@@ -1,0 +1,107 @@
+I"�<p>最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。</p>
+
+<p>先看看声明：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">extern int getaddrinfo (const char *__restrict __name,
+            const char *__restrict __service,
+            const struct addrinfo *__restrict __req,
+            struct addrinfo **__restrict __pai);</pre>
+
+<p>可以看到，第一个参数是主机名（或域名），第二个参数是服务名（端口名）。第三个和第四个参数很奇怪，一个是addrinfo* 类型，另一个则是addrinfo** 类型，这是为什么呢？</p>
+
+<p>这就要说起这个函数的结果如何记录的问题。addrinfo的声明如下：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">struct addrinfo
+{
+  int ai_flags;            
+  int ai_family;        
+  int ai_socktype;       
+  int ai_protocol;        
+  socklen_t ai_addrlen;       
+  struct sockaddr *ai_addr;    
+  char *ai_canonname;       
+  struct addrinfo *ai_next;    
+};</pre>
+
+<p>注意到最后的一个成员ai_next，这似乎是被设计来串成链表的。实际上也确实是这样。由于一个主机名可能对应着不同的地址（最简单的情况就是一个ipv4地址，一个ipv6地址）被填入的addrinfo 结构的数量是不确定的。所以为了方便，设计者用一个指向addrinfo*的指针作为参数传入，以便将链表的头指针写调用者提供的地址。</p>
+
+<p>这就是第四个参数了，那么第三个参数是什么呢？这个函数查找到ip后，会将连接需要的所有信息填好，而这“所有信息”也是需要调用者提供的。第三个参数指向一个已经写好部分信息的addrinfo结构体，通过这个结构体中的信息决定结果链表如何填写。</p>
+
+<p>那么，很自然的，我们会问，这个函数可以同时进行ipv4 和 ipv6填写吗？答案当然是可以的。但是，它真正写入的是sockaddr结构体。设计者们创造了两个马甲：sockaddr_in和sockaddr_in6，分别对应ipv4和ipv6的情况，很多时候需要通过转型拿到具体的地址，比如，需要ipv4的地址时，我们用这种写法：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">((struct sockaddr_in *)(p-&gt;ai_addr))-&gt;sin_addr</pre>
+
+<p>/*这里吐槽一下，这样实在是不太漂亮*/</p>
+
+<p>学会了这个函数，我们就可以编一个查询ip地址的小程序：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">#include&lt;sys/types.h&gt;
+#include&lt;sys/socket.h&gt;
+#include&lt;netdb.h&gt;
+#include&lt;bits/stdc++.h&gt;
+#include&lt;arpa/inet.h&gt;
+#include&lt;netinet/in.h&gt;
+
+int main(int argc, char *argv[])
+{
+    addrinfo hints, *res, *p;
+    int ret;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    /* if (argc != 2)
+    {
+        std::cout &lt;&lt; "bad input\n";
+        exit(-1);
+    }*/
+
+    memset(&amp;hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_CANONNAME;
+    ret = getaddrinfo(argv[1], "80", &amp;hints, &amp;res);
+
+    if (ret)
+    {
+        fprintf(stderr, "%s", gai_strerror(ret));
+        exit(-1);
+    }
+
+    for (p = res; p != NULL; p = p-&gt;ai_next)
+    {
+        if (p-&gt;ai_family == AF_INET)
+        {
+            inet_ntop(p-&gt;ai_family,
+                      &amp;(((struct sockaddr_in *)(p-&gt;ai_addr))-&gt;sin_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &lt;&lt; "IPV4: " &lt;&lt; ipstr &lt;&lt; '\n';
+        }
+        else
+        {
+            inet_ntop(p-&gt;ai_family,
+                      &amp;(((struct sockaddr_in6 *)(p-&gt;ai_addr))-&gt;sin6_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &lt;&lt; "IPV6: " &lt;&lt; ipstr &lt;&lt; '\n';
+        }
+    }
+
+    freeaddrinfo(res);
+}</pre>
+
+<p>运行结果：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">ayanamists@ubuntu:~/netLab$ ./b google.com
+IPV4: 172.217.27.142
+IPV6: 2404:6800:4012::200e
+ayanamists@ubuntu:~/netLab$ ./b apple.com
+IPV4: 17.172.224.47
+IPV4: 17.142.160.59
+IPV4: 17.178.96.59
+ayanamists@ubuntu:~/netLab$ ./b www.baidu.com
+IPV4: 182.61.200.7
+IPV4: 182.61.200.6
+ayanamists@ubuntu:~/netLab$ ./b chenxi.com
+IPV4: 104.250.144.22
+ayanamists@ubuntu:~/netLab$ ./b blog.ayanamists.xyz
+IPV4: 178.128.88.147
+</pre>
+:ET

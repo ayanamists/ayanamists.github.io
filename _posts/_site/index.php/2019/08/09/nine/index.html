@@ -1,0 +1,328 @@
+<p>“九连环”是一种传统游戏，我上周在亲戚家发现。它的构造比较复杂，但实际上规则却很简单，即只有下面的几种情况才可以对编号为 i 的环进行操作：</p>
+
+<p>i == 1, 无论后面何种情况，都可以解下或放上它。</p>
+
+<p>i == 2，若 i==1的环解下，则它可以与 i == 1的环一同被放上；若i==1的环放上，则它可以同 i==1的环一同解下.</p>
+
+<p>i &gt; 2，当 前 i-2 个环被解下，第 i-1 个环被放上时，它可以被解下或放上。</p>
+
+<p>基于此，我们编写程序解决：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">#include &lt;bits/stdc++.h&gt;
+
+void lock(int);
+void unlock(int);
+
+int count = 0;
+void lock(int n)
+{
+    if (n == 1)
+    {
+        std::cout &lt;&lt; "lock 1\n";
+    }
+    else if (n == 2)
+    {
+        std::cout &lt;&lt; "lock 1 and 2\n";
+        count++;
+    }
+    else
+    {
+        lock(n - 1);
+        unlock(n - 2);
+        std::cout &lt;&lt; "lock" &lt;&lt; n &lt;&lt; std::endl;
+        lock(n - 2);
+    }
+    count++;
+}
+
+void unlock(int n)
+{
+    if (n == 1)
+    {
+        std::cout &lt;&lt; "unlock 1\n";
+    }
+    else if (n == 2)
+    {
+        std::cout &lt;&lt; "unlock 1 and 2\n";
+        count++;
+    }
+    else
+    {
+        unlock(n - 2);
+        std::cout &lt;&lt; "unlock" &lt;&lt; n &lt;&lt; std::endl;
+        lock(n - 2);
+        unlock(n - 1);
+    }
+    count++;
+}
+
+int main()
+{
+    int n;
+    std::cin &gt;&gt; n;
+    unlock(n);
+    std::cout &lt;&lt; count &lt;&lt; '\n';
+}</pre>
+
+<p>输出：</p>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">9
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock7
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock9
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock7
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock8
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock7
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+341</pre>
+
+<p>最后341步的结论和现有的是一样的。</p>

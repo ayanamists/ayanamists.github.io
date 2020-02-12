@@ -1,1 +1,1463 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-11T06:44:38-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Your awesome title</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-11T19:42:11-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Your awesome title</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><entry><title type="html">802.11i 无线安全（一）建立RSNA</title><link href="http://localhost:4000/index.php/2019/11/02/802-11i-1/" rel="alternate" type="text/html" title="802.11i 无线安全（一）建立RSNA" /><published>2019-11-02T01:53:03-07:00</published><updated>2019-11-02T01:53:03-07:00</updated><id>http://localhost:4000/index.php/2019/11/02/802-11i-1</id><content type="html" xml:base="http://localhost:4000/index.php/2019/11/02/802-11i-1/">&lt;p&gt;这学期我选了我校的公选课《无线网络安全技术》。以第二个实验为契机，我学习了一下802.11无线网络的安全。感觉网络上的中文资料太混乱、太不成体系。在这里，我用这些文章来系统地说一下这方面的东西。&lt;/p&gt;
+
+&lt;p&gt;首先，我们要先分清楚几个名词：WEP WPA WPA2 802.11 802.11i Wifi RSN RSNA&lt;/p&gt;
+
+&lt;p&gt;分清楚这几个东西不是很简单的事情。我们应该知道Wi-Fi是无线局域网的意思，而802.11也是无线局域网的标准，那么它们的区别是什么呢?&lt;/p&gt;
+
+&lt;p&gt;参考这本书 &lt;strong&gt;Real 802.11 Security: Wi-Fi Protected Access and 802.11i&lt;/strong&gt;的说法：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    In summary, Wi-Fi defines a subset of IEEE 802.11 with some extensions
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;而会出现这种情况的原因要归结于802.11协议比较开放，没有强制规定很多问题。这也就导致一个采用部分802.11特性的设备很可能不能和令一个采用部分802.11特性的设备通信。这很糟糕。为了解决这个问题，Wi-Fi联盟成立（当时叫做 Wireless Ethernet Compatibility Alliance ，WECA）,它推出了Wi-Fi认证，并保证：两台通过Wi-Fi认证的设备可以通过无线网络相互通信。这样一来就解决了上面的问题。&lt;/p&gt;
+
+&lt;p&gt;那么，作为安全标准的WEP、WPA、WPA2和ieee 802.11i的关系是什么呢？首先来看WEP。参考&lt;a href=&quot;https://en.wikipedia.org/wiki/Wired_Equivalent_Privacy&quot;&gt;维基百科&lt;/a&gt;的说法：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    Introduced as part of the original 802.11 standard ratified in 1997, its intention was to provide data &lt;a href=&quot;https://en.wikipedia.org/wiki/Confidentiality&quot;&gt;confidentiality&lt;/a&gt; comparable to that of a traditional wired &lt;a href=&quot;https://en.wikipedia.org/wiki/Local_area_network&quot;&gt;network&lt;/a&gt;.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;也就是说WEP是IEEE 802.11标准一开始就规定的安全标准。 WEP的意思是“有线等效加密”。&lt;/p&gt;
+
+&lt;p&gt;再来看WPA。WPA和Wi-Fi一样，也是Wi-Fi联盟的认证。和Wi-Fi不同的是，WPA是安全性认证。比较麻烦的是，WPA一开始并不是802.11某个部分的子集，它完全是Wi-Fi联盟设计的安全协议。这是为了避免厂家自行其是，从而产生安全上的不兼容问题。这一部分安全协议最终被标准化为802.11i，也就是今天我们要说的主角了。802.11i是对WPA协议的扩展与重构，Wi-Fi联盟使用WPA2作为新的认证商标，以说明这个产品支持802.11i标准。所以简单地说，WPA2应该被视作802.11i的实现。&lt;/p&gt;
+
+&lt;p&gt;虽然WPA3认证（对应802.11-2016）已经在2018年发布，但现今市面上绝大多数产品仍是WPA2认证的。下面的讨论也主要基于WPA2，也就是802.11i-2004和802.11-2007&lt;/p&gt;
+
+&lt;p&gt;最后来研究RSN和RSNA。RSN(robust security network)是“鲁棒安全网络”或者“健壮安全网络”的意思。RSN的字面意思很好懂，就是一个健壮的、安全的网络。802.11i引入这个概念来区分使用802.11i规定的、新的安全方法的网络和旧的WEP网络。它将WEP网络称为”pre-RSN”，也就是在RSN提出之前的网络，而将使用802.11i新引入的安全手段建立的网络称为RSN。所以建立RSN其实是使用802.11i安全的目的。&lt;/p&gt;
+
+&lt;p&gt;RSNA则是在两个使用802.11i安全套件的终端间建立的逻辑连接。或者用一个更常用的词“链路”。我们说的两个终端（比如说AP和STA）“连上了”，其实就是在这两个终端间建立了RSNA。&lt;/p&gt;
+
+&lt;p&gt;值得一提的是， &lt;strong&gt;深入理解Android：Wi-Fi、NFC和GPS卷&lt;/strong&gt; 这本书很不错，值得一读，但在RSNA的概念上犯了错误。原文如下：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    RSNA（Robust Secure Network Association，强健安全网络联合）是802.11定义的一组保护无线网络安全的过程，是一套安全组合拳。这套组合拳包含的过程如图3-45所示。
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;RSNA的Association不是指802.11i各个组件的组合，而是指两个终端的连接。在NIST上查询RSNA这一词，定义很明确：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    A logical connection between communicating IEEE 802.11 entities established through the IEEE 802.11i key management scheme, also known as the four-way handshake.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;其实我们查询Association这个词也会发现，它有两个意思，这里应该取第二个：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    1. (often in names) a group of people organized for a joint purpose.
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    2. a connection or cooperative link between people or organizations.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下面，我们就围绕两个终端如何建立RSNA这一主题，探索802.11i的世界。&lt;/p&gt;
+
+&lt;p&gt;首先，802.11i规定了建立RSNA的方法和建立RSNA后数据如何传输，整个过程可以用802.11i状态机表示：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://www.tech-faq.com/wp-content/uploads/RSN.png&quot; alt=&quot;&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;整个连接可以分为五个过程：&lt;/p&gt;
+
+&lt;p&gt;发现（Discovery）-&amp;gt; 认证（Authentication）-&amp;gt; 密钥生成与分发（Key Generation and Distribution） -&amp;gt; 加密数据传输（Protected Communication）-&amp;gt; 连接终止（Connection Termination）&lt;/p&gt;
+
+&lt;p&gt;其中相当于建立连接的前三个过程，是我们最感兴趣的过程。下面就来近距离观察这三个过程：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1.发现&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;AP会对外发送BEACON帧：&lt;figure class=&quot;wp-block-image is-resized&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1-1024x17.png&quot; alt=&quot;&quot; class=&quot;wp-image-427&quot; width=&quot;580&quot; height=&quot;9&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1-1024x17.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1-300x5.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1-768x13.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1.png 1347w&quot; sizes=&quot;(max-width: 580px) 100vw, 580px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;这个帧是AP在对外广播自己的各种信息。见下：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104752.png&quot; alt=&quot;&quot; class=&quot;wp-image-429&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104752.png 587w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104752-300x113.png 300w&quot; sizes=&quot;(max-width: 587px) 100vw, 587px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;我们感兴趣的当然是RSN Information:&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104753.png&quot; alt=&quot;&quot; class=&quot;wp-image-430&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104753.png 521w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104753-300x116.png 300w&quot; sizes=&quot;(max-width: 521px) 100vw, 521px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;这个结构说明了自己支持的加密方法、认证方法等。&lt;/p&gt;
+
+&lt;p&gt;STA捕获了这个帧，就可以知道环境中无线网络的信息。如果要求某个AP提供信息，可以用Probe request帧：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104754-1024x30.png&quot; alt=&quot;&quot; class=&quot;wp-image-431&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104754-1024x30.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104754-300x9.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104754-768x22.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104754.png 1353w&quot; sizes=&quot;(max-width: 1024px) 100vw, 1024px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;在Probe response帧中，AP回答自己的各种信息。&lt;/p&gt;
+
+&lt;p&gt;在知道AP的信息后就可以连接了。第一个发送的帧应该是Authentication:&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104755.png&quot; alt=&quot;&quot; class=&quot;wp-image-432&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104755.png 932w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104755-300x25.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104755-768x65.png 768w&quot; sizes=&quot;(max-width: 932px) 100vw, 932px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;聪明的同学可能会问，这里的Authentication不是“认证”的意思吗？而认证不是下一步要做的事情吗？其实这个认证，叫做Open System Authentication，或者叫做Null Authentication. 从第二个名字就可以知道它什么也不做，那为什么还是要进行这个过程呢？前面说过，WEP是802.11协议的一部分，有了新的WPA，不能直接剔除掉WEP的过程。这个帧正是WEP的认证，在RSNA建立的过程中使用这个帧是为了和WEP，更准确地说是和802.11状态机兼容。这也体现了开闭原则，在添加新功能时，不能修改原有的体系。&lt;/p&gt;
+
+&lt;p&gt;下一步是Association request and response，在这个过程中，STA发送association request，选择自己想采用的各种连接参数（其中包括认证和加密方式），AP发送association response, 确认STA的选择有效。&lt;/p&gt;
+
+&lt;p&gt;（不知道为什么，我没有捕获到AP发送的association response）&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104756-1024x29.png&quot; alt=&quot;&quot; class=&quot;wp-image-437&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104756-1024x29.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104756-300x9.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104756-768x22.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104756.png 1341w&quot; sizes=&quot;(max-width: 1024px) 100vw, 1024px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.认证&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在介绍这个过程之前，我们首先需要知道802.11i使用的两种认证方法。一种是预共享密钥（Pre Shared Key, PSK）认证，另一种是802.1x EAP（Extensible Authentication Protocol ）认证。PSK就是我们常见的那种一个密码的情况，EAP则是公共网络（比如我校的SYSU-SECURE）常用的认证方式。&lt;/p&gt;
+
+&lt;p&gt;预共享密钥认证只认证双方对PSK的所有权，而不认证任何其他内容，这个所有权认证通过下面的4-Way Handshake进行；而EAP则要具体协议具体分析。&lt;/p&gt;
+
+&lt;p&gt;第二个过程·认证 分为两种情况，如果采用的是802.1x EAP套件，那么在这一步用EAP协议进行认证。关于EAP协议的情况我会在下一篇文章中涉及。如果采用的是PSK，则直接跳过这个过程&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3. 密钥生成与分发( 4-WAY HANSHAKE&lt;/strong&gt; )&lt;/p&gt;
+
+&lt;p&gt;这一步就是传说中的四次握手了。这个过程主要有两个目的：&lt;/p&gt;
+
+&lt;p&gt;1.验证上一步认证的效果–AP和STA是否都对PMK有了所有权。&lt;/p&gt;
+
+&lt;p&gt;2.在AP和STA上安装密钥，以便下面加密通信。&lt;/p&gt;
+
+&lt;p&gt;（这个过程还可能会有Group Key的生成与分发，但一般用不到，这里不表）&lt;/p&gt;
+
+&lt;p&gt;首先先要解释PMK是什么。PMK（Pairwise Master Key）在下面会被用于密钥派生，它的产生分为两种情况：1.如果是PSK模式，PMK就是PSK。2.如果是802.1x EAP模式，它会在EAP协议过程中被安装在AP和STA中。&lt;/p&gt;
+
+&lt;p&gt;这样看，PMK是一个相对不变的参数。如果加密时直接使用PMK，那么安全性是很成问题的（据说tls1.1就有这个问题）。所以我们要使用PRF扩展密钥，生成一个暂时的密钥，也就是PTK（ Pairwise Transient Key ）:&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;PTK = PRF-X(PMK, “Pairwise key expansion”,Min(AA,SPA) || Max(AA,SPA) ||Min(ANonce,SNonce) ||Max(ANonce,SNonce))
+&lt;/pre&gt;
+
+&lt;p&gt;其中X指长度，可以是384（CCMP）或者512（TKIP）.Nonce在这里指随机数，SNONCE指STA的随机数，ANONCE指客户端的随机数。AA指AP的MAC地址，SA指STA的MAC地址。&lt;/p&gt;
+
+&lt;p&gt;TIPS: CCMP是采用AES CCM（一种计数器模式）的加密方法，TKIP是采用RC4的加密方法，在802.11i中只支持这两种加密。&lt;/p&gt;
+
+&lt;p&gt;这里的SNONCE和ANONCE显然是这一次连接时产生的，那么应该要有某种形式的交换。第一帧就是AP向STA发送自己的随机数：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104757.png&quot; alt=&quot;&quot; class=&quot;wp-image-441&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104757.png 567w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104757-300x97.png 300w&quot; sizes=&quot;(max-width: 567px) 100vw, 567px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;拿到这个随机数以后，客户端就可以生成一个随机数，然后开始计算PTK。PTK算出来后会被分为3个部分：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104758.png&quot; alt=&quot;&quot; class=&quot;wp-image-443&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104758.png 602w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104758-300x106.png 300w&quot; sizes=&quot;(max-width: 602px) 100vw, 602px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;其中TK就是加密通信所用的密钥，KCK是下面计算MIC要用到的，KEK是用来加密某些信息的（这里并不深究KEK到底用来做什么，请自行查阅相关资料）。&lt;/p&gt;
+
+&lt;p&gt;之后，客户端会构造将自己的随机数写入第二帧，并且将MIC算出来后写入第二帧。MIC是怎么算出来的呢？其实MIC是一个消息校验码，相当于一个HASH函数，但这里用的是HMAC，用我们前面说过的KCK作为HMAC的key，用本帧的所有字节作为输入，计算出来的结果就是MIC。但这里有个问题，MIC不可能在计算出来之前就被填入本帧，所以在计算MIC的时候，要将本帧的MIC字段全部置为0.&lt;/p&gt;
+
+&lt;p&gt;第二帧的MIC用这个方式计算：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;MIC = MIC(KCK, EAPOL)&lt;/pre&gt;
+&lt;figure class=&quot;wp-block-image&quot;&gt;
+
+&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104759.png&quot; alt=&quot;&quot; class=&quot;wp-image-447&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104759.png 545w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104759-300x59.png 300w&quot; sizes=&quot;(max-width: 545px) 100vw, 545px&quot; /&gt; &lt;/figure&gt;
+
+&lt;p&gt;AP在收到第二帧后，用相同的方法计算PTK和MIC，再与第二帧时STA传的MIC进行对比，就可以验证STA对PSK的所有权了。&lt;/p&gt;
+
+&lt;p&gt;那么，客户端又是如何验证服务端对AP的所有权的呢？其实也是通过MIC的。因为要计算出正确的MIC，就必须要有正确的KCK，只要这一帧的内容和上一帧不一样就可以了！&lt;/p&gt;
+
+&lt;p&gt;而这内容肯定是和上一帧不一样的，因为这一帧的NONCE字段被设置为了：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;Key Nonce = ANonce&lt;/pre&gt;
+
+&lt;p&gt;STA只需要计算一下MIC，就可以验证AP对PMK的所有权了。验证成功后，发送第四帧，整个4-WAY-HANDSHAKE握手过程就结束了。&lt;/p&gt;
+
+&lt;p&gt;下面的数据就会使用CCMP或TKIP加密，是比较安全的。&lt;/p&gt;
+
+&lt;p&gt;总的来说，建立RSNA的过程不是很复杂，也有比较好的扩展性。下一篇文章中我们将会讨论关于EAP的内容。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">这学期我选了我校的公选课《无线网络安全技术》。以第二个实验为契机，我学习了一下802.11无线网络的安全。感觉网络上的中文资料太混乱、太不成体系。在这里，我用这些文章来系统地说一下这方面的东西。</summary></entry><entry><title type="html">SSL/TLS(三) 用RUBY实现TLS握手</title><link href="http://localhost:4000/index.php/2019/11/02/tls3/" rel="alternate" type="text/html" title="SSL/TLS(三) 用RUBY实现TLS握手" /><published>2019-11-01T19:54:04-07:00</published><updated>2019-11-01T19:54:04-07:00</updated><id>http://localhost:4000/index.php/2019/11/02/tls3</id><content type="html" xml:base="http://localhost:4000/index.php/2019/11/02/tls3/">&lt;p&gt;这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;警告：下面有大量的ruby编程细节&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;首先是将报文封装写好&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1.record&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;tlsPlainText = Class.new do 
+   attr_accessor :contentType, :protocolVersion, :length, :fragment
+end&lt;/pre&gt;
+
+&lt;p&gt;Record的Content一共有四种，分别对应于四种类型：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;contentType = {&quot;change_cipher_spec&quot; =&amp;gt; 20, &quot;alert&quot; =&amp;gt; 21, 
+  &quot;handshake&quot; =&amp;gt; 22, &quot;application_data&quot; =&amp;gt; 23}&lt;/pre&gt;
+
+&lt;p&gt;这里我们只实现handshake和change_cipher_spec&lt;/p&gt;
+
+&lt;p&gt;对于具体封装，我写了一个Record#make方法：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;def make(encrypt = false)
+        if encrypt == true
+            puts tlsPlainText.fragment.to_hex
+            @tlsPlainText.fragment = yield(@tlsPlainText.fragment)
+            @tlsPlainText.length = @tlsPlainText.fragment.length
+        end
+        template =
+            &quot;C&quot;+  #type
+            &quot;CC&quot;+ #protocolVersion
+            &quot;n&quot;+  #length
+            &quot;a#{@tlsPlainText.length}&quot; #fragment
+        
+        arr = [@tlsPlainText.contentType, 
+               @tlsPlainText.protocolVersion.major,             
+               @tlsPlainText.protocolVersion.minor, @tlsPlainText.length, 
+               @tlsPlainText.fragment ]
+        ret = arr.pack template
+        return ret
+    end&lt;/pre&gt;
+
+&lt;p&gt;由于后面我们的加密器是一个外部对象，要将自己的fragment加密后再替换成新的fragment，如果我们写出这样的代码：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;record_a.tlsPlainText.fragment = Encrypter.encrypt(record_a.tlsPlainText.fragment )&lt;/pre&gt;
+
+&lt;p&gt;感觉不是很顺畅，也违背了面向对象封装的思想。&lt;/p&gt;
+
+&lt;p&gt;我们使用yield来解决这个问题:&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;str_fin = fin.make do |i|
+    encrypt_handler.send_encrypt(22, i)
+end&lt;/pre&gt;
+
+&lt;p&gt;这样是对的吗？我不太清楚，但至少比上面的写法要好一些。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.Handshake&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;让Handshake继承Record，有这个想法是因为Handshake是Record的细化。&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;class Handshake &amp;lt; Record
+    attr_accessor :record, :handshakeType, :handshakeLength, :handshakeBody
+    ...
+end&lt;/pre&gt;
+
+&lt;p&gt;handshakeType一共有四种（哈哈，这里不太对，应该是我们只实现了四种）：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;def self.handshake_type
+        return {'1' =&amp;gt; 'client_hello',
+                '2' =&amp;gt; 'server_hello',
+                '11' =&amp;gt; 'server_certificates',
+                '14' =&amp;gt; 'server_hello_done'}
+end&lt;/pre&gt;
+
+&lt;p&gt;然后具体的make封装如下：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;def make(encrypt = false)
+        template = 
+            &quot;C&quot;+ #handshakeType
+            &quot;Cn&quot;+ #length
+            &quot;a#{@handshakeLength}&quot; #body
+        
+        arr = [self.handshakeType, 0 ,self.handshakeLength, 
+               self.handshakeBody]
+        pack = arr.pack template
+        @tlsPlainText.fragment = pack
+        @tlsPlainText.length = pack.length
+        super(encrypt)
+end&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;3.各个Handshake&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然只有四种，但是实现起来是很麻烦的。这里进一步简化了一下–不实现ClientHello的扩展。&lt;/p&gt;
+
+&lt;p&gt;报文封装写好以后，下面的工作就是最重要、最核心的工作的了–实现密码学计算。这里为了简化，我们只实现一种密码学套件–TLS_RSA_WITH_AES_GCM_128_SHA_256&lt;/p&gt;
+
+&lt;p&gt;最开始是ClientHello和ServerHello里的随机数，这里使用OpenSSL::Random#random_bytes&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;time = Time.new
+@gmt_unix_time = time.to_i
+@random_bytes = OpenSSL::Random.random_bytes(28)&lt;/pre&gt;
+
+&lt;p&gt;然后是扩展函数PRF，这里使用一个猴子补丁:&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;class Integer
+    def tls_prf(secret = '', label = '', seed = '', hash_methods = 'SHA256')
+        return self.tls_P_hash(secret, label + seed, hash_methods)
+    end
+
+    def tls_P_hash(secret='', seed = '', hash_methods = 'SHA256')
+        t = self.to_f / 32
+        t = t.ceil
+        ret = ''
+
+        a = seed
+        t.times do |i|
+            a = OpenSSL::HMAC.send(&quot;digest&quot;, hash_methods, secret, a)
+            ret &amp;lt;&amp;lt; OpenSSL::HMAC.send(&quot;digest&quot;, hash_methods, secret, a + seed)
+        end
+        return ret[0, self]
+    end
+end&lt;/pre&gt;
+
+&lt;p&gt;在EncryptMessageHandler这个模块中生成Pre-master-key和master-key&lt;/p&gt;
+
+&lt;p&gt;这里需要注意两个细节：&lt;/p&gt;
+
+&lt;p&gt;1.不要搞混client_random和server_random的顺序。（这个问题我debug了一天才发现）&lt;/p&gt;
+
+&lt;p&gt;2.client_random和server_random都是32字节的、真正发送出去的东西，而不是28字节的random_bytes。&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;@pre_master = @version.pack(&quot;CC&quot;) + OpenSSL::Random.random_bytes(46)
+@master = 48.tls_prf(@pre_master, &quot;master secret&quot;, client_random+server_random)&lt;/pre&gt;
+
+&lt;p&gt;其中pre-master-key要用server传来的certificate加密：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;rsa = OpenSSL::PKey::RSA.new (certificate.public_key)
+@encrypt_pre_master = rsa.public_encrypt @pre_master&lt;/pre&gt;
+
+&lt;p&gt;生成主密钥之后，应该是根据实际情况进行密钥扩展。将密钥扩展成六个部分：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;client_write_MAC_key[SecurityParameters.mac_key_length]      server_write_MAC_key[SecurityParameters.mac_key_length]      client_write_key[SecurityParameters.enc_key_length]      server_write_key[SecurityParameters.enc_key_length]      client_write_IV[SecurityParameters.fixed_iv_length]      server_write_IV[SecurityParameters.fixed_iv_length]&lt;/pre&gt;
+
+&lt;p&gt;可这个“实际情况”在使用TLS_RSA_WITH_AES_128_GCM_SHA_256这个套件的情况下究竟是什么样的呢?&lt;/p&gt;
+
+&lt;p&gt;我找了一些资料，最后发现有两个地方说的比较靠谱：&lt;/p&gt;
+
+&lt;p&gt;第一个是RFC5246对于AES_XXX_GCM这种AEAD方式的描述：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    AEAD ciphers take as input a single key, a nonce, a plaintext, and &amp;#8220;additional data&amp;#8221; to be included in the authentication check, as described in Section 2.1 of [AEAD]. &lt;strong&gt;The key is either the client_write_key or the server_write_key. &lt;/strong&gt; &lt;strong&gt;No MAC key is used.&lt;/strong&gt;
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    Each AEAD cipher suite MUST specify how the nonce supplied to the AEAD operation is constructed, and what is the length of the GenericAEADCipher.nonce_explicit part. In many cases, it is appropriate to use the partially implicit nonce technique described in Section 3.2.1 of [AEAD]; with record_iv_length being the length of the explicit part. &lt;strong&gt;In this case, the implicit part SHOULD be derived from key_block as client_write_iv and server_write_iv (as described in Section 6.3), and the explicit part is included in GenericAEAEDCipher.nonce_explicit &lt;/strong&gt;
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;通过第一段文字，我们可以知道两个问题：第一，加密用到的key就是client_write_key和server_write_key。第二，之前说的client_MAC_KEY和server_MAC_KEY都是用不到的。在RFC 5246中也说了，如果用不到，长度设为0就可以（也就是不产生了）。&lt;/p&gt;
+
+&lt;p&gt;麻烦的是第二段文字。如果你之前没有接触过相关内容，肯定会感觉到不知所云。这文字显然就是“给已经懂了的人看的”。在这里简单解释一下，第一段里说，AEAD需要有一个nonce作为输入。然后第二段里说，这个nonce可以被分为两部分：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;nonce = implicit_nonce || explicit_nonce&lt;/pre&gt;
+
+&lt;p&gt;然后implicit部分应该是上面扩展出来的&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;client_write_IV[SecurityParameters.fixed_iv_length]      server_write_IV[SecurityParameters.fixed_iv_length]&lt;/pre&gt;
+
+&lt;p&gt;explicit部分则是直接明文传过去，因为AEAD产生的报文是以下格式的：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;false&quot; data-enlighter-lineoffset=&quot;0&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;struct {         
+       opaque nonce_explicit[SecurityParameters.record_iv_length];         
+       aead-ciphered struct { opaque content[TLSCompressed.length];};      
+} GenericAEADCipher;&lt;/pre&gt;
+
+&lt;p&gt;GenericAEADCipher.nonce_explicit就是explicit部分填充的地方。&lt;/p&gt;
+
+&lt;p&gt;那么，AES_XXX_GCM到底是怎么做的呢？这就要看第二份文件 RFC 5288了：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    The &amp;#8220;nonce&amp;#8221; SHALL be 12 bytes long consisting of two parts as follows: (this is an example of a &amp;#8220;partially explicit&amp;#8221; nonce; see Section 3.2.1 in [RFC5116]).
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    struct {
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    opaque salt[4];
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    opaque nonce_explicit[8];
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    } GCMNonce;
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    The salt is the &amp;#8220;implicit&amp;#8221; part of the nonce and is not sent in the packet. Instead, the salt is generated as part of the handshake process: it is either the client_write_IV (when the client is sending) or the server_write_IV (when the server is sending). The salt length (SecurityParameters.fixed_iv_length) is 4 octets.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;看到这段文字，我们就已经很清楚了。AES_XXX_GCM的nonce是12byte的，其中四个byte来自于&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;client_write_IV[SecurityParameters.fixed_iv_length]   server_write_IV[SecurityParameters.fixed_iv_length]&lt;/pre&gt;
+
+&lt;p&gt;后面8个byte就是一个每个报文的都不同的随机数，直接明文写在报文里。&lt;/p&gt;
+
+&lt;p&gt;好的，我们据此写出密钥扩展的部分：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;key_block = (length/4 + 4 * 2).tls_prf(@master, &quot;key expansion&quot;, server_random + client_random)
+arr = key_block.unpack &quot;a#{length/8}a#{length/8}a4a4&quot;
+client_write_key = arr[0]
+server_write_key = arr[1]
+client_write_iv = arr[2]
+server_write_iv = arr[3]&lt;/pre&gt;
+
+&lt;p&gt;然后是加密和解密的部分。Ruby中Openssl库的AES::GCM加密时需要设置密钥、nonce和auth_data，那这个auth_data又怎么设置呢？再回到RFC 5246:&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    The additional authenticated data, which we denote as additional_data, is defined as follows:
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    additional_data = seq_num + TLSCompressed.type + TLSCompressed.version + TLSCompressed.length;
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;别的都好说，这个序列号怎么办？它是几位的？怎么产生？怎么更新？再看RFC 5246,这需要使用搜索功能，搜索seqence number:&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    sequence number
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    Each connection state contains a sequence number, which is maintained separately for read and write states. The sequence number MUST be set to zero whenever a connection state is made the active state. Sequence numbers are of type uint64 and may not exceed 2^64-1. Sequence numbers do not wrap. If a TLS implementation would need to wrap a sequence number, it must renegotiate instead. A sequence number is incremented after each record: specifically, the first record transmitted under a particular connection state MUST use sequence number 0.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这样一来就明白了，客户端和服务端各维护一个seq_num，长度为8个byte，初始值为0，每发送一个加密报文递增一。&lt;/p&gt;
+
+&lt;p&gt;然后我们又遇到了一个大麻烦：AES::GCM加密后会产生一个auth_tag，这个auth_tag解密的时候要用。这又该怎么处理呢？我在协议中没有找到，倒是在stack overflow上找到了相关的问题： &lt;a href=&quot;https://crypto.stackexchange.com/questions/25249/where-is-the-authentication-tag-stored-in-file-encrypted-using-aes-gcm?newreg=ac7536f1cb2646d995c2c8607aea7d2c&quot;&gt;https://crypto.stackexchange.com/questions/25249/where-is-the-authentication-tag-stored-in-file-encrypted-using-aes-gcm?newreg=ac7536f1cb2646d995c2c8607aea7d2c&lt;/a&gt; 回答者引用了RFC 5116的内容：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    The&amp;nbsp;&lt;code&gt;AEAD_AES_128_GCM&lt;/code&gt;&amp;nbsp;ciphertext is formed by appending the authentication tag provided as an output to the GCM encryption operation to the ciphertext that is output by that operation.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那么，我们只要将auth_tag直接附在加密的密文后就可以了。这样一来所有的问题就都解决了：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;def send_encrypt(type = 22, seqence = '')
+        nonce_explicit = OpenSSL::Random.random_bytes(8)
+        nonce = @send_implicit + nonce_explicit
+        @send_cipher.iv = nonce
+        length = seqence.length
+        #the handle of seq_num may be wrong
+        @send_cipher.auth_data = [0, @send_seq_num,
+            type, @version[0], @version[1], 0 ,length].pack(&quot;NNCCCCC&quot;)
+        puts @send_seq_num
+        encrypt = @send_cipher.update(seqence) + @send_cipher.final
+        encrypt = encrypt + @send_cipher.auth_tag
+        encrypt = nonce_explicit + encrypt
+        return encrypt
+        @send_seq_num += 1
+end&lt;/pre&gt;
+
+&lt;p&gt;这时我们离握手成功只差一步了！只要写好Finished消息，就可以和服务器愉快地通信了！&lt;/p&gt;
+
+&lt;p&gt;Finished消息需要把所有的握手消息打一个HASH，再将HASH值送进PRF:&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;PRF(master_secret, finished_label, Hash(handshake_messages))            [0..verify_data_length-1];&lt;/pre&gt;
+
+&lt;p&gt;但这里也有个大坑：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    Here handshake_messages refers to all handshake messages sent or received, starting at client hello and up to, but not including this message, including the type and length fields of the handshake messages. &lt;strong&gt;This is the concatenation of all the Handshake structures &lt;/strong&gt;
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;注意这个Handshake structures，这不是报文的意思，而应该是报文剥掉Record层的信息后的Record.fragment结构体！另外，ChangeCipherSpec消息不是Handshake消息，这里不应该被包括。&lt;/p&gt;
+
+&lt;p&gt;解决Finished后，所有的工作就做完了。下面是和baidu.com握手的结果：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png&quot; alt=&quot;&quot; class=&quot;wp-image-405&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-300x28.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-768x73.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751.png 1345w&quot; sizes=&quot;(max-width: 1024px) 100vw, 1024px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到握手成功。&lt;/p&gt;
+
+&lt;p&gt;通过这一次实现握手的旅程，我们发现，TLS在密码学上可谓固若金汤。最后一定可以100%确保对方有了正确的加密密钥。但是，tls在密码学上固若金汤，并不是说tls实现固若金汤，更不是说使用tls的人写的程序固若金汤。想要MITM攻击TLS的人大可放心，世界上漏洞百出的TLS程序还是多如牛毛的。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。</summary></entry><entry><title type="html">SSL/TLS(二) 证书里都有啥</title><link href="http://localhost:4000/index.php/2019/10/06/ssl-tls-2/" rel="alternate" type="text/html" title="SSL/TLS(二) 证书里都有啥" /><published>2019-10-06T05:14:54-07:00</published><updated>2019-10-06T05:14:54-07:00</updated><id>http://localhost:4000/index.php/2019/10/06/ssl-tls-2</id><content type="html" xml:base="http://localhost:4000/index.php/2019/10/06/ssl-tls-2/">&lt;p&gt;上回说到SSL通过&lt;strong&gt;证书（certificate）&lt;/strong&gt;验证服务器或客户端的身份。今天就来解答两个问题：&lt;/p&gt;
+
+&lt;p&gt;1.证书是什么？&lt;/p&gt;
+
+&lt;p&gt;2.如何使用证书验证服务器（少见地，也可能是客户端）的身份？&lt;/p&gt;
+
+&lt;h2 id=&quot;证书是什么里面有什么&quot;&gt;&lt;strong&gt;证书是什么？里面有什么&lt;/strong&gt;？&lt;/h2&gt;
+
+&lt;p&gt;首先，我们用openssl自己造一张证书：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;shell&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;openssl genrsa -out server.key&lt;/pre&gt;
+
+&lt;p&gt;openssl是什么不用我多说，genrsa指产生rsa密钥。输出到server.key中。这个输出的文件写的是“私钥”，其实里面公私钥和生成公私钥的数应该是都有的。&lt;/p&gt;
+
+&lt;p&gt;看一下里面有什么：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;cat server.key&lt;/pre&gt;
+
+&lt;p&gt;输出：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;no-highlight&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEApSUo2NghUOYaQGhL6WwLzDDtD1SxEibolifYW4XacaeN3suz
+a/5MD5pvTW6dGVf1ah4vfPEqMbG3tglpE+1bQG2Aqy5p+ODcx/4f7rDBMt/Lgthy
+QuSXILwTxVE88CthMwnFRSxARAWjQk74CEOQMLRKpS7SnizPP9hTQE0CUi+KXngR
+WI9Za20D5gsx4Fzb3w1phNPXZvouBKK2Zsj1sohqVxz8DH5h28/iU3Ynk0tUxmGU
+hJJWycOC/NImKeYVhzGN3rFWWcW6lXT9lFoieYuEdcp43kLA3aRzF4cTq0ln//6H
+lORJN+uvNqv74NcBax/TbGv9zgUShjr5NkAHLwIDAQABAoIBACL9sp/ve2+msZ0/
+/AWjTQSgwTnkWfhcoh9epesOe3Blbhvs0UFqijcsI7UmYMcD6g3oA2vXtXb+DszV
+RZxhSFpoWUDr/qwrCNyfLajnbqgW3woEToF56cOX1iCSy/SfXGLyCQhVDfDbuPHN
+xaQKnLyVFtPVDe9R0z/V2B3hs0IyVVDC8rJWkHDJ1YteWnNK5UJjsCZB4mhB3crC
+kx/JxBMllcLN1DCsIIHliMfwDZa6xUZ37bHCD3Ch3Kmz1Vr6IT8CHjq7EEpHi2Vb
+jLmQKl/LUdg3qCS0H8etmUPeKrc1brdxAUUUokNFvYOssyCeZr8PBJW1CieUvjrt
+rj1BerECgYEA1SSl17nREmIIHGT/7VJepZfSF5jW3lkWijMGcciKKlsVwS9BrftX
+415MDAaTaVWuR+JwicG3MFY/z1U6bHEu3sGpvoFI9R9eqvr8ofiRBdo6avR+kEtk
+rEx8rqQ0Yt7pt+RN8ReswROfLytOztAHBrfwsivMYorHg+IeuOGKaNMCgYEAxlnb
+mbiHutzPrbQ5SXcSJkCTzVUSYg/pgGkSjfL/MXWUDL0oWTFoQFxwuZ+4khdCpBQJ
+crVKs6guGUfwPB8nmD1DuNuFmadl9fYBTDZosYw5EOK4fSjuJcC7MyYpPHFfLFAN
+fciVmoFvxZhbdxRlzPPAMIpyjUbfy8fEU+R6LrUCgYEApLKR19VEwZCwtcgxnl+E
+tS5QcF1wwxVR/m4ZL7kHUl1ZvRJYDSlnq1CFMNGv/LfxWKiXz0q51AcBfaNc5si6
+r/Qzxvo9tvOLglE4/6uD3GLZuyW72qH3Y9AilAxcUn3vWWJ3+7EQk40m9xre5Z4H
+n+BohDSl1QtpyfXjSXc2LXMCgYBG+cJ92C0hbYAW/SV+p0/kRjldQTLJyj3YyEBu
+cORmM1ed01YLzIUseqePlJq8E/yxr8XNuReY//Y276oEKXXGoS2JiWveFquCftvq
+BJIj7jRBWY+AodPNyJBz9hTNXxgaSC77snnuBqETSLh5/N+MnjBIblIdQZ41Ui9r
+gZdC/QKBgB3Ty8gu+c68YfTIG3Qzn9ai1iUc6ZeOczPH0H6jdRXBVptD7Ms7PPbp
+Pkjj3mea9lAC1Y6der0fBZ+gRYQNhO0Z/vlgWkWSpyic+K5FBlDasZTDSyknLPNO
+kfQpMWI6YrnUe8w9qwPxL5J5RFDzZmJvtBSeN3PAzzitydTKdXmz
+-----END RSA PRIVATE KEY-----&lt;/pre&gt;
+
+&lt;p&gt;看来里面只有私钥，奇怪的是这里面似乎只有可见字符。查询资料后得知，这是BASE64编码后的结果：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    &lt;strong&gt;Base64&lt;/strong&gt;是一种基于64个可打印字符来表示&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E4%BA%8C%E8%BF%9B%E5%88%B6&quot;&gt;二进制数据&lt;/a&gt;的表示方法。
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如果想要看里面真的有什么，还是需要openssl的帮助：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;shell&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;openssl rsa -in server.key -text&lt;/pre&gt;
+
+&lt;p&gt;这命令会将公私钥一同打出。&lt;/p&gt;
+
+&lt;p&gt;好，我们已经有了密钥对，可以来自己签一张证书了。&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;shell&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;openssl req -new -key server.key -out server.csr&lt;/pre&gt;
+
+&lt;p&gt;注意，这个命令是在生成一个“证书请求”。填好必要信息后就有了server.csr&lt;/p&gt;
+
+&lt;p&gt;下面，用自己的私钥对这个“证书请求”签名，得到证书：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;openssl x509 -req -in server.csr -out server.crt -signkey server.key -days 3650&lt;/pre&gt;
+
+&lt;p&gt;这“证书请求是”什么东西呢？简单地说， “证书请求”和证书是很相近的，或者说，“证书请求”就是未经签名的证书。我们将想要写入的身份信息写入“证书请求”，然后交给CA进行验证和签名后，就有了证书。要理解具体的过程，需要看一下证书的定义：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;Certificate  ::=  SEQUENCE  {        
+tbsCertificate       TBSCertificate,        
+signatureAlgorithm   AlgorithmIdentifier,
+signatureValue       BIT STRING  }
+ &lt;/pre&gt;
+
+&lt;p&gt;这是RFC 5280中对于证书的定义，这种奇怪的表示方法，叫做ASN.1，可以理解为一种表示数据的方法（其实在我看来就是定义数据结构……），也就说，证书，就是tbsCertficate 后面接 signatireAlgorithm 再后面接 signatureValue。&lt;/p&gt;
+
+&lt;p&gt;具体是什么样的过程呢？简单的说，就是openssl对“证书请求”进行了一下加工，将对应的部分填入tbsCertificate。再根据请求的签名算法，对证书进行签名。其中，所请求的签名算法，就是signatureAlgorithm字段。&lt;/p&gt;
+
+&lt;p&gt;可以看到，这个过程的重点，是CA校验“证书请求”的真实性，并进行签名。CA如何校验“证书请求”的真实性呢？或者说，“证书请求”的请求者，必须要满足什么条件呢？&lt;/p&gt;
+
+&lt;p&gt;用下面的命令查看“证书请求”的内容：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;openssl req -in server.csr -noout -text&lt;/pre&gt;
+
+&lt;p&gt;输出如下：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;Certificate Request:
+    Data:
+        Version: 0 (0x0)
+        Subject: C=CN, ST=GuangDong, L=GuangZhou, O=Sun Yet-san University, OU=Stu, CN=google.com/emailAddress=ayanamists@gmail.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    ......
+                Exponent: 65537 (0x10001)
+        Attributes:
+            a0:00
+    Signature Algorithm: sha256WithRSAEncryption
+         ......&lt;/pre&gt;
+
+&lt;p&gt;想一想的话，这里面最重要的，无疑就是&lt;strong&gt;CN = google.com&lt;/strong&gt;这个信息了。请求这张证书的请求者必须证明自己就是google.com（直接通过DNS解析），或者google.com这个域名的所有权归请求者所有（通过DNS的TXT记录）。&lt;/p&gt;
+
+&lt;p&gt;好，假设请求者可以证明这点，CA就可以签发证书了。现在只需要把证书最后的signatureValue填好，证书就完成了。具体来说，就是将之前做好的tbsCertificate用请求的hash算法取得摘要，再用自己的rsa私钥进行加密（也可以用别的非对称加密算法），将加密的结果填入signatureValue。&lt;/p&gt;
+
+&lt;p&gt;什么？RSA私钥还可以用作加密？这个……确实是的。用私钥加密后，可以用公钥解密。&lt;/p&gt;
+
+&lt;p&gt;最终产生的证书的内容，和“证书请求”的内容基本相同，用以下命令查看：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;openssl x509 -in server_.cer -text -noout&lt;/pre&gt;
+
+&lt;p&gt;得到输出：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            99:2f:c7:9b:ed:6d:d0:93
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=GuangDong, L=GuangZhou, O=Sun Yet-san University, OU=Stu, CN=google.com/emailAddress=ayanamists@gmail.com
+        Validity
+            Not Before: Oct  6 07:23:29 2019 GMT
+            Not After : Oct  3 07:23:29 2029 GMT
+        Subject: C=CN, ST=GuangDong, L=GuangZhou, O=Sun Yet-san University, OU=Stu, CN=google.com/emailAddress=ayanamists@gmail.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    ......
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha256WithRSAEncryption
+         ......&lt;/pre&gt;
+
+&lt;p&gt;可以看到，主要的区别是多了一些字段，比如&lt;strong&gt;Issuer&lt;/strong&gt;（用于表面签发者的身份），&lt;strong&gt;Serial Number&lt;/strong&gt;（序列号）等等。&lt;/p&gt;
+
+&lt;h2 id=&quot;客户端如何根据证书验证服务端身份&quot;&gt;&lt;strong&gt;客户端如何根据证书验证服务端身份？&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;我们假设现在客户端在google上搜素什么东西。现在，服务端发送certificate。客户端收到了服务端www.google.com的一张证书。它是如何验证这张证书不是伪造的呢？&lt;/p&gt;
+
+&lt;p&gt;点击chrome浏览器的“锁”，你可以看到证书:&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191741.png&quot; alt=&quot;&quot; class=&quot;wp-image-325&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191741.png 475w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191741-254x300.png 254w&quot; sizes=&quot;(max-width: 475px) 100vw, 475px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;点击“证书路径”，你会看到：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191742.png&quot; alt=&quot;&quot; class=&quot;wp-image-326&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191742.png 349w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191742-300x101.png 300w&quot; sizes=&quot;(max-width: 349px) 100vw, 349px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;为什么会有三张证书呢？这就要说到证书链了。&lt;/p&gt;
+
+&lt;p&gt;刚才在介绍证书内容时，我们介绍了“签名”就是将证书 的tbsCertificate部分进行HASH，将结果用CA的私钥加密后的值。很自然地，如果客户端要验证这张证书并非伪造，那么可以用CA的公钥解密“签名”，将解密后的值（HASH_1）和自己进行运算的值（HASH_2）进行对比，如果相同，那么这证书就不是伪造的。&lt;/p&gt;
+
+&lt;p&gt;那么就会有一个问题：&lt;strong&gt;CA公钥从哪里获得？如何保证CA公钥是正确的？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;证书链的引入就是为了解决这个问题。首先，我们制作一些私钥绝对安全的根证书，这些证书只能是自签的（也就是说，加密自己证书的私钥是自己的，上面的即使一张自签证书），这是因为在此之前没有任何证书可以为他们签名。&lt;/p&gt;
+
+&lt;p&gt;然后，用这些根证书签名一些“CA证书”，这些CA证书可以为别的证书签名，但他们不是自签的。证书的扩展（Extension）字段中有一个选项是&lt;strong&gt;Basic Constraints&lt;/strong&gt;，定义如下：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;BasicConstraints ::= SEQUENCE {        
+cA                      BOOLEAN DEFAULT FALSE,        
+pathLenConstraint       INTEGER (0..MAX) OPTIONAL }
+&lt;/pre&gt;
+
+&lt;p&gt;只要这个字段中的cA选项为true，这张证书就可以为其他证书签名。也就是说，我们用root证书制作出cA选项为true的证书，就可以为其他证书签名了。这样就会有至少三级的证书链：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;目标网站的证书 &amp;lt;= CA证书 &amp;lt;= root证书&lt;/pre&gt;
+
+&lt;p&gt;这样一来，浏览器只要维护好root证书，就可以通过root证书验证CA证书的真伪，进而验证目标网站的证书的真伪了。至于CA证书如何得到，其实有很多方法，大概有三个：&lt;/p&gt;
+
+&lt;p&gt;1.浏览器自己维护。&lt;/p&gt;
+
+&lt;p&gt;2.服务器发送自己的证书时，也发送ca证书。&lt;/p&gt;
+
+&lt;p&gt;3.通过authorityInfoAccess扩展字段发送ca证书的url:&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191744.png&quot; alt=&quot;&quot; class=&quot;wp-image-336&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191744.png 649w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191744-300x102.png 300w&quot; sizes=&quot;(max-width: 649px) 100vw, 649px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;不管具体用什么方法，只要证书链上的一环不匹配，浏览器就可以发送alert消息，直接断开连接。&lt;/p&gt;
+
+&lt;p&gt;如果证书验证成功，客户端还要校验证书是否被吊销，这可以通过上面那张图中的OCSP验证，不再多说。&lt;/p&gt;
+
+&lt;p&gt;等等！如果有人下载了google.com的证书，自己用了起来，会怎么样呢？&lt;/p&gt;
+
+&lt;p&gt;这也不用担心。因为证书里的公钥，是google.com的，不是他的。他是无法正确地解密客户端发送的pre-master-key的，进而，他无法正确地发送加密握手消息Finished，客户端会直接发送alert，断开连接。&lt;/p&gt;
+
+&lt;p&gt;经过了漫长的旅途，我们终于完全验证了服务端的身份。只要root私钥、CA私钥的安全无虞，CA没有乱发证书，这种验证，就是无懈可击的。&lt;/p&gt;
+
+&lt;p&gt;诶？似乎有个东西叫做CDN吧！比如你在访问本站的时候就使用了cloudflare的CDN。这个时候，客户端实际获得的，是CDN的证书。比如本站的：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191745.png&quot; alt=&quot;&quot; class=&quot;wp-image-340&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;这是怎么做到的呢？要知道，只要证书和域名不匹配，就会使得浏览器报错：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191746.png&quot; alt=&quot;&quot; class=&quot;wp-image-341&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191746.png 640w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-191746-300x255.png 300w&quot; sizes=&quot;(max-width: 640px) 100vw, 640px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;那么，cdn是怎么做到在我访问本站的时候，给出一张sni.cloudflaresll.com的证书的呢？&lt;/p&gt;
+
+&lt;p&gt;哈哈！虽然RFC5280没有明确说，但是一般的证书的&lt;strong&gt;Subject&lt;/strong&gt;字段只有一个CN（可以理解为域名，但也可以是别的）在这里就是sni.cloudflaresll.com了。我们查看一下这张证书，会发现它在&lt;strong&gt;Subject Alternative Name&lt;/strong&gt;字段别有玄机：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-231341.png&quot; alt=&quot;&quot; class=&quot;wp-image-343&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-231341.png 769w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-231341-300x69.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-06-231341-768x177.png 768w&quot; sizes=&quot;(max-width: 769px) 100vw, 769px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;这样一来，就可以让浏览器把这证书当作本站的证书了。&lt;/p&gt;
+
+&lt;p&gt;不过方便之余，细细一想也有点后怕：这cloudflare在我不知情的情况下，擅自发我域名的证书，如果有一天……&lt;/p&gt;
+
+&lt;p&gt;而且更让人担心的是，这时是客户端和cdn节点握手，然后cdn节点和我的服务器再握手，岂不相当于让cdn获得了我的数据？？&lt;/p&gt;
+
+&lt;p&gt;不过出于其他因素的考虑，cdn还是利大于弊的，这也是本站挂了cdn的原因。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">上回说到SSL通过证书（certificate）验证服务器或客户端的身份。今天就来解答两个问题：</summary></entry><entry><title type="html">SSL/TLS笔记(一) 加密！加密！加密！</title><link href="http://localhost:4000/index.php/2019/10/05/en1/" rel="alternate" type="text/html" title="SSL/TLS笔记(一) 加密！加密！加密！" /><published>2019-10-05T08:45:17-07:00</published><updated>2019-10-05T08:45:17-07:00</updated><id>http://localhost:4000/index.php/2019/10/05/en1</id><content type="html" xml:base="http://localhost:4000/index.php/2019/10/05/en1/">&lt;p&gt;在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。&lt;/p&gt;
+
+&lt;p&gt;更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某种程度上的加密，那么这些服务便无法成立。基于很多类似的理由，SSL/TLS应运而生。&lt;/p&gt;
+
+&lt;p&gt;SSL是一家公司的产品，SSLv1从未公开过，SSLv2有严重漏洞，SSLv3是SSL的最后一个版本，其后，它被IETF收编为了TLSv1.0，随后又有TLSv1.1，TLSv1.2，目前（2019年10月）TLSv1.3还未大规模部署。这篇文章主要介绍TLSv1.2。&lt;/p&gt;
+
+&lt;p&gt;TLS，也就是传输层安全，是一个三层上的协议，但它的下层一般是TCP协议（当然其实也可以是UDP协议），上层则一般是HTTP协议。读者可能认为TLS只是用作HTTPS的加密层，实际上它的上层可以是任何协议，只不过现今多用于http协议。（这就是为什么DNS over HTTPS和DNS over TLS是不一样的）它在安全方面有三个主要目的：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;对服务器和客户端的数据进行端对端加密，使得任何中间节点无法理解数据，防止窃听。&lt;/li&gt;
+  &lt;li&gt;通过证书的引入，验证服务端（有时也验证客户端）的身份。&lt;/li&gt;
+  &lt;li&gt;通过校验的引入，保证数据在传输过程中未被篡改。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;探索TLS，就是一遍遍的问自己“TLS如何做到这三点的”。首先来解决第一个问题:&lt;/p&gt;
+
+&lt;p&gt;TLS如何保证数据是加密的？如何保证在攻击者监听了这个TCP请求的全过程时，攻击者仍然无法理解数据？&lt;/p&gt;
+
+&lt;p&gt;好吧，让我来做一次监听者。用浏览器打开&lt;a href=&quot;https://cnnic.com.cn&quot;&gt;https://cnnic.com.cn&lt;/a&gt;，在Wireshark中抓包，看一下这个连接的全貌：&lt;figure class=&quot;wp-block-image is-resized&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png&quot; alt=&quot;一次TLS连接&quot; class=&quot;wp-image-214&quot; width=&quot;869&quot; height=&quot;352&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-300x122.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-768x311.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714.png 1345w&quot; sizes=&quot;(max-width: 869px) 100vw, 869px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;在WINDOWS下抓包每一个己方的包都会被捕捉两次，应该是wireshark的捕获有些问题，先不管这些，看一下这个连接：&lt;/p&gt;
+
+&lt;p&gt;前三个包是TCP握手，不用多说，第四个包叫做Client Hello，这是啥呢？&lt;/p&gt;
+
+&lt;p&gt;随便查一下资料，发现这是tls握手的第一个包。看来，要窃听数据，需要先学习一下tls握手的过程。&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://www.researchgate.net/profile/Wazen_Shbair/publication/321347130/figure/fig5/AS:631648328630324@1527608105567/The-TLS-handshake-protocol-messages-sequence.png&quot; alt=&quot;&quot; /&gt; &amp;lt;figcaption&amp;gt;注：这图对于加密信息和未加密信息的划分是错误的&amp;lt;/figcaption&amp;gt;&amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;看上去有点复杂，实际上也有点复杂。不过好消息是，当我们理解了握手过程后，我们就理解了数据是如何加密的。&lt;/p&gt;
+
+&lt;p&gt;只能硬着头皮上了!&lt;/p&gt;
+
+&lt;p&gt;第一个包叫做Client Hello，这是干什么的呢？用wireshark看看有啥吧。&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png&quot; alt=&quot;&quot; class=&quot;wp-image-219&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png 583w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715-300x172.png 300w&quot; sizes=&quot;(max-width: 583px) 100vw, 583px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;哇！一个handshake头里竟然有这么多内容，要学到什么时候才能掌握啊？但又有一个好消息，下面都是“Extension”，在大部分时候，extension都是不用重点关注的。不然为啥不放在不是扩展的参数里面呢？那就先看看上面的字段。&lt;/p&gt;
+
+&lt;p&gt;1.&lt;strong&gt;Handshake Type&lt;/strong&gt;，这不用多说，就是来标识握手进入哪一阶段的。&lt;/p&gt;
+
+&lt;p&gt;2.&lt;strong&gt;Length&lt;/strong&gt; 这也不用多说。&lt;/p&gt;
+
+&lt;p&gt;3.&lt;strong&gt;Version&lt;/strong&gt;, 不用多说。&lt;/p&gt;
+
+&lt;p&gt;4.&lt;strong&gt;Random&lt;/strong&gt;，听名字就知道这是一个随机数，而且显然是客户端产生的。它是干什么的呢？先按下不表。&lt;/p&gt;
+
+&lt;p&gt;5.&lt;strong&gt;Session ID Length 和 Session ID，&lt;/strong&gt;这和对话恢复有关，按下不表。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Cipher Suites Length 和 Cipher Suites，&lt;/strong&gt;这似乎到了重点了！这长度这么长（34个字节），看看都有啥：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png&quot; alt=&quot;&quot; class=&quot;wp-image-228&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png 616w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376-300x178.png 300w&quot; sizes=&quot;(max-width: 616px) 100vw, 616px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;34 = 17 * 2，看来每一个选项都有两个字节（&lt;s&gt;废话，图上都是四个十六进制数，可不就是两个字节吗）&lt;/s&gt;，这Cipher的意思，是密钥，密钥套装，岂不就是加密方式套装……仔细看看&lt;a href=&quot;https://tools.ietf.org/pdf/rfc5246.pdf&quot;&gt;RFC5246&lt;/a&gt;，你会发现这选项的原型是&lt;strong&gt;TLS_NULL_WITH_NULL_NULL&lt;/strong&gt;，看来，每个选项都是分为三个部分的。比如说，&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;TLS_RSA_WITH_AES_256_CBC_SHA&lt;/pre&gt;
+
+&lt;p&gt;肯定就是表示RSA和什么 什么。但是后面的怎么划分呢？不用着急，求助一下搜索引擎，&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png&quot; alt=&quot;&quot; class=&quot;wp-image-231&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png 801w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377-300x126.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377-768x322.png 768w&quot; sizes=&quot;(max-width: 801px) 100vw, 801px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;哈哈，这样的话，肯定就是AES-256-CBC 和 SHA了!&lt;/p&gt;
+
+&lt;p&gt;那新的问题就来了，为什么要发这么多呢？聪明的你肯定猜到了。这种要商量用啥的协议经常是一方宣示自己可以用啥，另一方在一方的宣示中选一个。是不是客户端在宣示自己可以用这17种方式，然后让服务端选一个呢？是不是呢？让我们看看第二个包 &lt;strong&gt;Server Hello&lt;/strong&gt;吧！&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png&quot; alt=&quot;&quot; class=&quot;wp-image-240&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png 661w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378-300x105.png 300w&quot; sizes=&quot;(max-width: 661px) 100vw, 661px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Bingo!服务端只回复了一种方式，果然是在客户端提供的17种方式中选择了一种。可以看到这个包和上一个的头部没啥太大差别，只不过扩展少了很多，随机数变了而已。&lt;/p&gt;
+
+&lt;p&gt;下一个包是什么？是TLS的核心：&lt;strong&gt;Certificate&lt;/strong&gt;。这证书可不是一般的东西，但我们留到下一篇文章研究。现在要知道的是，这证书里有一个宝贝：客户端的公钥。公钥是什么？咳咳，如果这个也不知道，就请自行查询吧。&lt;/p&gt;
+
+&lt;p&gt;那么在证书发送完成后，服务端（如果采用RSA）就会发送一个&lt;strong&gt;Server Hello Done&lt;/strong&gt;，表示我的事情已经做完了，下面看你（客户端）表演了。&lt;/p&gt;
+
+&lt;p&gt;客户端在收到这个包（之前没有收到要求客户端的证书的请求）后，会发送一个&lt;strong&gt;Client Key Exchange&lt;/strong&gt;。这个包，毫不夸张地说，是握手中最关键的一个包。先看看里面有什么：&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png&quot; alt=&quot;&quot; class=&quot;wp-image-249&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png 730w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379-300x49.png 300w&quot; sizes=&quot;(max-width: 730px) 100vw, 730px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;emmm……这么简单就说是关键，不脸红吗？还真不脸红，因为生成加密的密钥靠的就是这个。&lt;/p&gt;
+
+&lt;p&gt;下面开始我的半吊子密码学秀。&lt;/p&gt;
+
+&lt;p&gt;首先，上面的AES-256-CBC是啥呢？求助一下维基：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    &lt;strong&gt;高级加密标准&lt;/strong&gt;（英语：&lt;strong&gt;A&lt;/strong&gt;dvanced&amp;nbsp;&lt;strong&gt;E&lt;/strong&gt;ncryption&amp;nbsp;&lt;strong&gt;S&lt;/strong&gt;tandard，&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%BC%A9%E5%86%99&quot;&gt;缩写&lt;/a&gt;：AES），在&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A0%81%E5%AD%A6&quot;&gt;密码学&lt;/a&gt;中又称&lt;strong&gt;Rijndael加密法&lt;/strong&gt;，是&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9B%BD%E8%81%94%E9%82%A6%E6%94%BF%E5%BA%9C&quot;&gt;美国联邦政府&lt;/a&gt;采用的一种&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%8D%80%E5%A1%8A%E5%8A%A0%E5%AF%86&quot;&gt;区块加密&lt;/a&gt;标准。这个标准用来替代原先的&lt;a href=&quot;https://zh.wikipedia.org/wiki/DES&quot;&gt;DES&lt;/a&gt;，已经被多方分析且广为全世界所使用。经过五年的甄选流程，高级加密标准由&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9B%BD%E5%9B%BD%E5%AE%B6%E6%A0%87%E5%87%86%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%A0%94%E7%A9%B6%E9%99%A2&quot;&gt;美国国家标准与技术研究院&lt;/a&gt;（NIST）于2001年11月26日发布于FIPS PUB 197，并在2002年5月26日成为有效的标准。2006年，高级加密标准已然成为&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%AF%B9%E7%A7%B0%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86&quot;&gt;对称密钥加密&lt;/a&gt;中最流行的&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E6%BC%94%E7%AE%97%E6%B3%95&quot;&gt;算法&lt;/a&gt;之一。
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;看来也就是一种对称加密算法。对称加密也就是说有一个密钥就可以搞定加解密。那看来256就是说，密钥是256位的。这时就可以联想到有个说法说，为了性能，TLS加密实际上采用的对称加密算法，但是对称加密的密钥是非对称加密的。AES-256-CBC恐怕就是那个“对称加密算法”了。&lt;/p&gt;
+
+&lt;p&gt;这个Pre-Master就是256位的，会不会它就是密码呢?即使是，也应该是用公钥加密后的吧。&lt;/p&gt;
+
+&lt;p&gt;咦？似乎得到答案了呢！客户端生成一个对称加密的密钥，加密以后送给服务端，依据非对称加密的特性，这岂不就只有服务端可以解密？&lt;/p&gt;
+
+&lt;p&gt;这是比较接近的答案。但是，TLS并不是这么做的。查看一下RFC 5246:&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;struct {
+ ProtocolVersion client_version;
+ opaque random[46];
+ } PreMasterSecret;&lt;/pre&gt;
+
+&lt;p&gt;看来这实际上是版本+随机数。那么这个东西是怎么产生密钥的呢？&lt;/p&gt;
+
+&lt;p&gt;再看RFC 5246:&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;master_secret = PRF(pre_master_secret, &quot;master secret&quot;,
+ ClientHello.random + ServerHello.random)[0..47];&lt;/pre&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;key_block = PRF(SecurityParameters.master_secret,
+ &quot;key expansion&quot;,
+ SecurityParameters.server_random +
+ SecurityParameters.client_random);
+&lt;/pre&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;client_write_MAC_key[SecurityParameters.mac_key_length]
+ server_write_MAC_key[SecurityParameters.mac_key_length]
+ client_write_key[SecurityParameters.enc_key_length]
+ server_write_key[SecurityParameters.enc_key_length]
+ client_write_IV[SecurityParameters.fixed_iv_length]
+ server_write_IV[SecurityParameters.fixed_iv_length]&lt;/pre&gt;
+
+&lt;p&gt;不知道你什么感觉，但是我看到这个的时候，感觉只有一个：这都是什么？PRF是什么？master_key是什么？最后一堆东西又是什么？&lt;/p&gt;
+
+&lt;p&gt;好。我们先来看PRF，查询一下维基，你会发现甚至没有中文版：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    In&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Cryptography&quot;&gt;cryptography&lt;/a&gt;, a&amp;nbsp;&lt;strong&gt;pseudorandom function family&lt;/strong&gt;, abbreviated&amp;nbsp;&lt;strong&gt;PRF&lt;/strong&gt;, is a collection of&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Efficiently-computable&quot;&gt;efficiently-computable&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Function_(computer_science)&quot;&gt;functions&lt;/a&gt;&amp;nbsp;which emulate a&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Random_oracle&quot;&gt;random oracle&lt;/a&gt;&amp;nbsp;in the following way: no efficient algorithm can distinguish (with significant&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Advantage_(cryptography)&quot;&gt;advantage&lt;/a&gt;) between a function chosen randomly from the PRF family and a random oracle (a function whose outputs are fixed completely at random). Pseudorandom functions are vital tools in the construction of&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Cryptographic_primitive&quot;&gt;cryptographic primitives&lt;/a&gt;, especially secure&amp;nbsp;&lt;a href=&quot;https://en.wikipedia.org/wiki/Encryption&quot;&gt;encryption schemes&lt;/a&gt;.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;硬着头皮看完了，我觉得还不是很懂，这是一“族”输出随机数的函数吗？幸好RFC 5246里有一个PRF的定义：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;P_hash(secret, seed) = HMAC_hash(secret, A(1) + seed) +
+ HMAC_hash(secret, A(2) + seed) +
+ HMAC_hash(secret, A(3) + seed) + ...&lt;/pre&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;PRF(secret, label, seed) = P_&amp;lt;hash&amp;gt;(secret, label + seed)&lt;/pre&gt;
+
+&lt;p&gt;看到这里我终于有点懂了。首先这个HMAC_hash函数是“带密钥的hash函数”。也就是说，如果密钥不同，hash的结果一定不同，其实也可以想成受两个参数影响的hash函数。然后这个A(n)是递归定义的：&lt;/p&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;
+  &lt;p&gt;
+    A() is defined as:
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    A(0) = seed
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    A(i) = HMAC_hash(secret, A(i-1))
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;（以上+表示连接，比如说a+b = ab）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这个P_hash函数其实是很简单的。因为HMAC_hash函数只能生成定长的输出，要想得到变长的输出，就要想点办法（像P_hash一样去构造）。P_hash就是“变长的HMAC_hash的函数”。这里举个例子，比如说HMAC_hash的输出是48位的，你想要一个100位的，那就让N = 3，最后得到144位输出，然后取前100位就好啦。（当然，严格来说P_hash的输出长度只能是HMAC_hash函数的整倍数）&lt;/p&gt;
+
+&lt;p&gt;理解了P_hash，下面的PRF就水到渠成了。因为这个PRF只是把自己的第二和第三个参数连接起来，再把自己的第一个参数和连接起来的东西作为P_hash的参数。&lt;/p&gt;
+
+&lt;p&gt;这样我们就知道了PRF是个什么东西，它确实是一个伪随机生成函数，而且生成的长度是不定的。&lt;/p&gt;
+
+&lt;p&gt;回到那三组代码：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;master_secret = PRF(pre_master_secret, &quot;master secret&quot;,
+ ClientHello.random + ServerHello.random)[0..47];&lt;/pre&gt;
+
+&lt;p&gt;这是说，master_key是P_hash(pre_master_secret, “master secret”+ClientHello.random + ServerHello.random)的输出取前48位。至于这两个random，还记得我们分析Client Hello 和 Server Hello时的情况吗？&lt;/p&gt;
+
+&lt;p&gt;然后下面的事情就更简单了，我们把master_key作为P_hash的第一个参数，生成一个符合要求长度的key_block，把这个key_block顺序分为6组（字面意思），生成下面的东西：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;client_write_MAC_key[SecurityParameters.mac_key_length]
+ server_write_MAC_key[SecurityParameters.mac_key_length]
+ client_write_key[SecurityParameters.enc_key_length]
+ server_write_key[SecurityParameters.enc_key_length]
+ client_write_IV[SecurityParameters.fixed_iv_length]
+ server_write_IV[SecurityParameters.fixed_iv_length]&lt;/pre&gt;
+
+&lt;p&gt;名字里都带key了，肯定就是加解密用的了。具体每一个是什么作用，这里不再多说。&lt;/p&gt;
+
+&lt;p&gt;注意，上面的运算，是服务器和客户端同时都在做的。所以他们共享同一组密钥。&lt;/p&gt;
+
+&lt;p&gt;现在是不是皆大欢喜了呢？似乎还有一个问题，那个&lt;strong&gt;TLS_RSA_WITH_AES_256_CBC_SHA&lt;/strong&gt; 最后的 &lt;strong&gt;SHA&lt;/strong&gt;是什么呢？恐怕读者知道这应该是哈希算法吧，注意到HMAC_&lt;strong&gt;hash&lt;/strong&gt;，嗯？&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png&quot; alt=&quot;&quot; class=&quot;wp-image-289&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png 647w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380-300x126.png 300w&quot; sizes=&quot;(max-width: 647px) 100vw, 647px&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;但实际上，这个SHA指的是HMAC-SHA1，它被用作MAC算法，而PRF使用的HMAC算法则由协议版本决定，比如tls1.2是HMAC-SHA256。&lt;/p&gt;
+
+&lt;p&gt;好了好了，说了这么多，简单总结一下 &lt;strong&gt;RSA_WITH_AES_256_CBC_SHA&lt;/strong&gt; 加密的核心：&lt;/p&gt;
+
+&lt;p&gt;客户端产生一个随机数作为&lt;strong&gt;pre_master_key&lt;/strong&gt;，将它用服务端公钥加密后送给服务端，然后客户端和服务端同时用基于&lt;strong&gt;HMAC-SHA&lt;/strong&gt;的PRF产生&lt;strong&gt;master_key&lt;/strong&gt;，再用&lt;strong&gt;master_key&lt;/strong&gt;和随机数作为PRF的输入得到六个密钥，用于&lt;strong&gt;AES-256-CBC&lt;/strong&gt;加密。以后的通信，都用&lt;strong&gt;AES-256-CBC&lt;/strong&gt;加密，具有了反窃听的特性。只要私钥是安全的，就只能有客户端和服务端进行解密。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。</summary></entry><entry><title type="html">记录一下最近踩的坑</title><link href="http://localhost:4000/index.php/2019/10/04/trap/" rel="alternate" type="text/html" title="记录一下最近踩的坑" /><published>2019-10-04T06:55:21-07:00</published><updated>2019-10-04T06:55:21-07:00</updated><id>http://localhost:4000/index.php/2019/10/04/trap</id><content type="html" xml:base="http://localhost:4000/index.php/2019/10/04/trap/">&lt;p&gt;这博客很久没更新了，一方面是由于手里有两台VPS、一个域名，一直没有想好怎么分配，怕有一天心情不好将这个WP撤掉；另一方面是因为感觉写博客有点浪费时间，平常的日子有点不太愿意写。&lt;/p&gt;
+
+&lt;p&gt;今天终于配置好了域名分配、CDN加速等等事项，再也不用担心第一个问题。现在也正好是国庆，也有写博客的时间了，于是就有了这篇东西。&lt;/p&gt;
+
+&lt;p&gt;最近踩了不少的坑，但是最令我痛心的是我的两次VPS误操作。为什么用痛心这么严肃的词语呢？因为这两次误操作让我不得不重装VPS的系统，直接使得我暑假对它的经营付诸东流。&lt;/p&gt;
+
+&lt;p&gt;先看看第一次误操作吧。记得那天我将VPS上的auth.log下载到了本地，用ruby写了个脚本随便分析了一下，发现居然有1000多个ip曾经试图登录过我的主机，其中欺人最甚的218.92.0.186居然试了1192次……又联想到我的密码很弱、用户名和域名有关系，我果断将ssh的密码登录关闭了，改用公钥登录。增加安全性当然是好事情，但有时候过于追求安全反而会发生一些意想不到的情况。为了进一步提高安全性，我决定将SSH监听的端口由22改到一个大端口上。就在我修改、重启ssh完成后，敲下 ^D的一刹那，我意识到出大事了。为什么呢？我的VPS配置了防火墙，只允许几个端口入站，而我刚刚改成的那个端口，不在此列！&lt;/p&gt;
+
+&lt;p&gt;也就是说，这次改动过后，我就无法用SSH登录了。我联系了superVPS的工作人员，得知他们也无法处理，于是只好重装系统……&lt;/p&gt;
+
+&lt;p&gt;其实也许有一个解决问题的方法。我的VPS上不是部署了V2RAY吗？如果我们配置了&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;iptables -A INPUT -i lo -j ACCEPT&lt;/pre&gt;
+
+&lt;p&gt;那么就是可以使用V2RAY做代理在内部访问ssh的端口的。SSH命令如下：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;ssh -o ProxyCommand=&quot;nc -X 5 -x localhost:YourPort %h %p&quot; YourUser@YourIp&lt;/pre&gt;
+
+&lt;p&gt;当然上面的-X 5 socks5代理，要是http代理就是其他的选项了。&lt;/p&gt;
+
+&lt;p&gt;这就是第一次误操作。如果说第一次误操作的源头是不小心的话，那么第二次误操作的源头恐怕是对于Linux的了解不足了。&lt;/p&gt;
+
+&lt;p&gt;再讲故事之前，容我先问一句。能看到这里的读者们想必都是知道在Linux中，..表示上层目录。那么这个“表示”，究竟只是一种“表示”，还是“就是”呢？也许这种问法可能还比较晦涩。读者想必也知道目录就是一种特殊的文件，那么 .. 和上层目录的关系，究竟是一个链接（先不论软硬），还是只是将上层目录的一些特性复制了过来呢？&lt;/p&gt;
+
+&lt;p&gt;无论读者有什么答案，我先讲故事。为了传输一些文件，我配置了ftp。作为一个立志于搞安全的人，我绝对不会做直接用日常用户登录家目录的事。因为ftp密码明文传输，非常危险。基于此我创建了一个用户，并且把他的家目录权限设为了755。感觉这似乎不很过瘾，最理想的情况是该用户登陆后不能进入上层目录。那么，为了尽可能简单，我直接输入了&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;sudo chmod 700 ..&lt;/pre&gt;
+
+&lt;p&gt;打下这命令后我就感觉事情似乎有点不妙，因为700似乎有点严厉了。事情和我想得一点不差，在敲下这命令后，无论我做什么，都会出现权限错误。最后，我只好重装了系统。&lt;/p&gt;
+
+&lt;p&gt;这是为什么呢？参考&lt;a href=&quot;https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/index.html&quot;&gt;https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/index.html&lt;/a&gt;的说法，..文件是上层文件夹的一个硬链接。这也就是说，他们的权限是一样的，你改变一个的权限，另一个的权限也会跟着改变，而这个时候，我们的上层文件夹，叫做 /&lt;/p&gt;
+
+&lt;p&gt;因为这个时候/已经不能读取，所以所有基于/的路径都不能读取，无论我们是想要用su还是sudo su来变成root用户，在这之前bash都要去exec对应的可执行文件，而这个时候就会用到基于/的绝对路径，在开始读取/的时候，我们就会遇到权限错误了。换句话说，除非你^alt+F[1-6]用root来登录，否则都是在做无用功。而VPS是不可能做到这一点的……&lt;/p&gt;
+
+&lt;p&gt;这两次误操作，都是由于我过度追求安全，而忽视了其他潜在问题导致的。话又说回到森口阿姨的那句歌词“ 見知らぬ力に流されて 心がどこかへはぐれてく ”，哈哈，对于不很了解的力量，我们还是谨慎使用吧！&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">这博客很久没更新了，一方面是由于手里有两台VPS、一个域名，一直没有想好怎么分配，怕有一天心情不好将这个WP撤掉；另一方面是因为感觉写博客有点浪费时间，平常的日子有点不太愿意写。</summary></entry><entry><title type="html">解九连环</title><link href="http://localhost:4000/index.php/2019/08/09/nine/" rel="alternate" type="text/html" title="解九连环" /><published>2019-08-09T00:58:22-07:00</published><updated>2019-08-09T00:58:22-07:00</updated><id>http://localhost:4000/index.php/2019/08/09/nine</id><content type="html" xml:base="http://localhost:4000/index.php/2019/08/09/nine/">&lt;p&gt;“九连环”是一种传统游戏，我上周在亲戚家发现。它的构造比较复杂，但实际上规则却很简单，即只有下面的几种情况才可以对编号为 i 的环进行操作：&lt;/p&gt;
+
+&lt;p&gt;i == 1, 无论后面何种情况，都可以解下或放上它。&lt;/p&gt;
+
+&lt;p&gt;i == 2，若 i==1的环解下，则它可以与 i == 1的环一同被放上；若i==1的环放上，则它可以同 i==1的环一同解下.&lt;/p&gt;
+
+&lt;p&gt;i &amp;gt; 2，当 前 i-2 个环被解下，第 i-1 个环被放上时，它可以被解下或放上。&lt;/p&gt;
+
+&lt;p&gt;基于此，我们编写程序解决：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;cpp&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;#include &amp;lt;bits/stdc++.h&amp;gt;
+
+void lock(int);
+void unlock(int);
+
+int count = 0;
+void lock(int n)
+{
+    if (n == 1)
+    {
+        std::cout &amp;lt;&amp;lt; &quot;lock 1\n&quot;;
+    }
+    else if (n == 2)
+    {
+        std::cout &amp;lt;&amp;lt; &quot;lock 1 and 2\n&quot;;
+        count++;
+    }
+    else
+    {
+        lock(n - 1);
+        unlock(n - 2);
+        std::cout &amp;lt;&amp;lt; &quot;lock&quot; &amp;lt;&amp;lt; n &amp;lt;&amp;lt; std::endl;
+        lock(n - 2);
+    }
+    count++;
+}
+
+void unlock(int n)
+{
+    if (n == 1)
+    {
+        std::cout &amp;lt;&amp;lt; &quot;unlock 1\n&quot;;
+    }
+    else if (n == 2)
+    {
+        std::cout &amp;lt;&amp;lt; &quot;unlock 1 and 2\n&quot;;
+        count++;
+    }
+    else
+    {
+        unlock(n - 2);
+        std::cout &amp;lt;&amp;lt; &quot;unlock&quot; &amp;lt;&amp;lt; n &amp;lt;&amp;lt; std::endl;
+        lock(n - 2);
+        unlock(n - 1);
+    }
+    count++;
+}
+
+int main()
+{
+    int n;
+    std::cin &amp;gt;&amp;gt; n;
+    unlock(n);
+    std::cout &amp;lt;&amp;lt; count &amp;lt;&amp;lt; '\n';
+}&lt;/pre&gt;
+
+&lt;p&gt;输出：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;9
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock7
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock9
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock7
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock8
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock7
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+lock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock6
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+lock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+unlock5
+lock 1 and 2
+unlock 1
+lock3
+lock 1
+unlock 1 and 2
+unlock4
+lock 1 and 2
+unlock 1
+unlock3
+lock 1
+unlock 1 and 2
+341&lt;/pre&gt;
+
+&lt;p&gt;最后341步的结论和现有的是一样的。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">“九连环”是一种传统游戏，我上周在亲戚家发现。它的构造比较复杂，但实际上规则却很简单，即只有下面的几种情况才可以对编号为 i 的环进行操作：</summary></entry><entry><title type="html">Linux 网络编程的getaddrinfo()函数</title><link href="http://localhost:4000/index.php/2019/08/07/linux-net-1/" rel="alternate" type="text/html" title="Linux 网络编程的getaddrinfo()函数" /><published>2019-08-07T02:52:57-07:00</published><updated>2019-08-07T02:52:57-07:00</updated><id>http://localhost:4000/index.php/2019/08/07/linux-net-1</id><content type="html" xml:base="http://localhost:4000/index.php/2019/08/07/linux-net-1/">&lt;p&gt;最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。&lt;/p&gt;
+
+&lt;p&gt;先看看声明：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;extern int getaddrinfo (const char *__restrict __name,
+            const char *__restrict __service,
+            const struct addrinfo *__restrict __req,
+            struct addrinfo **__restrict __pai);&lt;/pre&gt;
+
+&lt;p&gt;可以看到，第一个参数是主机名（或域名），第二个参数是服务名（端口名）。第三个和第四个参数很奇怪，一个是addrinfo* 类型，另一个则是addrinfo** 类型，这是为什么呢？&lt;/p&gt;
+
+&lt;p&gt;这就要说起这个函数的结果如何记录的问题。addrinfo的声明如下：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;struct addrinfo
+{
+  int ai_flags;            
+  int ai_family;        
+  int ai_socktype;       
+  int ai_protocol;        
+  socklen_t ai_addrlen;       
+  struct sockaddr *ai_addr;    
+  char *ai_canonname;       
+  struct addrinfo *ai_next;    
+};&lt;/pre&gt;
+
+&lt;p&gt;注意到最后的一个成员ai_next，这似乎是被设计来串成链表的。实际上也确实是这样。由于一个主机名可能对应着不同的地址（最简单的情况就是一个ipv4地址，一个ipv6地址）被填入的addrinfo 结构的数量是不确定的。所以为了方便，设计者用一个指向addrinfo*的指针作为参数传入，以便将链表的头指针写调用者提供的地址。&lt;/p&gt;
+
+&lt;p&gt;这就是第四个参数了，那么第三个参数是什么呢？这个函数查找到ip后，会将连接需要的所有信息填好，而这“所有信息”也是需要调用者提供的。第三个参数指向一个已经写好部分信息的addrinfo结构体，通过这个结构体中的信息决定结果链表如何填写。&lt;/p&gt;
+
+&lt;p&gt;那么，很自然的，我们会问，这个函数可以同时进行ipv4 和 ipv6填写吗？答案当然是可以的。但是，它真正写入的是sockaddr结构体。设计者们创造了两个马甲：sockaddr_in和sockaddr_in6，分别对应ipv4和ipv6的情况，很多时候需要通过转型拿到具体的地址，比如，需要ipv4的地址时，我们用这种写法：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;((struct sockaddr_in *)(p-&amp;gt;ai_addr))-&amp;gt;sin_addr&lt;/pre&gt;
+
+&lt;p&gt;/*这里吐槽一下，这样实在是不太漂亮*/&lt;/p&gt;
+
+&lt;p&gt;学会了这个函数，我们就可以编一个查询ip地址的小程序：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;#include&amp;lt;sys/types.h&amp;gt;
+#include&amp;lt;sys/socket.h&amp;gt;
+#include&amp;lt;netdb.h&amp;gt;
+#include&amp;lt;bits/stdc++.h&amp;gt;
+#include&amp;lt;arpa/inet.h&amp;gt;
+#include&amp;lt;netinet/in.h&amp;gt;
+
+int main(int argc, char *argv[])
+{
+    addrinfo hints, *res, *p;
+    int ret;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    /* if (argc != 2)
+    {
+        std::cout &amp;lt;&amp;lt; &quot;bad input\n&quot;;
+        exit(-1);
+    }*/
+
+    memset(&amp;amp;hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_CANONNAME;
+    ret = getaddrinfo(argv[1], &quot;80&quot;, &amp;amp;hints, &amp;amp;res);
+
+    if (ret)
+    {
+        fprintf(stderr, &quot;%s&quot;, gai_strerror(ret));
+        exit(-1);
+    }
+
+    for (p = res; p != NULL; p = p-&amp;gt;ai_next)
+    {
+        if (p-&amp;gt;ai_family == AF_INET)
+        {
+            inet_ntop(p-&amp;gt;ai_family,
+                      &amp;amp;(((struct sockaddr_in *)(p-&amp;gt;ai_addr))-&amp;gt;sin_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &amp;lt;&amp;lt; &quot;IPV4: &quot; &amp;lt;&amp;lt; ipstr &amp;lt;&amp;lt; '\n';
+        }
+        else
+        {
+            inet_ntop(p-&amp;gt;ai_family,
+                      &amp;amp;(((struct sockaddr_in6 *)(p-&amp;gt;ai_addr))-&amp;gt;sin6_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &amp;lt;&amp;lt; &quot;IPV6: &quot; &amp;lt;&amp;lt; ipstr &amp;lt;&amp;lt; '\n';
+        }
+    }
+
+    freeaddrinfo(res);
+}&lt;/pre&gt;
+
+&lt;p&gt;运行结果：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;ayanamists@ubuntu:~/netLab$ ./b google.com
+IPV4: 172.217.27.142
+IPV6: 2404:6800:4012::200e
+ayanamists@ubuntu:~/netLab$ ./b apple.com
+IPV4: 17.172.224.47
+IPV4: 17.142.160.59
+IPV4: 17.178.96.59
+ayanamists@ubuntu:~/netLab$ ./b www.baidu.com
+IPV4: 182.61.200.7
+IPV4: 182.61.200.6
+ayanamists@ubuntu:~/netLab$ ./b chenxi.com
+IPV4: 104.250.144.22
+ayanamists@ubuntu:~/netLab$ ./b blog.ayanamists.xyz
+IPV4: 178.128.88.147
+&lt;/pre&gt;</content><author><name>ayanamists</name></author><summary type="html">最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。</summary></entry><entry><title type="html">使用iRedMail配置邮箱服务器</title><link href="http://localhost:4000/index.php/2019/08/06/iredmail/" rel="alternate" type="text/html" title="使用iRedMail配置邮箱服务器" /><published>2019-08-06T01:11:40-07:00</published><updated>2019-08-06T01:11:40-07:00</updated><id>http://localhost:4000/index.php/2019/08/06/iredmail</id><content type="html" xml:base="http://localhost:4000/index.php/2019/08/06/iredmail/">&lt;p&gt;iRedMail是一个一键式配置邮箱服务器的解决方案。分为iRedMail（免费）、iRedMail Easy\Pro（付费），近日，我用iRedMail配置了本站的邮箱，将过程记录在此。&lt;/p&gt;
+
+&lt;p&gt;首先，我们要配置好一个二级域名作为邮箱服务器的主机名。鉴于后面邮箱的域名不能和主机名相同，这里不建议使用mail.mydomain.me（不然就要和我一样用别的作为邮箱的域名了）。添加一条DNS A类型记录，然后修改主机名即可。&lt;/p&gt;
+
+&lt;p&gt;有人可能会问了，为啥主机名一定要是一个二级域名呢？原因是iRedMail会自动创建证书和网页的服务，这个时候需要一个域名，它似乎是直接将主机名作为这个域名处理的。&lt;/p&gt;
+
+&lt;p&gt;后面的步骤很简单，直接wget下载脚本，然后bash运行即可。这里记录几个要点：&lt;/p&gt;
+
+&lt;p&gt;1.安装完成后用chown和chgrp将iRedMail.tips设为root所有，并设置440权限。&lt;/p&gt;
+
+&lt;p&gt;2.安装过程中iRedMail会自动设置防火墙，有别的网络服务（比如apache2服务器）时，其端口很可能会被防火墙封掉。&lt;/p&gt;
+
+&lt;p&gt;3.注意不要用弱密码。&lt;/p&gt;
+
+&lt;p&gt;重点是之后的步骤。用这样设置好的邮箱发邮件，几乎是100%被拒收。我们还需要配置以下几项服务：SPF、反向解析、DKIM、DMRAC。&lt;/p&gt;
+
+&lt;p&gt;反向解析：向服务器或VPS服务商发TICKET。&lt;/p&gt;
+
+&lt;p&gt;SPF、DIMM、DMRAC完全是靠添加DNS的TXT记录实现的，其实很简单，这里也不赘述了。&lt;/p&gt;
+
+&lt;p&gt;注：可以在 &lt;a rel=&quot;noreferrer noopener&quot; href=&quot;https://www.mail-tester.com/&quot; target=&quot;_blank&quot;&gt;https://www.mail-tester.com/&lt;/a&gt; 上检测，按照他的说明配置，得10分基本就没问题了。&lt;/p&gt;
+
+&lt;p&gt;注2：测试时不要发标题是TEST的邮件，网易会拒收。&lt;/p&gt;
+
+&lt;p&gt;注3：自签的SSL证书会被拦截，推荐使用acme.sh创建SSL证书并替换原有的证书。 &lt;a href=&quot;https://github.com/Neilpang/acme.sh&quot;&gt;https://github.com/Neilpang/acme.sh&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这样配好之后，可以和gmail、qq、微软、网易互相发几封邮件，可以降低被拒收的可能性。&lt;/p&gt;
+
+&lt;p&gt;以后的计划：研究一下iRedMail的具体实现。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">iRedMail是一个一键式配置邮箱服务器的解决方案。分为iRedMail（免费）、iRedMail Easy\Pro（付费），近日，我用iRedMail配置了本站的邮箱，将过程记录在此。</summary></entry><entry><title type="html">编写程序验证《全部成为F》中的巧妙trick</title><link href="http://localhost:4000/index.php/2019/07/25/ffff/" rel="alternate" type="text/html" title="编写程序验证《全部成为F》中的巧妙trick" /><published>2019-07-24T20:48:18-07:00</published><updated>2019-07-24T20:48:18-07:00</updated><id>http://localhost:4000/index.php/2019/07/25/ffff</id><content type="html" xml:base="http://localhost:4000/index.php/2019/07/25/ffff/">&lt;p&gt;我们在写程序时，时常要用到文件操作。文件操作是一种I/O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;HANDLE CreateFileA(
+  LPCSTR                lpFileName,
+  DWORD                 dwDesiredAccess,
+  DWORD                 dwShareMode,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  DWORD                 dwCreationDisposition,
+  DWORD                 dwFlagsAndAttributes,
+  HANDLE                hTemplateFile
+);
+
+&lt;/pre&gt;
+
+&lt;p&gt;倒数第二个参数设置为 CREATE_ALWAYS时，创建的新文件会覆盖原有的同名文件。《终将成为F》就利用了类似的思想，构造了一个非常巧妙的结构。&lt;/p&gt;
+
+&lt;p&gt;假设一个监控程序P，它在每分钟开始的时刻创建监控文件，这个文件记录该分钟内的事件。考虑以下情况：在程序开始运行时，系统时间比标准时间快1分钟（这里的“快”指数值比标准时间大）。在程序运行的过程中，系统通过校准，将时间调整为了标准时间，会发生什么呢？&lt;/p&gt;
+
+&lt;p&gt;假设调整为标准时间的时刻是a:b:c（标准时间），那么该系统错误显示的时间就是a:(b+1):c。假设P在a:(b+1):00（系统时间）时刻创建的文件名为a:b+1，那么在系统正确显示后，在新的a:b+1时刻，系统会创建新的a:b+1文件。这样一来，实际上的a:b（标准时间）文件就被覆盖了。《全部成为F》的作者就用这样的构造，做出了一个密室。具体情况可参见小说或动画。&lt;/p&gt;
+
+&lt;p&gt;我在WINDOWS环境下编写了以下程序来验证这个构造的正确性：&lt;/p&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;SYSTEMTIME time;
+GetLocalTime(&amp;amp;time);&lt;/pre&gt;
+
+&lt;pre class=&quot;EnlighterJSRAW&quot; data-enlighter-language=&quot;generic&quot; data-enlighter-theme=&quot;&quot; data-enlighter-highlight=&quot;&quot; data-enlighter-linenumbers=&quot;&quot; data-enlighter-lineoffset=&quot;&quot; data-enlighter-title=&quot;&quot; data-enlighter-group=&quot;&quot;&gt;while (true)
+{
+    while (true)
+    {
+        GetLocalTime(&amp;amp;time);
+        if (time.wSecond == 0 &amp;amp;&amp;amp; time.wMilliseconds == 0)
+        {
+            break;
+        }
+    }
+
+    wchar_t* name = (wchar_t*)malloc(0xff);
+    memset(name, 0, 0xff);
+    wsprintf(name, L&quot;Time is %02d：%02d&quot;, time.wHour, time.wMinute);
+
+    HANDLE hFile = CreateFile(name, GENERIC_READ | GENERIC_WRITE, 
+        0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        GetError(0);
+        exit(-1);
+    }
+
+    DWORD real = 0;     
+
+    if (WriteFile(hFile, &amp;amp;count, 4, &amp;amp;real, NULL) == false)
+    {
+        GetError(1);
+        exit(-1);
+    }
+
+    Sleep(1);
+    count++;
+    CloseHandle(hFile);
+    free(name);
+}&lt;/pre&gt;
+
+&lt;p&gt;在运行前，我将系统时间调快了一分钟，并在运行时开启自动对时。结果成功地验证了该构造的正确性。&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1024x161.png&quot; alt=&quot;&quot; class=&quot;wp-image-119&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1024x161.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-300x47.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-768x121.png 768w&quot; sizes=&quot;(max-width: 1024px) 100vw, 1024px&quot; /&gt; &amp;lt;/figure&amp;gt; &lt;figure class=&quot;wp-block-image is-resized&quot;&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2.png&quot; alt=&quot;&quot; class=&quot;wp-image-122&quot; width=&quot;354&quot; height=&quot;153&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2.png 749w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2-300x129.png 300w&quot; sizes=&quot;(max-width: 354px) 100vw, 354px&quot; /&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;2:55的计数为0，2：56的计数为1……系统在2：58调整为了正确的时间，按照前述，2：58的计数应该为4，因为计数为3的2：58文件被覆盖了。用WINHEX查看：&lt;figure class=&quot;wp-block-image is-resized&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1.png&quot; alt=&quot;&quot; class=&quot;wp-image-120&quot; width=&quot;591&quot; height=&quot;212&quot; srcset=&quot;https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1.png 909w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1-300x108.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1-768x275.png 768w&quot; sizes=&quot;(max-width: 591px) 100vw, 591px&quot; /&gt; &amp;lt;figcaption&amp;gt;4在前面是因为x86采取小端序，小端在前&amp;lt;/figcaption&amp;gt;&amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;这样来就验证了该结构的正确性。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">我们在写程序时，时常要用到文件操作。文件操作是一种I/O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中</summary></entry><entry><title type="html">魔偶马戏团：不幸的动画与伟大的原作</title><link href="http://localhost:4000/index.php/2019/07/17/maxituan/" rel="alternate" type="text/html" title="魔偶马戏团：不幸的动画与伟大的原作" /><published>2019-07-17T07:23:16-07:00</published><updated>2019-07-17T07:23:16-07:00</updated><id>http://localhost:4000/index.php/2019/07/17/maxituan</id><content type="html" xml:base="http://localhost:4000/index.php/2019/07/17/maxituan/">&lt;p&gt;去年的十月新番中，有一部叫 《魔偶马戏团》的漫改动画特别地吸引我的目光。&lt;figure class=&quot;wp-block-image&quot;&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://image.gcores.com/c57c5b7f-d9e7-434e-88de-a78fa889543f.jpg?x-oss-process=style/original_hsat2x&quot; alt=&quot;Related image&quot; /&gt; &amp;lt;/figure&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;为什么呢？看到那个银发小姐姐了吗？她的声优正是曾经饰演过灰原哀、绫波丽、FAYE的林原惠美。这也是林原女王多年（自《昭和元禄落语君中》）后再次在长篇电视动画中担任主役。&lt;/p&gt;
+
+&lt;div class=&quot;wp-block-image&quot;&gt;
+  &lt;figure class=&quot;aligncenter is-resized&quot;&gt;&lt;img src=&quot;http://img31.mtime.cn/ph/2016/08/25/114404.68927057_290X440X4.jpg&quot; alt=&quot;Image result for æåæ ç¾&quot; width=&quot;184&quot; height=&quot;279&quot; /&gt;&lt;figcaption&gt;林原惠美&lt;/figcaption&gt;&lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可惜，它失败的命运似乎从一开始就注定了。《魔偶马戏团》的原作是由著名漫画家藤田和日郎自1997年至2006年连载，用8年时间精心创作的、&lt;strong&gt;总计43卷、91幕&lt;/strong&gt;的超长篇漫画，而动画组只做了&lt;strong&gt;36集&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;作为对比，《进击的巨人》到马雷篇前的剧情总计&lt;strong&gt;22卷&lt;/strong&gt;，而动画已有&lt;strong&gt;59集&lt;/strong&gt;。在我的kindle上，《进击的巨人》一卷的页数在150-180之间，而《魔偶马戏团》在180-200页左右（&lt;s&gt;两位老师原谅我白嫖，为了赎罪会买正版的&lt;/s&gt;）。也就是说，实际上《魔偶马戏团》的动画集数/漫画页数比不及《进击的巨人》一半。在这样的篇幅下，动画怎么可能原汁原味地表现漫画的故事？更不要说什么对漫画有所超越了。&lt;/p&gt;
+
+&lt;p&gt;例如第14集路西尔和德托勒的对决，有很多观众无法理解路西尔的死，更有甚者说什么“1换1”之类的话。其实早在路西尔、奇、鸣海坐飞机的那一幕中，路西尔就说过，白银如果死了，那么只有两种可能，一种是由失血过多或者别的原因引起的生命之水耗尽，另一种则是白银自己已经不想继续活下去。但动画删掉了这一部分台词，导致有人认为路西尔是被杀死的。其实德托勒那一刀根本无足轻重，路西尔死亡的原因是自己大仇得报，且已经厌倦了成为“和自动傀儡对战的另一种傀儡”的生活，因此已无留意了。&lt;/p&gt;
+
+&lt;p&gt;话虽如此，这部动画还是有一点功劳的：让人们再次回忆起了《魔偶马戏团》这部伟大的漫画。&lt;/p&gt;
+
+&lt;p&gt;“伟大”这两个字用在一部少年漫身上，是否有些过于沉重了呢？不，一点也不。《魔偶马戏团》的故事不缺少沉重。这部漫画虽有一定的浪漫主义色彩，但在它的故事中，没有所谓的坏人，有的只是在无可救药的迷恋、无可救药的追求和无可救药的命运的驱使下犯下罪行的人。它虽有着少年漫常有的英雄主义色彩，却并没有将其流之于表面，在刻画英雄的过程中，作者表达了他对成为英雄的代价和英雄背负着什么这两个命题的理解。而更抽象一些的命题，如对死亡的思辨、对人生的思考等等更是点缀在整个故事之中，让整个故事有了很强的思想性。&lt;/p&gt;
+
+&lt;p&gt;即使完全抛开故事的思想性，《魔偶马戏团》的剧情也足以支撑“伟大”二字。在作为铺垫的“起”之后，在“承”的内容中作者使用多线叙事，这里的多线叙事并不是指小胜线和鸣海线的并行，而是指推进故事情节发展的内在逻辑的交织。比如探寻自动傀儡和白银的起源和真相；消灭自动傀儡；寻找ZONAHAPHA症的真相；小胜的奇妙的身世的解释；小胜会遇到爱蕾诺的解释；小胜的爷爷和父亲是什么关系；小胜父亲离奇的死亡的真相；探寻柔石的下落……在“承”的内容中，作者不断地从各个侧面组织叙事，最后在撒哈拉沙漠之战中开始收线。&lt;/p&gt;
+
+&lt;p&gt;在小胜进入正二记忆之后，整个故事进入“转”。作者将其埋下的所有故事线全部收回，将之编成了一股七彩线。他讲述了一个极为宏大的、跨越200年的故事，将所有谜雾全部一扫而空。其强烈的前后呼应和严丝合缝的设定让人拍案叫绝。在剧情这一点上，《魔偶马戏团》的伟大是毋庸置疑的。&lt;/p&gt;
+
+&lt;p&gt;作者的塑造功力更是一流。路西尔对仇人杀人诛心、鸣海背负着众白银的信念击败四大元老、法兰西奴临终前的笑、小胜继承祖父的意志、奇一人对战三千傀儡等等场景浸透着真正的感情，在作者的笔下让读者为之动容，为之流泪。&lt;/p&gt;
+
+&lt;p&gt;可惜，这样伟大的漫画永远也等不到一部伟大的动画为其作注了。&lt;/p&gt;</content><author><name>ayanamists</name></author><summary type="html">去年的十月新番中，有一部叫 《魔偶马戏团》的漫改动画特别地吸引我的目光。</summary></entry></feed>
