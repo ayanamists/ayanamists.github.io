@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>为什么需要EAP认证</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <hr>
+<h2 id="title--%e6%97%a0%e7%ba%bf%e7%bd%91%e7%bb%9c%e5%ae%89%e5%85%a82---8021x-eap%e8%ae%a4%e8%af%81date-2020-02-14author-ayanamistscategories-80211i">title : 无线网络安全（2）-- 802.1x eap认证
+date: 2020-02-14
+author: ayanamists
+categories: 802.11i</h2>
+<p>[toc]</p>
+<h2 id="%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81eap%e8%ae%a4%e8%af%81">为什么需要EAP认证</h2>
+<p>我们在[无线网络安全（1）]({% post_url 2019-11-02-802-11i-1 %})中说过，所谓的“认证”，在802.11i的RSN（或者说，WPA）中有两种方式，一种是<strong>802.1x EAP</strong>认证，一种是<strong>pre-shared-key</strong>认证，而<strong>pre-shared-key</strong>认证直接跳过认证过程，通过“四次握手”(密钥生成与分发)过程，验证<strong>AP</strong>和<strong>STA</strong>对于<strong>PSK</strong>的所有权，是一种相互认证。</p>
+<p>但<strong>pre-shared-key</strong>认证有一些缺陷。以我们的无线校园网<strong>SYSU_SECURE</strong>为例，如果采取<strong>pre-shared-key</strong>认证，那么就会遇到很多问题：</p>
+<ul>
+<li>向一个人分发一份<strong>pre-shared-key</strong>，本意是让一个人使用。但由于密钥生成与分发过程只验证AP和STA对<strong>PSK</strong>的所有权，如果这个人（A）将<strong>PSK</strong>送给了另一个人(B)，那么B也可以用这个<strong>PSK</strong>连接校园网。</li>
+<li>更新<strong>PSK</strong>时如何安全地通知全校同学？</li>
+</ul>
+<p>实际上，如果范围很大的话，我们很难控制<strong>PSK</strong>的传播。在802.11i中引入EAP，就是为了解决大规模无线网络的认证问题。</p>
+<h2 id="%e5%af%b9%e6%95%b4%e4%b8%aa8021x-eap%e8%ae%a4%e8%af%81%e6%9e%b6%e6%9e%84%e7%9a%84%e7%ae%80%e5%8d%95%e4%bb%8b%e7%bb%8d">对整个802.1x EAP认证架构的简单介绍</h2>
+<p>EAP这个东西，是古董。在PPP链路大行其道的时代，EAP就出现了。它最初就是为了解决PPP的认证问题而引入的。对它的具体描述，参见<a href="https://tools.ietf.org/html/rfc3748">rfc3748</a>。EAP叫做“可扩展认证协议”，它只规定了一个壳子，我们可以通过各种方法改造它以适应我们的要求。</p>
+<p>而802.1x，是所谓的“基于端口的介质访问控制”ieee标准。什么意思呢？就是说，在客户端没有认证之前，客户端只能通过“被控制的端口”（controlled port）和网络接入点（比如AP、交换机、路由器等等）进行通信。这就说是，在没有认证之前，网络接入点只接受客户端发来的802.1x帧（在以太网里，TYPE字段值为0x888e），其他的一律扔掉。这样一来，客户端虽然在物理上可以和网络接入点进行通信，但是只能进行认证而不能和别的终端进行通信。如果客户端进行了认证，那么，客户端就可以从不被控制的端口（uncontrolled port）通信，简单地来说就是可以上网了。这样一来，802.1x就提供了一种在以太网上进行访问控制的方法。</p>
+<p>那么，802.1x和EAP的关系是怎么样的呢？这是一个略复杂的问题。我们说，在以太网上，TYPE字段设置为0x888e就代表上层协议是802.1x。而它上层的协议包，被称为EAPOL（EAP over LAN），也就是EAP在Lan上的实现。它的包格式被802.1x规定如下：</p>
+<p><img src="https://i.loli.net/2020/02/14/qM7h4IWTSYptlAC.png" alt="1.PNG"></p>
+<p>可是令人迷惑的是，EAP协议有自己的包格式：</p>
+<p><img src="https://i.loli.net/2020/02/14/5XSJcP9bneWv7LQ.png" alt="2.PNG"></p>
+<p>那么，在以太网或者802.11无线网中，使用的包格式究竟是哪一套呢？</p>
+<p>答案很简单，这两套都使用。而且这两套包的层次是不同的。简单地说，802.1x的作用是“访问控制”，EAP的作用是“认证”。我们先按下不表，看看这个认证体系的拓扑架构：</p>
+<p><img src="https://i.loli.net/2020/02/14/TJhdktbIyjoqQuz.png" alt="3.PNG"></p>
+<p>我们发现，在这个架构里，有三个角色：</p>
+<ul>
+<li>host -- 客户</li>
+<li>Network Access Server -- <strong>NAS</strong>网络接入服务器</li>
+<li>Authentication Server -- 认证服务器</li>
+</ul>
+<p>这三个角色的作用和它的名字基本一样。那么，我们发现，在这个体系中，“认证”是委托给认证服务器做的。但认证服务器和客户的通信必须借助<strong>NAS</strong>的转发。而<strong>NAS</strong>转发的包，就是EAP包；客户和<strong>NAS</strong>的通信，是802.1x,或者说是EAPOL包, EAP包被封装在EAPOL包中；<strong>NAS</strong>和认证服务器的通信，是RADIUS包。实际上，整个协议栈可以如下示意：</p>
+<p><img src="https://slideplayer.com/slide/4802754/15/images/19/Through+the+protocol+stack.jpg" alt="4.PNG"></p>
+<p>实际上，如果仔细看802.1x-2010的话, 当EAPOL包的TYPE字段被设置为0时, 这个包的PacketBody字段就会是一个EAP包:</p>
+<p><img src="https://i.loli.net/2020/02/14/GN7PgKzLWIib3fZ.png" alt="5.PNG"></p>
+<p>我们用wireshark抓包也会看到这一点:</p>
+<p><img src="https://i.loli.net/2020/02/14/IcFwZpj9BxTDl3b.png" alt="6.PNG"></p>
+<p>为什么说EAP是用来认证的?因为EAP包是客户和认证服务器用来作认证通信的。理解了这一点，让我们暂时放下理论，先搭建一套使用EAP的802.11无线网络吧。</p>
+<h2 id="%e6%90%ad%e5%bb%ba%e4%bd%bf%e7%94%a8eap%e7%9a%8480211%e6%97%a0%e7%ba%bf%e7%bd%91%e7%bb%9c">搭建使用EAP的802.11无线网络</h2>
+<p>根据802.1x认证的构成要件，这里的无线网络至少要由三个部分：</p>
+<ul>
+<li>suplicant -- 客户</li>
+<li>Access Point -- 无线接入点<strong>AP</strong></li>
+<li>Radius Server -- Radius 服务器</li>
+</ul>
+<p>需要指出的是，这里的<strong>AP</strong>是“胖AP”，也就是说，它既担任接入点，又担任DHCP Server和Radius client，如果将AP换做所谓的“瘦AP”，那么，这里会有四个部分。</p>
+<h3 id="%e6%90%ad%e5%bb%basupplicant">搭建supplicant</h3>
+<p>现在的各种操作系统都有直接连接EAP方法的无线网的组件，这一步不用自己做什么。</p>
+<h3 id="%e6%90%ad%e5%bb%baradius-server">搭建Radius Server</h3>
+<p>这里我们使用了<a href="https://freeradius.org/">FreeRadius</a>这个开源的Radius服务器，在ubuntu18.04 LTS上搭建了Radius服务器。</p>
+<p>配置步骤如下：</p>
+<ol>
+<li>
+<p>在终端中输入</p>
+<pre><code class="language-shell"><div> sudo apt-get install freeradius
+</div></code></pre>
+</li>
+<li>
+<p>安装完成后，打开服务器，修改/etc/freeradius/users，添加一个用户，并使用radtest进行测试：</p>
+<pre><code class="language-shell"><div> echo bob Cleartext-Password := "hello" &gt;&gt; /etc/users
+ sudo freeradus -X
+ radtest bob hello 127.0.0.1 0 testing123
+</div></code></pre>
+</li>
+<li>
+<p>测试成功后，切换到/etc/freeradius/3.0/certs目录，修改client.cnf，填写自己在users中的用户相关信息（比如CN = bob），并使用make工具产生证书：</p>
+<pre><code class="language-shell"><div> vim client.cnf
+ make
+</div></code></pre>
+</li>
+<li>
+<p>修改/etc/freeradius/3.0/mods-enabled/eap文件，将ca证书改成刚刚修改好的证书：</p>
+<pre><code class="language-shell"><div> ca_file = /etc/freeradius/3.0/certs/ca.pem
+</div></code></pre>
+</li>
+<li>
+<p>修改/etc/freeradius/3.0/client.conf文件，新建一个clinet，准备与ap连接</p>
+<pre><code class="language-shell"><div> client 192.168.1.1 {
+   ipaddr = 192.168.1.1
+   proto = *
+   secret = testing123
+ }
+</div></code></pre>
+</li>
+<li>
+<p>将此服务器和AP连接到同一个网络，这里我使用的是虚拟机，所以新建了一块桥接网卡。</p>
+</li>
+</ol>
+<p>至此，Radius服务器就建好了，下面搭建AP。</p>
+<h3 id="%e6%90%ad%e5%bb%baap">搭建AP</h3>
+<p>这里我们采用了我家的家用路由器。</p>
+<ul>
+<li>型号：ASUS RT-AC87R</li>
+<li>固件版本：华硕原生固件 3.0.0.4.376_2769-g1bb5fac</li>
+</ul>
+<p>配置步骤如下：</p>
+<ol>
+<li>在<strong>无线网络-一般设置</strong>中将2.4G的验证方式设置为WPA-Enterprise。</li>
+<li>在<strong>无线网络-Radius设置</strong>中，填写Radius服务器地址、端口、密码等信息。</li>
+</ol>
+<p>至此，AP配置完成。</p>
+<h3 id="%e8%af%b4%e6%98%8e">说明</h3>
+<p>freeradius是一个很强的服务器，如果搭建到了这里，它的默认设置就几乎可以支持市面上常见的所有EAP方法，包括EAP-MD5、EAP-TLS、EAP-TTLS、EAP-PEAP等。</p>
+<h2 id="%e8%bf%9e%e6%8e%a5%e5%88%b0%e8%bf%99%e4%b8%aa%e6%97%a0%e7%ba%bf%e7%bd%91%e8%b7%af">连接到这个无线网路</h2>
+<h3 id="%e4%bd%bf%e7%94%a8peap%e6%96%b9%e6%b3%95">使用PEAP方法</h3>
+<p>在Windows平台和ios平台下，直接连接上面的无线网络，操作系统会默认使用PEAP方法。在GUI中输入用户名和密码即可。</p>
+<h3 id="%e4%bd%bf%e7%94%a8eap%ef%bc%8dtls%e6%96%b9%e6%b3%95">使用EAP－TLS方法</h3>
+<p>为什么要使用EAP－TLS方法呢？因为PEAP方法会第一阶段会创造tls信道，第二阶段分析起来不太方便。我们对TLS也相当熟悉，所以决定使用EAP-TLS方法进行分析整个连接过程。如果要分析，就必须先连接上。这里使用Windows平台进行连接。</p>
+<p>在上一步的配置中，freeradius会产生一堆证书：</p>
+<p><img src="https://i.loli.net/2020/02/14/h2xVkQqc7KiEOUT.png" alt="7.PNG"></p>
+<p>将clinet.p12复制一份到windows平台下，双击，进行安装。注意选择“标记为可导出的证书”选项。</p>
+<p><img src="https://i.loli.net/2020/02/14/brgWiSUOe2FK6nX.png" alt="8.PNG"></p>
+<p>然后在控制面版中新建一个无线连接：</p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20df.png" alt=""></p>
+<p>填写相关参数，并选择<strong>下一步</strong>：</p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e2.png" alt=""></p>
+<p>选择<strong>更改连接设置</strong>：</p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e4.png" alt=""></p>
+<p>在这个界面需要更改两个内容：</p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e6.png" alt=""></p>
+<ol>
+<li>
+<p>在<strong>高级设置</strong>中将<strong>指定身份验证模式</strong>改为<strong>用户身份验证</strong></p>
+<p><img src="https://pic.downk.cc/item/5e4647ff48b86553ee0f1597.png" alt="14.png"></p>
+</li>
+<li>
+<p>在<strong>选择网络身份验证方法</strong>中选择<strong>Microsoft智能卡或其他证书</strong>，并点击<strong>设置</strong></p>
+<p>在<strong>设置</strong>页面取消对<strong>通过验证证书验证服务器的身份</strong>的选择：</p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e8.png" alt=""></p>
+</li>
+</ol>
+<p>然后，在GUI中直接连接。</p>
+<h2 id="%e5%88%86%e6%9e%90eap%ef%bc%8dtls%e6%96%b9%e6%b3%95%e7%9a%84%e5%85%a8%e8%bf%87%e7%a8%8b">分析EAP－TLS方法的全过程</h2>
+<p>在刚才的连接过程中，我们可以看到，整个连接很繁琐，这是因为EAP-TLS使用了<strong>Client Certificate</strong>来验证客户端的有效性。</p>
+
+    </body>
+    </html>
