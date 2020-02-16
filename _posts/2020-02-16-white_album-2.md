@@ -271,6 +271,10 @@ input->dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN 
 input->dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN;
 ```
 
-结果是成功的！现在想到这件事，我的脸上仍然会浮现开心的笑容。这就是逆向的魅力所在吧！
+结果是成功的！效果如下：
+
+![gif](../assets/what1.gif)
+
+现在想到这件事，我的脸上仍然会浮现开心的笑容。这就是逆向的魅力所在吧！
 
 现在，我们获得了自动化的“手”，下面，我们要获得自动化的“眼睛”。
