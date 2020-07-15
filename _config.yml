@@ -27,7 +27,7 @@ twitter_username: ayanamists
 github_username:  ayanamists
 
 # Build settings
-theme: minima
+theme: jekyll-theme-cayman
 plugins:
   - jekyll-feed
 
