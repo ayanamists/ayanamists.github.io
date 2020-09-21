@@ -173,7 +173,7 @@ $$
 如果你这样认为，那么把它写成无歧义式就应该是这样的：
 
 $$
-y(t)=\int_{-\infin}^{\infin}x(\tau)h(t-\tau)d\tau \\
+y(t)=\int_{-\infty}^{\infty}x(\tau)h(t-\tau)d\tau \\
 y = x * h
 $$
 
