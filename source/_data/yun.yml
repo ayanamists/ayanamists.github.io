@@ -1,0 +1,16 @@
+mode: auto
+banner:
+  enable: false
+
+notice:
+  enable: false
+  content: Thanks for playing my game.
+
+reward:
+  enable: false
+
+say:
+  enable: false
+
+pages:
+social:
