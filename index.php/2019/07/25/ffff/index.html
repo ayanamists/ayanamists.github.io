@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Ayanamists"><meta name="copyright" content="Ayanamists"><meta name="generator" content="Hexo 5.2.0"><meta name="theme" content="hexo-theme-yun"><title>编写程序验证《全部成为F》中的巧妙trick | AyanamistsBlog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.21/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_ed8vp4atwoj.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"云游君的小站","version":"1.2.0","mode":"auto","copycode":true,"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="我们在写程序时，时常要用到文件操作。文件操作是一种I&#x2F;O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中 HANDLE CreateFileA(   LPCSTR                lpFileName,   DWORD                 dwDesiredAccess,   DWORD                 dwShareMode,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编写程序验证《全部成为F》中的巧妙trick">
+<meta property="og:url" content="http://example.com/index.php/2019/07/25/ffff/index.html">
+<meta property="og:site_name" content="AyanamistsBlog">
+<meta property="og:description" content="我们在写程序时，时常要用到文件操作。文件操作是一种I&#x2F;O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中 HANDLE CreateFileA(   LPCSTR                lpFileName,   DWORD                 dwDesiredAccess,   DWORD                 dwShareMode,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1024x161.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1.png">
+<meta property="article:published_time" content="2019-07-25T03:48:18.000Z">
+<meta property="article:modified_time" content="2020-10-11T08:52:29.464Z">
+<meta property="article:author" content="Ayanamists">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1024x161.png"><script src="/js/ui/mode.js"></script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Ayanamists"><img width="96" loading="lazy" src="/Yun.png" alt="Ayanamists"></a><div class="site-author-name"><a href="/about/">Ayanamists</a></div><a class="site-name" href="/about/site.html">AyanamistsBlog</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">39</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">0</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">This post does not have a Table of Contents</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/index.php/2019/07/25/ffff/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="AyanamistsBlog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">编写程序验证《全部成为F》中的巧妙trick</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-07-25 03:48:18" itemprop="dateCreated datePublished" datetime="2019-07-25T03:48:18+00:00">2019-07-25</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2020-10-11 08:52:29" itemprop="dateModified" datetime="2020-10-11T08:52:29+00:00">2020-10-11</time></div><div class="post-classify"><span class="post-category"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span> <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/C-C/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">C/C++</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/C-C/%E5%8A%A8%E7%94%BB/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">动画</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">未分类</span></a></span></span></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>我们在写程序时，时常要用到文件操作。文件操作是一种I/O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">HANDLE CreateFileA(
+  LPCSTR                lpFileName,
+  DWORD                 dwDesiredAccess,
+  DWORD                 dwShareMode,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  DWORD                 dwCreationDisposition,
+  DWORD                 dwFlagsAndAttributes,
+  HANDLE                hTemplateFile
+);
+
+</pre>
+<p>倒数第二个参数设置为 CREATE_ALWAYS时，创建的新文件会覆盖原有的同名文件。《终将成为F》就利用了类似的思想，构造了一个非常巧妙的结构。</p>
+<p>假设一个监控程序P，它在每分钟开始的时刻创建监控文件，这个文件记录该分钟内的事件。考虑以下情况：在程序开始运行时，系统时间比标准时间快1分钟（这里的“快”指数值比标准时间大）。在程序运行的过程中，系统通过校准，将时间调整为了标准时间，会发生什么呢？</p>
+<p>假设调整为标准时间的时刻是a🅱️c（标准时间），那么该系统错误显示的时间就是a:(b+1):c。假设P在a:(b+1):00（系统时间）时刻创建的文件名为a:b+1，那么在系统正确显示后，在新的a:b+1时刻，系统会创建新的a:b+1文件。这样一来，实际上的a:b（标准时间）文件就被覆盖了。《全部成为F》的作者就用这样的构造，做出了一个密室。具体情况可参见小说或动画。</p>
+<p>我在WINDOWS环境下编写了以下程序来验证这个构造的正确性：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">SYSTEMTIME time;
+GetLocalTime(&time);</pre>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">while (true)
+{
+    while (true)
+    {
+        GetLocalTime(&time);
+        if (time.wSecond == 0 && time.wMilliseconds == 0)
+        {
+            break;
+        }
+    }
+
+    wchar_t* name = (wchar_t*)malloc(0xff);
+    memset(name, 0, 0xff);
+    wsprintf(name, L"Time is %02d：%02d", time.wHour, time.wMinute);
+
+    HANDLE hFile = CreateFile(name, GENERIC_READ | GENERIC_WRITE, 
+        0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        GetError(0);
+        exit(-1);
+    }
+
+    DWORD real = 0;     
+
+    if (WriteFile(hFile, &count, 4, &real, NULL) == false)
+    {
+        GetError(1);
+        exit(-1);
+    }
+
+    Sleep(1);
+    count++;
+    CloseHandle(hFile);
+    free(name);
+}</pre>
+<p>在运行前，我将系统时间调快了一分钟，并在运行时开启自动对时。结果成功地验证了该构造的正确性。<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1024x161.png" alt="" class="wp-image-119" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1024x161.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-300x47.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-768x121.png 768w" sizes="(max-width: 1024px) 100vw, 1024px" / loading="lazy"> </figure> <figure class="wp-block-image is-resized"><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2.png" alt="" class="wp-image-122" width="354" height="153" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2.png 749w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-2-300x129.png 300w" sizes="(max-width: 354px) 100vw, 354px" / loading="lazy"></figure></p>
+<p>2:55的计数为0，2：56的计数为1……系统在2：58调整为了正确的时间，按照前述，2：58的计数应该为4，因为计数为3的2：58文件被覆盖了。用WINHEX查看：<figure class="wp-block-image is-resized"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1.png" alt="" class="wp-image-120" width="591" height="212" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1.png 909w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1-300x108.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/07/image-1-768x275.png 768w" sizes="(max-width: 591px) 100vw, 591px" / loading="lazy"> <figcaption>4在前面是因为x86采取小端序，小端在前</figcaption></figure></p>
+<p>这样来就验证了该结构的正确性。</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/index.php/2019/07/25/ffff/" title="编写程序验证《全部成为F》中的巧妙trick">http://example.com/index.php/2019/07/25/ffff/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless stating additionally.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/index.php/2019/08/06/iredmail/" rel="prev" title="使用iRedMail配置邮箱服务器"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">使用iRedMail配置邮箱服务器</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/index.php/2019/07/17/maxituan/" rel="next" title="魔偶马戏团：不幸的动画与伟大的原作"><span class="post-nav-text">魔偶马戏团：不幸的动画与伟大的原作</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div id="comment"><div class="comment-tooltip text-center"><span>点击按钮跳转 GitHub Issues 评论。</span><br><span>若没有本文 Issue，您可以使用 Comment 模版新建。</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/YunYouJun/yunyoujun.github.io/issues?q=is:issue+编写程序验证《全部成为F》中的巧妙trick">GitHub Issues</a></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.2.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.2.0</span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>

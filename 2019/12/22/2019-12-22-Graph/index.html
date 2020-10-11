@@ -1,0 +1,890 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Ayanamists"><meta name="copyright" content="Ayanamists"><meta name="generator" content="Hexo 5.2.0"><meta name="theme" content="hexo-theme-yun"><title>数据结构 -- 图 -- 笔记 | AyanamistsBlog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.21/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_ed8vp4atwoj.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="shortcut icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"example.com","root":"/","title":"云游君的小站","version":"1.2.0","mode":"auto","copycode":true,"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><meta name="description" content="前言 图的定义  图的一般定义 几种特殊的图 连通性  无向图 有向图   生成树   图的存储表示  ADT 与 抽象类接口 （逆）邻接表  邻接表     图上的8种泛型算法  前言 图的深度优先搜索算法 图的广度优先搜索算法 用深度优先搜索判断是否有环 用深度优先搜索进行拓扑排序 最小生成树–Prim算法 最小生成树 – Kruskal算法 最短路径算法 – Dijkstra算法 最短路径">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构 -- 图 -- 笔记">
+<meta property="og:url" content="http://example.com/2019/12/22/2019-12-22-Graph/index.html">
+<meta property="og:site_name" content="AyanamistsBlog">
+<meta property="og:description" content="前言 图的定义  图的一般定义 几种特殊的图 连通性  无向图 有向图   生成树   图的存储表示  ADT 与 抽象类接口 （逆）邻接表  邻接表     图上的8种泛型算法  前言 图的深度优先搜索算法 图的广度优先搜索算法 用深度优先搜索判断是否有环 用深度优先搜索进行拓扑排序 最小生成树–Prim算法 最小生成树 – Kruskal算法 最短路径算法 – Dijkstra算法 最短路径">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-22T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-11T08:52:29.468Z">
+<meta property="article:author" content="Ayanamists">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Ayanamists"><img width="96" loading="lazy" src="/Yun.png" alt="Ayanamists"></a><div class="site-author-name"><a href="/about/">Ayanamists</a></div><a class="site-name" href="/about/site.html">AyanamistsBlog</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">39</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">0</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">2.</span> <span class="toc-text"> 图的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E4%B8%80%E8%88%AC%E5%AE%9A%E4%B9%89"><span class="toc-number">2.1.</span> <span class="toc-text"> 图的一般定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%A0%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%9A%84%E5%9B%BE"><span class="toc-number">2.2.</span> <span class="toc-text"> 几种特殊的图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text"> 连通性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E5%90%91%E5%9B%BE"><span class="toc-number">2.3.1.</span> <span class="toc-text"> 无向图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E5%90%91%E5%9B%BE"><span class="toc-number">2.3.2.</span> <span class="toc-text"> 有向图</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%91"><span class="toc-number">2.4.</span> <span class="toc-text"> 生成树</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E5%AD%98%E5%82%A8%E8%A1%A8%E7%A4%BA"><span class="toc-number">3.</span> <span class="toc-text"> 图的存储表示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#adt-%E4%B8%8E-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.1.</span> <span class="toc-text"> ADT 与 抽象类接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%86%E9%82%BB%E6%8E%A5%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text"> （逆）邻接表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%82%BB%E6%8E%A5%E8%A1%A8"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 邻接表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E4%B8%8A%E7%9A%848%E7%A7%8D%E6%B3%9B%E5%9E%8B%E7%AE%97%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text"> 图上的8种泛型算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80-2"><span class="toc-number">4.1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text"> 图的深度优先搜索算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95"><span class="toc-number">4.3.</span> <span class="toc-text"> 图的广度优先搜索算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%9C%89%E7%8E%AF"><span class="toc-number">4.4.</span> <span class="toc-text"> 用深度优先搜索判断是否有环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%E8%BF%9B%E8%A1%8C%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F"><span class="toc-number">4.5.</span> <span class="toc-text"> 用深度优先搜索进行拓扑排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91prim%E7%AE%97%E6%B3%95"><span class="toc-number">4.6.</span> <span class="toc-text"> 最小生成树–Prim算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-kruskal%E7%AE%97%E6%B3%95"><span class="toc-number">4.7.</span> <span class="toc-text"> 最小生成树 – Kruskal算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95-dijkstra%E7%AE%97%E6%B3%95"><span class="toc-number">4.8.</span> <span class="toc-text"> 最短路径算法 – Dijkstra算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95-flyod%E7%AE%97%E6%B3%95"><span class="toc-number">4.9.</span> <span class="toc-text"> 最短路径算法 – Flyod算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E4%B8%93%E7%94%A8%E7%AE%97%E6%B3%95-%E9%82%BB%E6%8E%A5%E8%A1%A8%E4%B8%8A%E7%9A%84%E5%A0%86%E4%BC%98%E5%8C%96dijkstra%E7%AE%97%E6%B3%95%E5%92%8Cprim%E7%AE%97%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text"> 两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="http://example.com/2019/12/22/2019-12-22-Graph/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="AyanamistsBlog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">数据结构 -- 图 -- 笔记</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-12-22 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-22T00:00:00+00:00">2019-12-22</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2020-10-11 08:52:29" itemprop="dateModified" datetime="2020-10-11T08:52:29+00:00">2020-10-11</time></div><div class="post-classify"></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><ul>
+<li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
+<li><a href="#%e5%9b%be%e7%9a%84%e5%ae%9a%e4%b9%89">图的定义</a>
+<ul>
+<li><a href="#%e5%9b%be%e7%9a%84%e4%b8%80%e8%88%ac%e5%ae%9a%e4%b9%89">图的一般定义</a></li>
+<li><a href="#%e5%87%a0%e7%a7%8d%e7%89%b9%e6%ae%8a%e7%9a%84%e5%9b%be">几种特殊的图</a></li>
+<li><a href="#%e8%bf%9e%e9%80%9a%e6%80%a7">连通性</a>
+<ul>
+<li><a href="#%e6%97%a0%e5%90%91%e5%9b%be">无向图</a></li>
+<li><a href="#%e6%9c%89%e5%90%91%e5%9b%be">有向图</a></li>
+</ul>
+</li>
+<li><a href="#%e7%94%9f%e6%88%90%e6%a0%91">生成树</a></li>
+</ul>
+</li>
+<li><a href="#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8%e8%a1%a8%e7%a4%ba">图的存储表示</a>
+<ul>
+<li><a href="#adt-%e4%b8%8e-%e6%8a%bd%e8%b1%a1%e7%b1%bb%e6%8e%a5%e5%8f%a3">ADT 与 抽象类接口</a></li>
+<li><a href="#%e9%80%86%e9%82%bb%e6%8e%a5%e8%a1%a8">（逆）邻接表</a>
+<ul>
+<li><a href="#%e9%82%bb%e6%8e%a5%e8%a1%a8">邻接表</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%e5%9b%be%e4%b8%8a%e7%9a%848%e7%a7%8d%e6%b3%9b%e5%9e%8b%e7%ae%97%e6%b3%95">图上的8种泛型算法</a>
+<ul>
+<li><a href="#%e5%89%8d%e8%a8%80-1">前言</a></li>
+<li><a href="#%e5%9b%be%e7%9a%84%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e7%ae%97%e6%b3%95">图的深度优先搜索算法</a></li>
+<li><a href="#%e5%9b%be%e7%9a%84%e5%b9%bf%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e7%ae%97%e6%b3%95">图的广度优先搜索算法</a></li>
+<li><a href="#%e7%94%a8%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e5%88%a4%e6%96%ad%e6%98%af%e5%90%a6%e6%9c%89%e7%8e%af">用深度优先搜索判断是否有环</a></li>
+<li><a href="#%e7%94%a8%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e8%bf%9b%e8%a1%8c%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f">用深度优先搜索进行拓扑排序</a></li>
+<li><a href="#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91--prim%e7%ae%97%e6%b3%95">最小生成树–Prim算法</a></li>
+<li><a href="#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91----kruskal%e7%ae%97%e6%b3%95">最小生成树 – Kruskal算法</a></li>
+<li><a href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95----dijkstra%e7%ae%97%e6%b3%95">最短路径算法 – Dijkstra算法</a></li>
+<li><a href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95----flyod%e7%ae%97%e6%b3%95">最短路径算法 – Flyod算法</a></li>
+</ul>
+</li>
+<li><a href="#%e4%b8%a4%e4%b8%aa%e4%b8%93%e7%94%a8%e7%ae%97%e6%b3%95----%e9%82%bb%e6%8e%a5%e8%a1%a8%e4%b8%8a%e7%9a%84%e5%a0%86%e4%bc%98%e5%8c%96dijkstra%e7%ae%97%e6%b3%95%e5%92%8cprim%e7%ae%97%e6%b3%95">两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</a></li>
+</ul>
+<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>这一章，我们学习了图这种数据结构。本笔记主要完成了以下工作：</p>
+<ul>
+<li>总结了图的各种知识</li>
+<li>实现了邻接矩阵和邻接表定义的Graph类</li>
+<li>实现了IndexMapping 类，使得下面的泛型图算法成为可能（把元素内容和标记分开，下面的泛型图算法实现在整形标记上）</li>
+<li>实现了8个泛型图算法，并进行了简单测试，分别是
+<ul>
+<li>DFS 深度优先搜索</li>
+<li>BFS 广度优先搜索</li>
+<li>通过深度优先搜索判断图中是否有环</li>
+<li>通过深度优先搜索进行拓扑排序</li>
+<li>Prim最小生成树算法</li>
+<li>Kruskal最小生成树算法</li>
+<li>Dijskstra 最短路径算法</li>
+<li>Floyd 最短路径算法</li>
+</ul>
+</li>
+<li>实现了两个专用图算法，分别是
+<ul>
+<li>邻接表上的堆优化Dijkstra算法</li>
+<li>邻接表上的堆优化Prim算法</li>
+</ul>
+</li>
+<li>给出了几个简单的图论算法应用</li>
+</ul>
+<h2 id="图的定义"><a class="markdownIt-Anchor" href="#图的定义"></a> 图的定义</h2>
+<h3 id="图的一般定义"><a class="markdownIt-Anchor" href="#图的一般定义"></a> 图的一般定义</h3>
+<blockquote>
+<p>一张图 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">G</span></span></span></span> 是一个二元组<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>V</mi><mo separator="true">,</mo><mi>E</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(V,E)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span></span></span></span>称为顶点集，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span></span></span></span>称为边集。它们亦可写成<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi><mo stretchy="false">(</mo><mi>G</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">V(G)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mopen">(</span><span class="mord mathdefault">G</span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mo stretchy="false">(</mo><mi>G</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">E(G)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">(</span><span class="mord mathdefault">G</span><span class="mclose">)</span></span></span></span>。 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mi>E</mi></mstyle></mrow><annotation encoding="application/x-tex">{\displaystyle E}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span></span></span></span></span>的元素是一个二元组数对，用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mstyle></mrow><annotation encoding="application/x-tex">{\displaystyle (x,y)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span></span>表示，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle scriptlevel="0" displaystyle="true"><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo>∈</mo><mi>V</mi></mstyle><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo>∈</mo><mi>V</mi></mrow><annotation encoding="application/x-tex">{\displaystyle x,y\in V}x,y \in V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span></span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span></span></span></span>。</p>
+</blockquote>
+<ul>
+<li>从定义中可以看到，存储结构的设计主要在于表征此集合关系</li>
+<li>可以从边有无方向、是否允许重边（两条或多条边的起止点相同）、是否允许环、边是否带权将图分为多种</li>
+<li>值得一提的是，树是连通无回路的图</li>
+</ul>
+<h3 id="几种特殊的图"><a class="markdownIt-Anchor" href="#几种特殊的图"></a> 几种特殊的图</h3>
+<ul>
+<li>n-阶完全图(complete graph)<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>K</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">K_{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> − <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>个顶点两两之间都有一条边，每个顶点的度数都<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi mathvariant="normal">−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">n−1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mord">−</span><span class="mord">1</span></span></span></span> ◦ 边的总数目为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mi mathvariant="normal">−</mi><mn>1</mn><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">n(n−1)/2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">n</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mord">−</span><span class="mord">1</span><span class="mclose">)</span><span class="mord">/</span><span class="mord">2</span></span></span></span>.</li>
+<li>二部图 - 顶点集可以划分为两个集合<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">v_{i}, v_{j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>，且<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">v_{i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>与<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">v_{j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>之间没有边</li>
+</ul>
+<h3 id="连通性"><a class="markdownIt-Anchor" href="#连通性"></a> 连通性</h3>
+<h4 id="无向图"><a class="markdownIt-Anchor" href="#无向图"></a> 无向图</h4>
+<ul>
+<li>
+<p>一个无向图是联通的，当且仅当每两个点都是联通的。</p>
+<ul>
+<li>两个点是联通的，当且仅当他们之间有路径。</li>
+</ul>
+</li>
+<li>
+<p>如果一个图不是联通的，那么它的最大联通子图就叫做联通分量。</p>
+</li>
+<li>
+<p>可以直观地看到，一个无向图联通的最小边数为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></p>
+</li>
+</ul>
+<h4 id="有向图"><a class="markdownIt-Anchor" href="#有向图"></a> 有向图</h4>
+<ul>
+<li>一个有向图是弱联通的，当且仅当把它对应的无向图是联通的。</li>
+<li>一个有向图是强联通的，当且仅当每两个点都是联通的。</li>
+<li>可以直观地看到，一个有向图强联通的最小边数为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span></li>
+</ul>
+<h3 id="生成树"><a class="markdownIt-Anchor" href="#生成树"></a> 生成树</h3>
+<ul>
+<li>一般仅研究无向图的生成树（有向图的“生成树”实际上不能看作树，有术语“最小树形图”来描述此结构，这里不表）</li>
+<li>无向图<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>V</mi><mo separator="true">,</mo><mi>E</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G(V, E)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">G</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mclose">)</span></span></span></span>的生成树是一颗含有所有顶点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span></span></span></span>的，边属于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span></span></span></span>的树。</li>
+<li>可以看作<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">G</span></span></span></span>的极小联通子图。</li>
+<li>生成树是STP协议的基础。STP 协议就是通过构造网络拓扑图中的生成树来解决环路问题，具体协议内容参见IEEE 802.1D</li>
+</ul>
+<h2 id="图的存储表示"><a class="markdownIt-Anchor" href="#图的存储表示"></a> 图的存储表示</h2>
+<p>图的存储结构主要分为三种：</p>
+<ul>
+<li>（逆）邻接表</li>
+<li>邻接矩阵</li>
+<li>关联矩阵</li>
+</ul>
+<p>教师还讲述了两种：</p>
+<ul>
+<li>有向图的十字链表</li>
+<li>无向图的邻接多重表</li>
+</ul>
+<p>下面只研究（逆）邻接表和邻接矩阵, 并实现我们自己的Graph C++类。但在此之前，我们首先要知道一个Graph类需要有哪些方法。</p>
+<h3 id="adt-与-抽象类接口"><a class="markdownIt-Anchor" href="#adt-与-抽象类接口"></a> ADT 与 抽象类接口</h3>
+<ul>
+<li>ADT Name: Graph
+<ul>
+<li>Description: …</li>
+<li>Invariants:
+<ol>
+<li>Empty graph: number of vertices is 0; number of edges is 0.</li>
+<li>Self-loops are not allowed.</li>
+</ol>
+</li>
+<li>Attributes:
+<ul>
+<li>number of vertices</li>
+<li>number of edges.</li>
+</ul>
+</li>
+<li>Operations:
+<ul>
+<li>Graph() …</li>
+<li>addVertex(Vertex v) …</li>
+<li>addEdge(Vertex v_1, Vertex v_2) …</li>
+<li>removeVertex(Vertex v) …</li>
+<li>removeVertex(Vertex v) …</li>
+<li>removeEdge(Vertex v_1, Vertex v_2) …</li>
+<li>getNeighbors(Vertex v)
+<ul>
+<li>returns: a collection containing the Vertices incident on v</li>
+</ul>
+</li>
+<li>getNumberOfVertices()</li>
+<li>getNumberOfEdges()</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>基于以上的ADT，我们写一个抽象类Graph():</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class Vertex&gt;
+class Graph &#123;
+public:
+	virtual void addVertex(Vertex&amp; v) &#x3D; 0;
+	virtual void addEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#x3D; 0;
+	virtual void removeVertex(Vertex&amp; v) &#x3D; 0;
+	virtual void removeEdge(Vertex&amp; v_1, Vertex &amp; v_2) &#x3D; 0;
+	virtual std::vector&lt;Vertex&gt; getNeighbors(Vertex&amp; v) &#x3D; 0;
+	virtual uint32_t getNumberOfVertices() &#x3D; 0;
+	virtual uint32_t getNumberOfEdges() &#x3D; 0;
+	virtual void clearGraph() &#x3D; 0;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="逆邻接表"><a class="markdownIt-Anchor" href="#逆邻接表"></a> （逆）邻接表</h3>
+<h4 id="邻接表"><a class="markdownIt-Anchor" href="#邻接表"></a> 邻接表</h4>
+<p>邻接表是指把图存到一个线性表中，这个线性表的每一个元素都是一个链表，链表的第一个元素是一个图中的顶点，其他元素是和这个顶点相邻的顶点。线性表中的元素不重复地覆盖所有图中的顶点。<br />
+示意图：</p>
+<img src = "./pic/2.png" loading="lazy">
+<p>从描述中可以看出，这个结构实际上用于有向图。<br />
+这个结构实现起来很简单，如下所示：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value&gt;
+class stdVertex &#123;
+public:
+	value val;
+	stdVertex() &#123; val &#x3D; 0; &#125;
+	stdVertex(value val) &#123;
+		this-&gt;val &#x3D; val;
+	&#125;
+	bool operator &#x3D;&#x3D;(stdVertex&lt;value&gt; other) &#123;
+		return this-&gt;val &#x3D;&#x3D; other.val;
+	&#125;
+&#125;;
+
+&#x2F;*
+ * here we use Vertex class as node,
+ * to correctly implement this class, you should follow these rules:
+ * 1. overload &#x3D;(), or don&#39;t use anything could cause deep copy&#x2F;shallow copy problem.
+ * 2. implement these methods:
+ *    1. getValue()
+ *&#x2F;
+template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;, class VertexInner &#x3D; stdVertex&lt;value&gt;&gt;
+class ListGraph : public Graph&lt;Vertex&gt; &#123;
+public:
+	void addVertex(Vertex&amp; v) &#123;
+		std::list&lt;VertexInner&gt; vec_list;
+		vec_list.push_back(VertexInner(v));
+		this-&gt;adjList.push_back(vec_list);
+	&#125;
+
+	void addEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#123;
+		auto i &#x3D; std::find_if(this-&gt;adjList.begin(), this-&gt;adjList.end(),
+			[&amp;](auto j) &#123;if (j.front() &#x3D;&#x3D; v_1) &#123; return true; &#125;&#125;);
+		if (i &#x3D;&#x3D; this-&gt;adjList.end()) &#123;
+			throw std::invalid_argument(&quot;v_1 is not a vertex in list!&quot;);
+		&#125;
+		(*i).push_back(v_2);
+	&#125;
+
+	void removeVertex(Vertex&amp; v) &#123;
+		bool hit &#x3D; false;
+		for (auto i &#x3D; this-&gt;adjList.begin(); i !&#x3D; this-&gt;adjList.end();) &#123;
+			if ((*i).front() &#x3D;&#x3D; v) &#123;
+				i &#x3D; this-&gt;adjList.erase(i);
+				hit &#x3D; true;
+			&#125;
+			else &#123;
+				for (auto j &#x3D; (*i).begin(); j !&#x3D; (*i).end();) &#123;
+					if (*j &#x3D;&#x3D; v) &#123;
+						j &#x3D; (*i).erase(j);
+					&#125;
+					else &#123; ++j; &#125;
+				&#125;
+				i++;
+			&#125;
+		&#125;
+		if (!hit) &#123;
+			throw std::invalid_argument(&quot;can&#39;t find vertex!\n&quot;);
+		&#125;
+	&#125;
+
+	void removeEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#123;
+		for (auto i &#x3D; adjList.begin(); i !&#x3D; adjList.end(); ++i) &#123;
+			&#x2F;* find v_1 *&#x2F;
+			if ((*i).front() &#x3D;&#x3D; v_1) &#123;
+				for (auto j &#x3D; (*i).begin(); j !&#x3D; (*i).end();) &#123;
+					if ((*j) &#x3D;&#x3D; v_2) &#123;
+						&#x2F;* find v_2 *&#x2F;
+						j &#x3D; (*i).erase(j);
+						goto END;
+					&#125;
+					else &#123;
+						j++;
+					&#125;
+				&#125;
+			&#125;
+		&#125;
+		throw std::invalid_argument(&quot;can&#39;t find Edge!\n&quot;);
+	END:
+		return;
+	&#125;
+
+	std::vector&lt;Vertex&gt; getNeighbors(Vertex&amp; v_1) &#123;
+		auto i &#x3D; adjList[0];
+		std::for_each(this-&gt;adjList.begin(), this-&gt;adjList.end(),
+			[&amp;](auto list) &#123;if (list.front() &#x3D;&#x3D; v_1) &#123; i &#x3D; list; &#125;&#125;);
+
+		std::vector&lt;Vertex&gt; ret;
+		std::for_each(i.begin(), i.end(), [&amp;](auto j) &#123;ret.push_back(j); &#125;);
+		return ret;
+	&#125;
+
+	uint32_t getNumberOfVertices() &#123;
+		return this-&gt;adjList.size();
+	&#125;
+	
+	uint32_t getNumberOfEdges() &#123;
+		auto sum &#x3D; 0;
+		std::for_each(this-&gt;adjList.begin(), this-&gt;adjList.end(),
+			[&amp;sum](auto i) &#123;sum +&#x3D; i.size() - 1; &#125;);
+		return sum;
+	&#125;
+
+	void clearGraph () &#123;
+		adjList.clear();
+	&#125;
+protected:
+	std::vector&lt;std::list&lt;VertexInner&gt; &gt; adjList;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个时候问题来了，在这个设计下，我们如何实现带权图呢？</p>
+<p>呵呵，这个问题我在设计之初就想到了。</p>
+<p>首先我们考虑，只要将VertexInner类的参数改成下面这个类，实际上就实现了带权图：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value&gt;
+class ValuedVertex : public stdVertex&lt;value&gt; &#123;
+	&#x2F;* edge_value represents the value of edge 
+	 * between the former vertex and that vertex
+	 * if this vertex is the first vertex, 
+	 * then edge_value MUST be INT_MAX
+	 *&#x2F;
+	uint32_t edge_value;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>那么，我们只要继承一下ListGraph，再重载一个addEdge方法就可以了。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt; &gt;
+class ValuedListGraph : public ListGraph&lt;value, stdVertex&lt;value&gt;, ValuedVertex&lt;value&gt;&gt; &#123;
+public:
+	void addEdge(Vertex v_1, Vertex v_2, uint32_t _value) &#123;
+		auto i &#x3D; std::find_if(this-&gt;adjList.begin(), this-&gt;adjList.end(),
+			[&amp;](auto j) &#123;if (j.front() &#x3D;&#x3D; v_1) &#123; return true; &#125;&#125;);
+		if (i &#x3D;&#x3D; this-&gt;adjList.end()) &#123;
+			throw std::invalid_argument(&quot;v_1 is not a vertex in list!&quot;);
+		&#125;
+		ValuedVertex&lt;value&gt; vex(v_2);
+		vex.edge_value &#x3D; _value; 
+		(*i).push_back(vex);
+	&#125;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样邻接表就实现好了。邻接矩阵的实现其实更加简单：</p>
+<p>由于邻接矩阵天生就适合带权图（矩阵的元素是数），所以我们直接实现为带权图。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#define UNCONNECTED INT_MAX
+template &lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;&gt;
+class MatrixGraph : public IndexGraph&lt;value, Vertex&gt; &#123;
+public:
+	MatrixGraph()&#123;&#125;
+	void addVertex(Vertex&amp; v) &#123;
+		&#x2F;* add colunm *&#x2F;
+		for (auto i &#x3D; matrix.begin(); i &lt; matrix.end(); ++i) &#123;
+			(*i).push_back(UNCONNECTED);
+		&#125;
+
+		&#x2F;* add row *&#x2F;
+		size_t vec_size &#x3D; matrix.size() + 1;
+		std::vector&lt;uint32_t&gt; vec(vec_size, UNCONNECTED);
+		vec[vec_size - 1] &#x3D; 0;
+		matrix.push_back(vec);
+
+		this-&gt;addVertexToMap(v);
+	&#125;
+	
+	void addEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#123; addEdge(v_1, v_2, 1); &#125;
+
+	void addEdge(Vertex&amp; v_1, Vertex&amp; v_2, int value) &#123;
+		uint32_t i &#x3D; this-&gt;getIndex(v_1);
+		uint32_t j &#x3D; this-&gt;getIndex(v_2);
+		matrix[i][j] &#x3D; value;
+	&#125;
+
+	void removeVertex(Vertex&amp; v) &#123;
+	&#125;
+
+	void removeEdge(Vertex&amp; v_1, Vertex&amp; v_2)&#123;&#125;
+
+	std::vector&lt;Vertex&gt; getNeighbors(Vertex&amp; v) &#123;
+		std::vector&lt;Vertex&gt; ret;
+		uint32_t i &#x3D; this-&gt;getIndex(v);
+		for (auto j &#x3D; 0u; j &lt; this-&gt;matrix.size();++j) &#123;
+			if (this-&gt;_if_connected(i, j)) &#123;
+				ret.push_back(Vertex(this-&gt;getValue(j)));
+			&#125;
+		&#125;
+		return ret;
+	&#125;
+
+	uint32_t getNumberOfVertices() &#123;
+		return matrix.size();
+	&#125;
+
+	uint32_t getNumberOfEdges() &#123;
+		uint32_t ret &#x3D; 0;
+		for (auto i &#x3D; 0u; i &lt; matrix.size(); ++i) &#123;
+			for (auto j &#x3D; 0u; j &lt; matrix.size(); ++j) &#123;
+				if (_if_connected(i, j)) &#123;
+					ret++;
+				&#125;
+			&#125;
+		&#125;
+		return ret;
+	&#125;
+
+	void clearGraph() &#123;
+		matrix.clear();
+	&#125;
+
+protected:
+	std::vector&lt;std::vector&lt;uint32_t&gt;&gt; matrix;
+	
+	bool _if_connected(uint32_t index_1, uint32_t index_2) &#123;
+		return this-&gt;matrix[index_1][index_2] !&#x3D; UNCONNECTED &amp;&amp; index_1 !&#x3D; index_2;
+	&#125;
+
+	std::vector&lt;uint32_t&gt; _get_neighbors(uint32_t index) &#123;
+		std::vector&lt;uint32_t&gt; ret;
+		for (auto i &#x3D; 0u; i &lt; matrix[index].size(); ++i) &#123;
+			if (_if_connected(index, i)) &#123;
+				ret.push_back(i);
+			&#125;
+		&#125;
+		return ret;
+	&#125;
+	int _get_value(uint32_t pos_1, uint32_t pos_2) &#123;
+		return matrix[pos_1][pos_2];
+	&#125;
+	std::vector&lt;IndexEdge&gt; _get_all_edges() &#123;
+		std::vector&lt;IndexEdge&gt; ret;
+		for (auto i &#x3D; 0u; i &lt; this-&gt;matrix.size(); ++i) &#123;
+			for (auto j &#x3D; i + 1; j &lt; this-&gt;matrix.size(); ++j) &#123;
+				if (matrix[i][j] !&#x3D; UNCONNECTED) &#123;
+					ret.push_back(IndexEdge(i, j, matrix[i][j]));
+				&#125;
+			&#125;
+		&#125;
+		return ret;
+	&#125;
+&#125;;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="图上的8种泛型算法"><a class="markdownIt-Anchor" href="#图上的8种泛型算法"></a> 图上的8种泛型算法</h2>
+<h3 id="前言-2"><a class="markdownIt-Anchor" href="#前言-2"></a> 前言</h3>
+<p>我们实现了8种泛型图算法。“泛型”一词的意思是，这算法不与特定具体实现相关。只要特定具体实现实现了我们在算法中用到的各种函数，就可以使用该算法。</p>
+<p>这是怎么做到的呢？这里采用了继承的方法。</p>
+<p>我们首先将图中的每个元素与序号（一个整数）建立映射关系，下面的算法就都使用序号进行操作。这个行为被封装为IndexMapping类：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;&gt;
+class IndexMapping &#123;
+public:
+	uint32_t getIndex(Vertex&amp; v) &#123;
+		return this-&gt;valueToIndex.at(v.val);
+	&#125;
+	value getValue(uint32_t index) &#123;
+		return this-&gt;indexToValue.at(index);
+	&#125;
+	uint32_t addVertexToMap(Vertex&amp; v) &#123;
+		this-&gt;indexToValue.push_back(v.val);
+		this-&gt;valueToIndex.insert(
+			std::pair&lt;value, uint32_t&gt;(v.val, this-&gt;indexToValue.size() - 1));
+		return this-&gt;indexToValue.size() - 1;
+	&#125;
+	uint32_t removeVertexFromMap(Vertex&amp; v) &#123;
+		int index_v &#x3D; this-&gt;getIndex(v);
+		this-&gt;indexToValue.erase(indexToValue.begin() + index_v);
+		for (auto i &#x3D; valueToIndex.begin(); i !&#x3D; valueToIndex.end();) &#123;
+			if ((*i).second &#x3D;&#x3D; index_v) &#123;
+				i &#x3D; valueToIndex.erase(i);
+			&#125;
+			else &#123;
+				if ((*i).second &gt; index_v) &#123;
+					(*i).second--;
+				&#125;
+				i++;
+			&#125;
+		&#125;
+		return index_v;
+	&#125;
+private:
+	std::map&lt;value, uint32_t&gt; valueToIndex;
+	std::vector&lt;value&gt; indexToValue;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然后，用IndexGraph继承IndexMapping类和Graph类：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt; &gt;
+class IndexGraph : public Graph&lt;Vertex&gt;, public IndexMapping&lt;value, Vertex&gt; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>最后，用一个具体类继承IndexGraph类：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;, class VertexInner &#x3D; stdVertex&lt;uint32_t&gt;&gt;
+class ListGraph : public IndexGraph&lt;value, Vertex&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>有开发经验的人恐怕立刻就会想到我要做什么了。现在只要在IndexGraph类中实现基于整形标记的各种图上算法，各个具体子类就会自动地获得运行这些算法的能力！</p>
+<p>下面，我们就来实际地看一下这些算法。</p>
+<p>注：所有算法都是IndexGraph的成员函数，public, private, protected是c++成员函数可见性的声明。</p>
+<h3 id="图的深度优先搜索算法"><a class="markdownIt-Anchor" href="#图的深度优先搜索算法"></a> 图的深度优先搜索算法</h3>
+<blockquote>
+<p>深度优先搜索算法（英语：Depth-First-Search，DFS）是一种用于遍历或搜索树或图的算法。沿着树的深度遍历树的节点，尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将回溯到发现节点v的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止。<br />
+我们实现如下：</p>
+</blockquote>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
+	&#x2F;* Depth First Search *&#x2F;
+	void DFS(std::function&lt;void(Vertex)&gt; do_something, Vertex start) &#123;
+		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), false);
+		uint32_t start_index &#x3D; this-&gt;getIndex(start);
+		this-&gt;STD_DFS(do_something, start_index);
+	&#125;
+private:
+	void STD_DFS(std::function&lt;void(Vertex)&gt; do_something, uint32_t vertex) &#123;
+		do_something(Vertex(this-&gt;getValue(vertex)));
+		help_vec_8[vertex] &#x3D; true;
+		std::vector&lt;uint32_t&gt; list &#x3D; this-&gt;_get_neighbors(vertex);
+		for (auto i : list) &#123;
+			if (help_vec_8[i] &#x3D;&#x3D; false) &#123;
+				STD_DFS(do_something, i);
+			&#125;
+		&#125;
+	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里用到了一个函数_get_neighbors(uint32_t v)这个函数会返所有与v相邻的点。声明为：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">virtual std::vector&lt;uint32_t&gt; _get_neighbors(uint32_t index) &#x3D; 0;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="图的广度优先搜索算法"><a class="markdownIt-Anchor" href="#图的广度优先搜索算法"></a> 图的广度优先搜索算法</h3>
+<blockquote>
+<p>广度优先搜索算法（英语：Breadth-First-Search，缩写为BFS），又译作宽度优先搜索，或横向优先搜索，是一种图形搜索算法。简单的说，BFS是从根节点开始，沿着树的宽度遍历树的节点。如果所有节点均被访问，则算法中止。<br />
+我们实现如下：</p>
+</blockquote>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
+	void BFS(std::function&lt;void(Vertex)&gt; do_something, Vertex start) &#123;
+		auto _start &#x3D; this-&gt;getIndex(start);
+		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), 0);
+		std::queue&lt;uint32_t&gt; help_quene;
+		help_quene.push(_start);
+		for (;!help_quene.empty();) &#123;
+			uint32_t now &#x3D; help_quene.front();
+			help_quene.pop();
+			help_vec_8[now] &#x3D; true;
+			do_something(Vertex(this-&gt;getValue(now)));
+			auto neighbors &#x3D; this-&gt;_get_neighbors(now);
+			for (auto i : neighbors) &#123;
+				if (help_vec_8[i] !&#x3D; true) &#123;
+					help_quene.push(i);
+				&#125;
+			&#125;
+		&#125;
+	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="用深度优先搜索判断是否有环"><a class="markdownIt-Anchor" href="#用深度优先搜索判断是否有环"></a> 用深度优先搜索判断是否有环</h3>
+<p>这个算法很简单，大意是将每个点分为三种状态:</p>
+<p>{已遍历，未遍历，遍历中}</p>
+<p>如果出现了一个{遍历中}的点被再次遍历的情况，那么有环，反之无环。</p>
+<p>实现如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
+#define RED 1
+#define WHITE 0
+#define GREEN -1
+	&#x2F;* if the graph have a ring *&#x2F;
+	bool ifRing() &#123;
+		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), WHITE);
+		uint32_t index &#x3D; 0;
+		this-&gt;RING_DFS(index);
+		return this-&gt;ring_hit;
+	&#125;
+private:
+	void RING_DFS(uint32_t index) &#123;
+		if (ring_hit &#x3D;&#x3D; true) &#123;
+			return;
+		&#125;
+		if (help_vec_8[index] &#x3D;&#x3D; RED) &#123;
+			ring_hit &#x3D; true;
+			return;
+		&#125;
+		else &#123;
+			help_vec_8[index] &#x3D; RED;
+			std::vector&lt;uint32_t&gt; list &#x3D; this-&gt;_get_neighbors(index);
+			for (auto i : list) &#123;
+				if (help_vec_8[i] !&#x3D; GREEN)
+				&#123;
+					RING_DFS(i);
+				&#125;
+			&#125;
+			help_vec_8[index] &#x3D; GREEN;
+		&#125;
+	&#125;
+	bool ring_hit;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="用深度优先搜索进行拓扑排序"><a class="markdownIt-Anchor" href="#用深度优先搜索进行拓扑排序"></a> 用深度优先搜索进行拓扑排序</h3>
+<p>拓扑排序有一种不使用深度优先搜索、基于引用计数的算法，这里没有实现。我们实现的是稍微不太好理解的基于深度优先搜索的算法。</p>
+<p>这算法简单来说，就是基于这样一个事实</p>
+<blockquote>
+<p>在深度优先搜索中，如果一个点的搜索完成，那么它后继的所有点的搜索必定已经完成。</p>
+</blockquote>
+<p>这个事实告诉我们，如果在一个点搜索完成时将这个点压入结果栈中，那么这个结果栈的顺序必然是一个拓扑排序序列的反序列<br />
+实现如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
+&#x2F;* Topological Sort *&#x2F;
+	std::vector&lt;Vertex&gt; TopoSort() &#123;
+		if (ifRing()) &#123; throw std::runtime_error(&quot;can&#39;t sort because of ring!&quot;); &#125;
+		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), 0);
+		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
+			if (help_vec_8[i] !&#x3D; 1) &#123;
+				SORT_DFS(i);
+			&#125;
+		&#125;
+		std::reverse(this-&gt;sort_result_vec.begin(), this-&gt;sort_result_vec.end());
+		std::vector&lt;Vertex&gt; result_vec;
+		for (auto i : sort_result_vec) &#123;
+			result_vec.push_back(Vertex(this-&gt;getValue(i)));
+		&#125;
+		return result_vec;
+	&#125;
+private:
+		void SORT_DFS(uint32_t index)&#123;
+		this-&gt;help_vec_8[index] &#x3D; 1;
+		std::vector&lt;uint32_t&gt; neighbor &#x3D; this-&gt;_get_neighbors(index);
+		for (auto i : neighbor) &#123;
+			if (help_vec_8[i] !&#x3D; 1) &#123;
+				SORT_DFS(i);
+			&#125;
+		&#125;
+		sort_result_vec.push_back(index);
+	&#125;
+	std::vector&lt;int&gt; sort_result_vec;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="最小生成树prim算法"><a class="markdownIt-Anchor" href="#最小生成树prim算法"></a> 最小生成树–Prim算法</h3>
+<p>Prim 算法和Dijkstra 算法有些相似，其基本思想是选点，也就是将整个图划分为两个集合</p>
+<ul>
+<li>已选出的点</li>
+<li>未选出的点</li>
+</ul>
+<p>然后每次都在未选出点集合中选出与已选出的点集合距离最近的点。选择n次后，算法结束。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; Prim() &#123;
+	std::vector&lt;bool&gt; add_list(this-&gt;getNumberOfVertices(), false);
+	std::vector&lt;uint32_t&gt; father(this-&gt;getNumberOfVertices(), INT32_MAX);
+	std::vector&lt;int&gt; distance(this-&gt;getNumberOfVertices(), INT32_MAX);
+	std::vector&lt;std::pair&lt;int, int&gt;&gt; result_vec;
+
+	distance[0] &#x3D; 0;
+	father[0] &#x3D; 0;
+	for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
+		auto pos &#x3D; 0u;
+		auto min &#x3D; INT32_MAX;
+		for (auto j &#x3D; 0u; j &lt; distance.size(); ++j) &#123;
+			if ((distance[j] &lt; min)&amp;&amp; !add_list[j]) &#123;
+				pos &#x3D; j;
+				min &#x3D; distance[j];
+			&#125;
+		&#125;
+		add_list[pos] &#x3D; true;
+		for (auto j &#x3D; 0u; j &lt; distance.size(); ++j) &#123;
+			if ((distance[j] &gt; _get_value(pos, j)) &amp;&amp; !add_list[j]) &#123;
+				father[j] &#x3D; pos;
+				distance[j] &#x3D; _get_value(pos, j);
+			&#125;
+		&#125;
+	&#125;
+
+	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;
+	for (auto i &#x3D; 1u; i &lt; add_list.size();++i) &#123;
+		Vertex v_1(this-&gt;getValue(i));
+		Vertex v_2(this-&gt;getValue(father[i]));
+		std::pair&lt;Vertex, Vertex&gt; pair(v_1, v_2);
+		ret.push_back(pair);
+	&#125;
+	return ret;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="最小生成树-kruskal算法"><a class="markdownIt-Anchor" href="#最小生成树-kruskal算法"></a> 最小生成树 – Kruskal算法</h3>
+<p>这个算法的基本思想是选边。将这个图中所有的边划分为两个集合：</p>
+<ul>
+<li>已选出</li>
+<li>未选出</li>
+</ul>
+<p>然后每一次选择时，选择未选出集合中边权最小的边加入已选出集合，然后测试，若加入后形成了环，则删掉这个边，再选择次小边，直到加入后不形成环为止。<br />
+这样选择N - 1次后，算法结束。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; Kruskal() &#123;
+	std::vector&lt;IndexEdge&gt; vec &#x3D; this-&gt;_get_all_edges();
+	std::sort(vec.begin(), vec.end());
+	auto i &#x3D; vec.begin();
+	auto count &#x3D; 0U;
+	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;
+	IndexDSet&lt;&gt; set(this-&gt;getNumberOfVertices());
+	for (; count &lt; this-&gt;getNumberOfVertices() - 1;) &#123;
+		auto v_1 &#x3D; (*i).edge.first;
+		auto v_2 &#x3D; (*i).edge.second;
+		&#x2F;* retrun true means we don&#39;t have a ring after merge *&#x2F;
+		if (set.mergeTwoSet(v_1, v_2)) &#123;
+			ret.push_back(std::pair&lt;Vertex, Vertex&gt;( 
+				Vertex(this-&gt;getValue(v_1)), Vertex(this-&gt;getValue(v_2))));
+			count++;
+		&#125;
+		i++;
+	&#125;
+	return ret;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里使用了并查集这种数据结构来判断是否有环。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#define IndexType uint32_t
+class DSNode &#123;
+public:
+	IndexType getParent() &#123;
+		return parent;
+	&#125;
+	void setParent(IndexType&amp; index) &#123;
+		this-&gt;parent &#x3D; index;
+	&#125;
+protected:
+	IndexType parent;
+&#125;;
+
+template &lt;class Node &#x3D; DSNode&gt;
+class IndexDSet &#123;
+public:
+	IndexDSet()&#123;&#125;
+	IndexDSet(IndexType count) &#123;
+		vec &#x3D; std::vector&lt;Node&gt;(count);
+		for (auto i &#x3D; 0u; i &lt; vec.size(); ++i) &#123;
+			this-&gt;vec[i].setParent(i);
+		&#125;
+	&#125;
+	IndexType getParent(IndexType target) &#123;
+		if (this-&gt;vec[target].getParent() &#x3D;&#x3D; target) &#123;
+			return target;
+		&#125;
+		else &#123;
+			return getParent(this-&gt;vec[target].getParent());
+		&#125;
+	&#125;
+	bool ifSame(IndexType ele_a, IndexType ele_b) &#123;
+		IndexType parent_a &#x3D; getParent(ele_a);
+		IndexType parent_b &#x3D; getParent(ele_b);
+		
+		return parent_a &#x3D;&#x3D; parent_b;
+	&#125;
+	bool mergeTwoSet(IndexType ele_a, IndexType ele_b)&#123;
+		IndexType parent_a &#x3D; getParent(ele_a);
+		IndexType parent_b &#x3D; getParent(ele_b);
+		if (parent_a &#x3D;&#x3D; parent_b) &#123;
+			return false;
+		&#125;
+		else &#123;
+			this-&gt;vec[parent_a].setParent(parent_b);
+			return true;
+		&#125;
+	&#125;
+protected:
+	std::vector&lt;Node&gt; vec;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="最短路径算法-dijkstra算法"><a class="markdownIt-Anchor" href="#最短路径算法-dijkstra算法"></a> 最短路径算法 – Dijkstra算法</h3>
+<p>Dijkstra 算法的基本思想是，将所有的点分为两类：</p>
+<ul>
+<li>已选出</li>
+<li>未选出</li>
+</ul>
+<p>使用一个集合存储所有点与源点的距离；</p>
+<p>每次都选出未选出集合中，距离源点（Prim算法中是已选出点的集合）最近的点，然后更新和这个点邻接的所有点与源点的距离。</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;PathNode&lt;value&gt;&gt; Dijkstra(Vertex&amp; start) &#123;
+		std::vector&lt;uint32_t&gt; father(this-&gt;getNumberOfVertices(), 0xffffffff);
+		std::vector&lt;int&gt; shortest(this-&gt;getNumberOfVertices(), INT_MAX);
+		std::vector&lt;bool&gt; mark(this-&gt;getNumberOfVertices(), false);
+		auto v &#x3D; this-&gt;getIndex(start);
+		bool end &#x3D; false;
+		shortest[v] &#x3D; 0;
+		father[v] &#x3D; v;
+		auto pos &#x3D; 0;
+		for (; !end;) &#123;
+			auto min &#x3D; INT_MAX;
+			end &#x3D; true;
+			for (auto i &#x3D; 0u; i &lt; shortest.size(); ++i) &#123;
+				if (mark[i] &#x3D;&#x3D; false &amp;&amp; shortest[i] !&#x3D; INT_MAX) &#123;
+					end &#x3D; false;
+				&#125;
+				if (shortest[i] &lt; min &amp;&amp; mark[i] &#x3D;&#x3D; false) &#123;
+					pos &#x3D; i;
+					min &#x3D; shortest[i];
+				&#125;
+			&#125;
+			mark[pos] &#x3D; true;
+			for (auto i &#x3D; 0u; i &lt; shortest.size(); ++i) &#123;
+				if (_get_value(pos, i) &#x3D;&#x3D; INT_MAX) &#123;
+					continue;
+				&#125;
+				if (shortest[i] &gt; shortest[pos] + _get_value(pos, i) &amp;&amp; mark[i] &#x3D;&#x3D; false) &#123;
+					father[i] &#x3D; pos;
+					shortest[i] &#x3D; shortest[pos] + _get_value(pos, i);
+				&#125;
+			&#125;
+		&#125;
+		std::vector&lt;PathNode&lt;value&gt;&gt; ret;
+		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices();++i) &#123;
+			PathNode&lt;value&gt; p(Vertex(this-&gt;getValue(father[i])), Vertex(this-&gt;getValue(i)), shortest[i]);
+			ret.push_back(p);
+		&#125;
+		return ret;
+	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="最短路径算法-flyod算法"><a class="markdownIt-Anchor" href="#最短路径算法-flyod算法"></a> 最短路径算法 – Flyod算法</h3>
+<p>这是一个很有趣的算法，也可以用来求传递闭包，这里不过多解释：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;PathNode&lt;value&gt;&gt; Floyd(Vertex v_1) &#123;
+	auto temp &#x3D; std::vector&lt;std::vector&lt;int&gt;&gt;(this-&gt;getNumberOfVertices(), 
+		std::vector&lt;int&gt;(this-&gt;getNumberOfVertices(), INT_MAX));
+	
+	for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
+		for (auto j &#x3D; 0u; j &lt; this-&gt;getNumberOfVertices(); ++j) &#123;
+			temp[i][j] &#x3D; this-&gt;_get_value(i, j);
+		&#125;
+	&#125;
+
+	for (auto k &#x3D; 0u; k &lt; this-&gt;getNumberOfVertices(); ++k) &#123;
+		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
+			for (auto j &#x3D; 0u; j &lt; this-&gt;getNumberOfVertices(); ++j) &#123;
+				if (temp[i][k] &#x3D;&#x3D; INT_MAX || temp[k][j] &#x3D;&#x3D; INT_MAX) &#123;
+					continue;
+				&#125;
+				if (temp[i][j] &gt; temp[i][k] + temp[k][j]) &#123;
+					temp[i][j] &#x3D; temp[i][k] + temp[k][j];
+				&#125;
+			&#125;
+		&#125;
+	&#125;
+
+	auto v &#x3D; this-&gt;getIndex(v_1);
+	std::vector&lt;PathNode&lt;value&gt;&gt; ret;
+	for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
+		PathNode&lt;value&gt; temp_node(Vertex(this-&gt;getValue(v)), Vertex(this-&gt;getValue(i)), temp[v][i]);
+		ret.push_back(temp_node);
+	&#125;
+	return ret;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="两个专用算法-邻接表上的堆优化dijkstra算法和prim算法"><a class="markdownIt-Anchor" href="#两个专用算法-邻接表上的堆优化dijkstra算法和prim算法"></a> 两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</h2>
+<p>为什么要进行堆优化？可能有人会说是因为要实现<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mi>V</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Elog(V)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mclose">)</span></span></span></span>的复杂度，但对我们这种算法初学者来说，速度不是学习的重点。</p>
+<p>实际上，这是来源于我们对Dijkstra算法的实现很不自然：</p>
+<blockquote>
+<p>我们使用了一个vector来存储最短路径，又用了一个vector来存储标记，如果一个点被选出了，就打上标记，下一次就不选择它。</p>
+</blockquote>
+<p>这实际上是把已选出和未选出的点都放在一起，然后用标记来区分它们。这样很不自然而且很容易出错。</p>
+<p>那么可不可以专门建立一个未选出点的集合，一开始有所有点，每选出一个点就删除它呢？这是可以的，但需要二叉搜索树等数据结构的支持，可以用std::set实现这个想法。</p>
+<p>但这里不用这种办法，而是使用另一种办法：令未选出集合一开始为空，然后动态地添加和删除。</p>
+<p>也就是说，首先把源点加入集合中，然后使用一个循环：</p>
+<p>当集合非空时，每次取出集合中距离源点最小的元素，然后用与这个元素相接的元素更新结果集，同时将这些元素加入这个集合。</p>
+<p>其中“取出距离最小的元素”恰恰就是一个小顶堆的操作。所以这里使用 std::priority_queue 作为这个集合的实现。</p>
+<p>但是这里还有一个问题，如何更新堆中的元素呢？我们无法用std::priority_queue更新，因为它没有顺序迭代器。</p>
+<p>这个问题的答案是不需要做任何更新，而是无脑地加入。因为 <em>距离源点最小的元素会被最先选出</em> 所以即使有两个重复的元素，也是我们需要的、距离源点较近的元素先被选出，而当距离源点较远的点被选出时，<em>结果集已经被距离源点较近的点更新过了</em>，对所有与它邻接的点，都不会触发更新条件，也就对结果没有影响了。<br />
+实现代码如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">typedef std::pair&lt;uint32_t, int&gt; P;
+	&#x2F;* only when use listGraph, fastDijkstra is faster than normal Dijkstra *&#x2F;
+	std::vector&lt;PathNode&lt;value&gt;&gt; fastDijkstra(Vertex&amp; start) &#123;
+		std::vector&lt;uint32_t&gt; father(this-&gt;getNumberOfVertices(), 0xffffffff);
+		std::vector&lt;int&gt; shortest(this-&gt;getNumberOfVertices(), INT_MAX);
+
+		&#x2F;&#x2F; pair.first means index, pair.second means distance
+		auto cmp &#x3D; [](auto i, auto j) &#123; return i.second &gt; j.second; &#125;;
+		std::priority_queue &lt; P, std::vector&lt;P&gt;, std::function&lt;bool(P, P)&gt;&gt; que(cmp);
+
+		auto start_index &#x3D; this-&gt;getIndex(start);
+		que.push(P(start_index, 0));
+		shortest[start_index] &#x3D; 0;
+		father[start_index] &#x3D; start_index;
+
+		while (!que.empty())
+		&#123;
+			auto now &#x3D; que.top();
+			que.pop();
+
+			int distance_now &#x3D; now.second;
+			for (auto i : this-&gt;adjList[now.first]) &#123;
+				if (shortest[i.val] &gt; i.edge_value + distance_now) &#123;
+					shortest[i.val] &#x3D; i.edge_value + distance_now;
+					father[i.val] &#x3D; now.first;
+					que.push(P(i.val, shortest[i.val]));
+				&#125;
+			&#125;
+		&#125;
+		std::vector&lt;PathNode&lt;value&gt;&gt; ret;
+		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
+			PathNode&lt;value&gt; p(Vertex(this-&gt;getValue(father[i])), Vertex(this-&gt;getValue(i)), shortest[i]);
+			ret.push_back(p);
+		&#125;
+		return ret;
+	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Prim算法同理，只不过这时需要打上标记（因为是无向图，不打上标记的话会重复选择）：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; fastPrim() &#123;
+	std::vector&lt;temp_edge&gt; vec(this-&gt;getNumberOfVertices(), temp_edge(0xfffffff, INT32_MAX));
+	auto begin &#x3D; 0;
+	
+	auto cmp &#x3D; [](auto i, auto j) &#123; return i.second &gt; j.second; &#125;;
+	std::priority_queue&lt;P, std::vector&lt;P&gt;, std::function&lt;bool(P, P)&gt; &gt; pq(cmp);
+
+	pq.push(P(begin, 0));
+	while (!pq.empty()) &#123;
+		auto now &#x3D; pq.top();
+		pq.pop();
+		vec[now.first].mark &#x3D; true;
+		for (auto i : this-&gt;adjList[now.first]) &#123;
+			if (vec[i.val].value &gt; i.edge_value &amp;&amp; vec[i.val].mark &#x3D;&#x3D; false) &#123;
+				vec[i.val].father &#x3D; now.first;
+				vec[i.val].value &#x3D; i.edge_value;
+				pq.push(P(i.val, i.edge_value));
+			&#125;
+		&#125;
+	&#125;
+
+	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;
+	for (auto i &#x3D; 1u; i &lt; vec.size(); ++i) &#123;
+		Vertex v_1(this-&gt;getValue(i));
+		Vertex v_2(this-&gt;getValue(vec[i].father));
+		std::pair&lt;Vertex, Vertex&gt; pair(v_1, v_2);
+		ret.push_back(pair);
+	&#125;
+	return ret;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="http://example.com/2019/12/22/2019-12-22-Graph/" title="数据结构 -- 图 -- 笔记">http://example.com/2019/12/22/2019-12-22-Graph/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless stating additionally.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/01/02/2020-1-2-sort/" rel="prev" title="数据结构 -- 排序 -- 笔记"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">数据结构 -- 排序 -- 笔记</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2019/12/10/2019-12-10-find/" rel="next" title="数据结构 -- 查找 -- 笔记"><span class="post-nav-text">数据结构 -- 查找 -- 笔记</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div id="comment"><div class="comment-tooltip text-center"><span>点击按钮跳转 GitHub Issues 评论。</span><br><span>若没有本文 Issue，您可以使用 Comment 模版新建。</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/YunYouJun/yunyoujun.github.io/issues?q=is:issue+数据结构 -- 图 -- 笔记">GitHub Issues</a></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2020 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.2.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.2.0</span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div><script defer src="/js/utils.js"></script><script defer src="/js/hexo-theme-yun.js"></script></body></html>
