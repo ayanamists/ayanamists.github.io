@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Linux 网络编程的getaddrinfo()函数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。 先看看声明： extern int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 网络编程的getaddrinfo()函数">
+<meta property="og:url" content="http://example.com/index.php/2019/08/07/linux-net-1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。 先看看声明： extern int">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-08-07T09:52:57.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019-08-07-linux-net-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/index.php/2019/08/07/linux-net-1/" class="article-date">
+  <time datetime="2019-08-07T09:52:57.000Z" itemprop="datePublished">2019-08-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>►<a class="article-category-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux 网络编程的getaddrinfo()函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。</p>
+<p>先看看声明：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">extern int getaddrinfo (const char *__restrict __name,
+            const char *__restrict __service,
+            const struct addrinfo *__restrict __req,
+            struct addrinfo **__restrict __pai);</pre>
+
+<p>可以看到，第一个参数是主机名（或域名），第二个参数是服务名（端口名）。第三个和第四个参数很奇怪，一个是addrinfo* 类型，另一个则是addrinfo** 类型，这是为什么呢？</p>
+<p>这就要说起这个函数的结果如何记录的问题。addrinfo的声明如下：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">struct addrinfo
+{
+  int ai_flags;            
+  int ai_family;        
+  int ai_socktype;       
+  int ai_protocol;        
+  socklen_t ai_addrlen;       
+  struct sockaddr *ai_addr;    
+  char *ai_canonname;       
+  struct addrinfo *ai_next;    
+};</pre>
+
+<p>注意到最后的一个成员ai_next，这似乎是被设计来串成链表的。实际上也确实是这样。由于一个主机名可能对应着不同的地址（最简单的情况就是一个ipv4地址，一个ipv6地址）被填入的addrinfo 结构的数量是不确定的。所以为了方便，设计者用一个指向addrinfo*的指针作为参数传入，以便将链表的头指针写调用者提供的地址。</p>
+<p>这就是第四个参数了，那么第三个参数是什么呢？这个函数查找到ip后，会将连接需要的所有信息填好，而这“所有信息”也是需要调用者提供的。第三个参数指向一个已经写好部分信息的addrinfo结构体，通过这个结构体中的信息决定结果链表如何填写。</p>
+<p>那么，很自然的，我们会问，这个函数可以同时进行ipv4 和 ipv6填写吗？答案当然是可以的。但是，它真正写入的是sockaddr结构体。设计者们创造了两个马甲：sockaddr_in和sockaddr_in6，分别对应ipv4和ipv6的情况，很多时候需要通过转型拿到具体的地址，比如，需要ipv4的地址时，我们用这种写法：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">((struct sockaddr_in *)(p->ai_addr))->sin_addr</pre>
+
+<p>/*这里吐槽一下，这样实在是不太漂亮*/</p>
+<p>学会了这个函数，我们就可以编一个查询ip地址的小程序：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">#include&lt;sys/types.h>
+#include&lt;sys/socket.h>
+#include&lt;netdb.h>
+#include&lt;bits/stdc++.h>
+#include&lt;arpa/inet.h>
+#include&lt;netinet/in.h>
+
+int main(int argc, char *argv[])
+{
+    addrinfo hints, *res, *p;
+    int ret;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    /* if (argc != 2)
+    {
+        std::cout &lt;&lt; "bad input\n";
+        exit(-1);
+    }*/
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_CANONNAME;
+    ret = getaddrinfo(argv[1], "80", &hints, &res);
+
+    if (ret)
+    {
+        fprintf(stderr, "%s", gai_strerror(ret));
+        exit(-1);
+    }
+
+    for (p = res; p != NULL; p = p->ai_next)
+    {
+        if (p->ai_family == AF_INET)
+        {
+            inet_ntop(p->ai_family,
+                      &(((struct sockaddr_in *)(p->ai_addr))->sin_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &lt;&lt; "IPV4: " &lt;&lt; ipstr &lt;&lt; '\n';
+        }
+        else
+        {
+            inet_ntop(p->ai_family,
+                      &(((struct sockaddr_in6 *)(p->ai_addr))->sin6_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &lt;&lt; "IPV6: " &lt;&lt; ipstr &lt;&lt; '\n';
+        }
+    }
+
+    freeaddrinfo(res);
+}</pre>
+
+<p>运行结果：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">ayanamists@ubuntu:~/netLab$ ./b google.com
+IPV4: 172.217.27.142
+IPV6: 2404:6800:4012::200e
+ayanamists@ubuntu:~/netLab$ ./b apple.com
+IPV4: 17.172.224.47
+IPV4: 17.142.160.59
+IPV4: 17.178.96.59
+ayanamists@ubuntu:~/netLab$ ./b www.baidu.com
+IPV4: 182.61.200.7
+IPV4: 182.61.200.6
+ayanamists@ubuntu:~/netLab$ ./b chenxi.com
+IPV4: 104.250.144.22
+ayanamists@ubuntu:~/netLab$ ./b blog.ayanamists.xyz
+IPV4: 178.128.88.147
+</pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/index.php/2019/08/07/linux-net-1/" data-id="ckg4mhp1j000517sb78n6e4mu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/index.php/2019/08/09/nine/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          解九连环
+        
+      </div>
+    </a>
+  
+  
+    <a href="/index.php/2019/08/06/iredmail/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用iRedMail配置邮箱服务器</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

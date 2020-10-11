@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>谈谈网速（一）序 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="为什么要研究网速在日常生活中，你有没有遇到过以下情况呢？  想看盗版漫画，辛辛苦苦不辞辛劳地找到资源，却发现加载速度奇慢无比，阅读体验极差 想在github上clone一个几MB的项目，输入一行git clone xxx.git，喝杯咖啡回来后，git居然仍在以挤牙膏般的速度传输 想用ssh连接到境外远程主机，兴高采烈地在键盘上按下键，却迟迟不出现输出 …  以上情况都是我的亲身体验。我这个人有一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈网速（一）序">
+<meta property="og:url" content="http://example.com/2020/02/15/2020-02-15-speed-1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="为什么要研究网速在日常生活中，你有没有遇到过以下情况呢？  想看盗版漫画，辛辛苦苦不辞辛劳地找到资源，却发现加载速度奇慢无比，阅读体验极差 想在github上clone一个几MB的项目，输入一行git clone xxx.git，喝杯咖啡回来后，git居然仍在以挤牙膏般的速度传输 想用ssh连接到境外远程主机，兴高采烈地在键盘上按下键，却迟迟不出现输出 …  以上情况都是我的亲身体验。我这个人有一">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-15T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020-02-15-speed-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/15/2020-02-15-speed-1/" class="article-date">
+  <time datetime="2020-02-15T00:00:00.000Z" itemprop="datePublished">2020-02-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/network-speed/">network_speed</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      谈谈网速（一）序
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="为什么要研究网速"><a href="#为什么要研究网速" class="headerlink" title="为什么要研究网速"></a>为什么要研究网速</h2><p>在日常生活中，你有没有遇到过以下情况呢？</p>
+<ul>
+<li>想看盗版漫画，辛辛苦苦不辞辛劳地找到资源，却发现加载速度奇慢无比，阅读体验极差</li>
+<li>想在github上clone一个几MB的项目，输入一行<strong>git clone xxx.git</strong>，喝杯咖啡回来后，git居然仍在以挤牙膏般的速度传输</li>
+<li>想用ssh连接到境外远程主机，兴高采烈地在键盘上按下键，却迟迟不出现输出</li>
+<li>…</li>
+</ul>
+<p>以上情况都是我的亲身体验。我这个人有一点不好，那就是遇到不懂的事情，就一定要搞明白其中的道理。这些问题背后的道理是什么？恐怕和“网速”有着千丝万缕的联系。</p>
+<h2 id="什么是“网速”"><a href="#什么是“网速”" class="headerlink" title="什么是“网速”"></a>什么是“网速”</h2><p>“网速”这个词，似乎应该是 Network Speed 或者说 Network Rate. 但是，和这些术语不同，这里说的“网速”，其实是一个比较复杂和综合的概念，它描述的我们使用网络服务时的综合速度体验，包含这两个内容：</p>
+<ul>
+<li>比特率，考虑A主机的一个程序向B主机的一个程序发送一段连续信息。这里的比特率指这段信息的长度（以bit计）除以A程序发送信息到B程序收到信息的时间。</li>
+<li>网络延迟，一个包从源站发送到目的站接收需要的时间。</li>
+</ul>
+<p>必须指出，这两个内容并不是正交的，而是有一定联系的。</p>
+<p>我们将上节中所说的问题用这两个内容来规约一下，就是：</p>
+<ul>
+<li>看漫画问题 – 比特率太低</li>
+<li>clone问题 – 比特率太低</li>
+<li>ssh问题 – 延迟太高</li>
+</ul>
+<p>很显然，这两个话题不是很好讨论的，它涉及到计算机网络的方方面面，我们也不打算一一讨论，现在确定了以下的内容：</p>
+<ul>
+<li>传输延迟与比特率的关系</li>
+<li>应用层对比特率的直观认识</li>
+<li>以太网的比特率</li>
+<li>ISP接入的比特率与限速</li>
+<li>丢包与TCP</li>
+<li>linux对TCP的实现</li>
+<li>TCP性能调优</li>
+<li>实现自己的TCP</li>
+<li>BBR</li>
+</ul>
+<p>自问自答一下吧：</p>
+<ul>
+<li>为啥网络延迟不怎么研究？<ul>
+<li>因为这主要和运营商有关，个人搞不出来太大名堂。</li>
+</ul>
+</li>
+<li>这么多话题，要写多长时间呢？<ul>
+<li>或许会写很长时间吧！但愿我能把这些坑都填上。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/15/2020-02-15-speed-1/" data-id="ckg4mhp1r000c17sb52cb912p" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/15/2020-02-15-speed-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          谈谈网速（二）不得不首先研究清楚的问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/14/2020-02-14-eap/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">802.11i 无线网络安全（二）-- 802.1x eap认证</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

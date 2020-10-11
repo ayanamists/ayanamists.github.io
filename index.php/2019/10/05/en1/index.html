@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>SSL/TLS笔记(一) 加密！加密！加密！ | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。 更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSL&#x2F;TLS笔记(一) 加密！加密！加密！">
+<meta property="og:url" content="http://example.com/index.php/2019/10/05/en1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。 更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png">
+<meta property="og:image" content="https://www.researchgate.net/profile/Wazen_Shbair/publication/321347130/figure/fig5/AS:631648328630324@1527608105567/The-TLS-handshake-protocol-messages-sequence.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png">
+<meta property="article:published_time" content="2019-10-05T15:45:17.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019-10-05-en1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/index.php/2019/10/05/en1/" class="article-date">
+  <time datetime="2019-10-05T15:45:17.000Z" itemprop="datePublished">2019-10-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SSL/TLS笔记(一) 加密！加密！加密！
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。</p>
+<p>更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某种程度上的加密，那么这些服务便无法成立。基于很多类似的理由，SSL/TLS应运而生。</p>
+<p>SSL是一家公司的产品，SSLv1从未公开过，SSLv2有严重漏洞，SSLv3是SSL的最后一个版本，其后，它被IETF收编为了TLSv1.0，随后又有TLSv1.1，TLSv1.2，目前（2019年10月）TLSv1.3还未大规模部署。这篇文章主要介绍TLSv1.2。</p>
+<p>TLS，也就是传输层安全，是一个三层上的协议，但它的下层一般是TCP协议（当然其实也可以是UDP协议），上层则一般是HTTP协议。读者可能认为TLS只是用作HTTPS的加密层，实际上它的上层可以是任何协议，只不过现今多用于http协议。（这就是为什么DNS over HTTPS和DNS over TLS是不一样的）它在安全方面有三个主要目的：</p>
+<ol>
+<li>对服务器和客户端的数据进行端对端加密，使得任何中间节点无法理解数据，防止窃听。</li>
+<li>通过证书的引入，验证服务端（有时也验证客户端）的身份。</li>
+<li>通过校验的引入，保证数据在传输过程中未被篡改。</li>
+</ol>
+<p>探索TLS，就是一遍遍的问自己“TLS如何做到这三点的”。首先来解决第一个问题:</p>
+<p>TLS如何保证数据是加密的？如何保证在攻击者监听了这个TCP请求的全过程时，攻击者仍然无法理解数据？</p>
+<p>好吧，让我来做一次监听者。用浏览器打开<a target="_blank" rel="noopener" href="https://cnnic.com.cn/">https://cnnic.com.cn</a>，在Wireshark中抓包，看一下这个连接的全貌：<figure class="wp-block-image is-resized"></p>
+<p><img src="http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png" alt="一次TLS连接" class="wp-image-214" width="869" height="352" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-300x122.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-768x311.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714.png 1345w" sizes="(max-width: 869px) 100vw, 869px" /> </figure> </p>
+<p>在WINDOWS下抓包每一个己方的包都会被捕捉两次，应该是wireshark的捕获有些问题，先不管这些，看一下这个连接：</p>
+<p>前三个包是TCP握手，不用多说，第四个包叫做Client Hello，这是啥呢？</p>
+<p>随便查一下资料，发现这是tls握手的第一个包。看来，要窃听数据，需要先学习一下tls握手的过程。<figure class="wp-block-image"></p>
+<p><img src="https://www.researchgate.net/profile/Wazen_Shbair/publication/321347130/figure/fig5/AS:631648328630324@1527608105567/The-TLS-handshake-protocol-messages-sequence.png"> <figcaption>注：这图对于加密信息和未加密信息的划分是错误的</figcaption></figure> </p>
+<p>看上去有点复杂，实际上也有点复杂。不过好消息是，当我们理解了握手过程后，我们就理解了数据是如何加密的。</p>
+<p>只能硬着头皮上了!</p>
+<p>第一个包叫做Client Hello，这是干什么的呢？用wireshark看看有啥吧。<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png" alt="" class="wp-image-219" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png 583w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715-300x172.png 300w" sizes="(max-width: 583px) 100vw, 583px" /> </figure> </p>
+<p>哇！一个handshake头里竟然有这么多内容，要学到什么时候才能掌握啊？但又有一个好消息，下面都是“Extension”，在大部分时候，extension都是不用重点关注的。不然为啥不放在不是扩展的参数里面呢？那就先看看上面的字段。</p>
+<p>1.<strong>Handshake Type</strong>，这不用多说，就是来标识握手进入哪一阶段的。</p>
+<p>2.<strong>Length</strong> 这也不用多说。</p>
+<p>3.<strong>Version</strong>, 不用多说。</p>
+<p>4.<strong>Random</strong>，听名字就知道这是一个随机数，而且显然是客户端产生的。它是干什么的呢？先按下不表。</p>
+<p>5.<strong>Session ID Length 和 Session ID，</strong>这和对话恢复有关，按下不表。</p>
+<ol start="6">
+<li><strong>Cipher Suites Length 和 Cipher Suites，</strong>这似乎到了重点了！这长度这么长（34个字节），看看都有啥：<figure class="wp-block-image"></li>
+</ol>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png" alt="" class="wp-image-228" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png 616w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376-300x178.png 300w" sizes="(max-width: 616px) 100vw, 616px" /> </figure> </p>
+<p>34 = 17 * 2，看来每一个选项都有两个字节（<s>废话，图上都是四个十六进制数，可不就是两个字节吗）</s>，这Cipher的意思，是密钥，密钥套装，岂不就是加密方式套装……仔细看看<a target="_blank" rel="noopener" href="https://tools.ietf.org/pdf/rfc5246.pdf">RFC5246</a>，你会发现这选项的原型是<strong>TLS_NULL_WITH_NULL_NULL</strong>，看来，每个选项都是分为三个部分的。比如说，</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">TLS_RSA_WITH_AES_256_CBC_SHA</pre>
+
+<p>肯定就是表示RSA和什么 什么。但是后面的怎么划分呢？不用着急，求助一下搜索引擎，<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png" alt="" class="wp-image-231" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png 801w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377-300x126.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377-768x322.png 768w" sizes="(max-width: 801px) 100vw, 801px" /> </figure> </p>
+<p>哈哈，这样的话，肯定就是AES-256-CBC 和 SHA了!</p>
+<p>那新的问题就来了，为什么要发这么多呢？聪明的你肯定猜到了。这种要商量用啥的协议经常是一方宣示自己可以用啥，另一方在一方的宣示中选一个。是不是客户端在宣示自己可以用这17种方式，然后让服务端选一个呢？是不是呢？让我们看看第二个包 <strong>Server Hello</strong>吧！<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png" alt="" class="wp-image-240" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png 661w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378-300x105.png 300w" sizes="(max-width: 661px) 100vw, 661px" /> </figure> </p>
+<p>Bingo!服务端只回复了一种方式，果然是在客户端提供的17种方式中选择了一种。可以看到这个包和上一个的头部没啥太大差别，只不过扩展少了很多，随机数变了而已。</p>
+<p>下一个包是什么？是TLS的核心：<strong>Certificate</strong>。这证书可不是一般的东西，但我们留到下一篇文章研究。现在要知道的是，这证书里有一个宝贝：客户端的公钥。公钥是什么？咳咳，如果这个也不知道，就请自行查询吧。</p>
+<p>那么在证书发送完成后，服务端（如果采用RSA）就会发送一个<strong>Server Hello Done</strong>，表示我的事情已经做完了，下面看你（客户端）表演了。</p>
+<p>客户端在收到这个包（之前没有收到要求客户端的证书的请求）后，会发送一个<strong>Client Key Exchange</strong>。这个包，毫不夸张地说，是握手中最关键的一个包。先看看里面有什么：<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png" alt="" class="wp-image-249" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png 730w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379-300x49.png 300w" sizes="(max-width: 730px) 100vw, 730px" /> </figure> </p>
+<p>emmm……这么简单就说是关键，不脸红吗？还真不脸红，因为生成加密的密钥靠的就是这个。</p>
+<p>下面开始我的半吊子密码学秀。</p>
+<p>首先，上面的AES-256-CBC是啥呢？求助一下维基：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    <strong>高级加密标准</strong>（英语：<strong>A</strong>dvanced&nbsp;<strong>E</strong>ncryption&nbsp;<strong>S</strong>tandard，<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BC%A9%E5%86%99">缩写</a>：AES），在<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A0%81%E5%AD%A6">密码学</a>中又称<strong>Rijndael加密法</strong>，是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9B%BD%E8%81%94%E9%82%A6%E6%94%BF%E5%BA%9C">美国联邦政府</a>采用的一种<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%80%E5%A1%8A%E5%8A%A0%E5%AF%86">区块加密</a>标准。这个标准用来替代原先的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/DES">DES</a>，已经被多方分析且广为全世界所使用。经过五年的甄选流程，高级加密标准由<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9B%BD%E5%9B%BD%E5%AE%B6%E6%A0%87%E5%87%86%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%A0%94%E7%A9%B6%E9%99%A2">美国国家标准与技术研究院</a>（NIST）于2001年11月26日发布于FIPS PUB 197，并在2002年5月26日成为有效的标准。2006年，高级加密标准已然成为<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%AF%B9%E7%A7%B0%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86">对称密钥加密</a>中最流行的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%BC%94%E7%AE%97%E6%B3%95">算法</a>之一。
+  </p>
+</blockquote>
+
+<p>看来也就是一种对称加密算法。对称加密也就是说有一个密钥就可以搞定加解密。那看来256就是说，密钥是256位的。这时就可以联想到有个说法说，为了性能，TLS加密实际上采用的对称加密算法，但是对称加密的密钥是非对称加密的。AES-256-CBC恐怕就是那个“对称加密算法”了。</p>
+<p>这个Pre-Master就是256位的，会不会它就是密码呢?即使是，也应该是用公钥加密后的吧。</p>
+<p>咦？似乎得到答案了呢！客户端生成一个对称加密的密钥，加密以后送给服务端，依据非对称加密的特性，这岂不就只有服务端可以解密？</p>
+<p>这是比较接近的答案。但是，TLS并不是这么做的。查看一下RFC 5246:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">struct {
+ ProtocolVersion client_version;
+ opaque random[46];
+ } PreMasterSecret;</pre>
+
+<p>看来这实际上是版本+随机数。那么这个东西是怎么产生密钥的呢？</p>
+<p>再看RFC 5246:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">master_secret = PRF(pre_master_secret, "master secret",
+ ClientHello.random + ServerHello.random)[0..47];</pre>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">key_block = PRF(SecurityParameters.master_secret,
+ "key expansion",
+ SecurityParameters.server_random +
+ SecurityParameters.client_random);
+</pre>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_MAC_key[SecurityParameters.mac_key_length]
+ server_write_MAC_key[SecurityParameters.mac_key_length]
+ client_write_key[SecurityParameters.enc_key_length]
+ server_write_key[SecurityParameters.enc_key_length]
+ client_write_IV[SecurityParameters.fixed_iv_length]
+ server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+
+<p>不知道你什么感觉，但是我看到这个的时候，感觉只有一个：这都是什么？PRF是什么？master_key是什么？最后一堆东西又是什么？</p>
+<p>好。我们先来看PRF，查询一下维基，你会发现甚至没有中文版：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    In&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cryptography">cryptography</a>, a&nbsp;<strong>pseudorandom function family</strong>, abbreviated&nbsp;<strong>PRF</strong>, is a collection of&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Efficiently-computable">efficiently-computable</a>&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Function_(computer_science)">functions</a>&nbsp;which emulate a&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Random_oracle">random oracle</a>&nbsp;in the following way: no efficient algorithm can distinguish (with significant&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Advantage_(cryptography)">advantage</a>) between a function chosen randomly from the PRF family and a random oracle (a function whose outputs are fixed completely at random). Pseudorandom functions are vital tools in the construction of&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cryptographic_primitive">cryptographic primitives</a>, especially secure&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Encryption">encryption schemes</a>.
+  </p>
+</blockquote>
+
+<p>硬着头皮看完了，我觉得还不是很懂，这是一“族”输出随机数的函数吗？幸好RFC 5246里有一个PRF的定义：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">P_hash(secret, seed) = HMAC_hash(secret, A(1) + seed) +
+ HMAC_hash(secret, A(2) + seed) +
+ HMAC_hash(secret, A(3) + seed) + ...</pre>
+
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">PRF(secret, label, seed) = P_&lt;hash>(secret, label + seed)</pre>
+
+<p>看到这里我终于有点懂了。首先这个HMAC_hash函数是“带密钥的hash函数”。也就是说，如果密钥不同，hash的结果一定不同，其实也可以想成受两个参数影响的hash函数。然后这个A(n)是递归定义的：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    A() is defined as:
+  </p>
+
+  <p>
+    A(0) = seed
+  </p>
+
+  <p>
+    A(i) = HMAC_hash(secret, A(i-1))
+  </p>
+</blockquote>
+
+<p><strong>（以上+表示连接，比如说a+b = ab）</strong></p>
+<p>这个P_hash函数其实是很简单的。因为HMAC_hash函数只能生成定长的输出，要想得到变长的输出，就要想点办法（像P_hash一样去构造）。P_hash就是“变长的HMAC_hash的函数”。这里举个例子，比如说HMAC_hash的输出是48位的，你想要一个100位的，那就让N = 3，最后得到144位输出，然后取前100位就好啦。（当然，严格来说P_hash的输出长度只能是HMAC_hash函数的整倍数）</p>
+<p>理解了P_hash，下面的PRF就水到渠成了。因为这个PRF只是把自己的第二和第三个参数连接起来，再把自己的第一个参数和连接起来的东西作为P_hash的参数。</p>
+<p>这样我们就知道了PRF是个什么东西，它确实是一个伪随机生成函数，而且生成的长度是不定的。</p>
+<p>回到那三组代码：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">master_secret = PRF(pre_master_secret, "master secret",
+ ClientHello.random + ServerHello.random)[0..47];</pre>
+
+<p>这是说，master_key是P_hash(pre_master_secret, &#8220;master secret&#8221;+ClientHello.random + ServerHello.random)的输出取前48位。至于这两个random，还记得我们分析Client Hello 和 Server Hello时的情况吗？</p>
+<p>然后下面的事情就更简单了，我们把master_key作为P_hash的第一个参数，生成一个符合要求长度的key_block，把这个key_block顺序分为6组（字面意思），生成下面的东西：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_MAC_key[SecurityParameters.mac_key_length]
+ server_write_MAC_key[SecurityParameters.mac_key_length]
+ client_write_key[SecurityParameters.enc_key_length]
+ server_write_key[SecurityParameters.enc_key_length]
+ client_write_IV[SecurityParameters.fixed_iv_length]
+ server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+
+<p>名字里都带key了，肯定就是加解密用的了。具体每一个是什么作用，这里不再多说。</p>
+<p>注意，上面的运算，是服务器和客户端同时都在做的。所以他们共享同一组密钥。</p>
+<p>现在是不是皆大欢喜了呢？似乎还有一个问题，那个<strong>TLS_RSA_WITH_AES_256_CBC_SHA</strong> 最后的 <strong>SHA</strong>是什么呢？恐怕读者知道这应该是哈希算法吧，注意到HMAC_<strong>hash</strong>，嗯？<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png" alt="" class="wp-image-289" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png 647w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380-300x126.png 300w" sizes="(max-width: 647px) 100vw, 647px" /> </figure> </p>
+<p>但实际上，这个SHA指的是HMAC-SHA1，它被用作MAC算法，而PRF使用的HMAC算法则由协议版本决定，比如tls1.2是HMAC-SHA256。</p>
+<p>好了好了，说了这么多，简单总结一下 <strong>RSA_WITH_AES_256_CBC_SHA</strong> 加密的核心：</p>
+<p>客户端产生一个随机数作为<strong>pre_master_key</strong>，将它用服务端公钥加密后送给服务端，然后客户端和服务端同时用基于<strong>HMAC-SHA</strong>的PRF产生<strong>master_key</strong>，再用<strong>master_key</strong>和随机数作为PRF的输入得到六个密钥，用于<strong>AES-256-CBC</strong>加密。以后的通信，都用<strong>AES-256-CBC</strong>加密，具有了反窃听的特性。只要私钥是安全的，就只能有客户端和服务端进行解密。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/index.php/2019/10/05/en1/" data-id="ckg4mhp2z001n17sb1wde7kbk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/index.php/2019/10/06/ssl-tls-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          SSL/TLS(二) 证书里都有啥
+        
+      </div>
+    </a>
+  
+  
+    <a href="/index.php/2019/10/04/trap/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">记录一下最近踩的坑</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

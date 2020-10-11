@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>SSL/TLS(三) 用RUBY实现TLS握手 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。 警告：下面有大量的ruby编程细节 首先是将报文封装写好 1.record Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText tlsPlainText &#x3D; Class.new do     attr_accessor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSL&#x2F;TLS(三) 用RUBY实现TLS握手">
+<meta property="og:url" content="http://example.com/index.php/2019/11/02/tls3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。 警告：下面有大量的ruby编程细节 首先是将报文封装写好 1.record Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText tlsPlainText &#x3D; Class.new do     attr_accessor">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png">
+<meta property="article:published_time" content="2019-11-02T02:54:04.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019-11-02-tls3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/index.php/2019/11/02/tls3/" class="article-date">
+  <time datetime="2019-11-02T02:54:04.000Z" itemprop="datePublished">2019-11-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SSL/TLS(三) 用RUBY实现TLS握手
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。</p>
+<p><strong>警告：下面有大量的ruby编程细节</strong></p>
+<p>首先是将报文封装写好</p>
+<p><strong>1.record</strong></p>
+<p>Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">tlsPlainText = Class.new do 
+   attr_accessor :contentType, :protocolVersion, :length, :fragment
+end</pre>
+
+<p>Record的Content一共有四种，分别对应于四种类型：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">contentType = {"change_cipher_spec" => 20, "alert" => 21, 
+  "handshake" => 22, "application_data" => 23}</pre>
+
+<p>这里我们只实现handshake和change_cipher_spec</p>
+<p>对于具体封装，我写了一个Record#make方法：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def make(encrypt = false)
+        if encrypt == true
+            puts tlsPlainText.fragment.to_hex
+            @tlsPlainText.fragment = yield(@tlsPlainText.fragment)
+            @tlsPlainText.length = @tlsPlainText.fragment.length
+        end
+        template =
+            "C"+  #type
+            "CC"+ #protocolVersion
+            "n"+  #length
+            "a#{@tlsPlainText.length}" #fragment
+
+        arr = [@tlsPlainText.contentType, 
+               @tlsPlainText.protocolVersion.major,             
+               @tlsPlainText.protocolVersion.minor, @tlsPlainText.length, 
+               @tlsPlainText.fragment ]
+        ret = arr.pack template
+        return ret
+    end</pre>
+
+<p>由于后面我们的加密器是一个外部对象，要将自己的fragment加密后再替换成新的fragment，如果我们写出这样的代码：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">record_a.tlsPlainText.fragment = Encrypter.encrypt(record_a.tlsPlainText.fragment )</pre>
+
+<p>感觉不是很顺畅，也违背了面向对象封装的思想。</p>
+<p>我们使用yield来解决这个问题:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">str_fin = fin.make do |i|
+    encrypt_handler.send_encrypt(22, i)
+end</pre>
+
+<p>这样是对的吗？我不太清楚，但至少比上面的写法要好一些。</p>
+<p><strong>2.Handshake</strong></p>
+<p>让Handshake继承Record，有这个想法是因为Handshake是Record的细化。</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">class Handshake &lt; Record
+    attr_accessor :record, :handshakeType, :handshakeLength, :handshakeBody
+    ...
+end</pre>
+
+<p>handshakeType一共有四种（哈哈，这里不太对，应该是我们只实现了四种）：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def self.handshake_type
+        return {'1' => 'client_hello',
+                '2' => 'server_hello',
+                '11' => 'server_certificates',
+                '14' => 'server_hello_done'}
+end</pre>
+
+<p>然后具体的make封装如下：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def make(encrypt = false)
+        template = 
+            "C"+ #handshakeType
+            "Cn"+ #length
+            "a#{@handshakeLength}" #body
+
+        arr = [self.handshakeType, 0 ,self.handshakeLength, 
+               self.handshakeBody]
+        pack = arr.pack template
+        @tlsPlainText.fragment = pack
+        @tlsPlainText.length = pack.length
+        super(encrypt)
+end</pre>
+
+<p><strong>3.各个Handshake</strong></p>
+<p>虽然只有四种，但是实现起来是很麻烦的。这里进一步简化了一下&#8211;不实现ClientHello的扩展。</p>
+<p>报文封装写好以后，下面的工作就是最重要、最核心的工作的了&#8211;实现密码学计算。这里为了简化，我们只实现一种密码学套件&#8211;TLS_RSA_WITH_AES_GCM_128_SHA_256</p>
+<p>最开始是ClientHello和ServerHello里的随机数，这里使用OpenSSL::Random#random_bytes</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">time = Time.new
+@gmt_unix_time = time.to_i
+@random_bytes = OpenSSL::Random.random_bytes(28)</pre>
+
+<p>然后是扩展函数PRF，这里使用一个猴子补丁:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">class Integer
+    def tls_prf(secret = '', label = '', seed = '', hash_methods = 'SHA256')
+        return self.tls_P_hash(secret, label + seed, hash_methods)
+    end
+
+    def tls_P_hash(secret='', seed = '', hash_methods = 'SHA256')
+        t = self.to_f / 32
+        t = t.ceil
+        ret = ''
+
+        a = seed
+        t.times do |i|
+            a = OpenSSL::HMAC.send("digest", hash_methods, secret, a)
+            ret &lt;&lt; OpenSSL::HMAC.send("digest", hash_methods, secret, a + seed)
+        end
+        return ret[0, self]
+    end
+end</pre>
+
+<p>在EncryptMessageHandler这个模块中生成Pre-master-key和master-key</p>
+<p>这里需要注意两个细节：</p>
+<p>1.不要搞混client_random和server_random的顺序。（这个问题我debug了一天才发现）</p>
+<p>2.client_random和server_random都是32字节的、真正发送出去的东西，而不是28字节的random_bytes。</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">@pre_master = @version.pack("CC") + OpenSSL::Random.random_bytes(46)
+@master = 48.tls_prf(@pre_master, "master secret", client_random+server_random)</pre>
+
+<p>其中pre-master-key要用server传来的certificate加密：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">rsa = OpenSSL::PKey::RSA.new (certificate.public_key)
+@encrypt_pre_master = rsa.public_encrypt @pre_master</pre>
+
+<p>生成主密钥之后，应该是根据实际情况进行密钥扩展。将密钥扩展成六个部分：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_MAC_key[SecurityParameters.mac_key_length]      server_write_MAC_key[SecurityParameters.mac_key_length]      client_write_key[SecurityParameters.enc_key_length]      server_write_key[SecurityParameters.enc_key_length]      client_write_IV[SecurityParameters.fixed_iv_length]      server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+
+<p>可这个“实际情况”在使用TLS_RSA_WITH_AES_128_GCM_SHA_256这个套件的情况下究竟是什么样的呢?</p>
+<p>我找了一些资料，最后发现有两个地方说的比较靠谱：</p>
+<p>第一个是RFC5246对于AES_XXX_GCM这种AEAD方式的描述：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    AEAD ciphers take as input a single key, a nonce, a plaintext, and &#8220;additional data&#8221; to be included in the authentication check, as described in Section 2.1 of [AEAD]. <strong>The key is either the client_write_key or the server_write_key. </strong> <strong>No MAC key is used.</strong>
+  </p>
+
+  <p>
+    Each AEAD cipher suite MUST specify how the nonce supplied to the AEAD operation is constructed, and what is the length of the GenericAEADCipher.nonce_explicit part. In many cases, it is appropriate to use the partially implicit nonce technique described in Section 3.2.1 of [AEAD]; with record_iv_length being the length of the explicit part. <strong>In this case, the implicit part SHOULD be derived from key_block as client_write_iv and server_write_iv (as described in Section 6.3), and the explicit part is included in GenericAEAEDCipher.nonce_explicit </strong>
+  </p>
+</blockquote>
+
+<p>通过第一段文字，我们可以知道两个问题：第一，加密用到的key就是client_write_key和server_write_key。第二，之前说的client_MAC_KEY和server_MAC_KEY都是用不到的。在RFC 5246中也说了，如果用不到，长度设为0就可以（也就是不产生了）。</p>
+<p>麻烦的是第二段文字。如果你之前没有接触过相关内容，肯定会感觉到不知所云。这文字显然就是“给已经懂了的人看的”。在这里简单解释一下，第一段里说，AEAD需要有一个nonce作为输入。然后第二段里说，这个nonce可以被分为两部分：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">nonce = implicit_nonce || explicit_nonce</pre>
+
+<p>然后implicit部分应该是上面扩展出来的</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_IV[SecurityParameters.fixed_iv_length]      server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+
+<p>explicit部分则是直接明文传过去，因为AEAD产生的报文是以下格式的：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="false" data-enlighter-lineoffset="0" data-enlighter-title="" data-enlighter-group="">struct {         
+       opaque nonce_explicit[SecurityParameters.record_iv_length];         
+       aead-ciphered struct { opaque content[TLSCompressed.length];};      
+} GenericAEADCipher;</pre>
+
+<p>GenericAEADCipher.nonce_explicit就是explicit部分填充的地方。</p>
+<p>那么，AES_XXX_GCM到底是怎么做的呢？这就要看第二份文件 RFC 5288了：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    The &#8220;nonce&#8221; SHALL be 12 bytes long consisting of two parts as follows: (this is an example of a &#8220;partially explicit&#8221; nonce; see Section 3.2.1 in [RFC5116]).
+  </p>
+
+  <p>
+    struct {
+  </p>
+
+  <p>
+    opaque salt[4];
+  </p>
+
+  <p>
+    opaque nonce_explicit[8];
+  </p>
+
+  <p>
+    } GCMNonce;
+  </p>
+
+  <p>
+    The salt is the &#8220;implicit&#8221; part of the nonce and is not sent in the packet. Instead, the salt is generated as part of the handshake process: it is either the client_write_IV (when the client is sending) or the server_write_IV (when the server is sending). The salt length (SecurityParameters.fixed_iv_length) is 4 octets.
+  </p>
+</blockquote>
+
+<p>看到这段文字，我们就已经很清楚了。AES_XXX_GCM的nonce是12byte的，其中四个byte来自于</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_IV[SecurityParameters.fixed_iv_length]   server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+
+<p>后面8个byte就是一个每个报文的都不同的随机数，直接明文写在报文里。</p>
+<p>好的，我们据此写出密钥扩展的部分：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">key_block = (length/4 + 4 * 2).tls_prf(@master, "key expansion", server_random + client_random)
+arr = key_block.unpack "a#{length/8}a#{length/8}a4a4"
+client_write_key = arr[0]
+server_write_key = arr[1]
+client_write_iv = arr[2]
+server_write_iv = arr[3]</pre>
+
+<p>然后是加密和解密的部分。Ruby中Openssl库的AES::GCM加密时需要设置密钥、nonce和auth_data，那这个auth_data又怎么设置呢？再回到RFC 5246:</p>
+<blockquote class="wp-block-quote">
+  <p>
+    The additional authenticated data, which we denote as additional_data, is defined as follows:
+  </p>
+
+  <p>
+    additional_data = seq_num + TLSCompressed.type + TLSCompressed.version + TLSCompressed.length;
+  </p>
+</blockquote>
+
+<p>别的都好说，这个序列号怎么办？它是几位的？怎么产生？怎么更新？再看RFC 5246,这需要使用搜索功能，搜索seqence number:</p>
+<blockquote class="wp-block-quote">
+  <p>
+    sequence number
+  </p>
+
+  <p>
+    Each connection state contains a sequence number, which is maintained separately for read and write states. The sequence number MUST be set to zero whenever a connection state is made the active state. Sequence numbers are of type uint64 and may not exceed 2^64-1. Sequence numbers do not wrap. If a TLS implementation would need to wrap a sequence number, it must renegotiate instead. A sequence number is incremented after each record: specifically, the first record transmitted under a particular connection state MUST use sequence number 0.
+  </p>
+</blockquote>
+
+<p>这样一来就明白了，客户端和服务端各维护一个seq_num，长度为8个byte，初始值为0，每发送一个加密报文递增一。</p>
+<p>然后我们又遇到了一个大麻烦：AES::GCM加密后会产生一个auth_tag，这个auth_tag解密的时候要用。这又该怎么处理呢？我在协议中没有找到，倒是在stack overflow上找到了相关的问题： <a target="_blank" rel="noopener" href="https://crypto.stackexchange.com/questions/25249/where-is-the-authentication-tag-stored-in-file-encrypted-using-aes-gcm?newreg=ac7536f1cb2646d995c2c8607aea7d2c">https://crypto.stackexchange.com/questions/25249/where-is-the-authentication-tag-stored-in-file-encrypted-using-aes-gcm?newreg=ac7536f1cb2646d995c2c8607aea7d2c</a> 回答者引用了RFC 5116的内容：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    The&nbsp;<code>AEAD_AES_128_GCM</code>&nbsp;ciphertext is formed by appending the authentication tag provided as an output to the GCM encryption operation to the ciphertext that is output by that operation.
+  </p>
+</blockquote>
+
+<p>那么，我们只要将auth_tag直接附在加密的密文后就可以了。这样一来所有的问题就都解决了：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def send_encrypt(type = 22, seqence = '')
+        nonce_explicit = OpenSSL::Random.random_bytes(8)
+        nonce = @send_implicit + nonce_explicit
+        @send_cipher.iv = nonce
+        length = seqence.length
+        #the handle of seq_num may be wrong
+        @send_cipher.auth_data = [0, @send_seq_num,
+            type, @version[0], @version[1], 0 ,length].pack("NNCCCCC")
+        puts @send_seq_num
+        encrypt = @send_cipher.update(seqence) + @send_cipher.final
+        encrypt = encrypt + @send_cipher.auth_tag
+        encrypt = nonce_explicit + encrypt
+        return encrypt
+        @send_seq_num += 1
+end</pre>
+
+<p>这时我们离握手成功只差一步了！只要写好Finished消息，就可以和服务器愉快地通信了！</p>
+<p>Finished消息需要把所有的握手消息打一个HASH，再将HASH值送进PRF:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">PRF(master_secret, finished_label, Hash(handshake_messages))            [0..verify_data_length-1];</pre>
+
+<p>但这里也有个大坑：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    Here handshake_messages refers to all handshake messages sent or received, starting at client hello and up to, but not including this message, including the type and length fields of the handshake messages. <strong>This is the concatenation of all the Handshake structures </strong>
+  </p>
+</blockquote>
+
+<p>注意这个Handshake structures，这不是报文的意思，而应该是报文剥掉Record层的信息后的Record.fragment结构体！另外，ChangeCipherSpec消息不是Handshake消息，这里不应该被包括。</p>
+<p>解决Finished后，所有的工作就做完了。下面是和baidu.com握手的结果：<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png" alt="" class="wp-image-405" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-300x28.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-768x73.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751.png 1345w" sizes="(max-width: 1024px) 100vw, 1024px" /> </figure> </p>
+<p>可以看到握手成功。</p>
+<p>通过这一次实现握手的旅程，我们发现，TLS在密码学上可谓固若金汤。最后一定可以100%确保对方有了正确的加密密钥。但是，tls在密码学上固若金汤，并不是说tls实现固若金汤，更不是说使用tls的人写的程序固若金汤。想要MITM攻击TLS的人大可放心，世界上漏洞百出的TLS程序还是多如牛毛的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/index.php/2019/11/02/tls3/" data-id="ckg4mhp31001p17sbb6vpf3sm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/02/2019-11-02-802-11i-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          802.11i 无线安全（一）建立RSNA
+        
+      </div>
+    </a>
+  
+  
+    <a href="/index.php/2019/10/06/ssl-tls-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SSL/TLS(二) 证书里都有啥</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

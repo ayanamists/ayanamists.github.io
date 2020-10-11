@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>让我们实现编程语言吧(五) 解释器模型 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="什么是解释器在我国的大学里，学生们学会的第一门编程语言一般是C语言。因此，不少同学都习惯性地将编程语言的执行过程等价为【编译-链接-执行】的过程。但实际上，编程语言还可以进行所谓的【解释执行】。 什么叫【解释执行】呢？就是计算机直接对抽象语法树（或者进一步变换的结构）进行求值，而非把抽象语法树编译成目标代码再让机器对目标代码进行求值。可以【解释执行】代码的程序就是【解释器】了。 这个时候，聪明的同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让我们实现编程语言吧(五) 解释器模型">
+<meta property="og:url" content="http://example.com/2020/08/30/2020-08-30-pl5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="什么是解释器在我国的大学里，学生们学会的第一门编程语言一般是C语言。因此，不少同学都习惯性地将编程语言的执行过程等价为【编译-链接-执行】的过程。但实际上，编程语言还可以进行所谓的【解释执行】。 什么叫【解释执行】呢？就是计算机直接对抽象语法树（或者进一步变换的结构）进行求值，而非把抽象语法树编译成目标代码再让机器对目标代码进行求值。可以【解释执行】代码的程序就是【解释器】了。 这个时候，聪明的同">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.downk.cc/item/5f4b0217160a154a67505d9d.jpg">
+<meta property="article:published_time" content="2020-08-30T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.downk.cc/item/5f4b0217160a154a67505d9d.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020-08-30-pl5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/30/2020-08-30-pl5/" class="article-date">
+  <time datetime="2020-08-30T00:00:00.000Z" itemprop="datePublished">2020-08-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      让我们实现编程语言吧(五) 解释器模型
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是解释器"><a href="#什么是解释器" class="headerlink" title="什么是解释器"></a>什么是解释器</h2><p>在我国的大学里，学生们学会的第一门编程语言一般是C语言。因此，不少同学都习惯性地将编程语言的执行过程等价为【编译-链接-执行】的过程。但实际上，编程语言还可以进行所谓的【解释执行】。</p>
+<p>什么叫【解释执行】呢？就是计算机直接对抽象语法树（或者进一步变换的结构）进行求值，而非把抽象语法树编译成目标代码再让机器对目标代码进行求值。可以【解释执行】代码的程序就是【解释器】了。</p>
+<p>这个时候，聪明的同学也许会想到，<strong>整个计算机系统恰恰就是目标代码的解释器</strong>。</p>
+<h2 id="解释器的基本模型"><a href="#解释器的基本模型" class="headerlink" title="解释器的基本模型"></a>解释器的基本模型</h2><p>【解释器的模型】这个词的意思是，解释器将会被实现为【什么东西】。最简单的模型是【表达式-环境】模型。这个模型指整个解释器被实现为一个<code>eval</code>函数，这个函数的参数为<code>expression</code>和<code>environment</code>，返回值为一个<code>value</code>.</p>
+<p><code>expression</code>自然不用多说，<code>environment</code>是什么东西呢？几乎所有的编程语言都有“定义变量”的功能。比如在C中，我们可以这样写：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, a);</span><br></pre></td></tr></table></figure>
+
+<p>在第二行的<code>printf(&quot;%d&quot;, a);</code>中，<code>a</code>是一个【变量】，应该被解释为<code>10</code>. 但<code>expression</code>中是没有这个信息的，我们需要一个参数来保存<code>a-&gt;10</code>这个信息，这就是<code>environment</code>. </p>
+<p>特别地，我们这里实现的解释器不支持【有副作用的操作】，也就是说，一个【变量】不能被赋值两次。这样一来，所谓的【变量】，就可以看作一个【绑定】，即将一个符号绑定到一个值上。</p>
+<p>我们这里使用了<em>Essentials of Programming Languages</em>里的LET语言作为例子，它支持以下语法：</p>
+<p><img src="https://pic.downk.cc/item/5f4b0217160a154a67505d9d.jpg" alt="1"></p>
+<p>可以看到，这是一个很简单的语言，一个例子程序如下：</p>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> i = <span class="number">0</span> <span class="keyword">in</span></span><br><span class="line">  <span class="keyword">if</span> zero?(i) <span class="keyword">then</span> -(i, <span class="number">1</span>) <span class="keyword">else</span> i</span><br></pre></td></tr></table></figure>
+
+<h2 id="解释器的实现"><a href="#解释器的实现" class="headerlink" title="解释器的实现"></a>解释器的实现</h2><p>Parser部分，我们采用<em>Essentials of Programming Languages</em>送给我们的一套系统，下面不再讨论。</p>
+<p>解释器部分是这样实现的：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> value-of</span><br><span class="line">  (<span class="name"><span class="builtin-name">lambda</span></span>(exp env)</span><br><span class="line">    (<span class="name">cases</span> expression exp</span><br><span class="line">      [<span class="name">const-exp</span> (<span class="name">num</span>)</span><br><span class="line">                 (<span class="name">num-val</span> num)]</span><br><span class="line">      [<span class="name">var-exp</span> (<span class="name">var</span>)</span><br><span class="line">               (<span class="name">apply-environment</span> env var)]</span><br><span class="line">      [<span class="name">sub-exp</span> (<span class="name">exp0</span> exp1)</span><br><span class="line">               (<span class="name">num-val</span></span><br><span class="line">                (<span class="name"><span class="builtin-name">-</span></span></span><br><span class="line">                 (<span class="name">exp-val-&gt;num</span> (<span class="name">value-of</span> exp0 env))</span><br><span class="line">                 (<span class="name">exp-val-&gt;num</span> (<span class="name">value-of</span> exp1 env))))]</span><br><span class="line">      [<span class="name">zero-exp</span> (<span class="name">exp0</span>)</span><br><span class="line">                (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">=</span></span> (<span class="name">exp-val-&gt;num</span> (<span class="name">value-of</span> exp0 env)) <span class="number">0</span>)</span><br><span class="line">                    (<span class="name">bool-val</span> <span class="literal">#t</span>)</span><br><span class="line">                    (<span class="name">bool-val</span> <span class="literal">#f</span>))]</span><br><span class="line">      [<span class="name">if-exp</span> (<span class="name">exp0</span> exp1 exp2)</span><br><span class="line">              (<span class="name"><span class="builtin-name">if</span></span> (<span class="name">exp-val-&gt;bool</span> (<span class="name">value-of</span> exp0 env))</span><br><span class="line">                  (<span class="name">value-of</span> exp1 env)</span><br><span class="line">                  (<span class="name">value-of</span> exp2 env))]</span><br><span class="line">      [<span class="name">let-exp</span> (<span class="name">var</span> val body)</span><br><span class="line">               (<span class="name"><span class="builtin-name">let</span></span> ([<span class="name">value</span> (<span class="name">value-of</span> val env)])</span><br><span class="line">                 (<span class="name">value-of</span> body</span><br><span class="line">                           (<span class="name">extend-environment</span></span><br><span class="line">                            env var value)))]</span><br></pre></td></tr></table></figure>
+
+<p>由于我们这里使用了<em>Essentials of Programming Languages</em>送的一套类型系统<code>define-datatype</code>，所以这里各种类型转换有点麻烦，但是总体如何求值却是很清晰的。比如说上面的的代码</p>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> i = <span class="number">0</span> <span class="keyword">in</span></span><br><span class="line">  <span class="keyword">if</span> zero?(i) <span class="keyword">then</span> -(i, <span class="number">1</span>) <span class="keyword">else</span> i</span><br></pre></td></tr></table></figure>
+
+<p>会被Parser变成：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">a-program</span></span><br><span class="line"> (<span class="name">let-exp</span></span><br><span class="line">  <span class="symbol">&#x27;i</span></span><br><span class="line">  (<span class="name">const-exp</span> <span class="number">0</span>)</span><br><span class="line">  (<span class="name">if-exp</span></span><br><span class="line">   (<span class="name">zero-exp</span> (<span class="name">var-exp</span> <span class="symbol">&#x27;i</span>))</span><br><span class="line">   (<span class="name">sub-exp</span> (<span class="name">var-exp</span> <span class="symbol">&#x27;i</span>) (<span class="name">const-exp</span> <span class="number">1</span>))</span><br><span class="line">   (<span class="name">var-exp</span> <span class="symbol">&#x27;i</span>))))</span><br></pre></td></tr></table></figure>
+
+<p>首先，对<code>let-exp</code>求值，会首先求其第二个元素，也就是这里的<code>(const-exp 0)</code>的值，而它的值为<code>(num-val 0)</code>，之后，我们进行一个尾递归，对第三个元素，也即是这里的<code>(if-exp ...)</code>进行求值，此时的<code>env</code>会是：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">extend-environment</span> empty-environment <span class="symbol">&#x27;i</span> (<span class="name">num-val</span> <span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+
+<p>在后面的求值中，<code>i</code>就会被解释为<code>(num-val 0)</code>，这是通过对于<code>val-exp</code>的求值实现的：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">var-exp</span> (<span class="name">var</span>)</span><br><span class="line">               (<span class="name">apply-environment</span> env var)]</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>(apply-environment env var)</code>就会返回<code>env</code>中<code>var</code>所绑定的值。</p>
+<h2 id="头等函数的实现"><a href="#头等函数的实现" class="headerlink" title="头等函数的实现"></a>头等函数的实现</h2><p>在<code>scheme</code>系语言中，头等函数一直是整个语言的核心，这也是【函数式编程】得名的原因。函数可以被随意的定义、传入、传出，是一个值。它来源于lambda表达式。</p>
+<p>在lambda表达式中，有所谓的【自由变量】和【绑定变量】的概念，比如说：<br>$$<br>\lambda x.\lambda y.xyz<br>$$<br>在这个lambda表达式中，<code>x</code>和<code>y</code>都是【绑定变量】，而<code>z</code>是【自由变量】。具体的形式定义这里就不涉及了。我们要知道的是，在进行【函数调用】也就是所谓的$$\beta -reduction$$时，【绑定变量】最终会被【替换】为一个【实际参数】，而【自由变量】则不会如此。</p>
+<p>这样就出现了一个问题 – 如何【处理】自由变量。</p>
+<p><code>scheme</code>将函数实现为一个【闭包】，也就是说，</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> func</span><br><span class="line">  (<span class="name"><span class="builtin-name">let</span></span> ((<span class="name">a</span> <span class="number">10</span>))</span><br><span class="line">    (<span class="name"><span class="builtin-name">lambda</span></span> () a))</span><br><span class="line">  )</span><br><span class="line">(<span class="name">func</span>) <span class="comment">;永远都是10</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>func</code>实际上是<code>(lambda () a)</code>，而<code>a</code>是一个【自由变量】，<code>scheme</code>的设计是，【自由变量】永远会被解释为lambda表达式创建时的环境中的同名绑定。在这里，<code>(lambda () a)</code>创建时的环境是<code>(a 10)</code>，<code>a</code>被绑定到<code>10</code>，所以无论<code>func</code>何时被调用，<code>a</code>的值永远为<code>10</code>.</p>
+<p>要实现这个模型，我们的【函数对象】必须【保存】了三个内容：</p>
+<ol>
+<li>函数体，也即一个表达式</li>
+<li>绑定变量，或者说形式参数</li>
+<li>被创建时的环境，这个环境中保存了所有的【自由变量】。</li>
+</ol>
+<p>为了实现简单，我们这里直接把【被创建时的环境】整个拿到【函数对象】中：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> procedure</span><br><span class="line">  (<span class="name">λ</span>(<span class="name">var</span> body env)</span><br><span class="line">    (<span class="name">λ</span>(<span class="name">val</span>)</span><br><span class="line">      (<span class="name">value-of</span> body</span><br><span class="line">                (<span class="name">extend-environment</span> env var val)))))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> apply-procedure</span><br><span class="line">  (<span class="name">λ</span>(<span class="name">proc</span> val)</span><br><span class="line">    (<span class="name">proc</span> val)))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">proc-exp</span> (<span class="name">var</span> body)</span><br><span class="line">                (<span class="name">proc-val</span> (<span class="name">procedure</span> var body env))]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="name">apply-exp</span> (<span class="name">func</span> para)</span><br><span class="line">                 (<span class="name">apply-procedure</span> (<span class="name">exp-val-&gt;proc</span></span><br><span class="line">                                   (<span class="name">value-of</span> func env))</span><br><span class="line">                                  (<span class="name">value-of</span> para env))]</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，我们就实现了头等函数。现在，这门语言可以说是【图灵完全】的了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/08/30/2020-08-30-pl5/" data-id="ckg4mhp25000z17sbfh5xe6sa" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/08/30/2020-08-30-pl6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          让我们实现编程语言吧(六) 递归函数的养成方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/08/20/2020-8-20-writting/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">谈谈写作软件</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

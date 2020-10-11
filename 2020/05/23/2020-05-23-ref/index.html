@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>“引用类型”、“指针类型”与“值类型” | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="将符号解释为值 将符号绑定为IR类型，仍然解释为值类型 “绑定上”和“解释为”的区别 IR类型和ER类型 从绑定值到解释值   将符号解释为引用类型 传值（call-by-value）和传引用（call-by-reference） 传值 传引用   某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型 IER类型 IER类型的好处 C#中的传引用   真正的值类型  在众多编程语言复杂而">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“引用类型”、“指针类型”与“值类型”">
+<meta property="og:url" content="http://example.com/2020/05/23/2020-05-23-ref/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="将符号解释为值 将符号绑定为IR类型，仍然解释为值类型 “绑定上”和“解释为”的区别 IR类型和ER类型 从绑定值到解释值   将符号解释为引用类型 传值（call-by-value）和传引用（call-by-reference） 传值 传引用   某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型 IER类型 IER类型的好处 C#中的传引用   真正的值类型  在众多编程语言复杂而">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020-05-23-ref" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/23/2020-05-23-ref/" class="article-date">
+  <time datetime="2020-05-23T00:00:00.000Z" itemprop="datePublished">2020-05-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      “引用类型”、“指针类型”与“值类型”
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><a href="#%E5%B0%86%E7%AC%A6%E5%8F%B7%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%80%BC">将符号解释为值</a></li>
+<li><a href="#%E5%B0%86%E7%AC%A6%E5%8F%B7%E7%BB%91%E5%AE%9A%E4%B8%BAir%E7%B1%BB%E5%9E%8B%E4%BB%8D%E7%84%B6%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%80%BC%E7%B1%BB%E5%9E%8B">将符号绑定为IR类型，仍然解释为值类型</a><ul>
+<li><a href="#%E7%BB%91%E5%AE%9A%E4%B8%8A%E5%92%8C%E8%A7%A3%E9%87%8A%E4%B8%BA%E7%9A%84%E5%8C%BA%E5%88%AB">“绑定上”和“解释为”的区别</a></li>
+<li><a href="#ir%E7%B1%BB%E5%9E%8B%E5%92%8Cer%E7%B1%BB%E5%9E%8B">IR类型和ER类型</a></li>
+<li><a href="#%E4%BB%8E%E7%BB%91%E5%AE%9A%E5%80%BC%E5%88%B0%E8%A7%A3%E9%87%8A%E5%80%BC">从绑定值到解释值</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B0%86%E7%AC%A6%E5%8F%B7%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">将符号解释为引用类型</a></li>
+<li><a href="#%E4%BC%A0%E5%80%BCcall-by-value%E5%92%8C%E4%BC%A0%E5%BC%95%E7%94%A8call-by-reference">传值（call-by-value）和传引用（call-by-reference）</a><ul>
+<li><a href="#%E4%BC%A0%E5%80%BC">传值</a></li>
+<li><a href="#%E4%BC%A0%E5%BC%95%E7%94%A8">传引用</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9F%90%E4%BA%9B%E5%85%B7%E6%9C%89gc%E7%9A%84%E8%AF%AD%E8%A8%80%E5%B0%86%E7%AC%A6%E5%8F%B7%E7%BB%91%E5%AE%9A%E5%88%B0%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%80%BC%E6%88%96%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</a><ul>
+<li><a href="#ier%E7%B1%BB%E5%9E%8B">IER类型</a></li>
+<li><a href="#ier%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%A5%BD%E5%A4%84">IER类型的好处</a></li>
+<li><a href="#c%E4%B8%AD%E7%9A%84%E4%BC%A0%E5%BC%95%E7%94%A8">C#中的传引用</a></li>
+</ul>
+</li>
+<li><a href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%80%BC%E7%B1%BB%E5%9E%8B">真正的值类型</a></li>
+</ul>
+<p>在众多编程语言复杂而不统一的设计的影响下，“引用类型”和“值类型”的问题，已经是一个相当混乱的问题了。在这里简单讲一下我的理解。</p>
+<p>首先，我们必须知道这两个概念是什么意思。</p>
+<ul>
+<li>绑定(binding)。绑定是编程语言里一个符号的解释。</li>
+<li>环境(environment)。环境是所有绑定的形成的复合数据结构。</li>
+</ul>
+<p>简单地说，在scheme里，我们使用</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> x <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">+</span></span> x <span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>就是把1这个值绑定到x这个符号上，下面(+ x 1)中的x就可以被解释为1.</p>
+<p><strong>然而，事情其实没有这么简单。</strong>下面，我们以C/C++为例，谈谈一个符号绑定上的，究竟是什么东西。</p>
+<h2 id="将符号解释为值"><a href="#将符号解释为值" class="headerlink" title="将符号解释为值"></a>将符号解释为值</h2><p>考虑下面的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, a);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们注意到，a这个变量，是可以被替换为0的，上面的代码和下面的代码等价：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, <span class="number">0</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个特性叫做引用透明性(Referential transparency)。其本质就是，一个符号对应一个<strong>不变的值</strong>，就像上面的代码里，我们有：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a : <span class="number">0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>a这个符号，在这个词法作用域里，处处被解释为0，只有声明一个新的a覆盖掉这个符号（C里面不允许这样），a才能不被解释为0.</p>
+<p>这才应该是所谓“a这个符号是值类型”的意义。但在C语言里，或者说在大多数命令式编程语言里，<strong>情况与此有些不同</strong>。</p>
+<h2 id="将符号绑定为IR类型，仍然解释为值类型"><a href="#将符号绑定为IR类型，仍然解释为值类型" class="headerlink" title="将符号绑定为IR类型，仍然解释为值类型"></a>将符号绑定为IR类型，仍然解释为值类型</h2><h3 id="“绑定上”和“解释为”的区别"><a href="#“绑定上”和“解释为”的区别" class="headerlink" title="“绑定上”和“解释为”的区别"></a>“绑定上”和“解释为”的区别</h3><p>简单来说，“绑定为”是实现上的概念，“解释为”是在外部观察到的现象。比如说，如果找一个C语言的REPL（类似于irb\fsi\scheme一样的东西），你输入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">a;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>它必定告诉你：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span>:<span class="number">0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>但a这个符号到底在解释器里真正对应什么东西，仅凭这个是不能确认的。它在解释器里真正对应的东西，就是“绑定为”的东西。</p>
+<h3 id="IR类型和ER类型"><a href="#IR类型和ER类型" class="headerlink" title="IR类型和ER类型"></a>IR类型和ER类型</h3><p>在C语言里，一个变量是可以被赋值的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">a = <span class="number">2</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果你还是让a绑定上一个值，那么必须要求绑定本身是可变的，而“可变”还不能是这样的可变：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，不能是开一个新的作用域来“覆盖”，而必须是精准地改变（在这个例子里的）顶层作用域的a符号。我们先禁止这种操作，因为继续看下去，你会发现<strong>这本质上也是引用</strong>。</p>
+<p>如果a不能被直接绑定上一个值，它应该被绑定上什么东西呢？<strong>我们创造一个新的类型，叫做“IR类型”</strong>，这个符号绑定上“IR类型”.</p>
+<p>IR类型”的构造方式为：</p>
+<ul>
+<li>声明一个局部变量，该局部变量的类型即为IR类型。</li>
+</ul>
+<p>“IR类型”应该支持这两种操作：</p>
+<ul>
+<li>改变其值，记作 set(a, b)，其中a为此类型的值，b为要set的值。</li>
+<li>得到其值，记作 get(a), 其中a为此类型的值，这个操作会返回最近一次set(a, b)中的b，如果没有被set过，则为未定义行为</li>
+</ul>
+<p>如何去实现这个类型呢？实现这个类型的关键在于“记忆最近的b”，而在数字电路中，“记忆”的实现方式是触发器，在现代计算机中就是内存。一个比较自然的想法是，每一个IR类型值都占有一块内存。而这个想法的实现方式，就是在IR类型的实现中，记录这块内存的索引（即地址）。</p>
+<p>我们用这种记法来写这个模型：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a : IR(location, value)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>简写为：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a : location --&gt; value</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注意到，在静态语言里，set(a, b)中的B必须是某个类型的值，记此类型为B，我们这样表示这个特定的IR类型：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">IR[B]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>你可能会说，<strong>这样不是把“变量”和“指针”混为一谈了吗？这和“指针”有什么区别呢？</strong>不要着急，我们来向这个模型中加入“指针”。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&amp;a;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这定义了一个新的操作和一个新的类型：</p>
+<ul>
+<li>对“IR类型”，可以用 get-ref(a)，得到一个“ER类型”值</li>
+<li>ER类型值有这几个操作：<ul>
+<li>de-ref(er)，er为ER类型值且er = get-ref(ir). 这个操作会返回get(ir)</li>
+<li>set-ref(er, b)，er为ER类型值且er = get-ref(ir). 这个操作和 set(ir, b) 等价</li>
+</ul>
+</li>
+</ul>
+<p>把ER类型简写为：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">er : location -&gt; value</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这么说，可能还不是特别清楚，我们来举个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a; <span class="comment">// 相当于构造了一个IR类型值，并绑定到a这个符号上，可以记作 a : loc_0 --&gt; undefined</span></span><br><span class="line">a = <span class="number">10</span>; <span class="comment">// 相当于set(a, 10)，a：loc_0 --&gt; 10</span></span><br><span class="line">a; <span class="comment">// 相当于get(a)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> * p = &amp;a;</span><br><span class="line"><span class="comment">// 注意，这里是构造了一个IR类型值，并绑定到p这个符号上，该IR的值为一个ER类型值，应该记作：</span></span><br><span class="line"><span class="comment">// p : loc_1 --&gt; loc_0 -&gt; 10</span></span><br><span class="line">*p = <span class="number">1000</span>;</span><br><span class="line"><span class="comment">// 相当于 set-ref(p, 1000)， p: loc_1 --&gt; loc_0 -&gt; 1000</span></span><br></pre></td></tr></table></figure>
+
+<p>讲到这里，我实际上说明了一个问题：<strong>C语言的变量符号，实际上绑定到IR类型值, C语言的指针值，实际上是ER类型值，C语言的指针变量符号，实际上绑定到IR[ER]类型的值</strong>。</p>
+<h3 id="从绑定值到解释值"><a href="#从绑定值到解释值" class="headerlink" title="从绑定值到解释值"></a>从绑定值到解释值</h3><p>从上面的例子中，我们看到，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个符号a，绑定为IR类型的值，在我们引用它时，通过</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a;</span><br><span class="line">&lt;=&gt;</span><br><span class="line">get(a);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个变换，实现了绑定值到解释值的转换。实际上，我们可以给出这时的绑定值和解释值的完整定义：</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ExpVal = All C Value</span><br><span class="line">BindVal = IR(ExpVal)</span><br></pre></td></tr></table></figure>
+
+<h2 id="将符号解释为引用类型"><a href="#将符号解释为引用类型" class="headerlink" title="将符号解释为引用类型"></a>将符号解释为引用类型</h2><p>我们知道C++中，有引用类型。就像下面这样：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> &amp;b = a;</span><br><span class="line">b = <span class="number">10</span>;</span><br><span class="line">a;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果有C++的REPL，将这份代码打进去，它会告诉你：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span>:<span class="number">10</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这又是怎么一回事呢？实际上，它不过是将我们之前说的IR类型，同时也作为了一种解释值而已。</p>
+<p>换句话说，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> &amp;b = a;</span><br><span class="line"><span class="comment">// a: loc_1 --&gt; value</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码中的b，接受的是a<strong>这个IR值本身</strong>，而不是它的解释值。b可以被记作：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">b: loc_0--&gt;loc_1--&gt;value</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这样一来，b的解释值就是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">loc_1--&gt;value</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>不过要注意的是，下面的代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span>&amp;&amp; c = b;</span><br><span class="line"><span class="comment">// 如果没有右值引用，c应该是loc_2 --&gt; loc_1 --&gt; loc_0 --&gt; value</span></span><br></pre></td></tr></table></figure>
+
+<p>会报错，这是因为c++用&amp;&amp;当作所谓的“右值引用”，导致引用值不能嵌套了。</p>
+<h2 id="传值（call-by-value）和传引用（call-by-reference）"><a href="#传值（call-by-value）和传引用（call-by-reference）" class="headerlink" title="传值（call-by-value）和传引用（call-by-reference）"></a>传值（call-by-value）和传引用（call-by-reference）</h2><p>在大多数语言中，函数调用都可以这样建模：</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">FUNCTION = BODY + ARG (+ ENV)?</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>BODY就是函数体，ARG就是形式参数，ENV是这个函数定义时的环境，如果有ENV，它就是一个闭包。C语言中的函数就不是闭包，所以它只有BODY和ARG。</p>
+<p>在调用函数时，我们必须将ARG绑定上实际参数，怎么绑定就成了一个问题。</p>
+<h3 id="传值"><a href="#传值" class="headerlink" title="传值"></a>传值</h3><p>传值是最自然、最合理的方法。</p>
+<p>在传值的情况下，调用函数可以写成：</p>
+<ol>
+<li>求每个参数的<strong>解释值</strong></li>
+<li>将对应的值绑定到形式参数上</li>
+<li>求函数体的值（面向表达式）/运行函数体（面向陈述）</li>
+</ol>
+<h3 id="传引用"><a href="#传引用" class="headerlink" title="传引用"></a>传引用</h3><p>传引用需要满足两个前置条件：</p>
+<ol>
+<li>这个语言的符号（可以）绑定到引用类型</li>
+<li>对应的参数绑定到引用类型</li>
+</ol>
+<p>也就是说，不绑定到引用类型的符号，或者不是符号的东西（例如字面值、调用函数的结果等等），一般来说是不能传引用的。</p>
+<p>用一句话来解释传引用，可以这样说：<strong>传引用时，传递一个绑定到IR值的符号的绑定值，而非解释值。</strong></p>
+<p>这个规则，应该说，叫做”General call by reference”，具体到C++，应该这么说：</p>
+<p><strong>如果符号的解释值是一个值，那么传递这个符号绑定的IR值；如果符号的解释值是一个IR值，那么传递这个解释值。</strong></p>
+<p>我们以一段代码为例，解释上面的话：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func2</span><span class="params">(<span class="keyword">int</span>&amp; a)</span></span>&#123;</span><br><span class="line">  a = <span class="number">2</span>;</span><br><span class="line">  <span class="comment">// a会绑定到 loc_a --&gt; loc_0 --&gt; 0</span></span><br><span class="line">  <span class="comment">// 所以运行后，a会绑定到 loc_a --&gt; loc_0 --&gt; 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// a: loc_0 --&gt; 0</span></span><br><span class="line">  func2(a);</span><br><span class="line">  <span class="comment">// 传入的是 loc_0 --&gt; 0 这个IR值</span></span><br><span class="line">  <span class="comment">// 汇编形式为</span></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * 00B48E02 8D 45 B8             lea         eax,[a]  </span></span><br><span class="line"><span class="comment">   * 00B48E05 50                   push        eax  </span></span><br><span class="line"><span class="comment">   * 00B48E06 E8 AE 87 FF FF       call        func2</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">int</span> &amp;b = a;</span><br><span class="line">  <span class="comment">// b: loc_1 --&gt; loc_0 --&gt; 2</span></span><br><span class="line">  func2(b);</span><br><span class="line">  <span class="comment">// 传入的是 b 的解释值 loc_0 --&gt; 2</span></span><br><span class="line">  <span class="comment">// 汇编形式为</span></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * 007B8E02 8B 45 AC             mov         eax,dword ptr [b]  </span></span><br><span class="line"><span class="comment">   * 007B8E05 50                   push        eax</span></span><br><span class="line"><span class="comment">   * 007B8E06 E8 AE 87 FF FF       call        func2</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>为啥C++的传引用和别的语言不太一样呢？这就要从那些带GC的语言说起了。</p>
+<h2 id="某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型"><a href="#某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型" class="headerlink" title="某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型"></a>某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</h2><h3 id="IER类型"><a href="#IER类型" class="headerlink" title="IER类型"></a>IER类型</h3><p>预测一下下面的三个带GC的语言，运行差不多代码的结果：</p>
+<p>C#:</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span>(<span class="params">List&lt;<span class="keyword">int</span>&gt; a</span>)</span>&#123;</span><br><span class="line">    a[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = List&lt;<span class="keyword">int</span>&gt;() &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">func(a);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>ruby:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span> <span class="title">a</span></span></span><br><span class="line">  a[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">func a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>scheme:</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> func</span><br><span class="line">  (<span class="name"><span class="builtin-name">lambda</span></span> (x)</span><br><span class="line">    (<span class="name"><span class="builtin-name">vector-set!</span></span> x <span class="number">0</span> <span class="number">0</span>)))</span><br><span class="line">(<span class="name"><span class="builtin-name">define</span></span> a (<span class="name"><span class="builtin-name">vector</span></span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span>))</span><br><span class="line">(<span class="name">func</span> a)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>先要提醒一句，<strong>这三个语言全部是传值的</strong>（C#可以传引用，默认传值）</p>
+<p>这三段差不多的代码都会得到一个结果–a变成了 {0, 2, 3}.</p>
+<p>为什么呢？因为在这三个语言中，数组这个结构，都是一个类似于ER类型、有IR类型的某些特征的值。</p>
+<p>这个“类似于ER类型、有IR类型的某些特征的值”，我把它叫做“IER”类型值。</p>
+<p>ER类型值的构造方法为：</p>
+<ul>
+<li>每当构造一个新的“引用类型值”（比如一个新的对象）时。</li>
+</ul>
+<p>例如，.Net IL的newobj指令会构造一个IER类型值，并把它放在求值栈(evalution stack)的栈顶。</p>
+<p>IER类型的行为为：</p>
+<ul>
+<li>IER类型值的解释值为IER类型值本身</li>
+<li>通过IER类型的值a，可以获得a指向的值（<strong>但在绝大多数有GC的语言中，用户不能这样做</strong>）</li>
+<li>通过IER类型的值a，可以获得a指向的值的一部分（例如，a指向的值是一个对象，那么可以通过a来获得某个成员的值、调用成员方法）</li>
+<li>通过IER类型的值a，可以改变a指向的值（“改变”的意义是模糊的，可以改变整个值，也可以改变这个值的一部分）</li>
+<li>IER类型指向的值，由垃圾回收器负责回收。</li>
+</ul>
+<p>我们记IRE类型的值为：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ier : loc ---&gt; value</span><br></pre></td></tr></table></figure>
+
+<p>你也许会问，IER类型的值是IER类型本身，这个特征说明它更像ER类型。它具有IR类型的哪些特质呢？</p>
+<p>观察这样的C#代码：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">List&lt;<span class="keyword">int</span>&gt; a = List&lt;<span class="keyword">int</span>&gt;() &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>a这个符号的绑定值的类型为：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">IR[List&lt;<span class="keyword">int</span>&gt;]</span><br><span class="line"><span class="comment">// 看起来像 loc_0 --&gt; value</span></span><br><span class="line"><span class="comment">// 实际上是 loc_0 --&gt; loc_1 ---&gt; value</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>习惯上，这个类型标志的应该是List&lt;int&gt;本身，而不是对List&lt;int&gt;的引用。所以它形式上更像IR一些。</p>
+<p>这样一来，整个类型体系可以被写成：</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ExpVal = IER + Value</span><br><span class="line">DenVal = IR[ExpVal]</span><br><span class="line">IER = Ref(C# Reference Type)</span><br><span class="line">Value = C# Value Type</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从这里我们可以看到，此处的“引用类型”和C++中的“引用类型”完全是两个东西。C++中的引用类型，是IR，这里的引用类型，是IER。</p>
+<h3 id="IER类型的好处"><a href="#IER类型的好处" class="headerlink" title="IER类型的好处"></a>IER类型的好处</h3><ul>
+<li><p>IER类型使得程序员不需要考虑大规模对象的复制开销，因为IER类型的值是IER类型本身，赋值过程本质上是共享的。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;()&#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br><span class="line"><span class="comment">// a: loc_a --&gt; loc_1 ---&gt; list0</span></span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line"><span class="comment">// b: loc_b --&gt; loc_1 ---&gt; list0</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同时，GC的存在使得有一种可靠的方式释放该共享对象。</p>
+</li>
+</ul>
+<h3 id="C-中的传引用"><a href="#C-中的传引用" class="headerlink" title="C#中的传引用"></a>C#中的传引用</h3><p>C#中的变量，也都是可变的，所以势必要有和IR类似的结构。（实际上就是IR）。它传引用的方式和我们前面说的一样：传引用时，传递一个绑定到IR值的符号的绑定值，而非解释值。</p>
+<p>举个例子：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span>(<span class="params"><span class="keyword">ref</span> List&lt;<span class="keyword">int</span>&gt; x</span>)</span>&#123;</span><br><span class="line">  <span class="comment">// x被绑定到 loc_x --&gt; loc_0 --&gt; loc_1 ---&gt; (list0)</span></span><br><span class="line">  x = <span class="literal">null</span>;</span><br><span class="line">  <span class="comment">// x变为 loc_x --&gt; loc_0 --&gt; null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"><span class="comment">// a: loc_0 --&gt; loc_1 ---&gt; (list0)</span></span><br><span class="line">func(<span class="keyword">ref</span> a);</span><br><span class="line"><span class="comment">// 传入a的绑定值loc_0 --&gt; loc_1 ---&gt; (list0)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="真正的值类型"><a href="#真正的值类型" class="headerlink" title="真正的值类型"></a>真正的值类型</h2><p>在F#、Haskell等等函数式语言里，有真正的、不可变的“值类型”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let a &#x3D; 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的a，永远会被解释为1。这才是真正的“值类型”。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/05/23/2020-05-23-ref/" data-id="ckg4mhp21000r17sbb4we5au6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/23/2020-06-23-tramp/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          谈谈【蹦床】技术
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/27/2020-04-27-what-to-watch-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">看点什么（二）那些让我不那么满意的作品</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>谈谈【蹦床】技术 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="过程式语言中的尾调用在scheme中，尾调用完全是循环的： 12345(define factor  (lambda (n result)    (if (&lt; n 2)      result      (factor (- n 1) (* result n)))))  这段代码和 12345678int factor(int n)&amp;#123;  int result &#x3D; 1;  while">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈【蹦床】技术">
+<meta property="og:url" content="http://example.com/2020/06/23/2020-06-23-tramp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="过程式语言中的尾调用在scheme中，尾调用完全是循环的： 12345(define factor  (lambda (n result)    (if (&lt; n 2)      result      (factor (- n 1) (* result n)))))  这段代码和 12345678int factor(int n)&amp;#123;  int result &#x3D; 1;  while">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020-06-23-tramp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/23/2020-06-23-tramp/" class="article-date">
+  <time datetime="2020-06-23T00:00:00.000Z" itemprop="datePublished">2020-06-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      谈谈【蹦床】技术
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="过程式语言中的尾调用"><a href="#过程式语言中的尾调用" class="headerlink" title="过程式语言中的尾调用"></a>过程式语言中的尾调用</h2><p>在scheme中，尾调用完全是循环的：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="builtin-name">define</span></span> factor</span><br><span class="line">  (<span class="name"><span class="builtin-name">lambda</span></span> (n result)</span><br><span class="line">    (<span class="name"><span class="builtin-name">if</span></span> (<span class="name"><span class="builtin-name">&lt;</span></span> n <span class="number">2</span>)</span><br><span class="line">      result</span><br><span class="line">      (<span class="name">factor</span> (<span class="name"><span class="builtin-name">-</span></span> n <span class="number">1</span>) (<span class="name"><span class="builtin-name">*</span></span> result n)))))</span><br></pre></td></tr></table></figure>
+
+<p>这段代码和</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">factor</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> result = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span>(n &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">    result = n * result;</span><br><span class="line">    n--;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具有完全相同的时间和空间复杂度。这是由于scheme中使用的不是【栈】，而是【继续】(continuation)。如果读者不知道什么是【继续】，可以继续关注我的博客，我会写另外一篇文章来专门解释这个问题。</p>
+<p>但在c语言那样的语言中，类似于上面的scheme的代码会产生多余的栈增长：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">rec_factor</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> ret)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (n &lt; <span class="number">2</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> rec_factor(n - <span class="number">1</span>, ret * n);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是因为，在调用rec_factor(n - 1, ret * n)时，这个rec_factor(n, ret)的局部变量、参数等等，都是没有用的。换言之，它应该【退出】之后再调用rec_factor()</p>
+<h2 id="【蹦床】技术"><a href="#【蹦床】技术" class="headerlink" title="【蹦床】技术"></a>【蹦床】技术</h2><p>为了解决这个问题，编程语言专家们引入了【蹦床】技术。这个技术的核心是【先退出，再调用】，如果你把【退出函数】想象成落下，【调用函数】想象成弹起，那么C语言的尾调用就是【跳跳跳跳跳。。。落落落落落】，而再使用了蹦床技术之后，尾调用就像是【跳落跳落跳落。。。】，自然就像一个【蹦床】一样了。</p>
+<p>怎么实现呢？我们再考察一下刚才的函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">rec_factor</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> ret)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (n &lt; <span class="number">2</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> rec_factor(n - <span class="number">1</span>, ret * n);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果return的不是一个【函数调用】，而是一个【值】，那么，它就会在这里直接返回。而我们可以在外部用这个【值】来继续计算rec_factor(n - 1, ret * n)，或者说，调用rec_factor(n - 1, ret * n)。</p>
+<p>我们先改写一下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Bounce <span class="title">rec_factor</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> ret)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (n &lt; <span class="number">2</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> Bounce;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> Bounce;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可见，这个Bounce需要既能包住一个【值】（也就是C中的值），又能包住一个【调用】。怎么设计呢？如果使用C++的话，我们有lambda()[]{}，std::function之类的匿名函数可以做到【包住调用】这点，但我们这里不用这些东西，而是使用自己定义的数据结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Bounce</span> &#123;</span></span><br><span class="line">	<span class="function"><span class="keyword">typedef</span> <span class="title">Bounce</span> <span class="params">(*func)</span><span class="params">(<span class="keyword">void</span>*, <span class="keyword">void</span>*)</span></span>;</span><br><span class="line">	func f;</span><br><span class="line">	<span class="keyword">void</span>* args;</span><br><span class="line">	<span class="keyword">void</span>* return_value;</span><br><span class="line">	<span class="keyword">bool</span> end;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这里的func类型是为了方便而定义的，第一个参数是【参数的指针】，第二个参数是【返回值的指针】，而它在语法意义上的返回值则是一个Bounce。end用来区分它是一个【函数调用】还是一个【值】。</p>
+<p>由于bounce包含了【要调用的函数指针、参数】，它自然可以用来保存调用。我们来看一下改写后的factor函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Bounce <span class="title">factor</span><span class="params">(<span class="keyword">int</span> * n, <span class="keyword">int</span>* ret)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (*n &lt; <span class="number">2</span>) &#123;</span><br><span class="line">		Bounce b;</span><br><span class="line">		b.return_value = ret;</span><br><span class="line">		b.end = <span class="literal">true</span>;</span><br><span class="line">		<span class="keyword">return</span> b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		*ret = (*n) * (*ret);</span><br><span class="line">		*n = (*n) - <span class="number">1</span>;</span><br><span class="line">		Bounce b;</span><br><span class="line">		b.f = (Bounce::func)factor;</span><br><span class="line">		b.args = n;</span><br><span class="line">		b.return_value = ret;</span><br><span class="line">		b.end = <span class="literal">false</span>;</span><br><span class="line">		<span class="keyword">return</span> b;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自然，这样的【函数】是不能直接调用的，因为它返回一个Bounce，我们需要另一个函数来**不断地处理bounce，直至得到一个【被包住的值】，而不是【被包住的调用】为止：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">Tramp</span><span class="params">(Bounce b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (b.end == <span class="literal">true</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> b.return_value;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">auto</span> hot = b;</span><br><span class="line">		<span class="keyword">while</span> (!hot.end)</span><br><span class="line">		&#123;</span><br><span class="line">			hot = hot.f(hot.args, hot.return_value);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> b.return_value;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在外部，我们会这样来调用它：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Bounce b;</span><br><span class="line">	b.f = (Bounce::func)factor;</span><br><span class="line">	b.args = <span class="built_in">malloc</span>(<span class="number">4</span>);</span><br><span class="line">	*(<span class="keyword">int</span>*)b.args = <span class="number">100000</span>;</span><br><span class="line">	b.return_value = <span class="built_in">malloc</span>(<span class="number">4</span>);</span><br><span class="line">	*(<span class="keyword">int</span>*)(b.return_value) = <span class="number">1</span>;</span><br><span class="line">	b.end = <span class="literal">false</span>;</span><br><span class="line">	Tramp(b);</span><br><span class="line"><span class="comment">// 	rec_factor(100000, 1);</span></span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; *(<span class="keyword">int</span>*)b.return_value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>下面那行被注释掉的代码，会爆栈；而我们用【蹦床】技术写的等效代码，则不会爆栈。这样一来，对于所有的尾调用，只要调用的函数满足func类型的函数声明，都可以这样调用而不会消耗额外的栈空间。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/23/2020-06-23-tramp/" data-id="ckg4mhp22000t17sb2qnx870q" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/04/2020-07-04-young/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          一个喜欢网上冲浪的小孩子
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/23/2020-05-23-ref/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">“引用类型”、“指针类型”与“值类型”</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

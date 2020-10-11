@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>让我们实现编程语言吧（一）序 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="为什么要实现编程语言 好玩 深入理解程序的执行过程 为以后的逆向工程研究打下一些基础  实现什么编程语言这里我们实现了类似于ruby的编程语言。它具有以下特性：  纯面向对象，即所有的字面量与值都是对象 值驱动，任何表达式都具有值，且其值是一个对象 支持块 大部分操作都可以归结为调用某个类的成员方法&#x2F;类方法  相比于ruby，我们做出的主要调整有：  只支持部分ruby语法 彻底推翻了ruby的单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让我们实现编程语言吧（一）序">
+<meta property="og:url" content="http://example.com/2020/03/14/2020-3-12-parser/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="为什么要实现编程语言 好玩 深入理解程序的执行过程 为以后的逆向工程研究打下一些基础  实现什么编程语言这里我们实现了类似于ruby的编程语言。它具有以下特性：  纯面向对象，即所有的字面量与值都是对象 值驱动，任何表达式都具有值，且其值是一个对象 支持块 大部分操作都可以归结为调用某个类的成员方法&#x2F;类方法  相比于ruby，我们做出的主要调整有：  只支持部分ruby语法 彻底推翻了ruby的单">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-14T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-11T04:43:47.184Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020-3-12-parser" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/03/14/2020-3-12-parser/" class="article-date">
+  <time datetime="2020-03-14T00:00:00.000Z" itemprop="datePublished">2020-03-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      让我们实现编程语言吧（一）序
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="为什么要实现编程语言"><a href="#为什么要实现编程语言" class="headerlink" title="为什么要实现编程语言"></a>为什么要实现编程语言</h2><ul>
+<li>好玩</li>
+<li>深入理解程序的执行过程</li>
+<li>为以后的逆向工程研究打下一些基础</li>
+</ul>
+<h2 id="实现什么编程语言"><a href="#实现什么编程语言" class="headerlink" title="实现什么编程语言"></a>实现什么编程语言</h2><p>这里我们实现了类似于ruby的编程语言。它具有以下特性：</p>
+<ul>
+<li>纯面向对象，即所有的字面量与值都是对象</li>
+<li>值驱动，任何表达式都具有值，且其值是一个对象</li>
+<li>支持块</li>
+<li>大部分操作都可以归结为调用某个类的成员方法/类方法</li>
+</ul>
+<p>相比于ruby，我们做出的主要调整有：</p>
+<ul>
+<li>只支持部分ruby语法</li>
+<li>彻底推翻了ruby的单件类设计，个人认为单件类是ruby设计中问题最大的一部分</li>
+<li>继承结构简单，所有对象都默认继承object类</li>
+</ul>
+<h2 id="如何实现编程语言"><a href="#如何实现编程语言" class="headerlink" title="如何实现编程语言"></a>如何实现编程语言</h2><p>简单来说有三步：</p>
+<ul>
+<li>实现前端：将输入的字符串变为一棵树（AST）</li>
+<li>实现内部数据结构</li>
+<li>实现eval函数</li>
+</ul>
+<p>今天（2020年3月14日）我们已经完成了第一个阶段的任务</p>
+<h2 id="第一步：Parser"><a href="#第一步：Parser" class="headerlink" title="第一步：Parser"></a>第一步：Parser</h2><h3 id="谈谈Parser"><a href="#谈谈Parser" class="headerlink" title="谈谈Parser"></a>谈谈Parser</h3><p>Parser是“语法解析器”的意思。一般来说它输入一串Token流，解析出一颗Ast。其实也不一定就是这样，比如说我们实现的产品就没有用词法解析器，直接通过源代码产AST。</p>
+<p>如何做到这件事呢？这是有点麻烦的。由于我没有学过编译原理，对LR、LALR的parser generator不太了解，这里只说一说递归下降解析器的原理和我们使用的Parser Generator库。</p>
+<p>在此之前，我们先要说一说所谓的“文法”，而这，就留给下面的文章吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/14/2020-3-12-parser/" data-id="ckg4mhp2c001917sbe73d5f24" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/27/2020-3-27-grammar/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          让我们实现编程语言吧（二）生成文法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/16/2020-02-16-white_album-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">WA2的逆向与外挂（一） 序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/802-11i/">802.11i</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E5%8A%A8%E7%94%BB/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/network-speed/">network_speed</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/">动画</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8A%A8%E7%94%BB/%E6%BC%AB%E7%94%BB/">漫画</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/11/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/03/2020-10-03-mma/">mathematica入坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/15/2020-09-25-fuck-the-signal/">f(x)记法的滥用与匿名函数</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
