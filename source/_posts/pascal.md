@@ -32,11 +32,11 @@ $$
 
 这个系数应该怎么算呢？仔细体会一下从$(a+b)$和$(a^2+2ab+b^2)$中得到$(a^3+3a^2b+3ab^2+b^3)$的过程：
 $$
-\begin{align*}
+\begin{aligned}
 (a+b)(a^2+2 ab+b^2) &= a(a^2+2 ab+b^2)+b(a^2+2 ab+b^2) \\
                     &= a^3+2a^2b+ab^2+a^2b+2ab^2+b^2 \\
                     &= a^3+3a^2b+3ab^2+b^3
-\end{align*}
+\end{aligned}
 $$
 在这个计算过程中，$3 a^2 b$是怎么来的？答案是，是由
 $$
@@ -90,10 +90,10 @@ $$
 $$
 
 $$
-\begin{align}
+\begin{aligned}
 \binom{n}{k} &=\binom{n-1}{k}+\binom{n-1}{k-1} \\
 \binom{n}{0} &=1
-\end{align}
+\end{aligned}
 $$
 
 究竟是如何结合在一起的呢？i.e. 如何互相推导呢？
