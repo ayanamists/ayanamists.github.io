@@ -1,0 +1,277 @@
+<h2 id="实现自动操作的几个想法">实现自动操作的几个想法</h2>
+
+<p>实现自动操作，大概有几个方法：</p>
+
+<ul>
+  <li>直接调用某些WA2的函数，强行推进</li>
+  <li>使用鼠标自动化方法，模拟人的行为</li>
+</ul>
+
+<p>这里，我们选择了第二个方案。因为在一番逆向过后，我并没有完全理解WA2剧情推进的机制，只能等日后逆向能力更强后再实践。</p>
+
+<h2 id="windows平台下鼠标自动化的方法">Windows平台下鼠标自动化的方法</h2>
+
+<p>据我所知，要实现UI的自动化，大概有几个方法：</p>
+
+<ul>
+  <li>使用win32 api，直接根据windows的消息机制进行注入。</li>
+  <li>使用vbs脚本</li>
+  <li>使用微软官方的<a href="https://docs.microsoft.com/zh-cn/windows/win32/winauto/uiauto-uiautomationoverview">UI Automation</a>库</li>
+  <li>使用python的某些库</li>
+  <li>使用自己写的驱动，实现硬件级别模拟</li>
+  <li>…</li>
+</ul>
+
+<p>这里，我们选择了第一种使用WIN API的方法，原因有两个：</p>
+
+<ul>
+  <li>相对比较简单直接，不需要进行内核编程，开发效率高</li>
+  <li>能力相对较强，能够处理绝大多数场景</li>
+</ul>
+
+<h2 id="初次尝试的折戟沉沙">初次尝试的折戟沉沙</h2>
+
+<p>我们知道，Windows的应用程序基于的是消息机制。什么是消息机制呢？MSDN上有一段令我印象深刻的解说：</p>
+
+<blockquote>
+  <p>Unlike MS-DOS-based applications, Windows-based applications are event-driven. They do not make explicit function calls (such as C run-time library calls) to obtain input. Instead, they wait for the system to pass input to them.</p>
+</blockquote>
+
+<p>每个Windows App的<strong>GUI线程</strong>都有一个<strong>消息队列</strong>，至于<strong>GUI线程</strong>是什么，我没有再MSDN上查到明确说法，个人认为是调用了<strong>CreateWindow</strong>的线程。</p>
+
+<p>应用程序使用<strong>GetMessage</strong>函数从自己的消息队列中取出消息，使用<strong>DispatchMessage</strong>将消息传给对应的WindowProc，使用<strong>WaitMessage</strong>函数等待外部传入消息。</p>
+
+<p>外部向应用程序发送消息，有两个办法：</p>
+
+<ol>
+  <li>
+    <p>使用PostMessage()函数，将一个消息压入某个窗口对应线程的消息队列中。</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">BOOL</span> <span class="nf">PostMessageA</span><span class="p">(</span>
+ <span class="n">HWND</span>   <span class="n">hWnd</span><span class="p">,</span>
+ <span class="n">UINT</span>   <span class="n">Msg</span><span class="p">,</span>
+ <span class="n">WPARAM</span> <span class="n">wParam</span><span class="p">,</span>
+ <span class="n">LPARAM</span> <span class="n">lParam</span>
+ <span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>使用SendMessage()函数，直接调用某个窗口的WindowProc。</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">LRESULT</span> <span class="nf">SendMessage</span><span class="p">(</span>
+ <span class="n">HWND</span>   <span class="n">hWnd</span><span class="p">,</span>
+ <span class="n">UINT</span>   <span class="n">Msg</span><span class="p">,</span>
+ <span class="n">WPARAM</span> <span class="n">wParam</span><span class="p">,</span>
+ <span class="n">LPARAM</span> <span class="n">lParam</span>
+ <span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>我们一向是实践第一，马上在写代码的时候发现了盲点：如何得到那个<strong>HWND</strong>类型的窗口句柄呢？这就要救助于FindWindow()函数了：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HWND</span> <span class="nf">FindWindowA</span><span class="p">(</span>
+  <span class="n">LPCSTR</span> <span class="n">lpClassName</span><span class="p">,</span>
+  <span class="n">LPCSTR</span> <span class="n">lpWindowName</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>就差一点点了！可是又如何得到主窗口的ClassName和WindowName呢？</p>
+
+<p>这里介绍一个工具，就是大名鼎鼎的spy++.</p>
+
+<p>我们可以在vs2019的工具里直接使用它：</p>
+
+<p><img src="https://pic.downk.cc/item/5e49095348b86553eed809e1.png" alt="1" /></p>
+
+<p>通过这个工具，我们就可以得到WA2主窗口的ClassName和WindowName了：</p>
+
+<p><img src="https://pic.downk.cc/item/5e490a0748b86553eed82f5f.png" alt="2" /></p>
+
+<p><img src="https://pic.downk.cc/item/5e490a0748b86553eed82f61.png" alt="3" /></p>
+
+<p>使用Spy++工具，我们还可以得知这个窗口所有的消息，进而得知鼠标点击的坐标：</p>
+
+<p><img src="https://pic.downk.cc/item/5e490b2348b86553eed86a17.png" alt="4" /></p>
+
+<p>注：这里的坐标是窗口坐标，也就是相对于这个窗口左上角的坐标。</p>
+
+<p>那么，我们只要向这个窗口发送LBUTTONDOWN和LBUTTONUP消息，不就可以模拟鼠标的行为了吗？</p>
+
+<p>写出以下代码：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">PostMessage</span><span class="p">(</span><span class="n">main_window</span><span class="p">,</span> <span class="n">WM_LBUTTONDOWN</span><span class="p">,</span> <span class="n">wparam</span><span class="p">,</span> <span class="n">lparam</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">OnCriticalError</span><span class="p">(</span><span class="s">"Post Down fail"</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="n">Sleep</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+	
+	<span class="n">wparam</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">lparam</span> <span class="o">=</span> <span class="n">MAKELPARAM</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">376</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">PostMessage</span><span class="p">(</span><span class="n">main_window</span><span class="p">,</span> <span class="n">WM_LBUTTONUP</span><span class="p">,</span> <span class="n">wparam</span><span class="p">,</span> <span class="n">lparam</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">OnCriticalError</span><span class="p">(</span><span class="s">"Post Up fail"</span><span class="p">);</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<p>实验发现，完全没啥用。第一回合，我败下阵来。</p>
+
+<h2 id="分析原因重整旗鼓">分析原因，重整旗鼓</h2>
+
+<p>为什么刚才的尝试失败了呢？我想，这个问题只能向逆向工程里要答案了。</p>
+
+<p>我们研究一下White AlbumCN这个窗口类的WindowProcess。它处理WM_LBUTTONDOWN或者WM_LBUTTONUP消息的代码在哪里呢？</p>
+
+<p><img src="https://pic.downk.cc/item/5e4925c948b86553eede746f.png" alt="6" /></p>
+
+<p>呵呵！原来如此！这个函数直接Return 0，根本不处理这个消息！</p>
+
+<p>我感到很迷惑，既然如此，它是如何接收输入的呢？</p>
+
+<p>我们先来看看主消息循环：</p>
+
+<p><img src="https://pic.downk.cc/item/5e4926ba48b86553eedeae70.png" alt="7" /></p>
+
+<p>注意被我标红的一条执行路径。被我命名为maybe_handle_click的函数，是这样的：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// line 37</span>
+  <span class="n">GetCursorPos</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Point</span><span class="p">);</span>
+  <span class="n">ScreenToClient</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Point</span><span class="p">);</span>
+
+<span class="c1">//line 105 - 129</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">byte_B601DF</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">v21</span> <span class="o">=</span> <span class="n">GetAsyncKeyState</span><span class="p">;</span>
+      <span class="n">if_leftButtonPress</span> <span class="o">=</span> <span class="p">(</span><span class="n">GetAsyncKeyState</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x8001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="n">if_rightButtonPress</span> <span class="o">=</span> <span class="p">(</span><span class="n">GetAsyncKeyState</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x8001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nl">LABEL_47:</span>
+      <span class="n">byte_B601AB</span> <span class="o">=</span> <span class="p">(</span><span class="n">v21</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x8001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">goto</span> <span class="n">LABEL_48</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">if_leftButtonPress</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">v22</span> <span class="o">=</span> <span class="n">GetAsyncKeyState</span><span class="p">;</span>
+      <span class="n">if_leftButtonPress</span> <span class="o">=</span> <span class="p">(</span><span class="n">GetAsyncKeyState</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x8001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">if_rightButtonPress</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">byte_B601AB</span> <span class="p">)</span>
+      <span class="p">{</span>
+        <span class="n">v21</span> <span class="o">=</span> <span class="n">GetAsyncKeyState</span><span class="p">;</span>
+        <span class="n">if_leftButtonPress</span> <span class="o">=</span> <span class="p">(</span><span class="n">GetAsyncKeyState</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x8001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">if_leftButtonPress</span> <span class="p">)</span>
+        <span class="p">{</span>
+          <span class="n">if_rightButtonPress</span> <span class="o">=</span> <span class="p">(</span><span class="n">GetAsyncKeyState</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x8001</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">if_rightButtonPress</span> <span class="p">)</span>
+            <span class="k">goto</span> <span class="n">LABEL_47</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>这个函数里反复调用了一个叫做GetAsyncKeyState的函数，查MSDN，描述如下：</p>
+
+<blockquote>
+  <p>Determines whether a key is up or down at the time the function is called, and whether the key was pressed after a previous call to GetAsyncKeyState.</p>
+</blockquote>
+
+<p>当这个函数的参数为1时，检测的就是鼠标左键。网上的资料还说，这个函数相当底层，基本是检测硬件的。</p>
+
+<p>几乎可以确定，这个函数就是检测输入的。</p>
+
+<p>那么，我们手里还有什么函数，可以在底层注入鼠标消息呢？</p>
+
+<p>有，就是SendInput()，函数原型如下：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UINT</span> <span class="nf">SendInput</span><span class="p">(</span>
+  <span class="n">UINT</span>    <span class="n">cInputs</span><span class="p">,</span>
+  <span class="n">LPINPUT</span> <span class="n">pInputs</span><span class="p">,</span>
+  <span class="kt">int</span>     <span class="n">cbSize</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>这个函数也工作在底层，相当于直接用键盘/鼠标进行操作。</p>
+
+<h2 id="再次尝试再次失败">再次尝试，再次失败</h2>
+
+<p>我们写出以下代码：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">if</span> <span class="p">(</span><span class="n">IsIconic</span><span class="p">(</span><span class="n">main_window</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">ShowWindow</span><span class="p">(</span><span class="n">main_window</span><span class="p">,</span> <span class="n">SW_RESTORE</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">SetForegroundWindow</span><span class="p">(</span><span class="n">main_window</span><span class="p">))</span> <span class="p">{</span>
+		<span class="n">OnCriticalError</span><span class="p">(</span><span class="s">"Set window fail"</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Inject</span><span class="o">::</span><span class="n">EnablePrivilege</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">OnCriticalError</span><span class="p">(</span><span class="s">"Privilege promt fail"</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">BeginEvent</span><span class="o">::</span><span class="n">SendBeginEvent</span><span class="p">(</span><span class="n">main_window</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>其中SendBeginEvent()函数定义如下：</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="n">BeginEvent</span> <span class="p">{</span>
+	<span class="k">const</span> <span class="n">DWORD</span> <span class="n">beginX</span> <span class="o">=</span> <span class="mi">600</span><span class="p">;</span>
+	<span class="k">const</span> <span class="n">DWORD</span> <span class="n">beginY</span> <span class="o">=</span> <span class="mi">376</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="n">SendBeginEvent</span><span class="p">(</span><span class="n">HWND</span> <span class="n">main_window</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">InputInjecter</span><span class="o">::</span><span class="n">SendMouseEvent</span><span class="p">(</span><span class="n">main_window</span><span class="p">,</span> <span class="n">beginX</span><span class="p">,</span> <span class="n">beginY</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">namespace</span> <span class="n">InputInjecter</span> <span class="p">{</span>
+	<span class="kt">void</span> <span class="n">SendMouseEvent</span><span class="p">(</span><span class="n">HWND</span> <span class="n">main_window</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">POINT</span> <span class="n">p</span><span class="p">;</span>
+		<span class="n">p</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+		<span class="n">p</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+
+		<span class="n">ClientToScreen</span><span class="p">(</span><span class="n">main_window</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">p</span><span class="p">);</span>
+		<span class="n">SetCursorPos</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+
+		<span class="n">LPMOUSEINPUT</span> <span class="n">input</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MOUSEINPUT</span><span class="p">;</span>
+		<span class="n">input</span><span class="o">-&gt;</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="n">MOUSEEVENTF_ABSOLUTE</span> <span class="o">|</span> <span class="n">MOUSEEVENTF_MOVE</span> <span class="o">|</span> <span class="n">MOUSEEVENTF_LEFTDOWN</span> <span class="o">|</span> <span class="n">MOUSEEVENT_LEFTUP</span><span class="p">;</span>
+		<span class="n">input</span><span class="o">-&gt;</span><span class="n">dx</span> <span class="o">=</span> <span class="n">Helper</span><span class="o">::</span><span class="n">CalculateAbsoluteCoordinateX</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+		<span class="n">input</span><span class="o">-&gt;</span><span class="n">dy</span> <span class="o">=</span> <span class="n">Helper</span><span class="o">::</span><span class="n">CalculateAbsoluteCoordinateY</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+		<span class="n">input</span><span class="o">-&gt;</span><span class="n">mouseData</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">input</span><span class="o">-&gt;</span><span class="n">dwExtraInfo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">input</span><span class="o">-&gt;</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+		<span class="n">INPUT</span> <span class="n">input_seal</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+		<span class="n">input_seal</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">type</span> <span class="o">=</span> <span class="n">INPUT_MOUSE</span><span class="p">;</span>
+		<span class="n">input_seal</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">mi</span> <span class="o">=</span> <span class="o">*</span><span class="n">input</span><span class="p">;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">SendInput</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_seal</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">INPUT</span><span class="p">)))</span> <span class="p">{</span>
+			<span class="n">OnCriticalError</span><span class="p">(</span><span class="s">"Send Down fail"</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="n">Sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>结果很诡异，用spy++可以看到消息是正确的，但桌面上的WA2就是纹丝不动。</p>
+
+<p>为啥又失败了？我百思不得其解。</p>
+
+<h2 id="猜测和成功">猜测和成功</h2>
+
+<p>我们观察到了两个现象：</p>
+
+<ul>
+  <li>那个may_be_handle_click函数有很多反复横跳的地方，检测变量更是变来变去，强行分析似乎很麻烦。</li>
+  <li>玩游戏的实际体验是，按下左键就会触发，而不是抬起时才触发。</li>
+</ul>
+
+<p>我们猜想，是不是只注入DOWN的消息，不注入UP的消息，我们就会成功呢？</p>
+
+<p>修改代码如下：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">input</span><span class="o">-&gt;</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="n">MOUSEEVENTF_ABSOLUTE</span> <span class="o">|</span> <span class="n">MOUSEEVENTF_MOVE</span> <span class="o">|</span> <span class="n">MOUSEEVENTF_LEFTDOWN</span> <span class="o">|</span> <span class="n">MOUSEEVENT_LEFTUP</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>修改为：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">input</span><span class="o">-&gt;</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="n">MOUSEEVENTF_ABSOLUTE</span> <span class="o">|</span> <span class="n">MOUSEEVENTF_MOVE</span> <span class="o">|</span> <span class="n">MOUSEEVENTF_LEFTDOWN</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>结果成功。现在想到这件事，我的脸上仍然会浮现开心的笑容。这就是逆向的魅力所在吧！</p>
+
+<p>现在，我们获得了自动化的“手”，下面，我们要获得自动化的“眼睛”。</p>

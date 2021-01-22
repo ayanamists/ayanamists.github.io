@@ -1,0 +1,966 @@
+I"<ul>
+  <li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
+  <li><a href="#%e5%9b%be%e7%9a%84%e5%ae%9a%e4%b9%89">图的定义</a>
+    <ul>
+      <li><a href="#%e5%9b%be%e7%9a%84%e4%b8%80%e8%88%ac%e5%ae%9a%e4%b9%89">图的一般定义</a></li>
+      <li><a href="#%e5%87%a0%e7%a7%8d%e7%89%b9%e6%ae%8a%e7%9a%84%e5%9b%be">几种特殊的图</a></li>
+      <li><a href="#%e8%bf%9e%e9%80%9a%e6%80%a7">连通性</a>
+        <ul>
+          <li><a href="#%e6%97%a0%e5%90%91%e5%9b%be">无向图</a></li>
+          <li><a href="#%e6%9c%89%e5%90%91%e5%9b%be">有向图</a></li>
+        </ul>
+      </li>
+      <li><a href="#%e7%94%9f%e6%88%90%e6%a0%91">生成树</a></li>
+    </ul>
+  </li>
+  <li><a href="#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8%e8%a1%a8%e7%a4%ba">图的存储表示</a>
+    <ul>
+      <li><a href="#adt-%e4%b8%8e-%e6%8a%bd%e8%b1%a1%e7%b1%bb%e6%8e%a5%e5%8f%a3">ADT 与 抽象类接口</a></li>
+      <li><a href="#%e9%80%86%e9%82%bb%e6%8e%a5%e8%a1%a8">（逆）邻接表</a>
+        <ul>
+          <li><a href="#%e9%82%bb%e6%8e%a5%e8%a1%a8">邻接表</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#%e5%9b%be%e4%b8%8a%e7%9a%848%e7%a7%8d%e6%b3%9b%e5%9e%8b%e7%ae%97%e6%b3%95">图上的8种泛型算法</a>
+    <ul>
+      <li><a href="#%e5%89%8d%e8%a8%80-1">前言</a></li>
+      <li><a href="#%e5%9b%be%e7%9a%84%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e7%ae%97%e6%b3%95">图的深度优先搜索算法</a></li>
+      <li><a href="#%e5%9b%be%e7%9a%84%e5%b9%bf%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e7%ae%97%e6%b3%95">图的广度优先搜索算法</a></li>
+      <li><a href="#%e7%94%a8%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e5%88%a4%e6%96%ad%e6%98%af%e5%90%a6%e6%9c%89%e7%8e%af">用深度优先搜索判断是否有环</a></li>
+      <li><a href="#%e7%94%a8%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e8%bf%9b%e8%a1%8c%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f">用深度优先搜索进行拓扑排序</a></li>
+      <li><a href="#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91--prim%e7%ae%97%e6%b3%95">最小生成树–Prim算法</a></li>
+      <li><a href="#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91----kruskal%e7%ae%97%e6%b3%95">最小生成树 – Kruskal算法</a></li>
+      <li><a href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95----dijkstra%e7%ae%97%e6%b3%95">最短路径算法 – Dijkstra算法</a></li>
+      <li><a href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95----flyod%e7%ae%97%e6%b3%95">最短路径算法 – Flyod算法</a></li>
+    </ul>
+  </li>
+  <li><a href="#%e4%b8%a4%e4%b8%aa%e4%b8%93%e7%94%a8%e7%ae%97%e6%b3%95----%e9%82%bb%e6%8e%a5%e8%a1%a8%e4%b8%8a%e7%9a%84%e5%a0%86%e4%bc%98%e5%8c%96dijkstra%e7%ae%97%e6%b3%95%e5%92%8cprim%e7%ae%97%e6%b3%95">两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</a></li>
+</ul>
+
+<h2 id="前言">前言</h2>
+<p>这一章，我们学习了图这种数据结构。本笔记主要完成了以下工作：</p>
+<ul>
+  <li>总结了图的各种知识</li>
+  <li>实现了邻接矩阵和邻接表定义的Graph类</li>
+  <li>实现了IndexMapping 类，使得下面的泛型图算法成为可能（把元素内容和标记分开，下面的泛型图算法实现在整形标记上）</li>
+  <li>实现了8个泛型图算法，并进行了简单测试，分别是
+    <ul>
+      <li>DFS 深度优先搜索</li>
+      <li>BFS 广度优先搜索</li>
+      <li>通过深度优先搜索判断图中是否有环</li>
+      <li>通过深度优先搜索进行拓扑排序</li>
+      <li>Prim最小生成树算法</li>
+      <li>Kruskal最小生成树算法</li>
+      <li>Dijskstra 最短路径算法</li>
+      <li>Floyd 最短路径算法</li>
+    </ul>
+  </li>
+  <li>实现了两个专用图算法，分别是
+    <ul>
+      <li>邻接表上的堆优化Dijkstra算法</li>
+      <li>邻接表上的堆优化Prim算法</li>
+    </ul>
+  </li>
+  <li>给出了几个简单的图论算法应用</li>
+</ul>
+
+<h2 id="图的定义">图的定义</h2>
+<h3 id="图的一般定义">图的一般定义</h3>
+<blockquote>
+  <p>一张图 $G$ 是一个二元组$(V,E)$，其中$V$称为顶点集，$E$称为边集。它们亦可写成$V(G)$和$E(G)$。 ${\displaystyle E}$的元素是一个二元组数对，用${\displaystyle (x,y)}$表示，其中${\displaystyle x,y\in V}x,y \in V$。</p>
+</blockquote>
+
+<ul>
+  <li>从定义中可以看到，存储结构的设计主要在于表征此集合关系</li>
+  <li>可以从边有无方向、是否允许重边（两条或多条边的起止点相同）、是否允许环、边是否带权将图分为多种</li>
+  <li>值得一提的是，树是连通无回路的图</li>
+</ul>
+
+<h3 id="几种特殊的图">几种特殊的图</h3>
+<ul>
+  <li>n-阶完全图(complete graph)$K_{n}$ − $n$个顶点两两之间都有一条边，每个顶点的度数都$n−1$ ◦ 边的总数目为$n(n−1)/2$.</li>
+  <li>二部图 - 顶点集可以划分为两个集合$v_{i}, v_{j}$，且$v_{i}$与$v_{j}$之间没有边</li>
+</ul>
+
+<h3 id="连通性">连通性</h3>
+<h4 id="无向图">无向图</h4>
+<ul>
+  <li>一个无向图是联通的，当且仅当每两个点都是联通的。
+    <ul>
+      <li>两个点是联通的，当且仅当他们之间有路径。</li>
+    </ul>
+  </li>
+  <li>如果一个图不是联通的，那么它的最大联通子图就叫做联通分量。</li>
+  <li>可以直观地看到，一个无向图联通的最小边数为$n - 1$</li>
+</ul>
+
+<h4 id="有向图">有向图</h4>
+<ul>
+  <li>一个有向图是弱联通的，当且仅当把它对应的无向图是联通的。</li>
+  <li>一个有向图是强联通的，当且仅当每两个点都是联通的。</li>
+  <li>可以直观地看到，一个有向图强联通的最小边数为$n$</li>
+</ul>
+
+<h3 id="生成树">生成树</h3>
+<ul>
+  <li>一般仅研究无向图的生成树（有向图的“生成树”实际上不能看作树，有术语“最小树形图”来描述此结构，这里不表）</li>
+  <li>无向图$G(V, E)$的生成树是一颗含有所有顶点$V$的，边属于$E$的树。</li>
+  <li>可以看作$G$的极小联通子图。</li>
+  <li>生成树是STP协议的基础。STP 协议就是通过构造网络拓扑图中的生成树来解决环路问题，具体协议内容参见IEEE 802.1D</li>
+</ul>
+
+<h2 id="图的存储表示">图的存储表示</h2>
+<p>图的存储结构主要分为三种：</p>
+<ul>
+  <li>（逆）邻接表</li>
+  <li>邻接矩阵</li>
+  <li>关联矩阵</li>
+</ul>
+
+<p>教师还讲述了两种：</p>
+<ul>
+  <li>有向图的十字链表</li>
+  <li>无向图的邻接多重表</li>
+</ul>
+
+<p>下面只研究（逆）邻接表和邻接矩阵, 并实现我们自己的Graph C++类。但在此之前，我们首先要知道一个Graph类需要有哪些方法。</p>
+
+<h3 id="adt-与-抽象类接口">ADT 与 抽象类接口</h3>
+<ul>
+  <li>ADT Name: Graph
+    <ul>
+      <li>Description: …</li>
+      <li>Invariants:
+        <ol>
+          <li>Empty graph: number of vertices is 0; number of edges is 0.</li>
+          <li>Self-loops are not allowed.</li>
+        </ol>
+      </li>
+      <li>Attributes:
+        <ul>
+          <li>number of vertices</li>
+          <li>number of edges.</li>
+        </ul>
+      </li>
+      <li>Operations:
+        <ul>
+          <li>Graph() …</li>
+          <li>addVertex(Vertex v) …</li>
+          <li>addEdge(Vertex v_1, Vertex v_2) …</li>
+          <li>removeVertex(Vertex v) …</li>
+          <li>removeVertex(Vertex v) …</li>
+          <li>removeEdge(Vertex v_1, Vertex v_2) …</li>
+          <li>getNeighbors(Vertex v)
+            <ul>
+              <li>returns: a collection containing the Vertices incident on v</li>
+            </ul>
+          </li>
+          <li>getNumberOfVertices()</li>
+          <li>getNumberOfEdges()</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>基于以上的ADT，我们写一个抽象类Graph():</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Vertex</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">Graph</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">addEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">removeVertex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">removeEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span> <span class="o">&amp;</span> <span class="n">v_2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">getNeighbors</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">uint32_t</span> <span class="n">getNumberOfVertices</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">uint32_t</span> <span class="n">getNumberOfEdges</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">clearGraph</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<h3 id="逆邻接表">（逆）邻接表</h3>
+<h4 id="邻接表">邻接表</h4>
+<p>邻接表是指把图存到一个线性表中，这个线性表的每一个元素都是一个链表，链表的第一个元素是一个图中的顶点，其他元素是和这个顶点相邻的顶点。线性表中的元素不重复地覆盖所有图中的顶点。
+示意图：</p>
+
+<p><img src="./pic/2.png" /></p>
+
+<p>从描述中可以看出，这个结构实际上用于有向图。
+这个结构实现起来很简单，如下所示：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">stdVertex</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">value</span> <span class="n">val</span><span class="p">;</span>
+	<span class="n">stdVertex</span><span class="p">()</span> <span class="p">{</span> <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+	<span class="n">stdVertex</span><span class="p">(</span><span class="n">value</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">bool</span> <span class="k">operator</span> <span class="o">==</span><span class="p">(</span><span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">val</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cm">/*
+ * here we use Vertex class as node,
+ * to correctly implement this class, you should follow these rules:
+ * 1. overload =(), or don't use anything could cause deep copy/shallow copy problem.
+ * 2. implement these methods:
+ *    1. getValue()
+ */</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Vertex</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="p">&gt;,</span> <span class="k">class</span> <span class="nc">VertexInner</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span>
+<span class="k">class</span> <span class="nc">ListGraph</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Graph</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="n">VertexInner</span><span class="o">&gt;</span> <span class="n">vec_list</span><span class="p">;</span>
+		<span class="n">vec_list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">VertexInner</span><span class="p">(</span><span class="n">v</span><span class="p">));</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">vec_list</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">addEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+			<span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span><span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">v_1</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}});</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+			<span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="p">(</span><span class="s">"v_1 is not a vertex in list!"</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">push_back</span><span class="p">(</span><span class="n">v_2</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">removeVertex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">bool</span> <span class="n">hit</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">();)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">i</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+				<span class="n">hit</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="p">}</span>
+			<span class="k">else</span> <span class="p">{</span>
+				<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">begin</span><span class="p">();</span> <span class="n">j</span> <span class="o">!=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">end</span><span class="p">();)</span> <span class="p">{</span>
+					<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">j</span> <span class="o">==</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+						<span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">erase</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+					<span class="p">}</span>
+					<span class="k">else</span> <span class="p">{</span> <span class="o">++</span><span class="n">j</span><span class="p">;</span> <span class="p">}</span>
+				<span class="p">}</span>
+				<span class="n">i</span><span class="o">++</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">hit</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="p">(</span><span class="s">"can't find vertex!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">removeEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">adjList</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="cm">/* find v_1 */</span>
+			<span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">v_1</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">begin</span><span class="p">();</span> <span class="n">j</span> <span class="o">!=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">end</span><span class="p">();)</span> <span class="p">{</span>
+					<span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="n">v_2</span><span class="p">)</span> <span class="p">{</span>
+						<span class="cm">/* find v_2 */</span>
+						<span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">erase</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+						<span class="k">goto</span> <span class="n">END</span><span class="p">;</span>
+					<span class="p">}</span>
+					<span class="k">else</span> <span class="p">{</span>
+						<span class="n">j</span><span class="o">++</span><span class="p">;</span>
+					<span class="p">}</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="p">(</span><span class="s">"can't find Edge!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="nl">END:</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">getNeighbors</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">adjList</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+			<span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span> <span class="n">list</span><span class="p">)</span> <span class="p">{</span><span class="k">if</span> <span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">v_1</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="n">list</span><span class="p">;</span> <span class="p">}});</span>
+
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">i</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span><span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">j</span><span class="p">);</span> <span class="p">});</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">uint32_t</span> <span class="n">getNumberOfVertices</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="p">}</span>
+	
+	<span class="kt">uint32_t</span> <span class="n">getNumberOfEdges</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+			<span class="p">[</span><span class="o">&amp;</span><span class="n">sum</span><span class="p">](</span><span class="k">auto</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span><span class="n">sum</span> <span class="o">+=</span> <span class="n">i</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+		<span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">clearGraph</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="n">adjList</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="nl">protected:</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="n">VertexInner</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">adjList</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>这个时候问题来了，在这个设计下，我们如何实现带权图呢？</p>
+
+<p>呵呵，这个问题我在设计之初就想到了。</p>
+
+<p>首先我们考虑，只要将VertexInner类的参数改成下面这个类，实际上就实现了带权图：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">ValuedVertex</span> <span class="o">:</span> <span class="k">public</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="p">{</span>
+	<span class="cm">/* edge_value represents the value of edge 
+	 * between the former vertex and that vertex
+	 * if this vertex is the first vertex, 
+	 * then edge_value MUST be INT_MAX
+	 */</span>
+	<span class="kt">uint32_t</span> <span class="n">edge_value</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>那么，我们只要继承一下ListGraph，再重载一个addEdge方法就可以了。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Vertex</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="p">&gt;</span> <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">ValuedListGraph</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ListGraph</span><span class="o">&lt;</span><span class="n">value</span><span class="p">,</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">ValuedVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="kt">void</span> <span class="n">addEdge</span><span class="p">(</span><span class="n">Vertex</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span> <span class="n">v_2</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">_value</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+			<span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span><span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">==</span> <span class="n">v_1</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}});</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+			<span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="p">(</span><span class="s">"v_1 is not a vertex in list!"</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">ValuedVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="n">vex</span><span class="p">(</span><span class="n">v_2</span><span class="p">);</span>
+		<span class="n">vex</span><span class="p">.</span><span class="n">edge_value</span> <span class="o">=</span> <span class="n">_value</span><span class="p">;</span> 
+		<span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">push_back</span><span class="p">(</span><span class="n">vex</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>这样邻接表就实现好了。邻接矩阵的实现其实更加简单：</p>
+
+<p>由于邻接矩阵天生就适合带权图（矩阵的元素是数），所以我们直接实现为带权图。</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define UNCONNECTED INT_MAX
+</span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Vertex</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="p">&gt;</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">MatrixGraph</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IndexGraph</span><span class="o">&lt;</span><span class="n">value</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">MatrixGraph</span><span class="p">(){}</span>
+	<span class="kt">void</span> <span class="n">addVertex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="cm">/* add colunm */</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">matrix</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">push_back</span><span class="p">(</span><span class="n">UNCONNECTED</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* add row */</span>
+		<span class="kt">size_t</span> <span class="n">vec_size</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">(</span><span class="n">vec_size</span><span class="p">,</span> <span class="n">UNCONNECTED</span><span class="p">);</span>
+		<span class="n">vec</span><span class="p">[</span><span class="n">vec_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">matrix</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">vec</span><span class="p">);</span>
+
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">addVertexToMap</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="kt">void</span> <span class="n">addEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_2</span><span class="p">)</span> <span class="p">{</span> <span class="n">addEdge</span><span class="p">(</span><span class="n">v_1</span><span class="p">,</span> <span class="n">v_2</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">addEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">uint32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">v_1</span><span class="p">);</span>
+		<span class="kt">uint32_t</span> <span class="n">j</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">v_2</span><span class="p">);</span>
+		<span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">removeVertex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">removeEdge</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_1</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v_2</span><span class="p">){}</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">getNeighbors</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="kt">uint32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_if_connected</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+				<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">j</span><span class="p">)));</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">uint32_t</span> <span class="n">getNumberOfVertices</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="kt">uint32_t</span> <span class="n">getNumberOfEdges</span><span class="p">()</span> <span class="p">{</span>
+		<span class="kt">uint32_t</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">_if_connected</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="p">{</span>
+					<span class="n">ret</span><span class="o">++</span><span class="p">;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">clearGraph</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">matrix</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+	<span class="p">}</span>
+
+<span class="nl">protected:</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;&gt;</span> <span class="n">matrix</span><span class="p">;</span>
+	
+	<span class="kt">bool</span> <span class="n">_if_connected</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">index_1</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">index_2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">matrix</span><span class="p">[</span><span class="n">index_1</span><span class="p">][</span><span class="n">index_2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">UNCONNECTED</span> <span class="o">&amp;&amp;</span> <span class="n">index_1</span> <span class="o">!=</span> <span class="n">index_2</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">_get_neighbors</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">matrix</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">_if_connected</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span> <span class="p">{</span>
+				<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">int</span> <span class="n">_get_value</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">pos_1</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">pos_2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">matrix</span><span class="p">[</span><span class="n">pos_1</span><span class="p">][</span><span class="n">pos_2</span><span class="p">];</span>
+	<span class="p">}</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">IndexEdge</span><span class="o">&gt;</span> <span class="n">_get_all_edges</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">IndexEdge</span><span class="o">&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">UNCONNECTED</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">IndexEdge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]));</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div></div>
+
+<h2 id="图上的8种泛型算法">图上的8种泛型算法</h2>
+
+<h3 id="前言-1">前言</h3>
+
+<p>我们实现了8种泛型图算法。“泛型”一词的意思是，这算法不与特定具体实现相关。只要特定具体实现实现了我们在算法中用到的各种函数，就可以使用该算法。</p>
+
+<p>这是怎么做到的呢？这里采用了继承的方法。</p>
+
+<p>我们首先将图中的每个元素与序号（一个整数）建立映射关系，下面的算法就都使用序号进行操作。这个行为被封装为IndexMapping类：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Vertex</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="p">&gt;</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">IndexMapping</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="kt">uint32_t</span> <span class="n">getIndex</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">valueToIndex</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">value</span> <span class="n">getValue</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">indexToValue</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="kt">uint32_t</span> <span class="n">addVertexToMap</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">indexToValue</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">valueToIndex</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">value</span><span class="p">,</span> <span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">val</span><span class="p">,</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">indexToValue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">indexToValue</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">uint32_t</span> <span class="n">removeVertexFromMap</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">int</span> <span class="n">index_v</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">indexToValue</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">indexToValue</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">index_v</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">valueToIndex</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">valueToIndex</span><span class="p">.</span><span class="n">end</span><span class="p">();)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">second</span> <span class="o">==</span> <span class="n">index_v</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">i</span> <span class="o">=</span> <span class="n">valueToIndex</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+			<span class="p">}</span>
+			<span class="k">else</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">((</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">second</span> <span class="o">&gt;</span> <span class="n">index_v</span><span class="p">)</span> <span class="p">{</span>
+					<span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">second</span><span class="o">--</span><span class="p">;</span>
+				<span class="p">}</span>
+				<span class="n">i</span><span class="o">++</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">index_v</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="nl">private:</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">value</span><span class="p">,</span> <span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">valueToIndex</span><span class="p">;</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="n">indexToValue</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>然后，用IndexGraph继承IndexMapping类和Graph类：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Vertex</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="p">&gt;</span> <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">IndexGraph</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Graph</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span><span class="p">,</span> <span class="k">public</span> <span class="n">IndexMapping</span><span class="o">&lt;</span><span class="n">value</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;</span> 
+</code></pre></div></div>
+
+<p>最后，用一个具体类继承IndexGraph类：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">Vertex</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="n">value</span><span class="p">&gt;,</span> <span class="k">class</span> <span class="nc">VertexInner</span> <span class="o">=</span> <span class="n">stdVertex</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;&gt;</span>
+<span class="k">class</span> <span class="nc">ListGraph</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IndexGraph</span><span class="o">&lt;</span><span class="n">value</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>有开发经验的人恐怕立刻就会想到我要做什么了。现在只要在IndexGraph类中实现基于整形标记的各种图上算法，各个具体子类就会自动地获得运行这些算法的能力！</p>
+
+<p>下面，我们就来实际地看一下这些算法。</p>
+
+<p>注：所有算法都是IndexGraph的成员函数，public, private, protected是c++成员函数可见性的声明。</p>
+
+<h3 id="图的深度优先搜索算法">图的深度优先搜索算法</h3>
+<blockquote>
+  <p>深度优先搜索算法（英语：Depth-First-Search，DFS）是一种用于遍历或搜索树或图的算法。沿着树的深度遍历树的节点，尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将回溯到发现节点v的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止。
+我们实现如下：</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">public:</span>
+	<span class="cm">/* Depth First Search */</span>
+	<span class="kt">void</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">Vertex</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">do_something</span><span class="p">,</span> <span class="n">Vertex</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">help_vec_8</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+		<span class="kt">uint32_t</span> <span class="n">start_index</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">start</span><span class="p">);</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">STD_DFS</span><span class="p">(</span><span class="n">do_something</span><span class="p">,</span> <span class="n">start_index</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="nf">STD_DFS</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">Vertex</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">do_something</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">vertex</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">do_something</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">vertex</span><span class="p">)));</span>
+		<span class="n">help_vec_8</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">list</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">STD_DFS</span><span class="p">(</span><span class="n">do_something</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>这里用到了一个函数_get_neighbors(uint32_t v)这个函数会返所有与v相邻的点。声明为：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">_get_neighbors</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">index</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="图的广度优先搜索算法">图的广度优先搜索算法</h3>
+<blockquote>
+  <p>广度优先搜索算法（英语：Breadth-First-Search，缩写为BFS），又译作宽度优先搜索，或横向优先搜索，是一种图形搜索算法。简单的说，BFS是从根节点开始，沿着树的宽度遍历树的节点。如果所有节点均被访问，则算法中止。
+我们实现如下：</p>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">public:</span>
+	<span class="kt">void</span> <span class="nf">BFS</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">Vertex</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">do_something</span><span class="p">,</span> <span class="n">Vertex</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">_start</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">start</span><span class="p">);</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">help_vec_8</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">queue</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">help_quene</span><span class="p">;</span>
+		<span class="n">help_quene</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">_start</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(;</span><span class="o">!</span><span class="n">help_quene</span><span class="p">.</span><span class="n">empty</span><span class="p">();)</span> <span class="p">{</span>
+			<span class="kt">uint32_t</span> <span class="n">now</span> <span class="o">=</span> <span class="n">help_quene</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+			<span class="n">help_quene</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+			<span class="n">help_vec_8</span><span class="p">[</span><span class="n">now</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="n">do_something</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">now</span><span class="p">)));</span>
+			<span class="k">auto</span> <span class="n">neighbors</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">now</span><span class="p">);</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">neighbors</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">help_quene</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="用深度优先搜索判断是否有环">用深度优先搜索判断是否有环</h3>
+<p>这个算法很简单，大意是将每个点分为三种状态:</p>
+
+<p>{已遍历，未遍历，遍历中}</p>
+
+<p>如果出现了一个{遍历中}的点被再次遍历的情况，那么有环，反之无环。</p>
+
+<p>实现如下：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">public:</span>
+<span class="cp">#define RED 1
+#define WHITE 0
+#define GREEN -1
+</span>	<span class="cm">/* if the graph have a ring */</span>
+	<span class="kt">bool</span> <span class="nf">ifRing</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">help_vec_8</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">WHITE</span><span class="p">);</span>
+		<span class="kt">uint32_t</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">RING_DFS</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">ring_hit</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="nf">RING_DFS</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ring_hit</span> <span class="o">==</span> <span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">==</span> <span class="n">RED</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">ring_hit</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="p">{</span>
+			<span class="n">help_vec_8</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">RED</span><span class="p">;</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">list</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">GREEN</span><span class="p">)</span>
+				<span class="p">{</span>
+					<span class="n">RING_DFS</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+			<span class="n">help_vec_8</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">GREEN</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="kt">bool</span> <span class="n">ring_hit</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="用深度优先搜索进行拓扑排序">用深度优先搜索进行拓扑排序</h3>
+<p>拓扑排序有一种不使用深度优先搜索、基于引用计数的算法，这里没有实现。我们实现的是稍微不太好理解的基于深度优先搜索的算法。</p>
+
+<p>这算法简单来说，就是基于这样一个事实</p>
+<blockquote>
+  <p>在深度优先搜索中，如果一个点的搜索完成，那么它后继的所有点的搜索必定已经完成。</p>
+</blockquote>
+
+<p>这个事实告诉我们，如果在一个点搜索完成时将这个点压入结果栈中，那么这个结果栈的顺序必然是一个拓扑排序序列的反序列
+实现如下：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">public:</span>
+<span class="cm">/* Topological Sort */</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">TopoSort</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ifRing</span><span class="p">())</span> <span class="p">{</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"can't sort because of ring!"</span><span class="p">);</span> <span class="p">}</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">help_vec_8</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">SORT_DFS</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">sort_result_vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">sort_result_vec</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">result_vec</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">sort_result_vec</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">result_vec</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">i</span><span class="p">)));</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">result_vec</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+		<span class="kt">void</span> <span class="nf">SORT_DFS</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">index</span><span class="p">){</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">neighbor</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">neighbor</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">help_vec_8</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">SORT_DFS</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">sort_result_vec</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">sort_result_vec</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="最小生成树prim算法">最小生成树–Prim算法</h3>
+<p>Prim 算法和Dijkstra 算法有些相似，其基本思想是选点，也就是将整个图划分为两个集合</p>
+
+<ul>
+  <li>已选出的点</li>
+  <li>未选出的点</li>
+</ul>
+
+<p>然后每次都在未选出点集合中选出与已选出的点集合距离最近的点。选择n次后，算法结束。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;&gt;</span> <span class="n">Prim</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">add_list</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">father</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">INT32_MAX</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">distance</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">INT32_MAX</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">result_vec</span><span class="p">;</span>
+
+		<span class="n">distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">father</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
+			<span class="k">auto</span> <span class="n">min</span> <span class="o">=</span> <span class="n">INT32_MAX</span><span class="p">;</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">((</span><span class="n">distance</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min</span><span class="p">)</span><span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">add_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+					<span class="n">pos</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+					<span class="n">min</span> <span class="o">=</span> <span class="n">distance</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+			<span class="n">add_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">((</span><span class="n">distance</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">_get_value</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">add_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+					<span class="n">father</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+					<span class="n">distance</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_value</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">add_list</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">Vertex</span> <span class="n">v_1</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+			<span class="n">Vertex</span> <span class="n">v_2</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">father</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">pair</span><span class="p">(</span><span class="n">v_1</span><span class="p">,</span> <span class="n">v_2</span><span class="p">);</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pair</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="最小生成树--kruskal算法">最小生成树 – Kruskal算法</h3>
+<p>这个算法的基本思想是选边。将这个图中所有的边划分为两个集合：</p>
+
+<ul>
+  <li>已选出</li>
+  <li>未选出</li>
+</ul>
+
+<p>然后每一次选择时，选择未选出集合中边权最小的边加入已选出集合，然后测试，若加入后形成了环，则删掉这个边，再选择次小边，直到加入后不形成环为止。
+这样选择N - 1次后，算法结束。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;&gt;</span> <span class="n">Kruskal</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">IndexEdge</span><span class="o">&gt;</span> <span class="n">vec</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_get_all_edges</span><span class="p">();</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+		<span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+		<span class="k">auto</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0U</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="n">IndexDSet</span><span class="o">&lt;&gt;</span> <span class="n">set</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">());</span>
+		<span class="k">for</span> <span class="p">(;</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;)</span> <span class="p">{</span>
+			<span class="k">auto</span> <span class="n">v_1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">edge</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+			<span class="k">auto</span> <span class="n">v_2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">).</span><span class="n">edge</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+			<span class="cm">/* retrun true means we don't have a ring after merge */</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">set</span><span class="p">.</span><span class="n">mergeTwoSet</span><span class="p">(</span><span class="n">v_1</span><span class="p">,</span> <span class="n">v_2</span><span class="p">))</span> <span class="p">{</span>
+				<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;</span><span class="p">(</span> 
+					<span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">v_1</span><span class="p">)),</span> <span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">v_2</span><span class="p">))));</span>
+				<span class="n">count</span><span class="o">++</span><span class="p">;</span>
+			<span class="p">}</span>
+			<span class="n">i</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里使用了并查集这种数据结构来判断是否有环。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define IndexType uint32_t
+</span><span class="k">class</span> <span class="nc">DSNode</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">IndexType</span> <span class="n">getParent</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">parent</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">void</span> <span class="n">setParent</span><span class="p">(</span><span class="n">IndexType</span><span class="o">&amp;</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">parent</span> <span class="o">=</span> <span class="n">index</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="nl">protected:</span>
+	<span class="n">IndexType</span> <span class="n">parent</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Node</span> <span class="o">=</span> <span class="n">DSNode</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">IndexDSet</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">IndexDSet</span><span class="p">(){}</span>
+	<span class="n">IndexDSet</span><span class="p">(</span><span class="n">IndexType</span> <span class="n">count</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">vec</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span><span class="p">(</span><span class="n">count</span><span class="p">);</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">this</span><span class="o">-&gt;</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">setParent</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">IndexType</span> <span class="n">getParent</span><span class="p">(</span><span class="n">IndexType</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">vec</span><span class="p">[</span><span class="n">target</span><span class="p">].</span><span class="n">getParent</span><span class="p">()</span> <span class="o">==</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="n">target</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="n">getParent</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">vec</span><span class="p">[</span><span class="n">target</span><span class="p">].</span><span class="n">getParent</span><span class="p">());</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="kt">bool</span> <span class="n">ifSame</span><span class="p">(</span><span class="n">IndexType</span> <span class="n">ele_a</span><span class="p">,</span> <span class="n">IndexType</span> <span class="n">ele_b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">IndexType</span> <span class="n">parent_a</span> <span class="o">=</span> <span class="n">getParent</span><span class="p">(</span><span class="n">ele_a</span><span class="p">);</span>
+		<span class="n">IndexType</span> <span class="n">parent_b</span> <span class="o">=</span> <span class="n">getParent</span><span class="p">(</span><span class="n">ele_b</span><span class="p">);</span>
+		
+		<span class="k">return</span> <span class="n">parent_a</span> <span class="o">==</span> <span class="n">parent_b</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">bool</span> <span class="n">mergeTwoSet</span><span class="p">(</span><span class="n">IndexType</span> <span class="n">ele_a</span><span class="p">,</span> <span class="n">IndexType</span> <span class="n">ele_b</span><span class="p">){</span>
+		<span class="n">IndexType</span> <span class="n">parent_a</span> <span class="o">=</span> <span class="n">getParent</span><span class="p">(</span><span class="n">ele_a</span><span class="p">);</span>
+		<span class="n">IndexType</span> <span class="n">parent_b</span> <span class="o">=</span> <span class="n">getParent</span><span class="p">(</span><span class="n">ele_b</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">parent_a</span> <span class="o">==</span> <span class="n">parent_b</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="p">{</span>
+			<span class="k">this</span><span class="o">-&gt;</span><span class="n">vec</span><span class="p">[</span><span class="n">parent_a</span><span class="p">].</span><span class="n">setParent</span><span class="p">(</span><span class="n">parent_b</span><span class="p">);</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="nl">protected:</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="最短路径算法--dijkstra算法">最短路径算法 – Dijkstra算法</h3>
+<p>Dijkstra 算法的基本思想是，将所有的点分为两类：</p>
+
+<ul>
+  <li>已选出</li>
+  <li>未选出</li>
+</ul>
+
+<p>使用一个集合存储所有点与源点的距离；</p>
+
+<p>每次都选出未选出集合中，距离源点（Prim算法中是已选出点的集合）最近的点，然后更新和这个点邻接的所有点与源点的距离。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="n">Dijkstra</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">father</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="mh">0xffffffff</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">shortest</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">INT_MAX</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">mark</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+		<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">start</span><span class="p">);</span>
+		<span class="kt">bool</span> <span class="n">end</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="n">shortest</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">father</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+		<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(;</span> <span class="o">!</span><span class="n">end</span><span class="p">;)</span> <span class="p">{</span>
+			<span class="k">auto</span> <span class="n">min</span> <span class="o">=</span> <span class="n">INT_MAX</span><span class="p">;</span>
+			<span class="n">end</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">shortest</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">mark</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="nb">false</span> <span class="o">&amp;&amp;</span> <span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">INT_MAX</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">end</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+				<span class="p">}</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">pos</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+					<span class="n">min</span> <span class="o">=</span> <span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+			<span class="n">mark</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">shortest</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">_get_value</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">INT_MAX</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">continue</span><span class="p">;</span>
+				<span class="p">}</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">shortest</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+</span> <span class="n">_get_value</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">mark</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">father</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+					<span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">shortest</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+</span> <span class="n">_get_value</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span><span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">father</span><span class="p">[</span><span class="n">i</span><span class="p">])),</span> <span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="最短路径算法--flyod算法">最短路径算法 – Flyod算法</h3>
+<p>这是一个很有趣的算法，也可以用来求传递闭包，这里不过多解释：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="n">Floyd</span><span class="p">(</span><span class="n">Vertex</span> <span class="n">v_1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> 
+			<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">INT_MAX</span><span class="p">));</span>
+		
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_get_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">if</span> <span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">INT_MAX</span> <span class="o">||</span> <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">INT_MAX</span><span class="p">)</span> <span class="p">{</span>
+						<span class="k">continue</span><span class="p">;</span>
+					<span class="p">}</span>
+					<span class="k">if</span> <span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+						<span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+					<span class="p">}</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">v_1</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="n">temp_node</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span> <span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">temp</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">temp_node</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="两个专用算法--邻接表上的堆优化dijkstra算法和prim算法">两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</h2>
+<p>为什么要进行堆优化？可能有人会说是因为要实现$Elog(V)$的复杂度，但对我们这种算法初学者来说，速度不是学习的重点。</p>
+
+<p>实际上，这是来源于我们对Dijkstra算法的实现很不自然：</p>
+
+<blockquote>
+  <p>我们使用了一个vector来存储最短路径，又用了一个vector来存储标记，如果一个点被选出了，就打上标记，下一次就不选择它。</p>
+</blockquote>
+
+<p>这实际上是把已选出和未选出的点都放在一起，然后用标记来区分它们。这样很不自然而且很容易出错。</p>
+
+<p>那么可不可以专门建立一个未选出点的集合，一开始有所有点，每选出一个点就删除它呢？这是可以的，但需要二叉搜索树等数据结构的支持，可以用std::set实现这个想法。</p>
+
+<p>但这里不用这种办法，而是使用另一种办法：令未选出集合一开始为空，然后动态地添加和删除。</p>
+
+<p>也就是说，首先把源点加入集合中，然后使用一个循环：</p>
+
+<p>当集合非空时，每次取出集合中距离源点最小的元素，然后用与这个元素相接的元素更新结果集，同时将这些元素加入这个集合。</p>
+
+<p>其中“取出距离最小的元素”恰恰就是一个小顶堆的操作。所以这里使用 std::priority_queue 作为这个集合的实现。</p>
+
+<p>但是这里还有一个问题，如何更新堆中的元素呢？我们无法用std::priority_queue更新，因为它没有顺序迭代器。</p>
+
+<p>这个问题的答案是不需要做任何更新，而是无脑地加入。因为 <em>距离源点最小的元素会被最先选出</em> 所以即使有两个重复的元素，也是我们需要的、距离源点较近的元素先被选出，而当距离源点较远的点被选出时，<em>结果集已经被距离源点较近的点更新过了</em>，对所有与它邻接的点，都不会触发更新条件，也就对结果没有影响了。
+实现代码如下：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">P</span><span class="p">;</span>
+	<span class="cm">/* only when use listGraph, fastDijkstra is faster than normal Dijkstra */</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="n">fastDijkstra</span><span class="p">(</span><span class="n">Vertex</span><span class="o">&amp;</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">father</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="mh">0xffffffff</span><span class="p">);</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">shortest</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">INT_MAX</span><span class="p">);</span>
+
+		<span class="c1">// pair.first means index, pair.second means distance</span>
+		<span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span> <span class="n">i</span><span class="p">,</span> <span class="k">auto</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span><span class="p">.</span><span class="n">second</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">.</span><span class="n">second</span><span class="p">;</span> <span class="p">};</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">priority_queue</span> <span class="o">&lt;</span> <span class="n">P</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">P</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span><span class="o">&gt;&gt;</span> <span class="n">que</span><span class="p">(</span><span class="n">cmp</span><span class="p">);</span>
+
+		<span class="k">auto</span> <span class="n">start_index</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getIndex</span><span class="p">(</span><span class="n">start</span><span class="p">);</span>
+		<span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="n">start_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+		<span class="n">shortest</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">father</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_index</span><span class="p">;</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">que</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">que</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+			<span class="n">que</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+			<span class="kt">int</span> <span class="n">distance_now</span> <span class="o">=</span> <span class="n">now</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">[</span><span class="n">now</span><span class="p">.</span><span class="n">first</span><span class="p">])</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">.</span><span class="n">edge_value</span> <span class="o">+</span> <span class="n">distance_now</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">edge_value</span> <span class="o">+</span> <span class="n">distance_now</span><span class="p">;</span>
+					<span class="n">father</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="n">now</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+					<span class="n">que</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">,</span> <span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">]));</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">PathNode</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">father</span><span class="p">[</span><span class="n">i</span><span class="p">])),</span> <span class="n">Vertex</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">shortest</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>Prim算法同理，只不过这时需要打上标记（因为是无向图，不打上标记的话会重复选择）：</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;&gt;</span> <span class="n">fastPrim</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">temp_edge</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getNumberOfVertices</span><span class="p">(),</span> <span class="n">temp_edge</span><span class="p">(</span><span class="mh">0xfffffff</span><span class="p">,</span> <span class="n">INT32_MAX</span><span class="p">));</span>
+		<span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		
+		<span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span> <span class="n">i</span><span class="p">,</span> <span class="k">auto</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span><span class="p">.</span><span class="n">second</span> <span class="o">&gt;</span> <span class="n">j</span><span class="p">.</span><span class="n">second</span><span class="p">;</span> <span class="p">};</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">P</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">P</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">pq</span><span class="p">(</span><span class="n">cmp</span><span class="p">);</span>
+
+		<span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+			<span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+			<span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+			<span class="n">vec</span><span class="p">[</span><span class="n">now</span><span class="p">.</span><span class="n">first</span><span class="p">].</span><span class="n">mark</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">adjList</span><span class="p">[</span><span class="n">now</span><span class="p">.</span><span class="n">first</span><span class="p">])</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">].</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">.</span><span class="n">edge_value</span> <span class="o">&amp;&amp;</span> <span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">].</span><span class="n">mark</span> <span class="o">==</span> <span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">].</span><span class="n">father</span> <span class="o">=</span> <span class="n">now</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+					<span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">].</span><span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="n">edge_value</span><span class="p">;</span>
+					<span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">val</span><span class="p">,</span> <span class="n">i</span><span class="p">.</span><span class="n">edge_value</span><span class="p">));</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;&gt;</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">Vertex</span> <span class="n">v_1</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+			<span class="n">Vertex</span> <span class="n">v_2</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getValue</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">father</span><span class="p">));</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertex</span><span class="p">,</span> <span class="n">Vertex</span><span class="o">&gt;</span> <span class="n">pair</span><span class="p">(</span><span class="n">v_1</span><span class="p">,</span> <span class="n">v_2</span><span class="p">);</span>
+			<span class="n">ret</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pair</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+:ET

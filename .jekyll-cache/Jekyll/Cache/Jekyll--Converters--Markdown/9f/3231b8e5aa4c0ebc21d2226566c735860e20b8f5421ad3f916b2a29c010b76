@@ -1,0 +1,143 @@
+I"�<<h2 id="过程式语言中的尾调用">过程式语言中的尾调用</h2>
+
+<p>在scheme中，尾调用完全是循环的：</p>
+
+<div class="language-scheme highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="k">define</span> <span class="nv">factor</span>
+  <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">n</span> <span class="nv">result</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&lt;</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="nv">result</span>
+      <span class="p">(</span><span class="nf">factor</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">result</span> <span class="nv">n</span><span class="p">)))))</span>
+</code></pre></div></div>
+
+<p>这段代码和</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">factor</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">result</span><span class="p">;</span>
+    <span class="n">n</span><span class="o">--</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>具有完全相同的时间和空间复杂度。这是由于scheme中使用的不是【栈】，而是【继续】(continuation)。如果读者不知道什么是【继续】，可以继续关注我的博客，我会写另外一篇文章来专门解释这个问题。</p>
+
+<p>但在c语言那样的语言中，类似于上面的scheme的代码会产生多余的栈增长：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">rec_factor</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">rec_factor</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ret</span> <span class="o">*</span> <span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这是因为，在调用rec_factor(n - 1, ret * n)时，这个rec_factor(n, ret)的局部变量、参数等等，都是没有用的。换言之，它应该【退出】之后再调用rec_factor()</p>
+
+<h2 id="蹦床技术">【蹦床】技术</h2>
+
+<p>为了解决这个问题，编程语言专家们引入了【蹦床】技术。这个技术的核心是【先退出，再调用】，如果你把【退出函数】想象成落下，【调用函数】想象成弹起，那么C语言的尾调用就是【跳跳跳跳跳。。。落落落落落】，而再使用了蹦床技术之后，尾调用就像是【跳落跳落跳落。。。】，自然就像一个【蹦床】一样了。</p>
+
+<p>怎么实现呢？我们再考察一下刚才的函数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">rec_factor</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">rec_factor</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ret</span> <span class="o">*</span> <span class="n">n</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>如果return的不是一个【函数调用】，而是一个【值】，那么，它就会在这里直接返回。而我们可以在外部用这个【值】来继续计算rec_factor(n - 1, ret * n)，或者说，调用rec_factor(n - 1, ret * n)。</p>
+
+<p>我们先改写一下：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Bounce</span> <span class="nf">rec_factor</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">Bounce</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">Bounce</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>可见，这个Bounce需要既能包住一个【值】（也就是C中的值），又能包住一个【调用】。怎么设计呢？如果使用C++的话，我们有lambda()[]{}，std::function之类的匿名函数可以做到【包住调用】这点，但我们这里不用这些东西，而是使用自己定义的数据结构：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Bounce</span> <span class="p">{</span>
+	<span class="k">typedef</span> <span class="n">Bounce</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+	<span class="n">func</span> <span class="n">f</span><span class="p">;</span>
+	<span class="kt">void</span><span class="o">*</span> <span class="n">args</span><span class="p">;</span>
+	<span class="kt">void</span><span class="o">*</span> <span class="n">return_value</span><span class="p">;</span>
+	<span class="n">bool</span> <span class="n">end</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>这里的func类型是为了方便而定义的，第一个参数是【参数的指针】，第二个参数是【返回值的指针】，而它在语法意义上的返回值则是一个Bounce。end用来区分它是一个【函数调用】还是一个【值】。</p>
+
+<p>由于bounce包含了【要调用的函数指针、参数】，它自然可以用来保存调用。我们来看一下改写后的factor函数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Bounce</span> <span class="nf">factor</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Bounce</span> <span class="n">b</span><span class="p">;</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">end</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">ret</span><span class="p">);</span>
+		<span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="n">Bounce</span> <span class="n">b</span><span class="p">;</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="n">Bounce</span><span class="o">::</span><span class="n">func</span><span class="p">)</span><span class="n">factor</span><span class="p">;</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">ret</span><span class="p">;</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">end</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>自然，这样的【函数】是不能直接调用的，因为它返回一个Bounce，我们需要另一个函数来**不断地处理bounce，直至得到一个【被包住的值】，而不是【被包住的调用】为止：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span><span class="o">*</span> <span class="nf">Tramp</span><span class="p">(</span><span class="n">Bounce</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">end</span> <span class="o">==</span> <span class="nb">true</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">b</span><span class="p">.</span><span class="n">return_value</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="k">auto</span> <span class="n">hot</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
+		<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">hot</span><span class="p">.</span><span class="n">end</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">hot</span> <span class="o">=</span> <span class="n">hot</span><span class="p">.</span><span class="n">f</span><span class="p">(</span><span class="n">hot</span><span class="p">.</span><span class="n">args</span><span class="p">,</span> <span class="n">hot</span><span class="p">.</span><span class="n">return_value</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">b</span><span class="p">.</span><span class="n">return_value</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>在外部，我们会这样来调用它：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Bounce</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">b</span><span class="p">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="n">Bounce</span><span class="o">::</span><span class="n">func</span><span class="p">)</span><span class="n">factor</span><span class="p">;</span>
+	<span class="n">b</span><span class="p">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+	<span class="o">*</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">b</span><span class="p">.</span><span class="n">args</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">;</span>
+	<span class="n">b</span><span class="p">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+	<span class="o">*</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)(</span><span class="n">b</span><span class="p">.</span><span class="n">return_value</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="n">b</span><span class="p">.</span><span class="n">end</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">Tramp</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<span class="c1">// 	rec_factor(100000, 1);</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">b</span><span class="p">.</span><span class="n">return_value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>下面那行被注释掉的代码，会爆栈；而我们用【蹦床】技术写的等效代码，则不会爆栈。这样一来，对于所有的尾调用，只要调用的函数满足func类型的函数声明，都可以这样调用而不会消耗额外的栈空间。</p>
+:ET

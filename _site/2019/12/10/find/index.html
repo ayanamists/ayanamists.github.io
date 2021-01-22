@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> 数据结构 -- 查找 -- 笔记 |  name</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="author">
+    <meta name="description" content="A blog and a portfolio">
+    <link rel="shortcut icon" type="image/png" href="http://via.placeholder.com/128x128">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Crimson+Text">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.2/css/bulma.min.css">
+    <link rel="stylesheet" href="/jekyll-theme-blogfolio/css/styles.css">
+</head>
+
+<body>
+    <nav class="nav">
+    <div class="container">
+        <div class="nav-left">
+            <a class="nav-item" href="/jekyll-theme-blogfolio/">
+                <span class="icon">
+                    <i class="fa fa-home"></i>
+                </span>
+            </a>
+        </div>
+
+        <div class="nav-center">
+            <a class="nav-item" target="_blank" href="https://www.github.com/username/">
+                <span class="icon">
+                    <i class="fa fa-github"></i>
+                </span>
+            </a>
+            <a class="nav-item" target="_blank" href="https://www.twitter.com/username/">
+                <span class="icon">
+                    <i class="fa fa-twitter"></i>
+                </span>
+            </a>
+        </div>
+
+        <span class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+        </span>
+
+        <div class="nav-right nav-menu">
+            
+            <a class="nav-item" href="/jekyll-theme-blogfolio/portfolio/">
+                <span>Portfolio</span>
+            </a>
+            
+            <a class="nav-item" href="/jekyll-theme-blogfolio/about/">
+                <span>About</span>
+            </a>
+            
+        </div>
+
+</nav>
+    <section class="section">
+    <div class="container">
+        <div class="heading has-text-centered">
+            <p class="title is-3">数据结构 -- 查找 -- 笔记</p>
+            <p class="subtitle is-6"><span class="tag is-white"><small>December 10, 2019</small></span></p>
+        </div>
+        <br>
+        <div class="columns is-multiline">
+
+            <div class="column is-half is-offset-one-quarter">
+                <div class="content">
+                    <ul>
+  <li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
+  <li><a href="#%e6%9f%a5%e6%89%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e5%ae%9a%e4%b9%89">查找的基本定义</a></li>
+  <li><a href="#%e6%9f%a5%e6%89%be%e7%ae%97%e6%b3%95%e7%9a%84%e5%88%86%e6%9e%90%e5%92%8c%e8%ae%be%e8%ae%a1">查找算法的分析和设计</a></li>
+  <li><a href="#%e9%a1%ba%e5%ba%8f%e6%9f%a5%e6%89%be%e7%ae%97%e6%b3%95">顺序查找算法</a></li>
+  <li><a href="#%e4%ba%8c%e5%88%86%e6%9f%a5%e6%89%be%e7%ae%97%e6%b3%95%e4%b8%8e%e4%ba%8c%e5%8f%89%e6%9f%a5%e6%89%be%e6%a0%91">二分查找算法与二叉查找树</a></li>
+  <li><a href="#%e5%88%86%e5%9d%97%e6%9f%a5%e6%89%be">分块查找</a></li>
+  <li><a href="#%e5%a0%86%e4%bc%98%e5%85%88%e9%98%9f%e5%88%97">堆/优先队列</a>
+    <ul>
+      <li><a href="#%e5%a0%86%e7%9a%84%e6%a6%82%e5%bf%b5%e4%b8%8e%e5%ae%9e%e7%8e%b0">堆的概念与实现</a></li>
+      <li><a href="#%e5%a0%86%e5%8f%af%e4%bb%a5%e7%94%a8%e6%9d%a5%e5%81%9a%e4%bb%80%e4%b9%88">堆可以用来做什么？</a></li>
+    </ul>
+  </li>
+  <li><a href="#%e6%95%a3%e5%88%97%e8%a1%a8">散列表</a>
+    <ul>
+      <li><a href="#%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84%e5%ae%9a%e4%b9%89">哈希表的定义</a></li>
+      <li><a href="#%e5%93%88%e5%b8%8c%e5%87%bd%e6%95%b0">哈希函数</a></li>
+      <li><a href="#%e7%a2%b0%e6%92%9e%e5%a4%84%e7%90%86">碰撞处理</a></li>
+      <li><a href="#%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84%e5%ae%9e%e7%8e%b0----%e6%88%91%e5%ae%9e%e7%8e%b0%e7%9a%84c%e7%89%88%e6%9c%ac">哈希表的实现 – 我实现的c++版本</a></li>
+      <li><a href="#ruby%e4%b8%ad%e7%9a%84%e5%93%88%e5%b8%8c%e8%a1%a8%e5%ae%9e%e7%8e%b0">Ruby中的哈希表实现</a>
+        <ul>
+          <li><a href="#sttable-%e7%9a%84%e5%93%88%e5%b8%8c%e5%87%bd%e6%95%b0">st_table 的哈希函数</a></li>
+          <li><a href="#sttable%e7%9a%84%e7%a2%b0%e6%92%9e%e5%a4%84%e7%90%86">st_table的碰撞处理</a></li>
+          <li><a href="#sttable%e7%9a%84%e6%89%a9%e5%ae%b9">st_table的扩容</a></li>
+          <li><a href="#%e6%80%bb%e7%bb%93">总结</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="前言">前言</h2>
+
+<p>这一章，我们学习了查找这种基本操作和堆、散列表这两种非常重要的数据结构。
+本笔记主要完成了以下工作：</p>
+
+<ul>
+  <li>总结了关于查找的各种知识点</li>
+  <li>用ruby语言实现了一个简单的堆模块(这里的模块指module，是ruby中MIX_IN思想的主要实现模式，下面会做简短介绍)，并进行了简单测试</li>
+  <li>用C++语言实现了一个简单的哈希表，并进行了简单测试</li>
+  <li>讨论了ruby中哈希表的实现</li>
+  <li>讨论了stl中std::find, std::binary_search等函数的实现</li>
+</ul>
+
+<h2 id="查找的基本定义">查找的基本定义</h2>
+
+<p>查找也可以视为搜索，wikipedia对搜索的定义是：</p>
+<blockquote>
+  <p>在计算机科学中，搜索算法是解决搜索问题的任何算法，即检索存储在某个数据结构中的信息，或者在问题域的搜索空间中计算的信息。
+其实简单来说，查找就是“找东西”。</p>
+</blockquote>
+
+<p>而我们要找的“东西”，严格来说应该叫做“关键字”，或者更学术一些，叫做“键”。找到“键”之后，如果存在一个“键-值映射”，就可以得到其“值”。</p>
+
+<h2 id="查找算法的分析和设计">查找算法的分析和设计</h2>
+
+<p>查找算法实际上包含三个层次的问题：</p>
+
+<ol>
+  <li>在什么数据结构上查找</li>
+  <li>如何查找</li>
+  <li>查找的效率如何</li>
+</ol>
+
+<h2 id="顺序查找算法">顺序查找算法</h2>
+
+<p>顺序查找是最朴素的查找，可以用在各种线性表上。在MSVC的stl中，我们有std::find函数实现这个算法：</p>
+
+<p><em>以下代码来自&lt;algorithm&gt;</em></p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InIt</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ty</span><span class="p">&gt;</span>
+<span class="n">_NODISCARD</span> <span class="kr">inline</span> <span class="n">_InIt</span> <span class="nf">find</span><span class="p">(</span><span class="n">_InIt</span> <span class="n">_First</span><span class="p">,</span> <span class="k">const</span> <span class="n">_InIt</span> <span class="n">_Last</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Ty</span><span class="o">&amp;</span> <span class="n">_Val</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// find first matching _Val</span>
+    <span class="n">_Adl_verify_range</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_Last</span><span class="p">);</span>
+    <span class="n">_Seek_wrapped</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_Find_unchecked</span><span class="p">(</span><span class="n">_Get_unwrapped</span><span class="p">(</span><span class="n">_First</span><span class="p">),</span> <span class="n">_Get_unwrapped</span><span class="p">(</span><span class="n">_Last</span><span class="p">),</span> <span class="n">_Val</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">_First</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>_Adl_verify_range是检查参数范围是否有效，_Seek_wrapped函数简单来说是把后一个参数的值赋给前一个参数：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Ty</span><span class="p">&gt;</span>
+<span class="k">constexpr</span> <span class="kt">void</span> <span class="nf">_Seek_wrapped</span><span class="p">(</span><span class="n">_Ty</span><span class="o">*&amp;</span> <span class="n">_It</span><span class="p">,</span> <span class="n">_Ty</span><span class="o">*</span> <span class="k">const</span> <span class="n">_UIt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_It</span> <span class="o">=</span> <span class="n">_UIt</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>实际查找过程在_Find_unchecked函数中：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InIt</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ty</span><span class="p">&gt;</span>
+<span class="kr">inline</span> <span class="n">_InIt</span> <span class="nf">_Find_unchecked</span><span class="p">(</span><span class="k">const</span> <span class="n">_InIt</span> <span class="n">_First</span><span class="p">,</span> <span class="k">const</span> <span class="n">_InIt</span> <span class="n">_Last</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Ty</span><span class="o">&amp;</span> <span class="n">_Val</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// find first matching _Val; choose optimization</span>
+    <span class="c1">// activate optimization for pointers to (const) bytes and integral values</span>
+    <span class="k">using</span> <span class="n">_Memchr_opt</span> <span class="o">=</span> <span class="n">bool_constant</span><span class="o">&lt;</span>
+        <span class="n">is_integral_v</span><span class="o">&lt;</span><span class="n">_Ty</span><span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span class="n">_Is_any_of_v</span><span class="o">&lt;</span><span class="n">_InIt</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="kt">signed</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="c1">//</span>
+            <span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">signed</span> <span class="kt">char</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;&gt;</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">_Find_unchecked1</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_Last</span><span class="p">,</span> <span class="n">_Val</span><span class="p">,</span> <span class="n">_Memchr_opt</span><span class="p">{});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>而这个函数实际上又调用了_Find_unchecked1函数：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InIt</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ty</span><span class="p">&gt;</span>
+<span class="kr">inline</span> <span class="n">_InIt</span> <span class="nf">_Find_unchecked1</span><span class="p">(</span><span class="n">_InIt</span> <span class="n">_First</span><span class="p">,</span> <span class="k">const</span> <span class="n">_InIt</span> <span class="n">_Last</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Ty</span><span class="o">&amp;</span> <span class="n">_Val</span><span class="p">,</span> <span class="n">false_type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// find first matching _Val</span>
+    <span class="k">for</span> <span class="p">(;</span> <span class="n">_First</span> <span class="o">!=</span> <span class="n">_Last</span><span class="p">;</span> <span class="o">++</span><span class="n">_First</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">_First</span> <span class="o">==</span> <span class="n">_Val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">_First</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>谢天谢地，_Find_unchecked1函数就是主要实现了。我们可以看到整个过程非常简单，就是顺序地查找整个表，如果找到了就退出。</p>
+
+<p>由于模板的存在，在c++中，只要定义了迭代器，一个类就可以使用这个函数进行查找。这也正是对我们抽象描述–查找线性表–的抽象实现。</p>
+
+<p>如果假设等概率，这个算法有</p>
+
+<p>\(ASL_{success} = \frac{n + 1}{2}\)
+\(ASL_{fail} = n + 1\)</p>
+
+<h2 id="二分查找算法与二叉查找树">二分查找算法与二叉查找树</h2>
+<p>从上面的分析可以看出，顺序查找查找一次的时间复杂度是$O(n)$的。可不可以有更好的效率呢？</p>
+
+<p>如果假定顺序表是有序的，那么思考这样的结论：</p>
+
+<blockquote>
+  <p>如果待查询的元素大于 $array[floor(n / 2)]$，那么，它一定大于$array[0]$到$array[floor(n / 2) - 1]$的所有元素。</p>
+</blockquote>
+
+<p>这样一来，下一次的查询就可以不管这些元素，直接查询$array[floor(n/2) + 1]$到$array[n - 1]$这个区间了。</p>
+
+<p>这实际上已经是一个递归算法了。这个算法的实现很简单，但我们还是来研究一下c++ stl中std::binary_search的实现：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_FwdIt</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ty</span><span class="p">&gt;</span>
+<span class="n">_NODISCARD</span> <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">binary_search</span><span class="p">(</span>
+    <span class="n">_FwdIt</span> <span class="n">_First</span><span class="p">,</span> <span class="n">_FwdIt</span> <span class="n">_Last</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Ty</span><span class="o">&amp;</span> <span class="n">_Val</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// test if _Val equivalent to some element, using operator&lt;</span>
+    <span class="k">return</span> <span class="n">_STD</span> <span class="n">binary_search</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_Last</span><span class="p">,</span> <span class="n">_Val</span><span class="p">,</span> <span class="n">less</span><span class="o">&lt;&gt;</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>下面这个binary_search是一个重载的函数，它才是真正用来实现的函数：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// FUNCTION TEMPLATE binary_search</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_FwdIt</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ty</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Pr</span><span class="p">&gt;</span>
+<span class="n">_NODISCARD</span> <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">binary_search</span><span class="p">(</span>
+    <span class="n">_FwdIt</span> <span class="n">_First</span><span class="p">,</span> <span class="n">_FwdIt</span> <span class="n">_Last</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Ty</span><span class="o">&amp;</span> <span class="n">_Val</span><span class="p">,</span> <span class="n">_Pr</span> <span class="n">_Pred</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// test if _Val equivalent to some element, using _Pred</span>
+    <span class="n">_Adl_verify_range</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_Last</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">_UFirst</span>      <span class="o">=</span> <span class="n">_Get_unwrapped</span><span class="p">(</span><span class="n">_First</span><span class="p">);</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">_ULast</span> <span class="o">=</span> <span class="n">_Get_unwrapped</span><span class="p">(</span><span class="n">_Last</span><span class="p">);</span>
+    <span class="n">_UFirst</span>           <span class="o">=</span> <span class="n">_STD</span> <span class="n">lower_bound</span><span class="p">(</span><span class="n">_UFirst</span><span class="p">,</span> <span class="n">_ULast</span><span class="p">,</span> <span class="n">_Val</span><span class="p">,</span> <span class="n">_Pass_fn</span><span class="p">(</span><span class="n">_Pred</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">_UFirst</span> <span class="o">!=</span> <span class="n">_ULast</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">_Pred</span><span class="p">(</span><span class="n">_Val</span><span class="p">,</span> <span class="o">*</span><span class="n">_UFirst</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这看起来并不是直接递归，而是使用了一个lower_bound函数。这个函数是干什么的呢？显然的，lower_bound的意思是下界，它定义如下：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// FUNCTION TEMPLATE lower_bound</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_FwdIt</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ty</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Pr</span><span class="p">&gt;</span>
+<span class="n">_NODISCARD</span> <span class="kr">inline</span> <span class="n">_FwdIt</span> <span class="nf">lower_bound</span><span class="p">(</span><span class="n">_FwdIt</span> <span class="n">_First</span><span class="p">,</span> <span class="k">const</span> <span class="n">_FwdIt</span> <span class="n">_Last</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Ty</span><span class="o">&amp;</span> <span class="n">_Val</span><span class="p">,</span> <span class="n">_Pr</span> <span class="n">_Pred</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// find first element not before _Val, using _Pred</span>
+    <span class="n">_Adl_verify_range</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_Last</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">_UFirst</span>                <span class="o">=</span> <span class="n">_Get_unwrapped</span><span class="p">(</span><span class="n">_First</span><span class="p">);</span>
+    <span class="n">_Iter_diff_t</span><span class="o">&lt;</span><span class="n">_FwdIt</span><span class="o">&gt;</span> <span class="n">_Count</span> <span class="o">=</span> <span class="n">_STD</span> <span class="n">distance</span><span class="p">(</span><span class="n">_UFirst</span><span class="p">,</span> <span class="n">_Get_unwrapped</span><span class="p">(</span><span class="n">_Last</span><span class="p">));</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">_Count</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// divide and conquer, find half that contains answer</span>
+        <span class="k">const</span> <span class="n">_Iter_diff_t</span><span class="o">&lt;</span><span class="n">_FwdIt</span><span class="o">&gt;</span> <span class="n">_Count2</span> <span class="o">=</span> <span class="n">_Count</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// TRANSITION, VSO#433486</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="n">_UMid</span>                   <span class="o">=</span> <span class="n">_STD</span> <span class="n">next</span><span class="p">(</span><span class="n">_UFirst</span><span class="p">,</span> <span class="n">_Count2</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_Pred</span><span class="p">(</span><span class="o">*</span><span class="n">_UMid</span><span class="p">,</span> <span class="n">_Val</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// try top half</span>
+            <span class="n">_UFirst</span> <span class="o">=</span> <span class="n">_Next_iter</span><span class="p">(</span><span class="n">_UMid</span><span class="p">);</span>
+            <span class="n">_Count</span> <span class="o">-=</span> <span class="n">_Count2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">_Count</span> <span class="o">=</span> <span class="n">_Count2</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">_Seek_wrapped</span><span class="p">(</span><span class="n">_First</span><span class="p">,</span> <span class="n">_UFirst</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">_First</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这个函数比较麻烦，它返回的是第一个不满足_Pred条件的元素。这里_Pred条件是&lt;，所以返回的是第一个大于等于这个元素的迭代器，
+然后binary_search函数就用!(_Pred(_Val, *_Ufirst))这个条件来判断是否相等，这相当于构造了
+\(a &gt;= b\)
+\(a &lt;= b\)
+显然地，只有当$a == b$时，表达式才返回真（吐槽一下，这stl写的太“聪明”了）</p>
+
+<p>在二分查找中，成功查找时的ASL为：
+\(\sum{i * P(i)} = 1/n*( \sum_{1}^{floor(log(n))}{i * 2^{i}} + ceil(log(n)) * (n - floor(log(n))))\)
+这个式子过于繁琐，我们假设它的二叉判定树为满二叉树，可以得到：
+\({n - 1}/{n} * log(n + 1) - 1\)</p>
+
+<h2 id="分块查找">分块查找</h2>
+
+<p>分块查找采用了块间有序，块内无序的基本思想，建立一个索引表记录块内的最大值或最小值，然后先查索引表，找到对应的块，然后再到块中查询。</p>
+
+<p>stl中的deque实现有这种思想的影子。</p>
+
+<h2 id="堆优先队列">堆/优先队列</h2>
+
+<h3 id="堆的概念与实现">堆的概念与实现</h3>
+
+<p>堆这个词来自于heap。我们最先学习到的heap，指的是C程序运行时环境的一部分–内存动态分配器及其分配的空间，我们在使用malloc函数、new函数（new实际上是一个函数）时都要用到它来分配空间。</p>
+
+<p>但是这里的heap，指的是一种特殊的数据结构，它具有以下特点：</p>
+
+<ul>
+  <li>分为小顶堆和大顶堆</li>
+  <li>对自$0$至$floor(n/2) - 1$的元素$heap[i]$有
+  \(heap[i] &lt;= heap[2i + 1]\)
+  \(heap[i] &lt;= heap[2i + 2]\)</li>
+</ul>
+
+<p>其实，第二个特点表明堆可以化为一颗二叉树，这颗二叉树的父亲节点都大于它的子节点。</p>
+
+<p>我们这里用ruby语言实现了一个简单的堆：</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">BinaryHeapable</span>
+  <span class="k">def</span> <span class="nf">insert_to_heap</span> <span class="n">element</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">length</span>
+    <span class="k">while</span> <span class="nb">self</span><span class="p">[</span><span class="n">target</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">element</span> <span class="o">&amp;&amp;</span> <span class="n">target</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="nb">self</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="n">target</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+      <span class="n">target</span> <span class="o">/=</span> <span class="mi">2</span>
+    <span class="k">end</span>
+    <span class="nb">self</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">remove_from_heap</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">pop</span>
+    <span class="n">heap_construct</span> <span class="mi">0</span>
+    <span class="n">ret</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">convert_to_heap</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+      <span class="n">heap_construct</span> <span class="n">i</span>
+      <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">heap_construct</span> <span class="n">target</span>
+    <span class="n">what</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">length</span>
+      <span class="k">if</span> <span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">&lt;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">length</span>
+        <span class="n">what</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nb">self</span><span class="p">[</span><span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="p">?</span> <span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span>
+      <span class="k">else</span>
+        <span class="n">what</span> <span class="o">=</span> <span class="n">target</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="k">break</span> <span class="k">if</span> <span class="nb">self</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nb">self</span><span class="p">[</span><span class="n">what</span><span class="p">]</span>
+      <span class="n">temp</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+      <span class="nb">self</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="nb">self</span><span class="p">[</span><span class="n">what</span><span class="p">]</span>
+      <span class="nb">self</span><span class="p">[</span><span class="n">what</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+      <span class="n">target</span> <span class="o">=</span> <span class="n">what</span>
+    <span class="k">end</span>
+    <span class="n">what</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>ruby 中的module是mix-in思想的载体。只要我们让一个类include这个模块，这个类就获得了“堆化”的能力。特别地，ruby的数组被封装为Array类，而所有的自带类都是可以修改的：</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Array</span>
+  <span class="kp">include</span> <span class="no">BinaryHeapable</span>
+<span class="k">end</span> 
+</code></pre></div></div>
+
+<p>这样一来，我们就可以按照以下方法使用数组：</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="nf">convert_to_heap</span>
+
+<span class="k">while</span> <span class="n">arr</span><span class="p">.</span><span class="nf">length</span> <span class="o">!=</span> <span class="mi">0</span>
+  <span class="n">pp</span> <span class="n">arr</span><span class="p">.</span><span class="nf">remove_from_heap</span>
+  <span class="n">pp</span> <span class="n">arr</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>这段代码会打出：</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">8</span>
+<span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="mi">6</span>
+<span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="mi">5</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="mi">3</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="mi">3</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="mi">1</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="mi">0</span>
+<span class="p">[]</span>
+</code></pre></div></div>
+
+<p>在上面的代码中我们看到，堆只需要实现一个操作，就可以搞定建堆和取出堆顶。</p>
+
+<p>这个操作是什么呢？就是如下的操作：</p>
+
+<p>假设一个堆节点的左子树与右子树均已经满足堆序，把以这个堆节点为根的子树调整成堆序。</p>
+
+<p>这个操作实现起来很简单，具体可参加代码。</p>
+
+<p>实现了这个操作后，</p>
+
+<ul>
+  <li>建堆就是自$floor(n/2) - 1$至$0$调用这个操作；</li>
+  <li>取出堆顶就是先将堆顶缓存，再将堆尾和堆顶交换，再对堆顶调用这个操作。</li>
+</ul>
+
+<h3 id="堆可以用来做什么">堆可以用来做什么？</h3>
+
+<p>堆可以在$O(log(n))$的时间复杂度内完成取出最大/最小元素并调整，这一特性可以作以下用途：</p>
+
+<ul>
+  <li>堆排序</li>
+  <li>堆优化Dijkstra和Prim算法</li>
+  <li>霍夫曼树的实现</li>
+  <li>etc</li>
+</ul>
+
+<h2 id="散列表">散列表</h2>
+
+<h3 id="哈希表的定义">哈希表的定义</h3>
+
+<p>散列表，又称哈希表，是一种极为重要的数据结构。</p>
+
+<p>为什么极其重要呢？因为</p>
+
+<ul>
+  <li>上文提到的ruby，其内部数据结构有很大一部分是用散列表实现的。</li>
+  <li>散列表可以用来建立映射，例如把一个字符串映射到一个整数上，这对某些情况是极为有用的(例如图结构笔记中实现的IndexMapping类)。</li>
+</ul>
+
+<p>散列表的定义为：</p>
+<blockquote>
+  <p>散列表（Hash table，也叫哈希表），是根据键（Key）而直接访问在内存存储位置的数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。</p>
+</blockquote>
+
+<h3 id="哈希函数">哈希函数</h3>
+
+<p>首先必须明确，这里的哈希函数和密码学中的哈希函数实质是一样的，都是一个映射：</p>
+<blockquote>
+  <p>A hash function is any function that can be used to map data of arbitrary size to fixed-size values.</p>
+</blockquote>
+
+<p>但是，这里的哈希函数和密码学中的哈希函数侧重点是不一样的：</p>
+
+<p>密码学中的哈希函数主要要求两个性质：</p>
+
+<ol>
+  <li>均匀性，所有的输出是<em>等概率</em>的</li>
+  <li>唯一性，要求单射，即是说不能存在$a,b$，使得$f(a) == f(b)$</li>
+</ol>
+
+<p>高效性（速度）虽然很重要，但远远没有上面两条重要</p>
+
+<p>而这里的哈希函数则要求高效性，因为我们访问哈希表中的元素可能是很频繁的。</p>
+
+<p>所以密码学中的哈希函数用在这里是不太合适的。</p>
+
+<p>教师讲述了6种方法，均以整数为键：</p>
+
+<ol>
+  <li>直接定址法(Identity hash function)，找一个整数到整数的线性变换</li>
+  <li>折叠法(Folding)，将整数分为几个部分，每个部分都是目标长度的倍数（最后一部分可以小于目标长度），然后将这几部分作运算（加、移位、异或等等），得到结果之后取目标长度位结果。
+    <ul>
+      <li>密码学哈希算法多与这个方法类似</li>
+    </ul>
+  </li>
+  <li>平方取中法(Mid-squares)，先平方，然后取中间的目标长度位</li>
+  <li>除数余留法（Division hashing），直接取模</li>
+  <li>代数编码法（Algebraic coding），用数字的不同位作变换。</li>
+  <li>随机数法，不解释。</li>
+</ol>
+
+<h3 id="碰撞处理">碰撞处理</h3>
+
+<p>如果发生了碰撞，也即是说，存在$a,b$，使得$f(a) == f(b)$，那么就需要进行处理，这大致有四种办法：</p>
+
+<ol>
+  <li>开放定址法
+    <ul>
+      <li>线性探测法</li>
+      <li>二次探测法</li>
+      <li>随机探测法</li>
+    </ul>
+  </li>
+  <li>再哈希法</li>
+  <li>链地址法</li>
+  <li>建立公共溢出区法
+具体讨论略。</li>
+</ol>
+
+<h3 id="哈希表的实现--我实现的c版本">哈希表的实现 – 我实现的c++版本</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* hashtable.h */</span>
+
+<span class="cp">#pragma once
+#include &lt;bits/stdc++.h&gt;
+</span>
+<span class="cp">#define TYPE_KEY char *
+#define TYPE_VALUE char *
+#define MD5 md5
+#define NOT_FIND NULL
+#define NUM_NOT_FIND -1
+</span>
+<span class="k">typedef</span> <span class="nf">uint64_t</span> <span class="p">(</span><span class="o">*</span><span class="n">HASH_FUNC</span><span class="p">)(</span><span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+<span class="k">class</span> <span class="nc">HashTable</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">insertTo</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">TYPE_KEY</span><span class="p">,</span> <span class="n">TYPE_VALUE</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pair</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">deleteFrom</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">uint64_t</span> <span class="n">findByKey</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">TYPE_VALUE</span> <span class="n">getValueByKey</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="k">class</span> <span class="nc">LinkHashTableNode</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">T</span> <span class="n">value</span><span class="p">;</span>
+    <span class="n">LinkHashTableNode</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+    <span class="n">LinkHashTableNode</span><span class="p">(</span><span class="n">T</span> <span class="n">value</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">LinkedHashTable</span> <span class="o">:</span> <span class="k">public</span> <span class="n">HashTable</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">insertTo</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">TYPE_KEY</span><span class="p">,</span> <span class="n">TYPE_VALUE</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pair</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">deleteFrom</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">TYPE_VALUE</span> <span class="n">getValueByKey</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">);</span>
+    <span class="n">LinkedHashTable</span><span class="p">(</span><span class="n">uint</span> <span class="n">value</span><span class="p">,</span> <span class="n">HASH_FUNC</span> <span class="n">hashFunction</span><span class="p">);</span>
+
+<span class="nl">private:</span>
+    <span class="k">virtual</span> <span class="kt">uint64_t</span> <span class="n">findByKey</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="p">(</span><span class="n">TYPE_KEY</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">hash</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">LinkHashTableNode</span><span class="o">&lt;</span><span class="n">TYPE_VALUE</span><span class="o">&gt;</span> <span class="o">*&gt;</span> <span class="n">nodePool</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* hashtable.cpp */</span>
+
+<span class="cp">#include "./hashtable.h"
+#include "md5.h"
+</span>
+<span class="n">LinkedHashTable</span><span class="o">::</span><span class="n">LinkedHashTable</span><span class="p">(</span><span class="n">uint</span> <span class="n">size</span><span class="p">,</span> <span class="n">HASH_FUNC</span> <span class="n">hashFunction</span><span class="p">)</span> <span class="o">:</span> <span class="n">nodePool</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">hash</span> <span class="o">=</span> <span class="n">hashFunction</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">uint64_t</span> <span class="n">LinkedHashTable</span><span class="o">::</span><span class="n">findByKey</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">uint64_t</span> <span class="n">hash_value</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">hash</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="n">hash_value</span> <span class="o">=</span> <span class="n">hash_value</span> <span class="o">%</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">[</span><span class="n">hash_value</span><span class="p">]</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">NUM_NOT_FIND</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">hash_value</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LinkedHashTable</span><span class="o">::</span><span class="n">insertTo</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">TYPE_KEY</span><span class="p">,</span> <span class="n">TYPE_VALUE</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pair</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">uint64_t</span> <span class="n">hash_value</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">hash</span><span class="p">(</span><span class="n">pair</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+    <span class="n">hash_value</span> <span class="o">=</span> <span class="n">hash_value</span> <span class="o">%</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">new_node</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkHashTableNode</span><span class="o">&lt;</span><span class="n">TYPE_VALUE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">pair</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+    <span class="n">new_node</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">[</span><span class="n">hash_value</span><span class="p">];</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">[</span><span class="n">hash_value</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_node</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LinkedHashTable</span><span class="o">::</span><span class="n">deleteFrom</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">hash_value</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">findByKey</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hash_value</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="k">auto</span> <span class="n">begin</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">[</span><span class="n">hash_value</span><span class="p">];</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">[</span><span class="n">hash_value</span><span class="p">]</span> <span class="o">=</span> <span class="n">begin</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">begin</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">TYPE_VALUE</span> <span class="n">LinkedHashTable</span><span class="o">::</span><span class="n">getValueByKey</span><span class="p">(</span><span class="n">TYPE_KEY</span> <span class="n">key</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">auto</span> <span class="n">hash_value</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">findByKey</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hash_value</span> <span class="o">==</span> <span class="n">NUM_NOT_FIND</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">NOT_FIND</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">nodePool</span><span class="p">[</span><span class="n">hash_value</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>我们实现了一个很简单的哈希表，采用链地址法进行碰撞处理，采用MD5（这是一个密码学哈希函数）作为哈希函数。</p>
+
+<h3 id="ruby中的哈希表实现">Ruby中的哈希表实现</h3>
+
+<p>我们实现的哈希表，玩具色彩浓厚，特别是直接采用MD5算法这种愚蠢行为，每次查询时，都需要做至少64轮循环，效率是很差的。</p>
+
+<p>所以，本笔记的最后一部分就集中精力来讨论一个工业级哈希表 – ruby中的哈希表。</p>
+
+<p>ruby中的哈希表使用为:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">hash</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:a</span> <span class="o">=&gt;</span> <span class="s2">"haha"</span><span class="p">,</span> <span class="ss">:b</span> <span class="o">=&gt;</span> <span class="s2">"hahaha"</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>这个数据结构在ruby程序中，使用得特别广泛、特别频繁。如果没有一个优秀的内部实现，ruby程序的性能将会受到很大影响。</p>
+
+<p>笔记篇幅所限，这里不能完整地讨论ruby哈希表底层实现ruby/st.c中1000多行代码的全部内容。这里仅仅讨论一些最重要、和我们所学习内容关系最大的内容。</p>
+
+<p><strong>下面所称 st_table 指的就是ruby内部的哈希表</strong></p>
+
+<h4 id="st_table-的哈希函数">st_table 的哈希函数</h4>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 537行 */</span>
+    <span class="n">hash_val</span> <span class="o">=</span> <span class="n">do_hash</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">table</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>上面这段代码表明哈希函数就是do_hash.我们来看一下这个函数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 88行 */</span>
+<span class="cp">#define do_hash(key,table) (st_index_t)(*(table)-&gt;type-&gt;hash)((key))
+</span></code></pre></div></div>
+
+<p>这段代码似乎不是很好理解，我们来一点点地看：</p>
+
+<p>首先这是一个宏定义，传入两个参数key和table，给出一个值，其类型为st_index_t，也就是哈希表的具体位置（数组下标）</p>
+
+<p>然后来看具体的内容</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">hash</span><span class="p">)((</span><span class="n">key</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>这个语法其实是一个函数调用。(table)-&gt;type-&gt;hash是一个函数指针，指向hash函数，key是其参数。</p>
+
+<p>那么想要找到真正的哈希函数，就必须要找到初始化时这个table-&gt;type-&gt;hash被赋了什么值：</p>
+
+<p>哈希表的初始化有些复杂，但是为了讨论的方便还是介绍一下：</p>
+
+<p>首先，所有的初始化都最终被转发到这个函数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">st_table</span><span class="o">*</span>
+<span class="n">st_init_table_with_size</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">st_hash_type</span> <span class="o">*</span><span class="n">type</span><span class="p">,</span> <span class="n">st_index_t</span> <span class="n">size</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>然后实际使用时有三种初始化方法：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">st_table</span><span class="o">*</span>
+<span class="nf">st_init_numtable_with_size</span><span class="p">(</span><span class="n">st_index_t</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">st_init_table_with_size</span><span class="p">(</span><span class="o">&amp;</span><span class="n">type_numhash</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">st_table</span><span class="o">*</span>
+<span class="n">st_init_strtable_with_size</span><span class="p">(</span><span class="n">st_index_t</span> <span class="n">size</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">st_table</span><span class="o">*</span>
+<span class="n">st_init_strcasetable_with_size</span><span class="p">(</span><span class="n">st_index_t</span> <span class="n">size</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>我们这里只研究第一种st_init_numtable_with_size。这一种看名字就知道是整数对整数的映射。
+它传入了一个type_numhash，这看起来是一个全局常量：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define type_numhash st_hashtype_num
+</span><span class="k">const</span> <span class="k">struct</span> <span class="n">st_hash_type</span> <span class="n">st_hashtype_num</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">st_numcmp</span><span class="p">,</span>
+    <span class="n">st_numhash</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>那么，整数对整数的映射实际上应该调用到st_numhash这个函数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 1666 - 1683行 */</span>
+<span class="n">st_index_t</span>
+<span class="nf">st_numhash</span><span class="p">(</span><span class="n">st_data_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="cm">/*
+     * This hash function is lightly-tuned for Ruby.  Further tuning
+     * should be possible.  Notes:
+     *
+     * - (n &gt;&gt; 3) alone is great for heap objects and OK for fixnum,
+     *   however symbols perform poorly.
+     * - (n &gt;&gt; (RUBY_SPECIAL_SHIFT+3)) was added to make symbols hash well,
+     *   n.b.: +3 to remove ID scope, +1 worked well initially, too
+     * - (n &lt;&lt; 3) was finally added to avoid losing bits for fixnums
+     * - avoid expensive modulo instructions, it is currently only
+     *   shifts and bitmask operations.
+     */</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">st_index_t</span><span class="p">)((</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">RUBY_SPECIAL_SHIFT</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">))</span> <span class="o">^</span> <span class="p">(</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这个函数看起来倒是很简单，就是用n做了一些位运算。不过不属于教师讲述的6中方法之一。</p>
+
+<p>这很大程度地激起了我的好奇心：难道Index是32位的整数吗？这个函数没有任何取模操作，如果传入一个很大的n,它该如何处理呢？</p>
+
+<p>不要着急，让我们继续追踪吧：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 584 - 588行 */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ptr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">func</span><span class="p">)(</span><span class="n">key</span><span class="p">);</span>
+<span class="n">add_direct</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">hash_val</span><span class="p">,</span> <span class="n">bin_pos</span><span class="p">);</span>
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>我们注意到bin_pos这个参数，因为在add_direct函数中，它会调用new_entry函数，最后会执行这个语句：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 445 行 */</span> 
+<span class="n">entry</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">[</span><span class="n">bin_pos</span><span class="p">];</span>
+<span class="n">table</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">[</span><span class="n">bin_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>显然地，bin_pos才是数组查找的真正下标！那么bin_pos是在哪里被设置的呢？一个出乎预料的答案是在FIND_ENTRY宏中：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 582行*/</span>
+    <span class="n">FIND_ENTRY</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">ptr</span><span class="p">,</span> <span class="n">hash_val</span><span class="p">,</span> <span class="n">bin_pos</span><span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 344行 */</span>
+<span class="cp">#define FIND_ENTRY(table, ptr, hash_val, bin_pos) \
+    ((ptr) = find_entry((table), key, (hash_val), ((bin_pos) = hash_pos(hash_val, (table)-&gt;num_bins))))
+</span></code></pre></div></div>
+
+<p>经历了千辛万苦，我们终于来到了真正获取下标的hash_pos宏：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 89行 */</span>
+<span class="cp">#define hash_pos(h,n) ((h) &amp; (n - 1))
+</span></code></pre></div></div>
+
+<p>这里可以看到，实际的下标是和哈希表的长度与之后的结果。</p>
+
+<p>有人可能会问，为什么要有两套键（一个hash_val，一个bin_pos）呢？我们下面会谈到，这里埋个伏笔。不过在谈到这个问题之前，我们先要看看它的碰撞处理。</p>
+
+<h4 id="st_table的碰撞处理">st_table的碰撞处理</h4>
+
+<p>如果FIND_ENTRY宏找到了该key，st_table会如何处理呢？其实，这个问题在add_direct调用的new_enrty函数那里就可以看出来：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 445 - 446行 */</span>
+    <span class="n">entry</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">[</span><span class="n">bin_pos</span><span class="p">];</span>
+    <span class="n">table</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">[</span><span class="n">bin_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>这写法显然是链表的头插法，所以是链地址法。</p>
+
+<h4 id="st_table的扩容">st_table的扩容</h4>
+
+<p>在我们实现的哈希表中，真正的哈希算法为：
+\(hash = MD5(key) \% n\)
+这样一来带来一个很麻烦的问题 – 扩容时必须重新计算哈希值。</p>
+
+<p>而我们可以猜想到，得益于ruby哈希表中hash_val和bin_pos的分离，扩容时只需要重新计算bin_pos，而不需要重新计算哈希值。</p>
+
+<p>真的是这样吗？让我们再看看源代码：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 459 - 462行 */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">num_entries</span> <span class="o">&gt;</span> <span class="n">ST_DEFAULT_MAX_DENSITY</span> <span class="o">*</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">num_bins</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">rehash</span><span class="p">(</span><span class="n">table</span><span class="p">);</span>
+    <span class="n">bin_pos</span> <span class="o">=</span> <span class="n">hash_pos</span><span class="p">(</span><span class="n">hash_val</span><span class="p">,</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">num_bins</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>可以清楚地看到，如果现在的哈希表项数大于可以容纳的最大数量 * 一个密度常数，那么就用rehash()函数重新对这个表作哈希，而rehash()函数定义如下：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 609 - 627行 */</span>
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">rehash</span><span class="p">(</span><span class="k">register</span> <span class="n">st_table</span> <span class="o">*</span><span class="n">table</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">register</span> <span class="n">st_table_entry</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="o">**</span><span class="n">new_bins</span><span class="p">;</span>
+    <span class="n">st_index_t</span> <span class="n">new_num_bins</span><span class="p">,</span> <span class="n">hash_val</span><span class="p">;</span>
+
+    <span class="n">new_num_bins</span> <span class="o">=</span> <span class="n">new_size</span><span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">num_bins</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">new_bins</span> <span class="o">=</span> <span class="n">st_realloc_bins</span><span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">bins</span><span class="p">,</span> <span class="n">new_num_bins</span><span class="p">,</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">num_bins</span><span class="p">);</span>
+    <span class="n">table</span><span class="o">-&gt;</span><span class="n">num_bins</span> <span class="o">=</span> <span class="n">new_num_bins</span><span class="p">;</span>
+    <span class="n">table</span><span class="o">-&gt;</span><span class="n">bins</span> <span class="o">=</span> <span class="n">new_bins</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">ptr</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">do</span> <span class="p">{</span>
+	    <span class="n">hash_val</span> <span class="o">=</span> <span class="n">hash_pos</span><span class="p">(</span><span class="n">ptr</span><span class="o">-&gt;</span><span class="n">hash</span><span class="p">,</span> <span class="n">new_num_bins</span><span class="p">);</span>
+	    <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_bins</span><span class="p">[</span><span class="n">hash_val</span><span class="p">];</span>
+	    <span class="n">new_bins</span><span class="p">[</span><span class="n">hash_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">while</span> <span class="p">((</span><span class="n">ptr</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">fore</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这段代码有两个地方需要研究</p>
+
+<ol>
+  <li>new_size是如何实现的，新的大小和现大小是什么关系？</li>
+  <li>现在的哈希表是如何迁移到新的哈希表的？</li>
+</ol>
+
+<p>首先研究第一个问题，我们直接研究new_size函数：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 157 - 172行 */</span>
+<span class="k">static</span> <span class="n">st_index_t</span>
+<span class="nf">new_size</span><span class="p">(</span><span class="n">st_index_t</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">st_index_t</span> <span class="n">n</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">size</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="n">size</span><span class="p">)</span> <span class="cm">/* already a power-of-two? */</span>
+	<span class="k">return</span> <span class="n">size</span><span class="p">;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">next_pow2</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="n">size</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="cp">#ifndef NOT_RUBY
+</span>    <span class="n">rb_raise</span><span class="p">(</span><span class="n">rb_eRuntimeError</span><span class="p">,</span> <span class="s">"st_table too big"</span><span class="p">);</span>
+<span class="cp">#endif
+</span>    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>			<span class="cm">/* should raise exception */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>可以看到，下一个大小是next_pow2算出来的。也就是说，新的大小和旧的大小有如下关系：
+\(size_{new} = 2 \times size_{former}\)</p>
+
+<p>然后研究第二个问题，现在的哈希表如何迁移到新的哈希表。</p>
+
+<p>首先，st_realloc_bins只会重新分配内存，而不会迁移，真正的迁移在这个循环中进行：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">((</span><span class="n">ptr</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">do</span> <span class="p">{</span>
+	    <span class="n">hash_val</span> <span class="o">=</span> <span class="n">hash_pos</span><span class="p">(</span><span class="n">ptr</span><span class="o">-&gt;</span><span class="n">hash</span><span class="p">,</span> <span class="n">new_num_bins</span><span class="p">);</span>
+	    <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_bins</span><span class="p">[</span><span class="n">hash_val</span><span class="p">];</span>
+	    <span class="n">new_bins</span><span class="p">[</span><span class="n">hash_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">while</span> <span class="p">((</span><span class="n">ptr</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">fore</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>要说明白这个循环，必须认真研究一下st_table_entry：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* ruby/st.c 18 - 26行 */</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">st_table_entry</span> <span class="n">st_table_entry</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">st_table_entry</span> <span class="p">{</span>
+    <span class="n">st_index_t</span> <span class="n">hash</span><span class="p">;</span>
+    <span class="n">st_data_t</span> <span class="n">key</span><span class="p">;</span>
+    <span class="n">st_data_t</span> <span class="n">record</span><span class="p">;</span>
+    <span class="n">st_table_entry</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+    <span class="n">st_table_entry</span> <span class="o">*</span><span class="n">fore</span><span class="p">,</span> <span class="o">*</span><span class="n">back</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>这个next，指向的是本bin_pos的下一个项；而fore和back，实际上是把整个哈希表中所有的项做成了一个双向链表！</p>
+
+<p>回过头来再看add_direct的最后一部分，我们会有种恍然大悟的感觉：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">table</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">entry</span><span class="o">-&gt;</span><span class="n">fore</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">(</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">back</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">tail</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">fore</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
+<span class="n">table</span><span class="o">-&gt;</span><span class="n">tail</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+<span class="n">table</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="n">table</span><span class="o">-&gt;</span><span class="n">tail</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
+<span class="n">entry</span><span class="o">-&gt;</span><span class="n">fore</span> <span class="o">=</span> <span class="n">entry</span><span class="o">-&gt;</span><span class="n">back</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>这也正是双向链表的插入操作，其中table-&gt;head是头指针，table-&gt;tail是尾指针。这样一来，所有的项都串成了一个双向链表，通过从头指针开始的遍历就可以将所有的项加入新的哈希表中，而这正是这个循环所做的事情：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">do</span> <span class="p">{</span>
+	<span class="n">hash_val</span> <span class="o">=</span> <span class="n">hash_pos</span><span class="p">(</span><span class="n">ptr</span><span class="o">-&gt;</span><span class="n">hash</span><span class="p">,</span> <span class="n">new_num_bins</span><span class="p">);</span>
+	<span class="n">ptr</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_bins</span><span class="p">[</span><span class="n">hash_val</span><span class="p">];</span>
+	<span class="n">new_bins</span><span class="p">[</span><span class="n">hash_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">((</span><span class="n">ptr</span> <span class="o">=</span> <span class="n">ptr</span><span class="o">-&gt;</span><span class="n">fore</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>特别地，我们发现它确实只是将哈希值用hash_pos宏变为了bin_pos，即下标，从而避免了再次哈希键。</p>
+
+<h4 id="总结">总结</h4>
+
+<p>总的来说，ruby中的哈希表有这几个特性：</p>
+
+<ol>
+  <li>哈希函数是将键做不循环的位运算。</li>
+  <li>哈希值和真正的下标分离，真正的下标由哈希值逻辑与哈希表长度得到，扩容时不需要再次计算哈希值，只需要再次计算真正的下标。</li>
+  <li>冲突处理采用链地址法。</li>
+  <li>容量永远是2的n次方，扩容时，新的容量是现容量的两倍</li>
+  <li>将所有的哈希表项用一个双向链表串起来，用头指针和尾指针实现对整个哈希表的高效遍历。</li>
+</ol>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <footer class="page-footer">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-4">
+                <div class="content">
+                    <p>
+                        <small>
+                            <span>Powered by</span>
+                            <a target="_blank" href="http://jekyllrb.com/">Jekyll</a>
+                            <span> / Styled using </span>
+                            <a target="_blank" href="http://bulma.io/">Bulma</a>
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="/jekyll-theme-blogfolio/js/script.js"></script>
+</body>
+
+</html>

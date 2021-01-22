@@ -1,0 +1,384 @@
+<ul>
+  <li><a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81eap%e8%ae%a4%e8%af%81">为什么需要EAP认证</a></li>
+  <li><a href="#%e6%9c%ac%e6%96%87%e8%a6%81%e6%90%9e%e6%b8%85%e6%a5%9a%e7%9a%84%e4%b8%bb%e8%a6%81%e9%97%ae%e9%a2%98">本文要搞清楚的主要问题</a></li>
+  <li><a href="#%e5%af%b9%e6%95%b4%e4%b8%aa8021x-eap%e8%ae%a4%e8%af%81%e6%9e%b6%e6%9e%84%e7%9a%84%e7%ae%80%e5%8d%95%e4%bb%8b%e7%bb%8d">对整个802.1x EAP认证架构的简单介绍</a></li>
+  <li><a href="#%e6%90%ad%e5%bb%ba%e4%bd%bf%e7%94%a8eap%e7%9a%8480211%e6%97%a0%e7%ba%bf%e7%bd%91%e7%bb%9c">搭建使用EAP的802.11无线网络</a>
+    <ul>
+      <li><a href="#%e6%90%ad%e5%bb%basupplicant">搭建supplicant</a></li>
+      <li><a href="#%e6%90%ad%e5%bb%baradius-server">搭建Radius Server</a></li>
+      <li><a href="#%e6%90%ad%e5%bb%baap">搭建AP</a></li>
+      <li><a href="#%e8%af%b4%e6%98%8e">说明</a></li>
+    </ul>
+  </li>
+  <li><a href="#%e8%bf%9e%e6%8e%a5%e5%88%b0%e8%bf%99%e4%b8%aa%e6%97%a0%e7%ba%bf%e7%bd%91%e8%b7%af">连接到这个无线网路</a>
+    <ul>
+      <li><a href="#%e4%bd%bf%e7%94%a8peap%e6%96%b9%e6%b3%95">使用PEAP方法</a></li>
+      <li><a href="#%e4%bd%bf%e7%94%a8eap%ef%bc%8dtls%e6%96%b9%e6%b3%95">使用EAP－TLS方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#%e5%88%86%e6%9e%90eap%ef%bc%8dtls%e6%96%b9%e6%b3%95%e7%9a%84%e5%85%a8%e8%bf%87%e7%a8%8b">分析EAP－TLS方法的全过程</a>
+    <ul>
+      <li><a href="#clinet-certificate%e4%b8%8etls12%e4%b8%ad%e7%9a%84client-certificatecertificate-verify%e5%b8%a7">Clinet Certificate与tls1.2中的Client Certificate、Certificate Verify帧</a></li>
+      <li><a href="#eap-tls%e6%96%b9%e6%b3%95%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e5%8f%8c%e5%90%91%e8%ae%a4%e8%af%81">EAP-TLS方法如何进行双向认证</a></li>
+      <li><a href="#eap-tls%e6%96%b9%e6%b3%95%e7%9a%84%e5%8d%8f%e8%ae%ae%e6%a0%88">EAP-TLS方法的协议栈</a></li>
+      <li><a href="#%e7%ac%ac%e4%b8%80%e9%98%b6%e6%ae%b5-%e5%8f%91%e9%80%81%e8%ba%ab%e4%bb%bd%e4%bf%a1%e6%81%af">第一阶段 ：发送身份信息</a></li>
+      <li><a href="#%e7%ac%ac%e4%ba%8c%e9%98%b6%e6%ae%b5-%e5%8d%8f%e5%95%86eap%e6%96%b9%e6%b3%95">第二阶段 ：协商EAP方法</a></li>
+      <li><a href="#%e7%ac%ac%e4%b8%89%e9%98%b6%e6%ae%b5-eap-tls%e8%bf%87%e7%a8%8b">第三阶段 ：EAP-TLS过程</a></li>
+      <li><a href="#%e7%ac%ac%e5%9b%9b%e9%98%b6%e6%ae%b5-eap%e6%88%90%e5%8a%9f%ef%bc%8f%e5%a4%b1%e8%b4%a5">第四阶段 ：EAP成功／失败</a></li>
+    </ul>
+  </li>
+  <li><a href="#eap-tls%e5%a6%82%e4%bd%95%e4%b8%ba80211i%e7%9a%84key-hierarchy%e8%bf%87%e7%a8%8b%e6%8f%90%e4%be%9bpmk">EAP-TLS如何为802.11i的Key Hierarchy过程提供PMK</a></li>
+  <li><a href="#%e6%80%bb%e7%bb%93">总结</a></li>
+</ul>
+
+<h2 id="为什么需要eap认证">为什么需要EAP认证</h2>
+
+<p>我们在<a href="/jekyll-theme-blogfolio/802.11i/2019/11/02/802-11i-1/">无线网络安全（1）</a>中说过，所谓的“认证”，在802.11i的RSN（或者说，WPA）中有两种方式，一种是<strong>802.1x EAP</strong>认证，一种是<strong>pre-shared-key</strong>认证，而<strong>pre-shared-key</strong>认证直接跳过认证过程，通过“四次握手”(密钥生成与分发)过程，验证<strong>AP</strong>和<strong>STA</strong>对于<strong>PSK</strong>的所有权，是一种相互认证。</p>
+
+<p>但<strong>pre-shared-key</strong>认证有一些缺陷。以我们的无线校园网<strong>SYSU_SECURE</strong>为例，如果采取<strong>pre-shared-key</strong>认证，那么就会遇到很多问题：</p>
+
+<ul>
+  <li>向一个人分发一份<strong>pre-shared-key</strong>，本意是让一个人使用。但由于密钥生成与分发过程只验证AP和STA对<strong>PSK</strong>的所有权，如果这个人（A）将<strong>PSK</strong>送给了另一个人(B)，那么B也可以用这个<strong>PSK</strong>连接校园网。</li>
+  <li>更新<strong>PSK</strong>时如何安全地通知全校同学？</li>
+</ul>
+
+<p>实际上，如果范围很大的话，我们很难控制<strong>PSK</strong>的传播。在802.11i中引入EAP，就是为了解决大规模无线网络的认证问题。</p>
+
+<h2 id="本文要搞清楚的主要问题">本文要搞清楚的主要问题</h2>
+
+<ul>
+  <li>什么是EAP？</li>
+  <li>使用802.1x EAP认证方法如何产生802.11i需要的PMK?</li>
+  <li>如何搭建一个WPA2-Enterprise或者说使用802.1x EAP认证方法的无线网络？</li>
+  <li>EAP-TLS如何进行双向验证？</li>
+</ul>
+
+<h2 id="对整个8021x-eap认证架构的简单介绍">对整个802.1x EAP认证架构的简单介绍</h2>
+
+<p>EAP这个东西，是古董。在PPP链路大行其道的时代，EAP就出现了。它最初就是为了解决PPP的认证问题而引入的。对它的具体描述，参见<a href="https://tools.ietf.org/html/rfc3748">rfc3748</a>。EAP叫做“可扩展认证协议”，它只规定了一个壳子，我们可以通过各种方法改造它以适应我们的要求。</p>
+
+<p>而802.1x，是所谓的“基于端口的介质访问控制”ieee标准。什么意思呢？就是说，在客户端没有认证之前，客户端只能通过“被控制的端口”（controlled port）和网络接入点（比如AP、交换机、路由器等等）进行通信。这就说是，在没有认证之前，网络接入点只接受客户端发来的802.1x帧（在以太网里，TYPE字段值为0x888e），其他的一律扔掉。这样一来，客户端虽然在物理上可以和网络接入点进行通信，但是只能进行认证而不能和别的终端进行通信。如果客户端进行了认证，那么，客户端就可以从不被控制的端口（uncontrolled port）通信，简单地来说就是可以上网了。这样一来，802.1x就提供了一种在以太网上进行访问控制的方法。</p>
+
+<p>那么，802.1x和EAP的关系是怎么样的呢？这是一个略复杂的问题。我们说，在以太网上，TYPE字段设置为0x888e就代表上层协议是802.1x。而它上层的协议包，被称为EAPOL（EAP over LAN），也就是EAP在Lan上的实现。它的包格式被802.1x规定如下：</p>
+
+<p><img src="https://i.loli.net/2020/02/14/qM7h4IWTSYptlAC.png" alt="1.PNG" /></p>
+
+<p>可是令人迷惑的是，EAP协议有自己的包格式：</p>
+
+<p><img src="https://i.loli.net/2020/02/14/5XSJcP9bneWv7LQ.png" alt="2.PNG" /></p>
+
+<p>那么，在以太网或者802.11无线网中，使用的包格式究竟是哪一套呢？</p>
+
+<p>答案很简单，这两套都使用。而且这两套包的层次是不同的。简单地说，802.1x的作用是“访问控制”，EAP的作用是“认证”。我们先按下不表，看看这个认证体系的拓扑架构：</p>
+
+<p><img src="https://i.loli.net/2020/02/14/TJhdktbIyjoqQuz.png" alt="3.PNG" /></p>
+
+<p>我们发现，在这个架构里，有三个角色：</p>
+
+<ul>
+  <li>host – 客户</li>
+  <li>Network Access Server – <strong>NAS</strong>网络接入服务器</li>
+  <li>Authentication Server – 认证服务器</li>
+</ul>
+
+<p>这三个角色的作用和它的名字基本一样。那么，我们发现，在这个体系中，“认证”是委托给认证服务器做的。但认证服务器和客户的通信必须借助<strong>NAS</strong>的转发。而<strong>NAS</strong>转发的包，就是EAP包；客户和<strong>NAS</strong>的通信，是802.1x,或者说是EAPOL包, EAP包被封装在EAPOL包中；<strong>NAS</strong>和认证服务器的通信，是RADIUS包。实际上，整个协议栈可以如下示意：</p>
+
+<p><img src="https://slideplayer.com/slide/4802754/15/images/19/Through+the+protocol+stack.jpg" alt="4.PNG" /></p>
+
+<p>实际上，如果仔细看802.1x-2010的话, 当EAPOL包的TYPE字段被设置为0时, 这个包的PacketBody字段就会是一个EAP包:</p>
+
+<p><img src="https://i.loli.net/2020/02/14/GN7PgKzLWIib3fZ.png" alt="5.PNG" /></p>
+
+<p>我们用wireshark抓包也会看到这一点:</p>
+
+<p><img src="https://i.loli.net/2020/02/14/IcFwZpj9BxTDl3b.png" alt="6.PNG" /></p>
+
+<p>为什么说EAP是用来认证的?因为EAP包是客户和认证服务器用来作认证通信的。理解了这一点，让我们暂时放下理论，先搭建一套使用EAP的802.11无线网络吧。</p>
+
+<h2 id="搭建使用eap的80211无线网络">搭建使用EAP的802.11无线网络</h2>
+
+<p>根据802.1x认证的构成要件，这里的无线网络至少要由三个部分：</p>
+
+<ul>
+  <li>suplicant – 客户</li>
+  <li>Access Point – 无线接入点<strong>AP</strong></li>
+  <li>Radius Server – Radius 服务器</li>
+</ul>
+
+<p>需要指出的是，这里的<strong>AP</strong>是“胖AP”，也就是说，它既担任接入点，又担任DHCP Server和Radius client，如果将AP换做所谓的“瘦AP”，那么，这里会有四个部分。</p>
+
+<h3 id="搭建supplicant">搭建supplicant</h3>
+
+<p>现在的各种操作系统都有直接连接EAP方法的无线网的组件，这一步不用自己做什么。</p>
+
+<h3 id="搭建radius-server">搭建Radius Server</h3>
+
+<p>这里我们使用了<a href="https://freeradius.org/">FreeRadius</a>这个开源的Radius服务器，在ubuntu18.04 LTS上搭建了Radius服务器。</p>
+
+<p>配置步骤如下：</p>
+
+<ol>
+  <li>
+    <p>在终端中输入</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>apt-get <span class="nb">install </span>freeradius
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>安装完成后，打开服务器，修改/etc/freeradius/users，添加一个用户，并使用radtest进行测试：</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">echo </span>bob Cleartext-Password :<span class="o">=</span> <span class="s2">"hello"</span> <span class="o">&gt;&gt;</span> /etc/users
+ <span class="nb">sudo </span>freeradus <span class="nt">-X</span>
+ radtest bob hello 127.0.0.1 0 testing123
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>测试成功后，切换到/etc/freeradius/3.0/certs目录，修改client.cnf，填写自己在users中的用户相关信息（比如CN = bob），并使用make工具产生证书：</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> vim client.cnf
+ make
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>修改/etc/freeradius/3.0/mods-enabled/eap文件，将ca证书改成刚刚修改好的证书：</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ca_file <span class="o">=</span> /etc/freeradius/3.0/certs/ca.pem
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>修改/etc/freeradius/3.0/client.conf文件，新建一个clinet，准备与ap连接</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> client 192.168.1.1 <span class="o">{</span>
+   ipaddr <span class="o">=</span> 192.168.1.1
+   proto <span class="o">=</span> <span class="k">*</span>
+   secret <span class="o">=</span> testing123
+ <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>将此服务器和AP连接到同一个网络，这里我使用的是虚拟机，所以新建了一块桥接网卡。</p>
+  </li>
+</ol>
+
+<p>至此，Radius服务器就建好了，下面搭建AP。</p>
+
+<h3 id="搭建ap">搭建AP</h3>
+
+<p>这里我们采用了我家的家用路由器。</p>
+
+<ul>
+  <li>型号：ASUS RT-AC87R</li>
+  <li>固件版本：华硕原生固件 3.0.0.4.376_2769-g1bb5fac</li>
+</ul>
+
+<p>配置步骤如下：</p>
+
+<ol>
+  <li>在<strong>无线网络-一般设置</strong>中将2.4G的验证方式设置为WPA-Enterprise。</li>
+  <li>在<strong>无线网络-Radius设置</strong>中，填写Radius服务器地址、端口、密码等信息。</li>
+</ol>
+
+<p>至此，AP配置完成。</p>
+
+<h3 id="说明">说明</h3>
+
+<p>freeradius是一个很强的服务器，如果搭建到了这里，它的默认设置就几乎可以支持市面上常见的所有EAP方法，包括EAP-MD5、EAP-TLS、EAP-TTLS、EAP-PEAP等。</p>
+
+<h2 id="连接到这个无线网路">连接到这个无线网路</h2>
+
+<h3 id="使用peap方法">使用PEAP方法</h3>
+
+<p>在Windows平台和ios平台下，直接连接上面的无线网络，操作系统会默认使用PEAP方法。在GUI中输入用户名和密码即可。</p>
+
+<h3 id="使用eaptls方法">使用EAP－TLS方法</h3>
+
+<p>为什么要使用EAP－TLS方法呢？因为PEAP方法会第一阶段会创造tls信道，第二阶段分析起来不太方便。我们对TLS也相当熟悉，所以决定使用EAP-TLS方法进行分析整个连接过程。如果要分析，就必须先连接上。这里使用Windows平台进行连接。</p>
+
+<p>在上一步的配置中，freeradius会产生一堆证书：</p>
+
+<p><img src="https://i.loli.net/2020/02/14/h2xVkQqc7KiEOUT.png" alt="7.PNG" /></p>
+
+<p>将clinet.p12复制一份到windows平台下，双击，进行安装。注意选择“标记为可导出的证书”选项。</p>
+
+<p><img src="https://i.loli.net/2020/02/14/brgWiSUOe2FK6nX.png" alt="8.PNG" /></p>
+
+<p>然后在控制面版中新建一个无线连接：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20df.png" alt="" /></p>
+
+<p>填写相关参数，并选择<strong>下一步</strong>：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e2.png" alt="" /></p>
+
+<p>选择<strong>更改连接设置</strong>：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e4.png" alt="" /></p>
+
+<p>在这个界面需要更改两个内容：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e6.png" alt="" /></p>
+
+<ol>
+  <li>
+    <p>在<strong>高级设置</strong>中将<strong>指定身份验证模式</strong>改为<strong>用户身份验证</strong></p>
+
+    <p><img src="https://pic.downk.cc/item/5e4647ff48b86553ee0f1597.png" alt="14.png" /></p>
+  </li>
+  <li>
+    <p>在<strong>选择网络身份验证方法</strong>中选择<strong>Microsoft智能卡或其他证书</strong>，并点击<strong>设置</strong></p>
+
+    <p>在<strong>设置</strong>页面取消对<strong>通过验证证书验证服务器的身份</strong>的选择：</p>
+
+    <p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e8.png" alt="" /></p>
+  </li>
+</ol>
+
+<p>然后，在GUI中直接连接。</p>
+
+<h2 id="分析eaptls方法的全过程">分析EAP－TLS方法的全过程</h2>
+
+<p>在刚才的连接过程中，我们可以看到，整个设置很繁琐。这是因为EAP-TLS使用了<strong>Client Certificate</strong>来验证客户端的有效性。</p>
+
+<h3 id="clinet-certificate与tls12中的client-certificatecertificate-verify帧">Clinet Certificate与tls1.2中的Client Certificate、Certificate Verify帧</h3>
+
+<p>在<a href="https://tools.ietf.org/html/rfc3748">rfc5246</a>中，定义了一个我们在TLS系列中没有分析过的帧 – <strong>clinet certificate</strong>. 这一帧是在收到服务器发来的<strong>Certificate Request</strong>帧后，客户端必须发送的帧。服务端通过这一帧来验证客户端的的身份。然而，在https的世界里，我们很少使用这个东西。因为http对应的主要是web应用，web应用一般不会要求验证用户的身份，即使真的要求，基于https的身份验证也会让使用http的用户无法登录，还有部署麻烦等劣势，所以用的很少，我们在之前的TLS文章中也没有研究。</p>
+
+<p>这一帧的结构如下：</p>
+
+<blockquote>
+  <p>Client certificates are sent using the Certificate structure defined in Section 7.4.2.</p>
+</blockquote>
+
+<p>7.4.2是Server Certificate的定义，所以这里也和Server Certificate一样，是直接<strong>明文</strong>发过去的。</p>
+
+<p>回忆TLS中对于Server Certificate的验证，我们会发现，如果只发送Client Certificate帧，是不能验证客户端对于这个证书的所有权的，验证所有权的关键，应该是私钥。客户端对证书的所有权，是Certificate Verify帧验证的。</p>
+
+<p>这一帧的结构如下：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="p">{</span>
+    <span class="n">digitally</span><span class="o">-</span><span class="kt">signed</span> <span class="k">struct</span>
+    <span class="p">{</span>
+        <span class="n">opaque</span> <span class="n">handshake_messages</span><span class="p">[</span><span class="n">handshake_messages_length</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="n">CertificateVerify</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>handshake_messages指的是从握手开始到握手结束的所有消息的连接，而digitally-signed正是指客户端需要用私钥加密这些消息。这样一来，服务端端用证书中的公钥解密，判断一下是否和自己存储/打的哈希一致，就可以验证客户端对证书的所有权了。</p>
+
+<h3 id="eap-tls方法如何进行双向认证">EAP-TLS方法如何进行双向认证</h3>
+
+<ul>
+  <li>客户端认证服务端：通过tls的密钥交换，是标准的tls方法，和一般使用的tls一致。</li>
+  <li>服务端认证客户端：通过Client Certificate和Certificate Verify消息，是标准的tls方法，但不常用。</li>
+</ul>
+
+<h3 id="eap-tls方法的协议栈">EAP-TLS方法的协议栈</h3>
+
+<p>既然这个方法名字叫做EAP-TLS，那么就是使用TLS来进行双向认证的。这里有个问题，那就是我们现在无法使用IP协议和TCP协议，如何使用TLS呢？这里采取的方法是，将TLS的帧封装在EAP协议中。</p>
+
+<p>用wireshark抓包，可以很清晰地看出这个情况：</p>
+
+<p><img src="https://pic.downk.cc/item/5e4650f348b86553ee1226df.png" alt="" /></p>
+
+<p>下面我们来分析认证的全过程。</p>
+
+<h3 id="第一阶段-发送身份信息">第一阶段 ：发送身份信息</h3>
+
+<p>首先需要说明，以下所有的通信都是发生于Radius Server（认证服务器）和STA之间的，AP只是起转发作用。</p>
+
+<p>在做完<strong>NULL　Authentication</strong>之后，STA发送EAPOL_Start帧，表明开始进行802.1x认证：</p>
+
+<p><img src="https://pic.downk.cc/item/5e4684c748b86553ee250255.png" alt="" /></p>
+
+<p>之后，STA回应AP的Request Identity消息，发送自己的身份信息：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46850f48b86553ee2521c4.png" alt="" />
+<img src="https://pic.downk.cc/item/5e46850f48b86553ee2521c6.png" alt="" /></p>
+
+<p>如果身份信息合法，进入下一阶段</p>
+
+<h3 id="第二阶段-协商eap方法">第二阶段 ：协商EAP方法</h3>
+
+<p>AP发送Request-MD5-Challenge消息，要求使用EAP-MD5-Challenge方法：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46859d48b86553ee2562c3.png" alt="" /></p>
+
+<p>客户端不同意，发送NAK消息，并指出自己想使用EAP-TLS方法：</p>
+
+<p><img src="https://pic.downk.cc/item/5e4685cf48b86553ee257d24.png" alt="" /></p>
+
+<p><img src="https://pic.downk.cc/item/5e4685cf48b86553ee257d27.png" alt="" /></p>
+
+<p>AP换用EAP-tls方法，发送Request-eap-tls消息：</p>
+
+<p><img src="https://pic.downk.cc/item/5e4685f548b86553ee25ad82.png" alt="" /></p>
+
+<p>下面的消息就全部是tls协议帧了。</p>
+
+<h3 id="第三阶段-eap-tls过程">第三阶段 ：EAP-TLS过程</h3>
+
+<p>eap-tls由rfc2716定义，现在通行的是<a href="https://tools.ietf.org/html/rfc2548">rfc5216</a>。</p>
+
+<p>成功的eap-tls整个过程大概有三种情况，一种是标准的tls握手过程，另一种是标准的tls快速恢复握手过程，还有一种是支持privacy的两次握手。这里只观察到了第一种，故只讨论第一种。</p>
+
+<p>此过程和一般的tls握手过程主要有以下区别：</p>
+
+<ul>
+  <li>服务端发送Certificate Request消息，客户端回应client Certificate 和 Certificate Verify消息。</li>
+  <li>同时进行EAP-TLS Key Hierarchy过程。注意，这并不是说TLS的Key Hierarchy过程就不进行了，而是说另外地进行其他的Key Hierarchy过程。由于握手过程的最后一帧finished是加密的，所以标准的TLS的Key Hierarchy也是必须的。</li>
+</ul>
+
+<p>抓包结果如下：</p>
+
+<p><img src="https://pic.downk.cc/item/5e46865748b86553ee260de9.png" alt="" /></p>
+
+<h3 id="第四阶段-eap成功失败">第四阶段 ：EAP成功／失败</h3>
+
+<p>如果成功，AP向STA发送EAP　Success消息，如果失败，AP向STA发送EAP Failure消息。</p>
+
+<p><img src="https://pic.downk.cc/item/5e46868248b86553ee262794.png" alt="" /></p>
+
+<h2 id="eap-tls如何为80211i的key-hierarchy过程提供pmk">EAP-TLS如何为802.11i的Key Hierarchy过程提供PMK</h2>
+
+<p>我们知道，在802.11i无线网络中，Key Hierachy的起点是<strong>PMK</strong>(Pairwise Master Key)。如果使用<strong>PSK</strong>方法，那么<strong>PMK</strong>就是<strong>PSK</strong>。如果使用EAP方法呢？802.11-2007并没有说得很明白，而是使用了May这样的词，但从“密码”到<strong>PSK</strong>所使用的哈希函数也是may，所以还是很有参考价值的。它指向了一个很奇怪的记号：<strong>MS-MPPE-Recv-Key</strong>。这个<strong>MS</strong>恐怕指的就是<strong>Microsoft</strong>了，而这个符号实际上来源于PEAP，是PEAP第一阶段（也是用TLS，只不过没有用Cilent Certificate校验客户端）通过Key Hierarchy产生的密钥。</p>
+
+<p>EAP-TLS提供了一种和标准TLS不同的方法，来生成PMK，在rfc-5216的2.3节中被这样定义：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">Key_Material</span> <span class="o">=</span> <span class="n">TLS</span><span class="o">-</span><span class="n">PRF</span><span class="o">-</span><span class="mi">128</span><span class="p">(</span><span class="n">master_secret</span><span class="p">,</span> <span class="s">"client EAP encryption"</span><span class="p">,</span> <span class="n">client</span><span class="p">.</span><span class="n">random</span> <span class="o">||</span> <span class="n">server</span><span class="p">.</span><span class="n">random</span><span class="p">)</span>
+ <span class="n">MSK</span> <span class="o">=</span> <span class="n">Key_Material</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span>
+ <span class="n">EMSK</span> <span class="o">=</span> <span class="n">Key_Material</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">127</span><span class="p">)</span>
+ <span class="n">IV</span> <span class="o">=</span> <span class="n">TLS</span><span class="o">-</span><span class="n">PRF</span><span class="o">-</span><span class="mi">64</span><span class="p">(</span><span class="s">""</span><span class="p">,</span> <span class="s">"client EAP encryption"</span><span class="p">,</span> <span class="n">client</span><span class="p">.</span><span class="n">random</span> <span class="o">||</span> <span class="n">server</span><span class="p">.</span><span class="n">random</span><span class="p">)</span>
+ <span class="n">Enc</span><span class="o">-</span><span class="n">RECV</span><span class="o">-</span><span class="n">Key</span> <span class="o">=</span> <span class="n">MSK</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">31</span><span class="p">)</span> 
+    <span class="cm">/*
+    Peer to Authenticator Encryption Key
+    (MS-MPPE-Recv-Key in [RFC2548]). Also known as the
+    PMK in [IEEE-802.11].
+    */</span>
+ <span class="n">Enc</span><span class="o">-</span><span class="n">SEND</span><span class="o">-</span><span class="n">Key</span> <span class="o">=</span> <span class="n">MSK</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">63</span><span class="p">)</span> 
+    <span class="cm">/*
+    Authenticator to Peer Encryption Key
+    (MS-MPPE-Send-Key in [RFC2548])
+    */</span>
+</code></pre></div></div>
+
+<p>为什么<strong>MS-MPPE-Recv-Key</strong>成了事实上的<strong>PMK</strong>呢？这似乎有历史原因，我并没有找到一个解释或是说明。但事实就是这样，我们的好奇心也不必过于旺盛。</p>
+
+<p>这时，所有的问题都解决了吗？确实解决了。但是我们又有了新的问题：tls握手是在Authentication Server和Client之间发生的，AP是如何得到Enc-RECV-Key的呢？下一阶段的Key Hierarchy是AP进行的，它必须得到PMK。</p>
+
+<p>我们仔细研究一下Radius Server发给AP的最后一帧：</p>
+
+<p><img src="https://pic.downk.cc/item/5e4686bc48b86553ee264917.png" alt="" /></p>
+
+<p>图中确实看到了MS-MPPE-RECV-KEY字段，但为什么长度不是0x22(32byte的Key, 1byte的Id，1byte的length)，而是0x34（52）呢？这是因为它不是明文传的，而是加密+padding后的结果。具体是如何加密的，可以参考<a href="https://tools.ietf.org/html/rfc2548">rfc2548</a>，此处就不赘述了。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>研究EAP是一件不那么轻松的事，主要原因一是资料少，二是资料基本都是英文的，中文搜索几乎没有什么有用结果。通过写这篇文章、研究这些内容，我已经基本搞清楚了802.11i认证过程的所有过程，不过还有很多坑待填，譬如最后产生的GTK究竟有什么用、如何处理漫游等等问题。不过，相信在不远的将来，我会完全研究清楚这些问题。</p>
+
+<p>最后来谈一谈我在部署过程中所踩的坑。</p>
+
+<ul>
+  <li>我们必须安装PKCS格式的证书，而不是.crt .pem那样的base64编码的证书（不然私钥无法安装）。</li>
+  <li>我们必须勾选“允许导出”选项，不然不会使用这张证书。</li>
+  <li>我们必须设置“用户认证”，不然windows会将我们计算机的主机名在eap identity里传过去。</li>
+</ul>
