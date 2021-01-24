@@ -83,7 +83,7 @@ $$
 $$
 这时再看那个函数式程序，我们会清晰很多：
 
-`ext_gcd b r`求出的是$$s b +  tr = gcd$$的三元组$(s, t, gcd)$，而此三元组与本次除法定义的$1 \times a + (-quo) \times b = r $之三元组$(1, -quo, r)$正好可以进行$*$运算，而
+`ext_gcd b r`求出的是$s b +  tr = gcd$的三元组$(s, t, gcd)$，而此三元组与本次除法定义的$1 \times a + (-quo) \times b = r$之三元组$(1, -quo, r)$正好可以进行$*$运算，而
 $$
 (1, -quo, r) * (s, t, gcd) = (t, s-(quo)t, gcd)
 $$
@@ -144,7 +144,7 @@ let rec ext_gcd2 a b =
 
 WAND总结出了第一个模式：
 
-![image-20210122162715233](C:\Users\ayanamists\AppData\Roaming\Typora\typora-user-images\image-20210122162715233.png)
+![1](https://img.imgdb.cn/item/600a8c5a3ffa7d37b31acd50.jpg)
 
 要求是$b$这个函数是$A \rightarrow A \rightarrow A$的运算，且具有结合性，其中$l_b$是右单位元（意思是说$b(x, l_b)=x$）。
 
