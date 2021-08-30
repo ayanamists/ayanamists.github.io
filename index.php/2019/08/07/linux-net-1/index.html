@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Ayanamists"><meta name="copyright" content="Ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Linux 网络编程的getaddrinfo()函数 | AyanamistsBlog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。 先看看声明： extern int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 网络编程的getaddrinfo()函数">
+<meta property="og:url" content="https://ayanamists.xyz/index.php/2019/08/07/linux-net-1/index.html">
+<meta property="og:site_name" content="AyanamistsBlog">
+<meta property="og:description" content="最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。 先看看声明： extern int">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-08-07T09:52:57.000Z">
+<meta property="article:modified_time" content="2021-08-30T10:51:28.941Z">
+<meta property="article:author" content="Ayanamists">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Ayanamists"><img width="96" loading="lazy" src="/yun.png" alt="Ayanamists"></a><div class="site-author-name"><a href="/about/">Ayanamists</a></div><span class="site-name">AyanamistsBlog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">49</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">This post does not have a Table of Contents</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/index.php/2019/08/07/linux-net-1/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="AyanamistsBlog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Linux 网络编程的getaddrinfo()函数</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-08-07 09:52:57" itemprop="dateCreated datePublished" datetime="2019-08-07T09:52:57+00:00">2019-08-07</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-08-30 10:51:28" itemprop="dateModified" datetime="2021-08-30T10:51:28+00:00">2021-08-30</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/C-C/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">C/C++</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/C-C/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">网络编程</span></a></span></span></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。</p>
+<p>先看看声明：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">extern int getaddrinfo (const char *__restrict __name,
+            const char *__restrict __service,
+            const struct addrinfo *__restrict __req,
+            struct addrinfo **__restrict __pai);</pre>
+<p>可以看到，第一个参数是主机名（或域名），第二个参数是服务名（端口名）。第三个和第四个参数很奇怪，一个是addrinfo* 类型，另一个则是addrinfo** 类型，这是为什么呢？</p>
+<p>这就要说起这个函数的结果如何记录的问题。addrinfo的声明如下：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">struct addrinfo
+{
+  int ai_flags;            
+  int ai_family;        
+  int ai_socktype;       
+  int ai_protocol;        
+  socklen_t ai_addrlen;       
+  struct sockaddr *ai_addr;    
+  char *ai_canonname;       
+  struct addrinfo *ai_next;    
+};</pre>
+<p>注意到最后的一个成员ai_next，这似乎是被设计来串成链表的。实际上也确实是这样。由于一个主机名可能对应着不同的地址（最简单的情况就是一个ipv4地址，一个ipv6地址）被填入的addrinfo 结构的数量是不确定的。所以为了方便，设计者用一个指向addrinfo*的指针作为参数传入，以便将链表的头指针写调用者提供的地址。</p>
+<p>这就是第四个参数了，那么第三个参数是什么呢？这个函数查找到ip后，会将连接需要的所有信息填好，而这“所有信息”也是需要调用者提供的。第三个参数指向一个已经写好部分信息的addrinfo结构体，通过这个结构体中的信息决定结果链表如何填写。</p>
+<p>那么，很自然的，我们会问，这个函数可以同时进行ipv4 和 ipv6填写吗？答案当然是可以的。但是，它真正写入的是sockaddr结构体。设计者们创造了两个马甲：sockaddr_in和sockaddr_in6，分别对应ipv4和ipv6的情况，很多时候需要通过转型拿到具体的地址，比如，需要ipv4的地址时，我们用这种写法：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">((struct sockaddr_in *)(p->ai_addr))->sin_addr</pre>
+<p>/*这里吐槽一下，这样实在是不太漂亮*/</p>
+<p>学会了这个函数，我们就可以编一个查询ip地址的小程序：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">#include&lt;sys/types.h>
+#include&lt;sys/socket.h>
+#include&lt;netdb.h>
+#include&lt;bits/stdc++.h>
+#include&lt;arpa/inet.h>
+#include&lt;netinet/in.h>
+
+int main(int argc, char *argv[])
+{
+    addrinfo hints, *res, *p;
+    int ret;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    /* if (argc != 2)
+    {
+        std::cout &lt;&lt; "bad input\n";
+        exit(-1);
+    }*/
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_CANONNAME;
+    ret = getaddrinfo(argv[1], "80", &hints, &res);
+
+    if (ret)
+    {
+        fprintf(stderr, "%s", gai_strerror(ret));
+        exit(-1);
+    }
+
+    for (p = res; p != NULL; p = p->ai_next)
+    {
+        if (p->ai_family == AF_INET)
+        {
+            inet_ntop(p->ai_family,
+                      &(((struct sockaddr_in *)(p->ai_addr))->sin_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &lt;&lt; "IPV4: " &lt;&lt; ipstr &lt;&lt; '\n';
+        }
+        else
+        {
+            inet_ntop(p->ai_family,
+                      &(((struct sockaddr_in6 *)(p->ai_addr))->sin6_addr),
+                      ipstr, sizeof(ipstr));
+            std::cout &lt;&lt; "IPV6: " &lt;&lt; ipstr &lt;&lt; '\n';
+        }
+    }
+
+    freeaddrinfo(res);
+}</pre>
+<p>运行结果：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">ayanamists@ubuntu:~/netLab$ ./b google.com
+IPV4: 172.217.27.142
+IPV6: 2404:6800:4012::200e
+ayanamists@ubuntu:~/netLab$ ./b apple.com
+IPV4: 17.172.224.47
+IPV4: 17.142.160.59
+IPV4: 17.178.96.59
+ayanamists@ubuntu:~/netLab$ ./b www.baidu.com
+IPV4: 182.61.200.7
+IPV4: 182.61.200.6
+ayanamists@ubuntu:~/netLab$ ./b chenxi.com
+IPV4: 104.250.144.22
+ayanamists@ubuntu:~/netLab$ ./b blog.ayanamists.xyz
+IPV4: 178.128.88.147
+</pre></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://ayanamists.xyz/index.php/2019/08/07/linux-net-1/" title="Linux 网络编程的getaddrinfo()函数">https://ayanamists.xyz/index.php/2019/08/07/linux-net-1/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/index.php/2019/08/09/nine/" rel="prev" title="解九连环"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">解九连环</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/index.php/2019/08/06/iredmail/" rel="next" title="使用iRedMail配置邮箱服务器"><span class="post-nav-text">使用iRedMail配置邮箱服务器</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

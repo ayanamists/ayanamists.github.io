@@ -1,0 +1,357 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Ayanamists"><meta name="copyright" content="Ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>“引用类型”、“指针类型”与“值类型” | AyanamistsBlog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="将符号解释为值 将符号绑定为IR类型，仍然解释为值类型  “绑定上”和“解释为”的区别 IR类型和ER类型 从绑定值到解释值   将符号解释为引用类型 传值（call-by-value）和传引用（call-by-reference）  传值 传引用   某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型  IER类型 IER类型的好处 C#中的传引用   真正的值类型  在众多编程语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“引用类型”、“指针类型”与“值类型”">
+<meta property="og:url" content="https://ayanamists.xyz/2020/05/23/2020-05-23-ref/index.html">
+<meta property="og:site_name" content="AyanamistsBlog">
+<meta property="og:description" content="将符号解释为值 将符号绑定为IR类型，仍然解释为值类型  “绑定上”和“解释为”的区别 IR类型和ER类型 从绑定值到解释值   将符号解释为引用类型 传值（call-by-value）和传引用（call-by-reference）  传值 传引用   某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型  IER类型 IER类型的好处 C#中的传引用   真正的值类型  在众多编程语言">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2021-08-30T10:51:28.941Z">
+<meta property="article:author" content="Ayanamists">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Ayanamists"><img width="96" loading="lazy" src="/yun.png" alt="Ayanamists"></a><div class="site-author-name"><a href="/about/">Ayanamists</a></div><span class="site-name">AyanamistsBlog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">49</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E7%AC%A6%E5%8F%B7%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%80%BC"><span class="toc-number">1.</span> <span class="toc-text"> 将符号解释为值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E7%AC%A6%E5%8F%B7%E7%BB%91%E5%AE%9A%E4%B8%BAir%E7%B1%BB%E5%9E%8B%E4%BB%8D%E7%84%B6%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text"> 将符号绑定为IR类型，仍然解释为值类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%91%E5%AE%9A%E4%B8%8A%E5%92%8C%E8%A7%A3%E9%87%8A%E4%B8%BA%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">2.1.</span> <span class="toc-text"> “绑定上”和“解释为”的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ir%E7%B1%BB%E5%9E%8B%E5%92%8Cer%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text"> IR类型和ER类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E7%BB%91%E5%AE%9A%E5%80%BC%E5%88%B0%E8%A7%A3%E9%87%8A%E5%80%BC"><span class="toc-number">2.3.</span> <span class="toc-text"> 从绑定值到解释值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E7%AC%A6%E5%8F%B7%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text"> 将符号解释为引用类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E5%80%BCcall-by-value%E5%92%8C%E4%BC%A0%E5%BC%95%E7%94%A8call-by-reference"><span class="toc-number">4.</span> <span class="toc-text"> 传值（call-by-value）和传引用（call-by-reference）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E5%80%BC"><span class="toc-number">4.1.</span> <span class="toc-text"> 传值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E5%BC%95%E7%94%A8"><span class="toc-number">4.2.</span> <span class="toc-text"> 传引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%90%E4%BA%9B%E5%85%B7%E6%9C%89gc%E7%9A%84%E8%AF%AD%E8%A8%80%E5%B0%86%E7%AC%A6%E5%8F%B7%E7%BB%91%E5%AE%9A%E5%88%B0%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E8%A7%A3%E9%87%8A%E4%B8%BA%E5%80%BC%E6%88%96%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text"> 某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ier%E7%B1%BB%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text"> IER类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ier%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-number">5.2.</span> <span class="toc-text"> IER类型的好处</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#c%E4%B8%AD%E7%9A%84%E4%BC%A0%E5%BC%95%E7%94%A8"><span class="toc-number">5.3.</span> <span class="toc-text"> C#中的传引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text"> 真正的值类型</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/2020/05/23/2020-05-23-ref/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="AyanamistsBlog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">“引用类型”、“指针类型”与“值类型”</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-05-23 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-23T00:00:00+00:00">2020-05-23</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-08-30 10:51:28" itemprop="dateModified" datetime="2021-08-30T10:51:28+00:00">2021-08-30</time></div><div class="post-classify"></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><ul>
+<li><a href="#%e5%b0%86%e7%ac%a6%e5%8f%b7%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%80%bc">将符号解释为值</a></li>
+<li><a href="#%e5%b0%86%e7%ac%a6%e5%8f%b7%e7%bb%91%e5%ae%9a%e4%b8%bair%e7%b1%bb%e5%9e%8b%e4%bb%8d%e7%84%b6%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%80%bc%e7%b1%bb%e5%9e%8b">将符号绑定为IR类型，仍然解释为值类型</a>
+<ul>
+<li><a href="#%e7%bb%91%e5%ae%9a%e4%b8%8a%e5%92%8c%e8%a7%a3%e9%87%8a%e4%b8%ba%e7%9a%84%e5%8c%ba%e5%88%ab">“绑定上”和“解释为”的区别</a></li>
+<li><a href="#ir%e7%b1%bb%e5%9e%8b%e5%92%8cer%e7%b1%bb%e5%9e%8b">IR类型和ER类型</a></li>
+<li><a href="#%e4%bb%8e%e7%bb%91%e5%ae%9a%e5%80%bc%e5%88%b0%e8%a7%a3%e9%87%8a%e5%80%bc">从绑定值到解释值</a></li>
+</ul>
+</li>
+<li><a href="#%e5%b0%86%e7%ac%a6%e5%8f%b7%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b">将符号解释为引用类型</a></li>
+<li><a href="#%e4%bc%a0%e5%80%bccall-by-value%e5%92%8c%e4%bc%a0%e5%bc%95%e7%94%a8call-by-reference">传值（call-by-value）和传引用（call-by-reference）</a>
+<ul>
+<li><a href="#%e4%bc%a0%e5%80%bc">传值</a></li>
+<li><a href="#%e4%bc%a0%e5%bc%95%e7%94%a8">传引用</a></li>
+</ul>
+</li>
+<li><a href="#%e6%9f%90%e4%ba%9b%e5%85%b7%e6%9c%89gc%e7%9a%84%e8%af%ad%e8%a8%80%e5%b0%86%e7%ac%a6%e5%8f%b7%e7%bb%91%e5%ae%9a%e5%88%b0%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%80%bc%e6%88%96%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b">某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</a>
+<ul>
+<li><a href="#ier%e7%b1%bb%e5%9e%8b">IER类型</a></li>
+<li><a href="#ier%e7%b1%bb%e5%9e%8b%e7%9a%84%e5%a5%bd%e5%a4%84">IER类型的好处</a></li>
+<li><a href="#c%e4%b8%ad%e7%9a%84%e4%bc%a0%e5%bc%95%e7%94%a8">C#中的传引用</a></li>
+</ul>
+</li>
+<li><a href="#%e7%9c%9f%e6%ad%a3%e7%9a%84%e5%80%bc%e7%b1%bb%e5%9e%8b">真正的值类型</a></li>
+</ul>
+<p>在众多编程语言复杂而不统一的设计的影响下，“引用类型”和“值类型”的问题，已经是一个相当混乱的问题了。在这里简单讲一下我的理解。</p>
+<p>首先，我们必须知道这两个概念是什么意思。</p>
+<ul>
+<li>绑定(binding)。绑定是编程语言里一个符号的解释。</li>
+<li>环境(environment)。环境是所有绑定的形成的复合数据结构。</li>
+</ul>
+<p>简单地说，在scheme里，我们使用</p>
+<pre class="line-numbers language-scheme" data-language="scheme"><code class="language-scheme">
+<span class="token punctuation">(</span><span class="token keyword">define</span> x <span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token operator">+</span> x <span class="token number">1</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>就是把1这个值绑定到x这个符号上，下面(+ x 1)中的x就可以被解释为1.</p>
+<p>**然而，事情其实没有这么简单。**下面，我们以C/C++为例，谈谈一个符号绑定上的，究竟是什么东西。</p>
+<h2 id="将符号解释为值"><a class="markdownIt-Anchor" href="#将符号解释为值"></a> 将符号解释为值</h2>
+<p>考虑下面的代码：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>我们注意到，a这个变量，是可以被替换为0的，上面的代码和下面的代码等价：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这个特性叫做引用透明性(Referential transparency)。其本质就是，一个符号对应一个<strong>不变的值</strong>，就像上面的代码里，我们有：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">
+a <span class="token operator">:</span> <span class="token number">0</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>a这个符号，在这个词法作用域里，处处被解释为0，只有声明一个新的a覆盖掉这个符号（C里面不允许这样），a才能不被解释为0.</p>
+<p>这才应该是所谓“a这个符号是值类型”的意义。但在C语言里，或者说在大多数命令式编程语言里，<strong>情况与此有些不同</strong>。</p>
+<h2 id="将符号绑定为ir类型仍然解释为值类型"><a class="markdownIt-Anchor" href="#将符号绑定为ir类型仍然解释为值类型"></a> 将符号绑定为IR类型，仍然解释为值类型</h2>
+<h3 id="绑定上和解释为的区别"><a class="markdownIt-Anchor" href="#绑定上和解释为的区别"></a> “绑定上”和“解释为”的区别</h3>
+<p>简单来说，“绑定为”是实现上的概念，“解释为”是在外部观察到的现象。比如说，如果找一个C语言的REPL（类似于irb\fsi\scheme一样的东西），你输入</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+a<span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>它必定告诉你：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span><span class="token operator">:</span><span class="token number">0</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>但a这个符号到底在解释器里真正对应什么东西，仅凭这个是不能确认的。它在解释器里真正对应的东西，就是“绑定为”的东西。</p>
+<h3 id="ir类型和er类型"><a class="markdownIt-Anchor" href="#ir类型和er类型"></a> IR类型和ER类型</h3>
+<p>在C语言里，一个变量是可以被赋值的：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>如果你还是让a绑定上一个值，那么必须要求绑定本身是可变的，而“可变”还不能是这样的可变：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>也就是说，不能是开一个新的作用域来“覆盖”，而必须是精准地改变（在这个例子里的）顶层作用域的a符号。我们先禁止这种操作，因为继续看下去，你会发现<strong>这本质上也是引用</strong>。</p>
+<p>如果a不能被直接绑定上一个值，它应该被绑定上什么东西呢？<strong>我们创造一个新的类型，叫做“IR类型”</strong>，这个符号绑定上“IR类型”.</p>
+<p>IR类型”的构造方式为：</p>
+<ul>
+<li>声明一个局部变量，该局部变量的类型即为IR类型。</li>
+</ul>
+<p>“IR类型”应该支持这两种操作：</p>
+<ul>
+<li>改变其值，记作 set(a, b)，其中a为此类型的值，b为要set的值。</li>
+<li>得到其值，记作 get(a), 其中a为此类型的值，这个操作会返回最近一次set(a, b)中的b，如果没有被set过，则为未定义行为</li>
+</ul>
+<p>如何去实现这个类型呢？实现这个类型的关键在于“记忆最近的b”，而在数字电路中，“记忆”的实现方式是触发器，在现代计算机中就是内存。一个比较自然的想法是，每一个IR类型值都占有一块内存。而这个想法的实现方式，就是在IR类型的实现中，记录这块内存的索引（即地址）。</p>
+<p>我们用这种记法来写这个模型：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">
+a <span class="token operator">:</span> IR<span class="token punctuation">(</span>location<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>简写为：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">
+a <span class="token operator">:</span> location <span class="token operator">-</span><span class="token operator">-></span> value
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>注意到，在静态语言里，set(a, b)中的B必须是某个类型的值，记此类型为B，我们这样表示这个特定的IR类型：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">
+IR<span class="token punctuation">[</span>B<span class="token punctuation">]</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>你可能会说，**这样不是把“变量”和“指针”混为一谈了吗？这和“指针”有什么区别呢？**不要着急，我们来向这个模型中加入“指针”。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token operator">&amp;</span>a<span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这定义了一个新的操作和一个新的类型：</p>
+<ul>
+<li>对“IR类型”，可以用 get-ref(a)，得到一个“ER类型”值</li>
+<li>ER类型值有这几个操作：
+<ul>
+<li>de-ref(er)，er为ER类型值且er = get-ref(ir). 这个操作会返回get(ir)</li>
+<li>set-ref(er, b)，er为ER类型值且er = get-ref(ir). 这个操作和 set(ir, b) 等价</li>
+</ul>
+</li>
+</ul>
+<p>把ER类型简写为：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">
+er <span class="token operator">:</span> location <span class="token operator">-></span> value
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这么说，可能还不是特别清楚，我们来举个例子：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span> a<span class="token punctuation">;</span> <span class="token comment">// 相当于构造了一个IR类型值，并绑定到a这个符号上，可以记作 a : loc_0 --> undefined</span>
+a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span> <span class="token comment">// 相当于set(a, 10)，a：loc_0 --> 10</span>
+a<span class="token punctuation">;</span> <span class="token comment">// 相当于get(a)</span>
+
+<span class="token keyword">int</span> <span class="token operator">*</span> p <span class="token operator">=</span> <span class="token operator">&amp;</span>a<span class="token punctuation">;</span>
+<span class="token comment">// 注意，这里是构造了一个IR类型值，并绑定到p这个符号上，该IR的值为一个ER类型值，应该记作：</span>
+<span class="token comment">// p : loc_1 --> loc_0 -> 10</span>
+<span class="token operator">*</span>p <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+<span class="token comment">// 相当于 set-ref(p, 1000)， p: loc_1 --> loc_0 -> 1000</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>讲到这里，我实际上说明了一个问题：<strong>C语言的变量符号，实际上绑定到IR类型值, C语言的指针值，实际上是ER类型值，C语言的指针变量符号，实际上绑定到IR[ER]类型的值</strong>。</p>
+<h3 id="从绑定值到解释值"><a class="markdownIt-Anchor" href="#从绑定值到解释值"></a> 从绑定值到解释值</h3>
+<p>从上面的例子中，我们看到，</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这个符号a，绑定为IR类型的值，在我们引用它时，通过</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+a<span class="token punctuation">;</span>
+<span class="token operator">&lt;=</span><span class="token operator">></span>
+<span class="token function">get</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个变换，实现了绑定值到解释值的转换。实际上，我们可以给出这时的绑定值和解释值的完整定义：</p>
+<pre class="line-numbers language-BNF" data-language="BNF"><code class="language-BNF">ExpVal &#x3D; All C Value
+BindVal &#x3D; IR(ExpVal)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="将符号解释为引用类型"><a class="markdownIt-Anchor" href="#将符号解释为引用类型"></a> 将符号解释为引用类型</h2>
+<p>我们知道C++中，有引用类型。就像下面这样：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
+int a &#x3D; 0;
+int &amp;b &#x3D; a;
+b &#x3D; 10;
+a;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果有C++的REPL，将这份代码打进去，它会告诉你：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
+int:10
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这又是怎么一回事呢？实际上，它不过是将我们之前说的IR类型，同时也作为了一种解释值而已。</p>
+<p>换句话说，</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
+int &amp;b &#x3D; a;
+&#x2F;&#x2F; a: loc_1 --&gt; value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这段代码中的b，接受的是a<strong>这个IR值本身</strong>，而不是它的解释值。b可以被记作：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">
+b<span class="token operator">:</span> loc_0<span class="token operator">-</span><span class="token operator">-></span>loc_1<span class="token operator">-</span><span class="token operator">-></span>value
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这样一来，b的解释值就是</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+loc_1<span class="token operator">--</span><span class="token operator">></span>value
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>不过要注意的是，下面的代码：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
+int&amp;&amp; c &#x3D; b;
+&#x2F;&#x2F; 如果没有右值引用，c应该是loc_2 --&gt; loc_1 --&gt; loc_0 --&gt; value<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>会报错，这是因为c++用&amp;&amp;当作所谓的“右值引用”，导致引用值不能嵌套了。</p>
+<h2 id="传值call-by-value和传引用call-by-reference"><a class="markdownIt-Anchor" href="#传值call-by-value和传引用call-by-reference"></a> 传值（call-by-value）和传引用（call-by-reference）</h2>
+<p>在大多数语言中，函数调用都可以这样建模：</p>
+<pre class="line-numbers language-BNF" data-language="BNF"><code class="language-BNF">
+FUNCTION &#x3D; BODY + ARG (+ ENV)?
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>BODY就是函数体，ARG就是形式参数，ENV是这个函数定义时的环境，如果有ENV，它就是一个闭包。C语言中的函数就不是闭包，所以它只有BODY和ARG。</p>
+<p>在调用函数时，我们必须将ARG绑定上实际参数，怎么绑定就成了一个问题。</p>
+<h3 id="传值"><a class="markdownIt-Anchor" href="#传值"></a> 传值</h3>
+<p>传值是最自然、最合理的方法。</p>
+<p>在传值的情况下，调用函数可以写成：</p>
+<ol>
+<li>求每个参数的<strong>解释值</strong></li>
+<li>将对应的值绑定到形式参数上</li>
+<li>求函数体的值（面向表达式）/运行函数体（面向陈述）</li>
+</ol>
+<h3 id="传引用"><a class="markdownIt-Anchor" href="#传引用"></a> 传引用</h3>
+<p>传引用需要满足两个前置条件：</p>
+<ol>
+<li>这个语言的符号（可以）绑定到引用类型</li>
+<li>对应的参数绑定到引用类型</li>
+</ol>
+<p>也就是说，不绑定到引用类型的符号，或者不是符号的东西（例如字面值、调用函数的结果等等），一般来说是不能传引用的。</p>
+<p>用一句话来解释传引用，可以这样说：<strong>传引用时，传递一个绑定到IR值的符号的绑定值，而非解释值。</strong></p>
+<p>这个规则，应该说，叫做&quot;General call by reference&quot;，具体到C++，应该这么说：</p>
+<p><strong>如果符号的解释值是一个值，那么传递这个符号绑定的IR值；如果符号的解释值是一个IR值，那么传递这个解释值。</strong></p>
+<p>我们以一段代码为例，解释上面的话：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
+void func2(int&amp; a)&#123;
+  a &#x3D; 2;
+  &#x2F;&#x2F; a会绑定到 loc_a --&gt; loc_0 --&gt; 0
+  &#x2F;&#x2F; 所以运行后，a会绑定到 loc_a --&gt; loc_0 --&gt; 2
+&#125;
+
+int main()&#123;
+  int a &#x3D; 0;
+  &#x2F;&#x2F; a: loc_0 --&gt; 0
+  func2(a);
+  &#x2F;&#x2F; 传入的是 loc_0 --&gt; 0 这个IR值
+  &#x2F;&#x2F; 汇编形式为
+  &#x2F;*
+   * 00B48E02 8D 45 B8             lea         eax,[a]  
+   * 00B48E05 50                   push        eax  
+   * 00B48E06 E8 AE 87 FF FF       call        func2
+   *&#x2F;
+  int &amp;b &#x3D; a;
+  &#x2F;&#x2F; b: loc_1 --&gt; loc_0 --&gt; 2
+  func2(b);
+  &#x2F;&#x2F; 传入的是 b 的解释值 loc_0 --&gt; 2
+  &#x2F;&#x2F; 汇编形式为
+  &#x2F;*
+   * 007B8E02 8B 45 AC             mov         eax,dword ptr [b]  
+   * 007B8E05 50                   push        eax
+   * 007B8E06 E8 AE 87 FF FF       call        func2
+   *&#x2F;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>为啥C++的传引用和别的语言不太一样呢？这就要从那些带GC的语言说起了。</p>
+<h2 id="某些具有gc的语言将符号绑定到引用类型解释为值或引用类型"><a class="markdownIt-Anchor" href="#某些具有gc的语言将符号绑定到引用类型解释为值或引用类型"></a> 某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</h2>
+<h3 id="ier类型"><a class="markdownIt-Anchor" href="#ier类型"></a> IER类型</h3>
+<p>预测一下下面的三个带GC的语言，运行差不多代码的结果：</p>
+<p>C#:</p>
+<pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">
+void func(List&lt;int&gt; a)&#123;
+    a[0] &#x3D; 1;
+&#125;
+var a &#x3D; List&lt;int&gt;() &#123;1, 2, 3&#125;;
+func(a);
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>ruby:</p>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">
+a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token keyword">def</span> <span class="token method-definition"><span class="token function">func</span></span> a
+  a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">end</span>
+func a
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>scheme:</p>
+<pre class="line-numbers language-scheme" data-language="scheme"><code class="language-scheme">
+<span class="token punctuation">(</span><span class="token keyword">define</span> func
+  <span class="token punctuation">(</span><span class="token keyword">lambda</span> <span class="token punctuation">(</span><span class="token lambda-parameter">x</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token builtin">vector-set!</span> x <span class="token number">0</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token keyword">define</span> a <span class="token punctuation">(</span><span class="token builtin">vector</span> <span class="token number">1</span> <span class="token number">2</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token function">func</span> a<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>先要提醒一句，<strong>这三个语言全部是传值的</strong>（C#可以传引用，默认传值）</p>
+<p>这三段差不多的代码都会得到一个结果–a变成了 {0, 2, 3}.</p>
+<p>为什么呢？因为在这三个语言中，数组这个结构，都是一个类似于ER类型、有IR类型的某些特征的值。</p>
+<p>这个“类似于ER类型、有IR类型的某些特征的值”，我把它叫做“IER”类型值。</p>
+<p>ER类型值的构造方法为：</p>
+<ul>
+<li>每当构造一个新的“引用类型值”（比如一个新的对象）时。</li>
+</ul>
+<p>例如，.Net IL的newobj指令会构造一个IER类型值，并把它放在求值栈(evalution stack)的栈顶。</p>
+<p>IER类型的行为为：</p>
+<ul>
+<li>IER类型值的解释值为IER类型值本身</li>
+<li>通过IER类型的值a，可以获得a指向的值（<strong>但在绝大多数有GC的语言中，用户不能这样做</strong>）</li>
+<li>通过IER类型的值a，可以获得a指向的值的一部分（例如，a指向的值是一个对象，那么可以通过a来获得某个成员的值、调用成员方法）</li>
+<li>通过IER类型的值a，可以改变a指向的值（“改变”的意义是模糊的，可以改变整个值，也可以改变这个值的一部分）</li>
+<li>IER类型指向的值，由垃圾回收器负责回收。</li>
+</ul>
+<p>我们记IRE类型的值为：</p>
+<pre class="line-numbers language-r" data-language="r"><code class="language-r">ier <span class="token operator">:</span> loc <span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-></span> value<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>你也许会问，IER类型的值是IER类型本身，这个特征说明它更像ER类型。它具有IR类型的哪些特质呢？</p>
+<p>观察这样的C#代码：</p>
+<pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">
+List&lt;int&gt; a &#x3D; List&lt;int&gt;() &#123;1, 2, 3&#125;;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>a这个符号的绑定值的类型为：</p>
+<pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">
+IR[List&lt;int&gt;]
+&#x2F;&#x2F; 看起来像 loc_0 --&gt; value
+&#x2F;&#x2F; 实际上是 loc_0 --&gt; loc_1 ---&gt; value
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>习惯上，这个类型标志的应该是List&lt;int&gt;本身，而不是对List&lt;int&gt;的引用。所以它形式上更像IR一些。</p>
+<p>这样一来，整个类型体系可以被写成：</p>
+<pre class="line-numbers language-BNF" data-language="BNF"><code class="language-BNF">
+ExpVal &#x3D; IER + Value
+DenVal &#x3D; IR[ExpVal]
+IER &#x3D; Ref(C# Reference Type)
+Value &#x3D; C# Value Type
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从这里我们可以看到，此处的“引用类型”和C<ins>中的“引用类型”完全是两个东西。C</ins>中的引用类型，是IR，这里的引用类型，是IER。</p>
+<h3 id="ier类型的好处"><a class="markdownIt-Anchor" href="#ier类型的好处"></a> IER类型的好处</h3>
+<ul>
+<li>
+<p>IER类型使得程序员不需要考虑大规模对象的复制开销，因为IER类型的值是IER类型本身，赋值过程本质上是共享的。</p>
+<pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">var a &#x3D; new List&lt;int&gt;()&#123;1, 2&#125;;
+&#x2F;&#x2F; a: loc_a --&gt; loc_1 ---&gt; list0
+var b &#x3D; a;
+&#x2F;&#x2F; b: loc_b --&gt; loc_1 ---&gt; list0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>
+<p>同时，GC的存在使得有一种可靠的方式释放该共享对象。</p>
+</li>
+</ul>
+<h3 id="c中的传引用"><a class="markdownIt-Anchor" href="#c中的传引用"></a> C#中的传引用</h3>
+<p>C#中的变量，也都是可变的，所以势必要有和IR类似的结构。（实际上就是IR）。它传引用的方式和我们前面说的一样：传引用时，传递一个绑定到IR值的符号的绑定值，而非解释值。</p>
+<p>举个例子：</p>
+<pre class="line-numbers language-c#" data-language="c#"><code class="language-c#">
+void func(ref List&lt;int&gt; x)&#123;
+  &#x2F;&#x2F; x被绑定到 loc_x --&gt; loc_0 --&gt; loc_1 ---&gt; (list0)
+  x &#x3D; null;
+  &#x2F;&#x2F; x变为 loc_x --&gt; loc_0 --&gt; null
+&#125;
+
+a &#x3D; new List&lt;int&gt;();
+&#x2F;&#x2F; a: loc_0 --&gt; loc_1 ---&gt; (list0)
+func(ref a);
+&#x2F;&#x2F; 传入a的绑定值loc_0 --&gt; loc_1 ---&gt; (list0)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="真正的值类型"><a class="markdownIt-Anchor" href="#真正的值类型"></a> 真正的值类型</h2>
+<p>在F#、Haskell等等函数式语言里，有真正的、不可变的“值类型”。</p>
+<pre class="line-numbers language-f#" data-language="f#"><code class="language-f#">
+let a &#x3D; 1
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>上面的a，永远会被解释为1。这才是真正的“值类型”。</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://ayanamists.xyz/2020/05/23/2020-05-23-ref/" title="“引用类型”、“指针类型”与“值类型”">https://ayanamists.xyz/2020/05/23/2020-05-23-ref/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/06/23/2020-06-23-tramp/" rel="prev" title="谈谈【蹦床】技术"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">谈谈【蹦床】技术</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/04/27/2020-04-27-what-to-watch-2/" rel="next" title="看点什么（二）那些让我不那么满意的作品"><span class="post-nav-text">看点什么（二）那些让我不那么满意的作品</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

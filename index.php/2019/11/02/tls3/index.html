@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Ayanamists"><meta name="copyright" content="Ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>SSL/TLS(三) 用RUBY实现TLS握手 | AyanamistsBlog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。 警告：下面有大量的ruby编程细节 首先是将报文封装写好 1.record Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText tlsPlainText &#x3D; Class.new do     attr_accessor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSL&#x2F;TLS(三) 用RUBY实现TLS握手">
+<meta property="og:url" content="https://ayanamists.xyz/index.php/2019/11/02/tls3/index.html">
+<meta property="og:site_name" content="AyanamistsBlog">
+<meta property="og:description" content="这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。 警告：下面有大量的ruby编程细节 首先是将报文封装写好 1.record Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText tlsPlainText &#x3D; Class.new do     attr_accessor">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png">
+<meta property="article:published_time" content="2019-11-02T02:54:04.000Z">
+<meta property="article:modified_time" content="2021-08-30T10:51:28.941Z">
+<meta property="article:author" content="Ayanamists">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Ayanamists"><img width="96" loading="lazy" src="/yun.png" alt="Ayanamists"></a><div class="site-author-name"><a href="/about/">Ayanamists</a></div><span class="site-name">AyanamistsBlog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">49</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">This post does not have a Table of Contents</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/index.php/2019/11/02/tls3/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="AyanamistsBlog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">SSL/TLS(三) 用RUBY实现TLS握手</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-11-02 02:54:04" itemprop="dateCreated datePublished" datetime="2019-11-02T02:54:04+00:00">2019-11-02</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-08-30 10:51:28" itemprop="dateModified" datetime="2021-08-30T10:51:28+00:00">2021-08-30</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">未分类</span></a></span></span></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。</p>
+<p><strong>警告：下面有大量的ruby编程细节</strong></p>
+<p>首先是将报文封装写好</p>
+<p><strong>1.record</strong></p>
+<p>Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">tlsPlainText = Class.new do 
+   attr_accessor :contentType, :protocolVersion, :length, :fragment
+end</pre>
+<p>Record的Content一共有四种，分别对应于四种类型：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">contentType = {"change_cipher_spec" => 20, "alert" => 21, 
+  "handshake" => 22, "application_data" => 23}</pre>
+<p>这里我们只实现handshake和change_cipher_spec</p>
+<p>对于具体封装，我写了一个Record#make方法：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def make(encrypt = false)
+        if encrypt == true
+            puts tlsPlainText.fragment.to_hex
+            @tlsPlainText.fragment = yield(@tlsPlainText.fragment)
+            @tlsPlainText.length = @tlsPlainText.fragment.length
+        end
+        template =
+            "C"+  #type
+            "CC"+ #protocolVersion
+            "n"+  #length
+            "a#{@tlsPlainText.length}" #fragment
+        
+        arr = [@tlsPlainText.contentType, 
+               @tlsPlainText.protocolVersion.major,             
+               @tlsPlainText.protocolVersion.minor, @tlsPlainText.length, 
+               @tlsPlainText.fragment ]
+        ret = arr.pack template
+        return ret
+    end</pre>
+<p>由于后面我们的加密器是一个外部对象，要将自己的fragment加密后再替换成新的fragment，如果我们写出这样的代码：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">record_a.tlsPlainText.fragment = Encrypter.encrypt(record_a.tlsPlainText.fragment )</pre>
+<p>感觉不是很顺畅，也违背了面向对象封装的思想。</p>
+<p>我们使用yield来解决这个问题:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">str_fin = fin.make do |i|
+    encrypt_handler.send_encrypt(22, i)
+end</pre>
+<p>这样是对的吗？我不太清楚，但至少比上面的写法要好一些。</p>
+<p><strong>2.Handshake</strong></p>
+<p>让Handshake继承Record，有这个想法是因为Handshake是Record的细化。</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">class Handshake &lt; Record
+    attr_accessor :record, :handshakeType, :handshakeLength, :handshakeBody
+    ...
+end</pre>
+<p>handshakeType一共有四种（哈哈，这里不太对，应该是我们只实现了四种）：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def self.handshake_type
+        return {'1' => 'client_hello',
+                '2' => 'server_hello',
+                '11' => 'server_certificates',
+                '14' => 'server_hello_done'}
+end</pre>
+<p>然后具体的make封装如下：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def make(encrypt = false)
+        template = 
+            "C"+ #handshakeType
+            "Cn"+ #length
+            "a#{@handshakeLength}" #body
+        
+        arr = [self.handshakeType, 0 ,self.handshakeLength, 
+               self.handshakeBody]
+        pack = arr.pack template
+        @tlsPlainText.fragment = pack
+        @tlsPlainText.length = pack.length
+        super(encrypt)
+end</pre>
+<p><strong>3.各个Handshake</strong></p>
+<p>虽然只有四种，但是实现起来是很麻烦的。这里进一步简化了一下–不实现ClientHello的扩展。</p>
+<p>报文封装写好以后，下面的工作就是最重要、最核心的工作的了–实现密码学计算。这里为了简化，我们只实现一种密码学套件–TLS_RSA_WITH_AES_GCM_128_SHA_256</p>
+<p>最开始是ClientHello和ServerHello里的随机数，这里使用OpenSSL::Random#random_bytes</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">time = Time.new
+@gmt_unix_time = time.to_i
+@random_bytes = OpenSSL::Random.random_bytes(28)</pre>
+<p>然后是扩展函数PRF，这里使用一个猴子补丁:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">class Integer
+    def tls_prf(secret = '', label = '', seed = '', hash_methods = 'SHA256')
+        return self.tls_P_hash(secret, label + seed, hash_methods)
+    end
+
+    def tls_P_hash(secret='', seed = '', hash_methods = 'SHA256')
+        t = self.to_f / 32
+        t = t.ceil
+        ret = ''
+
+        a = seed
+        t.times do |i|
+            a = OpenSSL::HMAC.send("digest", hash_methods, secret, a)
+            ret &lt;&lt; OpenSSL::HMAC.send("digest", hash_methods, secret, a + seed)
+        end
+        return ret[0, self]
+    end
+end</pre>
+<p>在EncryptMessageHandler这个模块中生成Pre-master-key和master-key</p>
+<p>这里需要注意两个细节：</p>
+<p>1.不要搞混client_random和server_random的顺序。（这个问题我debug了一天才发现）</p>
+<p>2.client_random和server_random都是32字节的、真正发送出去的东西，而不是28字节的random_bytes。</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">@pre_master = @version.pack("CC") + OpenSSL::Random.random_bytes(46)
+@master = 48.tls_prf(@pre_master, "master secret", client_random+server_random)</pre>
+<p>其中pre-master-key要用server传来的certificate加密：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">rsa = OpenSSL::PKey::RSA.new (certificate.public_key)
+@encrypt_pre_master = rsa.public_encrypt @pre_master</pre>
+<p>生成主密钥之后，应该是根据实际情况进行密钥扩展。将密钥扩展成六个部分：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_MAC_key[SecurityParameters.mac_key_length]      server_write_MAC_key[SecurityParameters.mac_key_length]      client_write_key[SecurityParameters.enc_key_length]      server_write_key[SecurityParameters.enc_key_length]      client_write_IV[SecurityParameters.fixed_iv_length]      server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+<p>可这个“实际情况”在使用TLS_RSA_WITH_AES_128_GCM_SHA_256这个套件的情况下究竟是什么样的呢?</p>
+<p>我找了一些资料，最后发现有两个地方说的比较靠谱：</p>
+<p>第一个是RFC5246对于AES_XXX_GCM这种AEAD方式的描述：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    AEAD ciphers take as input a single key, a nonce, a plaintext, and &#8220;additional data&#8221; to be included in the authentication check, as described in Section 2.1 of [AEAD]. <strong>The key is either the client_write_key or the server_write_key. </strong> <strong>No MAC key is used.</strong>
+  </p>
+  <p>
+    Each AEAD cipher suite MUST specify how the nonce supplied to the AEAD operation is constructed, and what is the length of the GenericAEADCipher.nonce_explicit part. In many cases, it is appropriate to use the partially implicit nonce technique described in Section 3.2.1 of [AEAD]; with record_iv_length being the length of the explicit part. <strong>In this case, the implicit part SHOULD be derived from key_block as client_write_iv and server_write_iv (as described in Section 6.3), and the explicit part is included in GenericAEAEDCipher.nonce_explicit </strong>
+  </p>
+</blockquote>
+<p>通过第一段文字，我们可以知道两个问题：第一，加密用到的key就是client_write_key和server_write_key。第二，之前说的client_MAC_KEY和server_MAC_KEY都是用不到的。在RFC 5246中也说了，如果用不到，长度设为0就可以（也就是不产生了）。</p>
+<p>麻烦的是第二段文字。如果你之前没有接触过相关内容，肯定会感觉到不知所云。这文字显然就是“给已经懂了的人看的”。在这里简单解释一下，第一段里说，AEAD需要有一个nonce作为输入。然后第二段里说，这个nonce可以被分为两部分：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">nonce = implicit_nonce || explicit_nonce</pre>
+<p>然后implicit部分应该是上面扩展出来的</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_IV[SecurityParameters.fixed_iv_length]      server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+<p>explicit部分则是直接明文传过去，因为AEAD产生的报文是以下格式的：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="false" data-enlighter-lineoffset="0" data-enlighter-title="" data-enlighter-group="">struct {         
+       opaque nonce_explicit[SecurityParameters.record_iv_length];         
+       aead-ciphered struct { opaque content[TLSCompressed.length];};      
+} GenericAEADCipher;</pre>
+<p>GenericAEADCipher.nonce_explicit就是explicit部分填充的地方。</p>
+<p>那么，AES_XXX_GCM到底是怎么做的呢？这就要看第二份文件 RFC 5288了：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    The &#8220;nonce&#8221; SHALL be 12 bytes long consisting of two parts as follows: (this is an example of a &#8220;partially explicit&#8221; nonce; see Section 3.2.1 in [RFC5116]).
+  </p>
+  <p>
+    struct {
+  </p>
+  <p>
+    opaque salt[4];
+  </p>
+  <p>
+    opaque nonce_explicit[8];
+  </p>
+  <p>
+    } GCMNonce;
+  </p>
+  <p>
+    The salt is the &#8220;implicit&#8221; part of the nonce and is not sent in the packet. Instead, the salt is generated as part of the handshake process: it is either the client_write_IV (when the client is sending) or the server_write_IV (when the server is sending). The salt length (SecurityParameters.fixed_iv_length) is 4 octets.
+  </p>
+</blockquote>
+<p>看到这段文字，我们就已经很清楚了。AES_XXX_GCM的nonce是12byte的，其中四个byte来自于</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_IV[SecurityParameters.fixed_iv_length]   server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+<p>后面8个byte就是一个每个报文的都不同的随机数，直接明文写在报文里。</p>
+<p>好的，我们据此写出密钥扩展的部分：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">key_block = (length/4 + 4 * 2).tls_prf(@master, "key expansion", server_random + client_random)
+arr = key_block.unpack "a#{length/8}a#{length/8}a4a4"
+client_write_key = arr[0]
+server_write_key = arr[1]
+client_write_iv = arr[2]
+server_write_iv = arr[3]</pre>
+<p>然后是加密和解密的部分。Ruby中Openssl库的AES::GCM加密时需要设置密钥、nonce和auth_data，那这个auth_data又怎么设置呢？再回到RFC 5246:</p>
+<blockquote class="wp-block-quote">
+  <p>
+    The additional authenticated data, which we denote as additional_data, is defined as follows:
+  </p>
+  <p>
+    additional_data = seq_num + TLSCompressed.type + TLSCompressed.version + TLSCompressed.length;
+  </p>
+</blockquote>
+<p>别的都好说，这个序列号怎么办？它是几位的？怎么产生？怎么更新？再看RFC 5246,这需要使用搜索功能，搜索seqence number:</p>
+<blockquote class="wp-block-quote">
+  <p>
+    sequence number
+  </p>
+  <p>
+    Each connection state contains a sequence number, which is maintained separately for read and write states. The sequence number MUST be set to zero whenever a connection state is made the active state. Sequence numbers are of type uint64 and may not exceed 2^64-1. Sequence numbers do not wrap. If a TLS implementation would need to wrap a sequence number, it must renegotiate instead. A sequence number is incremented after each record: specifically, the first record transmitted under a particular connection state MUST use sequence number 0.
+  </p>
+</blockquote>
+<p>这样一来就明白了，客户端和服务端各维护一个seq_num，长度为8个byte，初始值为0，每发送一个加密报文递增一。</p>
+<p>然后我们又遇到了一个大麻烦：AES::GCM加密后会产生一个auth_tag，这个auth_tag解密的时候要用。这又该怎么处理呢？我在协议中没有找到，倒是在stack overflow上找到了相关的问题： <a target="_blank" rel="noopener" href="https://crypto.stackexchange.com/questions/25249/where-is-the-authentication-tag-stored-in-file-encrypted-using-aes-gcm?newreg=ac7536f1cb2646d995c2c8607aea7d2c">https://crypto.stackexchange.com/questions/25249/where-is-the-authentication-tag-stored-in-file-encrypted-using-aes-gcm?newreg=ac7536f1cb2646d995c2c8607aea7d2c</a> 回答者引用了RFC 5116的内容：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    The&nbsp;<code>AEAD_AES_128_GCM</code>&nbsp;ciphertext is formed by appending the authentication tag provided as an output to the GCM encryption operation to the ciphertext that is output by that operation.
+  </p>
+</blockquote>
+<p>那么，我们只要将auth_tag直接附在加密的密文后就可以了。这样一来所有的问题就都解决了：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">def send_encrypt(type = 22, seqence = '')
+        nonce_explicit = OpenSSL::Random.random_bytes(8)
+        nonce = @send_implicit + nonce_explicit
+        @send_cipher.iv = nonce
+        length = seqence.length
+        #the handle of seq_num may be wrong
+        @send_cipher.auth_data = [0, @send_seq_num,
+            type, @version[0], @version[1], 0 ,length].pack("NNCCCCC")
+        puts @send_seq_num
+        encrypt = @send_cipher.update(seqence) + @send_cipher.final
+        encrypt = encrypt + @send_cipher.auth_tag
+        encrypt = nonce_explicit + encrypt
+        return encrypt
+        @send_seq_num += 1
+end</pre>
+<p>这时我们离握手成功只差一步了！只要写好Finished消息，就可以和服务器愉快地通信了！</p>
+<p>Finished消息需要把所有的握手消息打一个HASH，再将HASH值送进PRF:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">PRF(master_secret, finished_label, Hash(handshake_messages))            [0..verify_data_length-1];</pre>
+<p>但这里也有个大坑：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    Here handshake_messages refers to all handshake messages sent or received, starting at client hello and up to, but not including this message, including the type and length fields of the handshake messages. <strong>This is the concatenation of all the Handshake structures </strong>
+  </p>
+</blockquote>
+<p>注意这个Handshake structures，这不是报文的意思，而应该是报文剥掉Record层的信息后的Record.fragment结构体！另外，ChangeCipherSpec消息不是Handshake消息，这里不应该被包括。</p>
+<p>解决Finished后，所有的工作就做完了。下面是和baidu.com握手的结果：<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png" alt="" class="wp-image-405" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-1024x97.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-300x28.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751-768x73.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/11/Annotation-2019-11-02-104751.png 1345w" sizes="(max-width: 1024px) 100vw, 1024px" / loading="lazy"> </figure></p>
+<p>可以看到握手成功。</p>
+<p>通过这一次实现握手的旅程，我们发现，TLS在密码学上可谓固若金汤。最后一定可以100%确保对方有了正确的加密密钥。但是，tls在密码学上固若金汤，并不是说tls实现固若金汤，更不是说使用tls的人写的程序固若金汤。想要MITM攻击TLS的人大可放心，世界上漏洞百出的TLS程序还是多如牛毛的。</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://ayanamists.xyz/index.php/2019/11/02/tls3/" title="SSL/TLS(三) 用RUBY实现TLS握手">https://ayanamists.xyz/index.php/2019/11/02/tls3/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2019/11/02/2019-11-02-802-11i-1/" rel="prev" title="802.11i 无线安全（一）建立RSNA"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">802.11i 无线安全（一）建立RSNA</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/index.php/2019/10/06/ssl-tls-2/" rel="next" title="SSL/TLS(二) 证书里都有啥"><span class="post-nav-text">SSL/TLS(二) 证书里都有啥</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

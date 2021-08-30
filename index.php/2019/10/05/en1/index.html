@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Ayanamists"><meta name="copyright" content="Ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>SSL/TLS笔记(一) 加密！加密！加密！ | AyanamistsBlog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。 更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSL&#x2F;TLS笔记(一) 加密！加密！加密！">
+<meta property="og:url" content="https://ayanamists.xyz/index.php/2019/10/05/en1/index.html">
+<meta property="og:site_name" content="AyanamistsBlog">
+<meta property="og:description" content="在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。 更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png">
+<meta property="og:image" content="https://www.researchgate.net/profile/Wazen_Shbair/publication/321347130/figure/fig5/AS:631648328630324@1527608105567/The-TLS-handshake-protocol-messages-sequence.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png">
+<meta property="og:image" content="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png">
+<meta property="article:published_time" content="2019-10-05T15:45:17.000Z">
+<meta property="article:modified_time" content="2021-08-30T10:51:28.941Z">
+<meta property="article:author" content="Ayanamists">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Ayanamists"><img width="96" loading="lazy" src="/yun.png" alt="Ayanamists"></a><div class="site-author-name"><a href="/about/">Ayanamists</a></div><span class="site-name">AyanamistsBlog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">49</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">This post does not have a Table of Contents</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/index.php/2019/10/05/en1/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="AyanamistsBlog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">SSL/TLS笔记(一) 加密！加密！加密！</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-10-05 15:45:17" itemprop="dateCreated datePublished" datetime="2019-10-05T15:45:17+00:00">2019-10-05</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-08-30 10:51:28" itemprop="dateModified" datetime="2021-08-30T10:51:28+00:00">2021-08-30</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">未分类</span></a></span></span></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。</p>
+<p>更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某种程度上的加密，那么这些服务便无法成立。基于很多类似的理由，SSL/TLS应运而生。</p>
+<p>SSL是一家公司的产品，SSLv1从未公开过，SSLv2有严重漏洞，SSLv3是SSL的最后一个版本，其后，它被IETF收编为了TLSv1.0，随后又有TLSv1.1，TLSv1.2，目前（2019年10月）TLSv1.3还未大规模部署。这篇文章主要介绍TLSv1.2。</p>
+<p>TLS，也就是传输层安全，是一个三层上的协议，但它的下层一般是TCP协议（当然其实也可以是UDP协议），上层则一般是HTTP协议。读者可能认为TLS只是用作HTTPS的加密层，实际上它的上层可以是任何协议，只不过现今多用于http协议。（这就是为什么DNS over HTTPS和DNS over TLS是不一样的）它在安全方面有三个主要目的：</p>
+<ol>
+<li>对服务器和客户端的数据进行端对端加密，使得任何中间节点无法理解数据，防止窃听。</li>
+<li>通过证书的引入，验证服务端（有时也验证客户端）的身份。</li>
+<li>通过校验的引入，保证数据在传输过程中未被篡改。</li>
+</ol>
+<p>探索TLS，就是一遍遍的问自己“TLS如何做到这三点的”。首先来解决第一个问题:</p>
+<p>TLS如何保证数据是加密的？如何保证在攻击者监听了这个TCP请求的全过程时，攻击者仍然无法理解数据？</p>
+<p>好吧，让我来做一次监听者。用浏览器打开<a target="_blank" rel="noopener" href="https://cnnic.com.cn">https://cnnic.com.cn</a>，在Wireshark中抓包，看一下这个连接的全貌：<figure class="wp-block-image is-resized"></p>
+<p><img src="http://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png" alt="一次TLS连接" class="wp-image-214" width="869" height="352" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-1024x415.png 1024w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-300x122.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714-768x311.png 768w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213714.png 1345w" sizes="(max-width: 869px) 100vw, 869px" / loading="lazy"> </figure></p>
+<p>在WINDOWS下抓包每一个己方的包都会被捕捉两次，应该是wireshark的捕获有些问题，先不管这些，看一下这个连接：</p>
+<p>前三个包是TCP握手，不用多说，第四个包叫做Client Hello，这是啥呢？</p>
+<p>随便查一下资料，发现这是tls握手的第一个包。看来，要窃听数据，需要先学习一下tls握手的过程。<figure class="wp-block-image"></p>
+<p><img src="https://www.researchgate.net/profile/Wazen_Shbair/publication/321347130/figure/fig5/AS:631648328630324@1527608105567/The-TLS-handshake-protocol-messages-sequence.png" alt="" / loading="lazy"> <figcaption>注：这图对于加密信息和未加密信息的划分是错误的</figcaption></figure></p>
+<p>看上去有点复杂，实际上也有点复杂。不过好消息是，当我们理解了握手过程后，我们就理解了数据是如何加密的。</p>
+<p>只能硬着头皮上了!</p>
+<p>第一个包叫做Client Hello，这是干什么的呢？用wireshark看看有啥吧。<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png" alt="" class="wp-image-219" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715.png 583w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-213715-300x172.png 300w" sizes="(max-width: 583px) 100vw, 583px" / loading="lazy"> </figure></p>
+<p>哇！一个handshake头里竟然有这么多内容，要学到什么时候才能掌握啊？但又有一个好消息，下面都是“Extension”，在大部分时候，extension都是不用重点关注的。不然为啥不放在不是扩展的参数里面呢？那就先看看上面的字段。</p>
+<p>1.<strong>Handshake Type</strong>，这不用多说，就是来标识握手进入哪一阶段的。</p>
+<p>2.<strong>Length</strong> 这也不用多说。</p>
+<p>3.<strong>Version</strong>, 不用多说。</p>
+<p>4.<strong>Random</strong>，听名字就知道这是一个随机数，而且显然是客户端产生的。它是干什么的呢？先按下不表。</p>
+<p>5.**Session ID Length 和 Session ID，**这和对话恢复有关，按下不表。</p>
+<ol start="6">
+<li>**Cipher Suites Length 和 Cipher Suites，**这似乎到了重点了！这长度这么长（34个字节），看看都有啥：<figure class="wp-block-image"></li>
+</ol>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png" alt="" class="wp-image-228" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376.png 616w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21376-300x178.png 300w" sizes="(max-width: 616px) 100vw, 616px" / loading="lazy"> </figure></p>
+<p>34 = 17 * 2，看来每一个选项都有两个字节（<s>废话，图上都是四个十六进制数，可不就是两个字节吗）</s>，这Cipher的意思，是密钥，密钥套装，岂不就是加密方式套装……仔细看看<a target="_blank" rel="noopener" href="https://tools.ietf.org/pdf/rfc5246.pdf">RFC5246</a>，你会发现这选项的原型是<strong>TLS_NULL_WITH_NULL_NULL</strong>，看来，每个选项都是分为三个部分的。比如说，</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">TLS_RSA_WITH_AES_256_CBC_SHA</pre>
+<p>肯定就是表示RSA和什么 什么。但是后面的怎么划分呢？不用着急，求助一下搜索引擎，<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png" alt="" class="wp-image-231" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377.png 801w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377-300x126.png 300w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21377-768x322.png 768w" sizes="(max-width: 801px) 100vw, 801px" / loading="lazy"> </figure></p>
+<p>哈哈，这样的话，肯定就是AES-256-CBC 和 SHA了!</p>
+<p>那新的问题就来了，为什么要发这么多呢？聪明的你肯定猜到了。这种要商量用啥的协议经常是一方宣示自己可以用啥，另一方在一方的宣示中选一个。是不是客户端在宣示自己可以用这17种方式，然后让服务端选一个呢？是不是呢？让我们看看第二个包 <strong>Server Hello</strong>吧！<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png" alt="" class="wp-image-240" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378.png 661w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21378-300x105.png 300w" sizes="(max-width: 661px) 100vw, 661px" / loading="lazy"> </figure></p>
+<p>Bingo!服务端只回复了一种方式，果然是在客户端提供的17种方式中选择了一种。可以看到这个包和上一个的头部没啥太大差别，只不过扩展少了很多，随机数变了而已。</p>
+<p>下一个包是什么？是TLS的核心：<strong>Certificate</strong>。这证书可不是一般的东西，但我们留到下一篇文章研究。现在要知道的是，这证书里有一个宝贝：客户端的公钥。公钥是什么？咳咳，如果这个也不知道，就请自行查询吧。</p>
+<p>那么在证书发送完成后，服务端（如果采用RSA）就会发送一个<strong>Server Hello Done</strong>，表示我的事情已经做完了，下面看你（客户端）表演了。</p>
+<p>客户端在收到这个包（之前没有收到要求客户端的证书的请求）后，会发送一个<strong>Client Key Exchange</strong>。这个包，毫不夸张地说，是握手中最关键的一个包。先看看里面有什么：<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png" alt="" class="wp-image-249" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379.png 730w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21379-300x49.png 300w" sizes="(max-width: 730px) 100vw, 730px" / loading="lazy"> </figure></p>
+<p>emmm……这么简单就说是关键，不脸红吗？还真不脸红，因为生成加密的密钥靠的就是这个。</p>
+<p>下面开始我的半吊子密码学秀。</p>
+<p>首先，上面的AES-256-CBC是啥呢？求助一下维基：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    <strong>高级加密标准</strong>（英语：<strong>A</strong>dvanced&nbsp;<strong>E</strong>ncryption&nbsp;<strong>S</strong>tandard，<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BC%A9%E5%86%99">缩写</a>：AES），在<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A0%81%E5%AD%A6">密码学</a>中又称<strong>Rijndael加密法</strong>，是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9B%BD%E8%81%94%E9%82%A6%E6%94%BF%E5%BA%9C">美国联邦政府</a>采用的一种<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8D%80%E5%A1%8A%E5%8A%A0%E5%AF%86">区块加密</a>标准。这个标准用来替代原先的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/DES">DES</a>，已经被多方分析且广为全世界所使用。经过五年的甄选流程，高级加密标准由<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BE%8E%E5%9B%BD%E5%9B%BD%E5%AE%B6%E6%A0%87%E5%87%86%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%A0%94%E7%A9%B6%E9%99%A2">美国国家标准与技术研究院</a>（NIST）于2001年11月26日发布于FIPS PUB 197，并在2002年5月26日成为有效的标准。2006年，高级加密标准已然成为<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%AF%B9%E7%A7%B0%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86">对称密钥加密</a>中最流行的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%BC%94%E7%AE%97%E6%B3%95">算法</a>之一。
+  </p>
+</blockquote>
+<p>看来也就是一种对称加密算法。对称加密也就是说有一个密钥就可以搞定加解密。那看来256就是说，密钥是256位的。这时就可以联想到有个说法说，为了性能，TLS加密实际上采用的对称加密算法，但是对称加密的密钥是非对称加密的。AES-256-CBC恐怕就是那个“对称加密算法”了。</p>
+<p>这个Pre-Master就是256位的，会不会它就是密码呢?即使是，也应该是用公钥加密后的吧。</p>
+<p>咦？似乎得到答案了呢！客户端生成一个对称加密的密钥，加密以后送给服务端，依据非对称加密的特性，这岂不就只有服务端可以解密？</p>
+<p>这是比较接近的答案。但是，TLS并不是这么做的。查看一下RFC 5246:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">struct {
+ ProtocolVersion client_version;
+ opaque random[46];
+ } PreMasterSecret;</pre>
+<p>看来这实际上是版本+随机数。那么这个东西是怎么产生密钥的呢？</p>
+<p>再看RFC 5246:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">master_secret = PRF(pre_master_secret, "master secret",
+ ClientHello.random + ServerHello.random)[0..47];</pre>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">key_block = PRF(SecurityParameters.master_secret,
+ "key expansion",
+ SecurityParameters.server_random +
+ SecurityParameters.client_random);
+</pre>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_MAC_key[SecurityParameters.mac_key_length]
+ server_write_MAC_key[SecurityParameters.mac_key_length]
+ client_write_key[SecurityParameters.enc_key_length]
+ server_write_key[SecurityParameters.enc_key_length]
+ client_write_IV[SecurityParameters.fixed_iv_length]
+ server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+<p>不知道你什么感觉，但是我看到这个的时候，感觉只有一个：这都是什么？PRF是什么？master_key是什么？最后一堆东西又是什么？</p>
+<p>好。我们先来看PRF，查询一下维基，你会发现甚至没有中文版：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    In&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cryptography">cryptography</a>, a&nbsp;<strong>pseudorandom function family</strong>, abbreviated&nbsp;<strong>PRF</strong>, is a collection of&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Efficiently-computable">efficiently-computable</a>&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Function_(computer_science)">functions</a>&nbsp;which emulate a&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Random_oracle">random oracle</a>&nbsp;in the following way: no efficient algorithm can distinguish (with significant&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Advantage_(cryptography)">advantage</a>) between a function chosen randomly from the PRF family and a random oracle (a function whose outputs are fixed completely at random). Pseudorandom functions are vital tools in the construction of&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cryptographic_primitive">cryptographic primitives</a>, especially secure&nbsp;<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Encryption">encryption schemes</a>.
+  </p>
+</blockquote>
+<p>硬着头皮看完了，我觉得还不是很懂，这是一“族”输出随机数的函数吗？幸好RFC 5246里有一个PRF的定义：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">P_hash(secret, seed) = HMAC_hash(secret, A(1) + seed) +
+ HMAC_hash(secret, A(2) + seed) +
+ HMAC_hash(secret, A(3) + seed) + ...</pre>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">PRF(secret, label, seed) = P_&lt;hash>(secret, label + seed)</pre>
+<p>看到这里我终于有点懂了。首先这个HMAC_hash函数是“带密钥的hash函数”。也就是说，如果密钥不同，hash的结果一定不同，其实也可以想成受两个参数影响的hash函数。然后这个A(n)是递归定义的：</p>
+<blockquote class="wp-block-quote">
+  <p>
+    A() is defined as:
+  </p>
+  <p>
+    A(0) = seed
+  </p>
+  <p>
+    A(i) = HMAC_hash(secret, A(i-1))
+  </p>
+</blockquote>
+<p><strong>（以上+表示连接，比如说a+b = ab）</strong></p>
+<p>这个P_hash函数其实是很简单的。因为HMAC_hash函数只能生成定长的输出，要想得到变长的输出，就要想点办法（像P_hash一样去构造）。P_hash就是“变长的HMAC_hash的函数”。这里举个例子，比如说HMAC_hash的输出是48位的，你想要一个100位的，那就让N = 3，最后得到144位输出，然后取前100位就好啦。（当然，严格来说P_hash的输出长度只能是HMAC_hash函数的整倍数）</p>
+<p>理解了P_hash，下面的PRF就水到渠成了。因为这个PRF只是把自己的第二和第三个参数连接起来，再把自己的第一个参数和连接起来的东西作为P_hash的参数。</p>
+<p>这样我们就知道了PRF是个什么东西，它确实是一个伪随机生成函数，而且生成的长度是不定的。</p>
+<p>回到那三组代码：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">master_secret = PRF(pre_master_secret, "master secret",
+ ClientHello.random + ServerHello.random)[0..47];</pre>
+<p>这是说，master_key是P_hash(pre_master_secret, “master secret”+ClientHello.random + ServerHello.random)的输出取前48位。至于这两个random，还记得我们分析Client Hello 和 Server Hello时的情况吗？</p>
+<p>然后下面的事情就更简单了，我们把master_key作为P_hash的第一个参数，生成一个符合要求长度的key_block，把这个key_block顺序分为6组（字面意思），生成下面的东西：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">client_write_MAC_key[SecurityParameters.mac_key_length]
+ server_write_MAC_key[SecurityParameters.mac_key_length]
+ client_write_key[SecurityParameters.enc_key_length]
+ server_write_key[SecurityParameters.enc_key_length]
+ client_write_IV[SecurityParameters.fixed_iv_length]
+ server_write_IV[SecurityParameters.fixed_iv_length]</pre>
+<p>名字里都带key了，肯定就是加解密用的了。具体每一个是什么作用，这里不再多说。</p>
+<p>注意，上面的运算，是服务器和客户端同时都在做的。所以他们共享同一组密钥。</p>
+<p>现在是不是皆大欢喜了呢？似乎还有一个问题，那个<strong>TLS_RSA_WITH_AES_256_CBC_SHA</strong> 最后的 <strong>SHA</strong>是什么呢？恐怕读者知道这应该是哈希算法吧，注意到HMAC_<strong>hash</strong>，嗯？<figure class="wp-block-image"></p>
+<p><img src="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png" alt="" class="wp-image-289" srcset="https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380.png 647w, https://blog.ayanamists.xyz/wp-content/uploads/2019/10/批注-2019-10-05-21380-300x126.png 300w" sizes="(max-width: 647px) 100vw, 647px" / loading="lazy"> </figure></p>
+<p>但实际上，这个SHA指的是HMAC-SHA1，它被用作MAC算法，而PRF使用的HMAC算法则由协议版本决定，比如tls1.2是HMAC-SHA256。</p>
+<p>好了好了，说了这么多，简单总结一下 <strong>RSA_WITH_AES_256_CBC_SHA</strong> 加密的核心：</p>
+<p>客户端产生一个随机数作为<strong>pre_master_key</strong>，将它用服务端公钥加密后送给服务端，然后客户端和服务端同时用基于<strong>HMAC-SHA</strong>的PRF产生<strong>master_key</strong>，再用<strong>master_key</strong>和随机数作为PRF的输入得到六个密钥，用于<strong>AES-256-CBC</strong>加密。以后的通信，都用<strong>AES-256-CBC</strong>加密，具有了反窃听的特性。只要私钥是安全的，就只能有客户端和服务端进行解密。</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://ayanamists.xyz/index.php/2019/10/05/en1/" title="SSL/TLS笔记(一) 加密！加密！加密！">https://ayanamists.xyz/index.php/2019/10/05/en1/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/index.php/2019/10/06/ssl-tls-2/" rel="prev" title="SSL/TLS(二) 证书里都有啥"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">SSL/TLS(二) 证书里都有啥</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/index.php/2019/10/04/trap/" rel="next" title="记录一下最近踩的坑"><span class="post-nav-text">记录一下最近踩的坑</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
