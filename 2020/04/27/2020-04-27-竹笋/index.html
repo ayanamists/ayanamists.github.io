@@ -24,7 +24,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic.downk.cc/item/5ea6deacc2a9a83be5bf582e.png">
 <meta property="article:published_time" content="2020-04-27T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-11T08:33:49.316Z">
+<meta property="article:modified_time" content="2022-04-11T09:04:49.975Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="竹笋">
 <meta name="twitter:card" content="summary">
@@ -121,17 +121,7 @@
 <p>这次的尝试就相当成功，剩下的一点苦涩味完全可以看作对肉的油腻的调和。</p>
 <h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
 <p>我又用改进后的方法做了三次竹笋，味道是比较稳定的。用代码来描述一下这个核心过程–焯水的话，就是这样：</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">
-<span class="token keyword">module</span> 烹饪方式
-
-  <span class="token keyword">def</span> <span class="token method-definition"><span class="token function">self</span></span><span class="token punctuation">.</span>焯水<span class="token punctuation">(</span>食材，时间，环境<span class="token punctuation">)</span>
-    <span class="token operator">...</span>
-  <span class="token keyword">end</span>
-
-<span class="token keyword">end</span>
-
-烹饪方式<span class="token double-colon punctuation">::</span>焯水<span class="token punctuation">(</span>竹笋丝，<span class="token number">10</span>分钟，盐水<span class="token punctuation">)</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">module</span> 烹饪方式</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">self</span>.焯水(食材，时间，环境)</span><br><span class="line">    ...</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">烹饪方式<span class="symbol">:</span><span class="symbol">:</span>焯水(竹笋丝，<span class="number">10</span>分钟，盐水)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>不过，要想完全达到酒店的口感，这样还不行。这似乎是因为酒店用的笋，很可能是类似于笋干的一类东西。总之，用这个方法，在家里也可以吃到还不错的竹笋了。</p>
 
       

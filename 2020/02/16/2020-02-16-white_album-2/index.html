@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://pic.downk.cc/item/5e4925c948b86553eede746f.png">
 <meta property="og:image" content="https://pic.downk.cc/item/5e4926ba48b86553eedeae70.png">
 <meta property="article:published_time" content="2020-02-16T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-11T08:33:49.316Z">
+<meta property="article:modified_time" content="2022-04-11T09:04:49.975Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="逆向工程">
 <meta name="twitter:card" content="summary">
@@ -124,28 +124,15 @@
 <ol>
 <li>
 <p>使用PostMessage()函数，将一个消息压入某个窗口对应线程的消息队列中。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">BOOL PostMessageA(
-HWND   hWnd,
-UINT   Msg,
-WPARAM wParam,
-LPARAM lParam
-);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">PostMessageA</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">HWND   hWnd,</span></span></span><br><span class="line"><span class="params"><span class="function">UINT   Msg,</span></span></span><br><span class="line"><span class="params"><span class="function">WPARAM wParam,</span></span></span><br><span class="line"><span class="params"><span class="function">LPARAM lParam</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 <li>
 <p>使用SendMessage()函数，直接调用某个窗口的WindowProc。</p>
- <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">LRESULT SendMessage(
-HWND   hWnd,
-UINT   Msg,
-WPARAM wParam,
-LPARAM lParam
-);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT <span class="title">SendMessage</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">HWND   hWnd,</span></span></span><br><span class="line"><span class="params"><span class="function">UINT   Msg,</span></span></span><br><span class="line"><span class="params"><span class="function">WPARAM wParam,</span></span></span><br><span class="line"><span class="params"><span class="function">LPARAM lParam</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>我们一向是实践第一，马上在写代码的时候发现了盲点：如何得到那个<strong>HWND</strong>类型的窗口句柄呢？这就要救助于FindWindow()函数了：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">HWND FindWindowA(
-  LPCSTR lpClassName,
-  LPCSTR lpWindowName
-);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HWND <span class="title">FindWindowA</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">  LPCSTR lpClassName,</span></span></span><br><span class="line"><span class="params"><span class="function">  LPCSTR lpWindowName</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>就差一点点了！可是又如何得到主窗口的ClassName和WindowName呢？</p>
 <p>这里介绍一个工具，就是大名鼎鼎的spy++.</p>
 <p>我们可以在vs2019的工具里直接使用它：</p>
@@ -158,16 +145,7 @@ LPARAM lParam
 <p>注：这里的坐标是窗口坐标，也就是相对于这个窗口左上角的坐标。</p>
 <p>那么，我们只要向这个窗口发送LBUTTONDOWN和LBUTTONUP消息，不就可以模拟鼠标的行为了吗？</p>
 <p>写出以下代码：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">if ( !PostMessage(main_window, WM_LBUTTONDOWN, wparam, lparam) ) &#123;
-   OnCriticalError(&quot;Post Down fail&quot;);
-&#125;;
-Sleep(20);
-
-wparam &#x3D; 0;
-lparam &#x3D; MAKELPARAM(600, 376);
-if ( !PostMessage(main_window, WM_LBUTTONUP, wparam, lparam) ) &#123;
-	OnCriticalError(&quot;Post Up fail&quot;);
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( !<span class="built_in">PostMessage</span>(main_window, WM_LBUTTONDOWN, wparam, lparam) ) &#123;</span><br><span class="line">   <span class="built_in">OnCriticalError</span>(<span class="string">&quot;Post Down fail&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">Sleep</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">wparam = <span class="number">0</span>;</span><br><span class="line">lparam = <span class="built_in">MAKELPARAM</span>(<span class="number">600</span>, <span class="number">376</span>);</span><br><span class="line"><span class="keyword">if</span> ( !<span class="built_in">PostMessage</span>(main_window, WM_LBUTTONUP, wparam, lparam) ) &#123;</span><br><span class="line">	<span class="built_in">OnCriticalError</span>(<span class="string">&quot;Post Up fail&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>实验发现，完全没啥用。第一回合，我败下阵来。</p>
 <h2 id="分析原因重整旗鼓"><a class="markdownIt-Anchor" href="#分析原因重整旗鼓"></a> 分析原因，重整旗鼓</h2>
 <p>为什么刚才的尝试失败了呢？我想，这个问题只能向逆向工程里要答案了。</p>
@@ -178,37 +156,7 @@ if ( !PostMessage(main_window, WM_LBUTTONUP, wparam, lparam) ) &#123;
 <p>我们先来看看主消息循环：</p>
 <p><img src="https://pic.downk.cc/item/5e4926ba48b86553eedeae70.png" alt="7" /></p>
 <p>注意被我标红的一条执行路径。被我命名为maybe_handle_click的函数，是这样的：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
-&#x2F;&#x2F; line 37
-  GetCursorPos(&amp;Point);
-  ScreenToClient(hWnd, &amp;Point);
-
-&#x2F;&#x2F;line 105 - 129
-    if ( !byte_B601DF )
-    &#123;
-      v21 &#x3D; GetAsyncKeyState;
-      if_leftButtonPress &#x3D; (GetAsyncKeyState(1) &amp; 0x8001) !&#x3D; 0;
-      if_rightButtonPress &#x3D; (GetAsyncKeyState(2) &amp; 0x8001) !&#x3D; 0;
-LABEL_47:
-      byte_B601AB &#x3D; (v21(4) &amp; 0x8001) !&#x3D; 0;
-      goto LABEL_48;
-    &#125;
-    if ( if_leftButtonPress )
-    &#123;
-      v22 &#x3D; GetAsyncKeyState;
-      if_leftButtonPress &#x3D; (GetAsyncKeyState(1) &amp; 0x8001) !&#x3D; 0;
-    &#125;
-    else
-    &#123;
-      if ( !if_rightButtonPress &amp;&amp; !byte_B601AB )
-      &#123;
-        v21 &#x3D; GetAsyncKeyState;
-        if_leftButtonPress &#x3D; (GetAsyncKeyState(1) &amp; 0x8001) !&#x3D; 0;
-        if ( !if_leftButtonPress )
-        &#123;
-          if_rightButtonPress &#x3D; (GetAsyncKeyState(2) &amp; 0x8001) !&#x3D; 0;
-          if ( !if_rightButtonPress )
-            goto LABEL_47;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// line 37</span></span><br><span class="line">  <span class="built_in">GetCursorPos</span>(&amp;Point);</span><br><span class="line">  <span class="built_in">ScreenToClient</span>(hWnd, &amp;Point);</span><br><span class="line"></span><br><span class="line"><span class="comment">//line 105 - 129</span></span><br><span class="line">    <span class="keyword">if</span> ( !byte_B601DF )</span><br><span class="line">    &#123;</span><br><span class="line">      v21 = GetAsyncKeyState;</span><br><span class="line">      if_leftButtonPress = (<span class="built_in">GetAsyncKeyState</span>(<span class="number">1</span>) &amp; <span class="number">0x8001</span>) != <span class="number">0</span>;</span><br><span class="line">      if_rightButtonPress = (<span class="built_in">GetAsyncKeyState</span>(<span class="number">2</span>) &amp; <span class="number">0x8001</span>) != <span class="number">0</span>;</span><br><span class="line">LABEL_47:</span><br><span class="line">      byte_B601AB = (<span class="built_in">v21</span>(<span class="number">4</span>) &amp; <span class="number">0x8001</span>) != <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">goto</span> LABEL_48;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( if_leftButtonPress )</span><br><span class="line">    &#123;</span><br><span class="line">      v22 = GetAsyncKeyState;</span><br><span class="line">      if_leftButtonPress = (<span class="built_in">GetAsyncKeyState</span>(<span class="number">1</span>) &amp; <span class="number">0x8001</span>) != <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( !if_rightButtonPress &amp;&amp; !byte_B601AB )</span><br><span class="line">      &#123;</span><br><span class="line">        v21 = GetAsyncKeyState;</span><br><span class="line">        if_leftButtonPress = (<span class="built_in">GetAsyncKeyState</span>(<span class="number">1</span>) &amp; <span class="number">0x8001</span>) != <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> ( !if_leftButtonPress )</span><br><span class="line">        &#123;</span><br><span class="line">          if_rightButtonPress = (<span class="built_in">GetAsyncKeyState</span>(<span class="number">2</span>) &amp; <span class="number">0x8001</span>) != <span class="number">0</span>;</span><br><span class="line">          <span class="keyword">if</span> ( !if_rightButtonPress )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_47;</span><br></pre></td></tr></table></figure>
 <p>这个函数里反复调用了一个叫做GetAsyncKeyState的函数，查MSDN，描述如下：</p>
 <blockquote>
 <p>Determines whether a key is up or down at the time the function is called, and whether the key was pressed after a previous call to GetAsyncKeyState.</p>
@@ -217,65 +165,13 @@ LABEL_47:
 <p>几乎可以确定，这个函数就是检测输入的。</p>
 <p>那么，我们手里还有什么函数，可以在底层注入鼠标消息呢？</p>
 <p>有，就是SendInput()，函数原型如下：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">UINT SendInput(
-  UINT    cInputs,
-  LPINPUT pInputs,
-  int     cbSize
-);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">UINT <span class="title">SendInput</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">  UINT    cInputs,</span></span></span><br><span class="line"><span class="params"><span class="function">  LPINPUT pInputs,</span></span></span><br><span class="line"><span class="params"><span class="function">  <span class="type">int</span>     cbSize</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>这个函数也工作在底层，相当于直接用键盘/鼠标进行操作。</p>
 <h2 id="再次尝试再次失败"><a class="markdownIt-Anchor" href="#再次尝试再次失败"></a> 再次尝试，再次失败</h2>
 <p>我们写出以下代码：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">if (IsIconic(main_window))
-&#123;
-	ShowWindow(main_window, SW_RESTORE);
-&#125;
-
-if (!SetForegroundWindow(main_window)) &#123;
-	OnCriticalError(&quot;Set window fail&quot;);
-&#125;
-
-if (!Inject::EnablePrivilege()) &#123;
-	OnCriticalError(&quot;Privilege promt fail&quot;);
-&#125;
-
-BeginEvent::SendBeginEvent(main_window);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">IsIconic</span>(main_window))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">ShowWindow</span>(main_window, SW_RESTORE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="built_in">SetForegroundWindow</span>(main_window)) &#123;</span><br><span class="line">	<span class="built_in">OnCriticalError</span>(<span class="string">&quot;Set window fail&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!Inject::<span class="built_in">EnablePrivilege</span>()) &#123;</span><br><span class="line">	<span class="built_in">OnCriticalError</span>(<span class="string">&quot;Privilege promt fail&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">BeginEvent::<span class="built_in">SendBeginEvent</span>(main_window);</span><br></pre></td></tr></table></figure>
 <p>其中SendBeginEvent()函数定义如下：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">namespace BeginEvent &#123;
-	const DWORD beginX &#x3D; 600;
-	const DWORD beginY &#x3D; 376;
-	void SendBeginEvent(HWND main_window) &#123;
-		InputInjecter::SendMouseEvent(main_window, beginX, beginY);
-	&#125;
-&#125;;
-
-namespace InputInjecter &#123;
-	void SendMouseEvent(HWND main_window, int x, int y) &#123;
-		POINT p;
-		p.x &#x3D; x;
-		p.y &#x3D; y;
-
-		ClientToScreen(main_window, &amp;p);
-		SetCursorPos(p.x, p.y);
-
-		LPMOUSEINPUT input &#x3D; new MOUSEINPUT;
-		input-&gt;dwFlags &#x3D; MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENT_LEFTUP;
-		input-&gt;dx &#x3D; Helper::CalculateAbsoluteCoordinateX(p.x);
-		input-&gt;dy &#x3D; Helper::CalculateAbsoluteCoordinateY(p.y);
-		input-&gt;mouseData &#x3D; 0;
-		input-&gt;dwExtraInfo &#x3D; 0;
-		input-&gt;time &#x3D; 0;
-
-		INPUT input_seal[1];
-		input_seal[0].type &#x3D; INPUT_MOUSE;
-		input_seal[0].mi &#x3D; *input;
-
-		if (!SendInput(1, input_seal, sizeof(INPUT))) &#123;
-			OnCriticalError(&quot;Send Down fail&quot;);
-		&#125;
-
-		Sleep(10);
-	&#125;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> BeginEvent &#123;</span><br><span class="line">	<span class="type">const</span> DWORD beginX = <span class="number">600</span>;</span><br><span class="line">	<span class="type">const</span> DWORD beginY = <span class="number">376</span>;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">SendBeginEvent</span><span class="params">(HWND main_window)</span> </span>&#123;</span><br><span class="line">		InputInjecter::<span class="built_in">SendMouseEvent</span>(main_window, beginX, beginY);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> InputInjecter &#123;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">SendMouseEvent</span><span class="params">(HWND main_window, <span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">		POINT p;</span><br><span class="line">		p.x = x;</span><br><span class="line">		p.y = y;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">ClientToScreen</span>(main_window, &amp;p);</span><br><span class="line">		<span class="built_in">SetCursorPos</span>(p.x, p.y);</span><br><span class="line"></span><br><span class="line">		LPMOUSEINPUT input = <span class="keyword">new</span> MOUSEINPUT;</span><br><span class="line">		input-&gt;dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENT_LEFTUP;</span><br><span class="line">		input-&gt;dx = Helper::<span class="built_in">CalculateAbsoluteCoordinateX</span>(p.x);</span><br><span class="line">		input-&gt;dy = Helper::<span class="built_in">CalculateAbsoluteCoordinateY</span>(p.y);</span><br><span class="line">		input-&gt;mouseData = <span class="number">0</span>;</span><br><span class="line">		input-&gt;dwExtraInfo = <span class="number">0</span>;</span><br><span class="line">		input-&gt;time = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		INPUT input_seal[<span class="number">1</span>];</span><br><span class="line">		input_seal[<span class="number">0</span>].type = INPUT_MOUSE;</span><br><span class="line">		input_seal[<span class="number">0</span>].mi = *input;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (!<span class="built_in">SendInput</span>(<span class="number">1</span>, input_seal, <span class="built_in">sizeof</span>(INPUT))) &#123;</span><br><span class="line">			<span class="built_in">OnCriticalError</span>(<span class="string">&quot;Send Down fail&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">Sleep</span>(<span class="number">10</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>结果很诡异，用spy++可以看到消息是正确的，但桌面上的WA2就是纹丝不动。</p>
 <p>为啥又失败了？我百思不得其解。</p>
 <h2 id="猜测和成功"><a class="markdownIt-Anchor" href="#猜测和成功"></a> 猜测和成功</h2>
@@ -286,9 +182,9 @@ namespace InputInjecter &#123;
 </ul>
 <p>我们猜想，是不是只注入DOWN的消息，不注入UP的消息，我们就会成功呢？</p>
 <p>修改代码如下：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">input-&gt;dwFlags &#x3D; MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENT_LEFTUP;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input-&gt;dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENT_LEFTUP;</span><br></pre></td></tr></table></figure>
 <p>修改为：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">input-&gt;dwFlags &#x3D; MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">input-&gt;dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_LEFTDOWN;</span><br></pre></td></tr></table></figure>
 <p>结果成功。现在想到这件事，我的脸上仍然会浮现开心的笑容。这就是逆向的魅力所在吧！</p>
 <p>现在，我们获得了自动化的“手”，下面，我们要获得自动化的“眼睛”。</p>
 
@@ -317,21 +213,21 @@ namespace InputInjecter &#123;
   
 <nav id="article-nav" class="article-nav">
   
-    <a href="/2020/03/14/2020-3-12-parser/" id="article-nav-newer" class="article-nav-link-wrap newer">
+    <a href="/2020/02/16/2020-02-16-white_album-1/" id="article-nav-newer" class="article-nav-link-wrap newer">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          让我们实现编程语言吧（一）序
+          WA2的逆向与外挂（一） 序
         
       </div>
     </a>
   
   
-    <a href="/2020/02/16/2020-02-16-white_album-1/" id="article-nav-older" class="article-nav-link-wrap older">
+    <a href="/2020/02/15/2020-02-15-speed-1/" id="article-nav-older" class="article-nav-link-wrap older">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">
         
-          WA2的逆向与外挂（一） 序
+          谈谈网速（一）序
         
       </div>
     </a>

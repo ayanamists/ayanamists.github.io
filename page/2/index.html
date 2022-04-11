@@ -141,13 +141,7 @@ S(n) = \{ n \}
 <p>但是，在我的观念中，从C语言学习编程是很不正确的决定。</p>
 <p>不过从C语言开始学习编程也不是没有一点好处。如果某人从scheme等等有GC的语言开始学习编程的话的话，那么他到了某些不得不用<code>C/C++</code>写程序的时候，会陷入一些很麻烦的问题之中，其中之一，就是<code>C/C++</code>都可能会出现【裸错误】，或者说，在硬件层面、操作系统层面的错误，会毫无保留地送到程序员面前。</p>
 <p>比如说，考虑这样的C代码：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> a<span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-	a<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> a[<span class="number">10</span>];</span><br><span class="line">	a[<span class="number">10000</span>] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -182,7 +176,7 @@ S(n) = \{ n \}
           <time class="article-date" datetime="2020-10-13T23:43:50.000Z" itemprop="datePublished">2020-10-13</time>
 
           
-            × <span class="article-word-count">1k words</span>
+            × <span class="article-word-count">1.1k words</span>
             
             × <span class="article-time-to-read">4 minutes</span>
             
@@ -251,8 +245,7 @@ S(n) = \{ n \}
         <h2 id="在计算机里寻求符号计算是不是搞错了什么"><a class="markdownIt-Anchor" href="#在计算机里寻求符号计算是不是搞错了什么"></a> 在计算机里寻求符号计算是不是搞错了什么？</h2>
 <p>计算机系的学生，大多都是明白计算机是如何做数值计算的。</p>
 <p>比如说，你让一台<code>x86</code>计算机算<code>0xff+0xff00</code>等于多少，可以写成这样的汇编：</p>
-<pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">mov eax, 0xff ;把0xff这个数放到eax寄存器里
-add eax, 0xff00 ;把eax寄存器里的数加上 0xff00<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov eax, 0xff ;把0xff这个数放到eax寄存器里</span><br><span class="line">add eax, 0xff00 ;把eax寄存器里的数加上 0xff00</span><br></pre></td></tr></table></figure>
 <p>至于小数，可以用浮点数去算，这些东西都能在硬件上实现。事实上，我们也写过一个简单的CPU，大概知道这些东西在电路上是什么样的。</p>
 <p>可是，很多计算机系的学生，也不明白计算机是如何进行符号计算的。比如说，我要算以下的微分式：</p>
       
@@ -341,7 +334,7 @@ add eax, 0xff00 ;把eax寄存器里的数加上 0xff00<span aria-hidden="true" c
           <time class="article-date" datetime="2020-09-12T00:00:00.000Z" itemprop="datePublished">2020-09-12</time>
 
           
-            × <span class="article-word-count">1.7k words</span>
+            × <span class="article-word-count">1.8k words</span>
             
             × <span class="article-time-to-read">8 minutes</span>
             
@@ -354,10 +347,7 @@ add eax, 0xff00 ;把eax寄存器里的数加上 0xff00<span aria-hidden="true" c
       
         <h2 id="辗转相除法的正确性"><a class="markdownIt-Anchor" href="#辗转相除法的正确性"></a> 辗转相除法的正确性</h2>
 <p>凡是学过编程的人，几乎没有不知道【辗转相除法】，或者【欧几里得算法】的。用scheme写出来，就是这样：</p>
-<pre class="line-numbers language-scheme" data-language="scheme"><code class="language-scheme"><span class="token punctuation">(</span><span class="token keyword">define</span> <span class="token punctuation">(</span><span class="token builtin">gcd</span> a b<span class="token punctuation">)</span>
-  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span> b <span class="token number">0</span><span class="token punctuation">)</span>
-      a
-      <span class="token punctuation">(</span><span class="token builtin">gcd</span> b <span class="token punctuation">(</span><span class="token builtin">modulo</span> a b<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name"><span class="built_in">gcd</span></span> a b)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> b <span class="number">0</span>)</span><br><span class="line">      a</span><br><span class="line">      (<span class="name"><span class="built_in">gcd</span></span> b (<span class="name"><span class="built_in">modulo</span></span> a b))))</span><br></pre></td></tr></table></figure>
 <p>大部分人还知道，GCD的理论基础是：</p>
 <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mtext> </mtext><mi>m</mi><mi>o</mi><mi>d</mi><mtext> </mtext><mi>b</mi><mo>=</mo><mi>c</mi><mo stretchy="false">)</mo><mo>→</mo><mi>G</mi><mi>C</mi><mi>D</mi><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>G</mi><mi>C</mi><mi>D</mi><mo stretchy="false">(</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a\ mod\ b = c) \rightarrow
 GCD(a,b) = GCD(b,c)
@@ -368,6 +358,57 @@ GCD(a,b) = GCD(b,c)
     
       <div class="article-more-link">
         <a href="/2020/09/12/2020-09-12-number-theory/#more">read more</a>
+      </div>
+    
+    
+    
+  </div>
+</article>
+
+
+
+  
+    <article id="post-2020-08-30-pl5" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="name">
+      <a href="/2020/08/30/2020-08-30-pl5/">让我们实现编程语言吧(五) 解释器模型</a>
+      
+        
+      
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2020-08-30T00:00:00.000Z" itemprop="datePublished">2020-08-30</time>
+
+          
+            × <span class="article-word-count">1.4k words</span>
+            
+            × <span class="article-time-to-read">5 minutes</span>
+            
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h2 id="什么是解释器"><a class="markdownIt-Anchor" href="#什么是解释器"></a> 什么是解释器</h2>
+<p>在我国的大学里，学生们学会的第一门编程语言一般是C语言。因此，不少同学都习惯性地将编程语言的执行过程等价为【编译-链接-执行】的过程。但实际上，编程语言还可以进行所谓的【解释执行】。</p>
+<p>什么叫【解释执行】呢？就是计算机直接对抽象语法树（或者进一步变换的结构）进行求值，而非把抽象语法树编译成目标代码再让机器对目标代码进行求值。可以【解释执行】代码的程序就是【解释器】了。</p>
+<p>这个时候，聪明的同学也许会想到，<strong>整个计算机系统恰恰就是目标代码的解释器</strong>。</p>
+<h2 id="解释器的基本模型"><a class="markdownIt-Anchor" href="#解释器的基本模型"></a> 解释器的基本模型</h2>
+<p>【解释器的模型】这个词的意思是，解释器将会被实现为【什么东西】。最简单的模型是【表达式-环境】模型。这个模型指整个解释器被实现为一个<code>eval</code>函数，这个函数的参数为<code>expression</code>和<code>environment</code>，返回值为一个<code>value</code>.</p>
+      
+    </div>
+    
+      <div class="article-more-link">
+        <a href="/2020/08/30/2020-08-30-pl5/#more">read more</a>
       </div>
     
     
@@ -420,57 +461,6 @@ GCD(a,b) = GCD(b,c)
     
       <div class="article-more-link">
         <a href="/2020/08/30/2020-08-30-pl6/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-08-30-pl5" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/08/30/2020-08-30-pl5/">让我们实现编程语言吧(五) 解释器模型</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-08-30T00:00:00.000Z" itemprop="datePublished">2020-08-30</time>
-
-          
-            × <span class="article-word-count">1.4k words</span>
-            
-            × <span class="article-time-to-read">5 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="什么是解释器"><a class="markdownIt-Anchor" href="#什么是解释器"></a> 什么是解释器</h2>
-<p>在我国的大学里，学生们学会的第一门编程语言一般是C语言。因此，不少同学都习惯性地将编程语言的执行过程等价为【编译-链接-执行】的过程。但实际上，编程语言还可以进行所谓的【解释执行】。</p>
-<p>什么叫【解释执行】呢？就是计算机直接对抽象语法树（或者进一步变换的结构）进行求值，而非把抽象语法树编译成目标代码再让机器对目标代码进行求值。可以【解释执行】代码的程序就是【解释器】了。</p>
-<p>这个时候，聪明的同学也许会想到，<strong>整个计算机系统恰恰就是目标代码的解释器</strong>。</p>
-<h2 id="解释器的基本模型"><a class="markdownIt-Anchor" href="#解释器的基本模型"></a> 解释器的基本模型</h2>
-<p>【解释器的模型】这个词的意思是，解释器将会被实现为【什么东西】。最简单的模型是【表达式-环境】模型。这个模型指整个解释器被实现为一个<code>eval</code>函数，这个函数的参数为<code>expression</code>和<code>environment</code>，返回值为一个<code>value</code>.</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/08/30/2020-08-30-pl5/#more">read more</a>
       </div>
     
     
@@ -554,9 +544,9 @@ GCD(a,b) = GCD(b,c)
           <time class="article-date" datetime="2020-08-08T00:00:00.000Z" itemprop="datePublished">2020-08-08</time>
 
           
-            × <span class="article-word-count">1.2k words</span>
+            × <span class="article-word-count">1.3k words</span>
             
-            × <span class="article-time-to-read">4 minutes</span>
+            × <span class="article-time-to-read">5 minutes</span>
             
           
         </div>

@@ -23,7 +23,7 @@
 <meta property="og:description" content="前言 图的定义  图的一般定义 几种特殊的图 连通性  无向图 有向图   生成树   图的存储表示  ADT 与 抽象类接口 （逆）邻接表  邻接表     图上的8种泛型算法  前言 图的深度优先搜索算法 图的广度优先搜索算法 用深度优先搜索判断是否有环 用深度优先搜索进行拓扑排序 最小生成树–Prim算法 最小生成树 – Kruskal算法 最短路径算法 – Dijkstra算法 最短路径">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-12-22T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-11T08:33:49.316Z">
+<meta property="article:modified_time" content="2022-04-11T09:04:49.975Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
@@ -73,9 +73,9 @@
           <time class="article-date" datetime="2019-12-22T00:00:00.000Z" itemprop="datePublished">2019-12-22</time>
 
           
-            × <span class="article-word-count">6.4k words</span>
+            × <span class="article-word-count">6.2k words</span>
             
-            × <span class="article-time-to-read">31 minutes</span>
+            × <span class="article-time-to-read">29 minutes</span>
             
           
         </div>
@@ -245,18 +245,7 @@
 </li>
 </ul>
 <p>基于以上的ADT，我们写一个抽象类Graph():</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class Vertex&gt;
-class Graph &#123;
-public:
-	virtual void addVertex(Vertex&amp; v) &#x3D; 0;
-	virtual void addEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#x3D; 0;
-	virtual void removeVertex(Vertex&amp; v) &#x3D; 0;
-	virtual void removeEdge(Vertex&amp; v_1, Vertex &amp; v_2) &#x3D; 0;
-	virtual std::vector&lt;Vertex&gt; getNeighbors(Vertex&amp; v) &#x3D; 0;
-	virtual uint32_t getNumberOfVertices() &#x3D; 0;
-	virtual uint32_t getNumberOfEdges() &#x3D; 0;
-	virtual void clearGraph() &#x3D; 0;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Vertex</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">addVertex</span><span class="params">(Vertex&amp; v)</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">addEdge</span><span class="params">(Vertex&amp; v_1, Vertex&amp; v_2)</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">removeVertex</span><span class="params">(Vertex&amp; v)</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">removeEdge</span><span class="params">(Vertex&amp; v_1, Vertex &amp; v_2)</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> std::vector&lt;Vertex&gt; <span class="title">getNeighbors</span><span class="params">(Vertex&amp; v)</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">uint32_t</span> <span class="title">getNumberOfVertices</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">uint32_t</span> <span class="title">getNumberOfEdges</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">clearGraph</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="逆邻接表"><a class="markdownIt-Anchor" href="#逆邻接表"></a> （逆）邻接表</h3>
 <h4 id="邻接表"><a class="markdownIt-Anchor" href="#邻接表"></a> 邻接表</h4>
 <p>邻接表是指把图存到一个线性表中，这个线性表的每一个元素都是一个链表，链表的第一个元素是一个图中的顶点，其他元素是和这个顶点相邻的顶点。线性表中的元素不重复地覆盖所有图中的顶点。<br />
@@ -264,285 +253,26 @@ public:
 <img src = "./pic/2.png">
 <p>从描述中可以看出，这个结构实际上用于有向图。<br />
 这个结构实现起来很简单，如下所示：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value&gt;
-class stdVertex &#123;
-public:
-	value val;
-	stdVertex() &#123; val &#x3D; 0; &#125;
-	stdVertex(value val) &#123;
-		this-&gt;val &#x3D; val;
-	&#125;
-	bool operator &#x3D;&#x3D;(stdVertex&lt;value&gt; other) &#123;
-		return this-&gt;val &#x3D;&#x3D; other.val;
-	&#125;
-&#125;;
-
-&#x2F;*
- * here we use Vertex class as node,
- * to correctly implement this class, you should follow these rules:
- * 1. overload &#x3D;(), or don&#39;t use anything could cause deep copy&#x2F;shallow copy problem.
- * 2. implement these methods:
- *    1. getValue()
- *&#x2F;
-template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;, class VertexInner &#x3D; stdVertex&lt;value&gt;&gt;
-class ListGraph : public Graph&lt;Vertex&gt; &#123;
-public:
-	void addVertex(Vertex&amp; v) &#123;
-		std::list&lt;VertexInner&gt; vec_list;
-		vec_list.push_back(VertexInner(v));
-		this-&gt;adjList.push_back(vec_list);
-	&#125;
-
-	void addEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#123;
-		auto i &#x3D; std::find_if(this-&gt;adjList.begin(), this-&gt;adjList.end(),
-			[&amp;](auto j) &#123;if (j.front() &#x3D;&#x3D; v_1) &#123; return true; &#125;&#125;);
-		if (i &#x3D;&#x3D; this-&gt;adjList.end()) &#123;
-			throw std::invalid_argument(&quot;v_1 is not a vertex in list!&quot;);
-		&#125;
-		(*i).push_back(v_2);
-	&#125;
-
-	void removeVertex(Vertex&amp; v) &#123;
-		bool hit &#x3D; false;
-		for (auto i &#x3D; this-&gt;adjList.begin(); i !&#x3D; this-&gt;adjList.end();) &#123;
-			if ((*i).front() &#x3D;&#x3D; v) &#123;
-				i &#x3D; this-&gt;adjList.erase(i);
-				hit &#x3D; true;
-			&#125;
-			else &#123;
-				for (auto j &#x3D; (*i).begin(); j !&#x3D; (*i).end();) &#123;
-					if (*j &#x3D;&#x3D; v) &#123;
-						j &#x3D; (*i).erase(j);
-					&#125;
-					else &#123; ++j; &#125;
-				&#125;
-				i++;
-			&#125;
-		&#125;
-		if (!hit) &#123;
-			throw std::invalid_argument(&quot;can&#39;t find vertex!\n&quot;);
-		&#125;
-	&#125;
-
-	void removeEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#123;
-		for (auto i &#x3D; adjList.begin(); i !&#x3D; adjList.end(); ++i) &#123;
-			&#x2F;* find v_1 *&#x2F;
-			if ((*i).front() &#x3D;&#x3D; v_1) &#123;
-				for (auto j &#x3D; (*i).begin(); j !&#x3D; (*i).end();) &#123;
-					if ((*j) &#x3D;&#x3D; v_2) &#123;
-						&#x2F;* find v_2 *&#x2F;
-						j &#x3D; (*i).erase(j);
-						goto END;
-					&#125;
-					else &#123;
-						j++;
-					&#125;
-				&#125;
-			&#125;
-		&#125;
-		throw std::invalid_argument(&quot;can&#39;t find Edge!\n&quot;);
-	END:
-		return;
-	&#125;
-
-	std::vector&lt;Vertex&gt; getNeighbors(Vertex&amp; v_1) &#123;
-		auto i &#x3D; adjList[0];
-		std::for_each(this-&gt;adjList.begin(), this-&gt;adjList.end(),
-			[&amp;](auto list) &#123;if (list.front() &#x3D;&#x3D; v_1) &#123; i &#x3D; list; &#125;&#125;);
-
-		std::vector&lt;Vertex&gt; ret;
-		std::for_each(i.begin(), i.end(), [&amp;](auto j) &#123;ret.push_back(j); &#125;);
-		return ret;
-	&#125;
-
-	uint32_t getNumberOfVertices() &#123;
-		return this-&gt;adjList.size();
-	&#125;
-	
-	uint32_t getNumberOfEdges() &#123;
-		auto sum &#x3D; 0;
-		std::for_each(this-&gt;adjList.begin(), this-&gt;adjList.end(),
-			[&amp;sum](auto i) &#123;sum +&#x3D; i.size() - 1; &#125;);
-		return sum;
-	&#125;
-
-	void clearGraph () &#123;
-		adjList.clear();
-	&#125;
-protected:
-	std::vector&lt;std::list&lt;VertexInner&gt; &gt; adjList;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">stdVertex</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	value val;</span><br><span class="line">	<span class="built_in">stdVertex</span>() &#123; val = <span class="number">0</span>; &#125;</span><br><span class="line">	<span class="built_in">stdVertex</span>(value val) &#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;val = val;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">bool</span> <span class="keyword">operator</span> ==(stdVertex&lt;value&gt; other) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;val == other.val;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * here we use Vertex class as node,</span></span><br><span class="line"><span class="comment"> * to correctly implement this class, you should follow these rules:</span></span><br><span class="line"><span class="comment"> * 1. overload =(), or don&#x27;t use anything could cause deep copy/shallow copy problem.</span></span><br><span class="line"><span class="comment"> * 2. implement these methods:</span></span><br><span class="line"><span class="comment"> *    1. getValue()</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>, <span class="keyword">class</span> <span class="title class_">Vertex</span> = stdVertex&lt;value&gt;, <span class="keyword">class</span> VertexInner = stdVertex&lt;value&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> ListGraph : <span class="keyword">public</span> Graph&lt;Vertex&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">void</span> <span class="built_in">addVertex</span>(Vertex&amp; v) &#123;</span><br><span class="line">		std::list&lt;VertexInner&gt; vec_list;</span><br><span class="line">		vec_list.<span class="built_in">push_back</span>(<span class="built_in">VertexInner</span>(v));</span><br><span class="line">		<span class="keyword">this</span>-&gt;adjList.<span class="built_in">push_back</span>(vec_list);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(Vertex&amp; v_1, Vertex&amp; v_2)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> i = std::<span class="built_in">find_if</span>(<span class="keyword">this</span>-&gt;adjList.<span class="built_in">begin</span>(), <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>(),</span><br><span class="line">			[&amp;](<span class="keyword">auto</span> j) &#123;<span class="keyword">if</span> (j.<span class="built_in">front</span>() == v_1) &#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;&#125;);</span><br><span class="line">		<span class="keyword">if</span> (i == <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>()) &#123;</span><br><span class="line">			<span class="keyword">throw</span> std::<span class="built_in">invalid_argument</span>(<span class="string">&quot;v_1 is not a vertex in list!&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		(*i).<span class="built_in">push_back</span>(v_2);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">removeVertex</span><span class="params">(Vertex&amp; v)</span> </span>&#123;</span><br><span class="line">		<span class="type">bool</span> hit = <span class="literal">false</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="keyword">this</span>-&gt;adjList.<span class="built_in">begin</span>(); i != <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>();) &#123;</span><br><span class="line">			<span class="keyword">if</span> ((*i).<span class="built_in">front</span>() == v) &#123;</span><br><span class="line">				i = <span class="keyword">this</span>-&gt;adjList.<span class="built_in">erase</span>(i);</span><br><span class="line">				hit = <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">auto</span> j = (*i).<span class="built_in">begin</span>(); j != (*i).<span class="built_in">end</span>();) &#123;</span><br><span class="line">					<span class="keyword">if</span> (*j == v) &#123;</span><br><span class="line">						j = (*i).<span class="built_in">erase</span>(j);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span> &#123; ++j; &#125;</span><br><span class="line">				&#125;</span><br><span class="line">				i++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (!hit) &#123;</span><br><span class="line">			<span class="keyword">throw</span> std::<span class="built_in">invalid_argument</span>(<span class="string">&quot;can&#x27;t find vertex!\n&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">removeEdge</span><span class="params">(Vertex&amp; v_1, Vertex&amp; v_2)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = adjList.<span class="built_in">begin</span>(); i != adjList.<span class="built_in">end</span>(); ++i) &#123;</span><br><span class="line">			<span class="comment">/* find v_1 */</span></span><br><span class="line">			<span class="keyword">if</span> ((*i).<span class="built_in">front</span>() == v_1) &#123;</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">auto</span> j = (*i).<span class="built_in">begin</span>(); j != (*i).<span class="built_in">end</span>();) &#123;</span><br><span class="line">					<span class="keyword">if</span> ((*j) == v_2) &#123;</span><br><span class="line">						<span class="comment">/* find v_2 */</span></span><br><span class="line">						j = (*i).<span class="built_in">erase</span>(j);</span><br><span class="line">						<span class="keyword">goto</span> END;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span> &#123;</span><br><span class="line">						j++;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">invalid_argument</span>(<span class="string">&quot;can&#x27;t find Edge!\n&quot;</span>);</span><br><span class="line">	END:</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">std::vector&lt;Vertex&gt; <span class="title">getNeighbors</span><span class="params">(Vertex&amp; v_1)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> i = adjList[<span class="number">0</span>];</span><br><span class="line">		std::for_each(<span class="keyword">this</span>-&gt;adjList.<span class="built_in">begin</span>(), <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>(),</span><br><span class="line">			[&amp;](<span class="keyword">auto</span> list) &#123;<span class="keyword">if</span> (list.<span class="built_in">front</span>() == v_1) &#123; i = list; &#125;&#125;);</span><br><span class="line"></span><br><span class="line">		std::vector&lt;Vertex&gt; ret;</span><br><span class="line">		std::for_each(i.<span class="built_in">begin</span>(), i.<span class="built_in">end</span>(), [&amp;](<span class="keyword">auto</span> j) &#123;ret.<span class="built_in">push_back</span>(j); &#125;);</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">uint32_t</span> <span class="title">getNumberOfVertices</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;adjList.<span class="built_in">size</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="type">uint32_t</span> <span class="title">getNumberOfEdges</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> sum = <span class="number">0</span>;</span><br><span class="line">		std::for_each(<span class="keyword">this</span>-&gt;adjList.<span class="built_in">begin</span>(), <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>(),</span><br><span class="line">			[&amp;sum](<span class="keyword">auto</span> i) &#123;sum += i.<span class="built_in">size</span>() - <span class="number">1</span>; &#125;);</span><br><span class="line">		<span class="keyword">return</span> sum;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">clearGraph</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">		adjList.<span class="built_in">clear</span>();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	std::vector&lt;std::list&lt;VertexInner&gt; &gt; adjList;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>这个时候问题来了，在这个设计下，我们如何实现带权图呢？</p>
 <p>呵呵，这个问题我在设计之初就想到了。</p>
 <p>首先我们考虑，只要将VertexInner类的参数改成下面这个类，实际上就实现了带权图：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value&gt;
-class ValuedVertex : public stdVertex&lt;value&gt; &#123;
-	&#x2F;* edge_value represents the value of edge 
-	 * between the former vertex and that vertex
-	 * if this vertex is the first vertex, 
-	 * then edge_value MUST be INT_MAX
-	 *&#x2F;
-	uint32_t edge_value;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ValuedVertex</span> : <span class="keyword">public</span> stdVertex&lt;value&gt; &#123;</span><br><span class="line">	<span class="comment">/* edge_value represents the value of edge </span></span><br><span class="line"><span class="comment">	 * between the former vertex and that vertex</span></span><br><span class="line"><span class="comment">	 * if this vertex is the first vertex, </span></span><br><span class="line"><span class="comment">	 * then edge_value MUST be INT_MAX</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="type">uint32_t</span> edge_value;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>那么，我们只要继承一下ListGraph，再重载一个addEdge方法就可以了。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt; &gt;
-class ValuedListGraph : public ListGraph&lt;value, stdVertex&lt;value&gt;, ValuedVertex&lt;value&gt;&gt; &#123;
-public:
-	void addEdge(Vertex v_1, Vertex v_2, uint32_t _value) &#123;
-		auto i &#x3D; std::find_if(this-&gt;adjList.begin(), this-&gt;adjList.end(),
-			[&amp;](auto j) &#123;if (j.front() &#x3D;&#x3D; v_1) &#123; return true; &#125;&#125;);
-		if (i &#x3D;&#x3D; this-&gt;adjList.end()) &#123;
-			throw std::invalid_argument(&quot;v_1 is not a vertex in list!&quot;);
-		&#125;
-		ValuedVertex&lt;value&gt; vex(v_2);
-		vex.edge_value &#x3D; _value; 
-		(*i).push_back(vex);
-	&#125;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>, <span class="keyword">class</span> <span class="title class_">Vertex</span> = stdVertex&lt;value&gt; &gt;</span><br><span class="line"><span class="keyword">class</span> ValuedListGraph : <span class="keyword">public</span> ListGraph&lt;value, stdVertex&lt;value&gt;, ValuedVertex&lt;value&gt;&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">void</span> <span class="built_in">addEdge</span>(Vertex v_1, Vertex v_2, <span class="type">uint32_t</span> _value) &#123;</span><br><span class="line">		<span class="keyword">auto</span> i = std::<span class="built_in">find_if</span>(<span class="keyword">this</span>-&gt;adjList.<span class="built_in">begin</span>(), <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>(),</span><br><span class="line">			[&amp;](<span class="keyword">auto</span> j) &#123;<span class="keyword">if</span> (j.<span class="built_in">front</span>() == v_1) &#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;&#125;);</span><br><span class="line">		<span class="keyword">if</span> (i == <span class="keyword">this</span>-&gt;adjList.<span class="built_in">end</span>()) &#123;</span><br><span class="line">			<span class="keyword">throw</span> std::<span class="built_in">invalid_argument</span>(<span class="string">&quot;v_1 is not a vertex in list!&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function">ValuedVertex&lt;value&gt; <span class="title">vex</span><span class="params">(v_2)</span></span>;</span><br><span class="line">		vex.edge_value = _value; </span><br><span class="line">		(*i).<span class="built_in">push_back</span>(vex);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>这样邻接表就实现好了。邻接矩阵的实现其实更加简单：</p>
 <p>由于邻接矩阵天生就适合带权图（矩阵的元素是数），所以我们直接实现为带权图。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#define UNCONNECTED INT_MAX
-template &lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;&gt;
-class MatrixGraph : public IndexGraph&lt;value, Vertex&gt; &#123;
-public:
-	MatrixGraph()&#123;&#125;
-	void addVertex(Vertex&amp; v) &#123;
-		&#x2F;* add colunm *&#x2F;
-		for (auto i &#x3D; matrix.begin(); i &lt; matrix.end(); ++i) &#123;
-			(*i).push_back(UNCONNECTED);
-		&#125;
-
-		&#x2F;* add row *&#x2F;
-		size_t vec_size &#x3D; matrix.size() + 1;
-		std::vector&lt;uint32_t&gt; vec(vec_size, UNCONNECTED);
-		vec[vec_size - 1] &#x3D; 0;
-		matrix.push_back(vec);
-
-		this-&gt;addVertexToMap(v);
-	&#125;
-	
-	void addEdge(Vertex&amp; v_1, Vertex&amp; v_2) &#123; addEdge(v_1, v_2, 1); &#125;
-
-	void addEdge(Vertex&amp; v_1, Vertex&amp; v_2, int value) &#123;
-		uint32_t i &#x3D; this-&gt;getIndex(v_1);
-		uint32_t j &#x3D; this-&gt;getIndex(v_2);
-		matrix[i][j] &#x3D; value;
-	&#125;
-
-	void removeVertex(Vertex&amp; v) &#123;
-	&#125;
-
-	void removeEdge(Vertex&amp; v_1, Vertex&amp; v_2)&#123;&#125;
-
-	std::vector&lt;Vertex&gt; getNeighbors(Vertex&amp; v) &#123;
-		std::vector&lt;Vertex&gt; ret;
-		uint32_t i &#x3D; this-&gt;getIndex(v);
-		for (auto j &#x3D; 0u; j &lt; this-&gt;matrix.size();++j) &#123;
-			if (this-&gt;_if_connected(i, j)) &#123;
-				ret.push_back(Vertex(this-&gt;getValue(j)));
-			&#125;
-		&#125;
-		return ret;
-	&#125;
-
-	uint32_t getNumberOfVertices() &#123;
-		return matrix.size();
-	&#125;
-
-	uint32_t getNumberOfEdges() &#123;
-		uint32_t ret &#x3D; 0;
-		for (auto i &#x3D; 0u; i &lt; matrix.size(); ++i) &#123;
-			for (auto j &#x3D; 0u; j &lt; matrix.size(); ++j) &#123;
-				if (_if_connected(i, j)) &#123;
-					ret++;
-				&#125;
-			&#125;
-		&#125;
-		return ret;
-	&#125;
-
-	void clearGraph() &#123;
-		matrix.clear();
-	&#125;
-
-protected:
-	std::vector&lt;std::vector&lt;uint32_t&gt;&gt; matrix;
-	
-	bool _if_connected(uint32_t index_1, uint32_t index_2) &#123;
-		return this-&gt;matrix[index_1][index_2] !&#x3D; UNCONNECTED &amp;&amp; index_1 !&#x3D; index_2;
-	&#125;
-
-	std::vector&lt;uint32_t&gt; _get_neighbors(uint32_t index) &#123;
-		std::vector&lt;uint32_t&gt; ret;
-		for (auto i &#x3D; 0u; i &lt; matrix[index].size(); ++i) &#123;
-			if (_if_connected(index, i)) &#123;
-				ret.push_back(i);
-			&#125;
-		&#125;
-		return ret;
-	&#125;
-	int _get_value(uint32_t pos_1, uint32_t pos_2) &#123;
-		return matrix[pos_1][pos_2];
-	&#125;
-	std::vector&lt;IndexEdge&gt; _get_all_edges() &#123;
-		std::vector&lt;IndexEdge&gt; ret;
-		for (auto i &#x3D; 0u; i &lt; this-&gt;matrix.size(); ++i) &#123;
-			for (auto j &#x3D; i + 1; j &lt; this-&gt;matrix.size(); ++j) &#123;
-				if (matrix[i][j] !&#x3D; UNCONNECTED) &#123;
-					ret.push_back(IndexEdge(i, j, matrix[i][j]));
-				&#125;
-			&#125;
-		&#125;
-		return ret;
-	&#125;
-&#125;;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> UNCONNECTED INT_MAX</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">value</span>, <span class="keyword">class</span> <span class="title class_">Vertex</span> = stdVertex&lt;value&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> MatrixGraph : <span class="keyword">public</span> IndexGraph&lt;value, Vertex&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">MatrixGraph</span>()&#123;&#125;</span><br><span class="line">	<span class="type">void</span> <span class="built_in">addVertex</span>(Vertex&amp; v) &#123;</span><br><span class="line">		<span class="comment">/* add colunm */</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = matrix.<span class="built_in">begin</span>(); i &lt; matrix.<span class="built_in">end</span>(); ++i) &#123;</span><br><span class="line">			(*i).<span class="built_in">push_back</span>(UNCONNECTED);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/* add row */</span></span><br><span class="line">		<span class="type">size_t</span> vec_size = matrix.<span class="built_in">size</span>() + <span class="number">1</span>;</span><br><span class="line">		<span class="function">std::vector&lt;<span class="type">uint32_t</span>&gt; <span class="title">vec</span><span class="params">(vec_size, UNCONNECTED)</span></span>;</span><br><span class="line">		vec[vec_size - <span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">		matrix.<span class="built_in">push_back</span>(vec);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">this</span>-&gt;<span class="built_in">addVertexToMap</span>(v);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(Vertex&amp; v_1, Vertex&amp; v_2)</span> </span>&#123; <span class="built_in">addEdge</span>(v_1, v_2, <span class="number">1</span>); &#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(Vertex&amp; v_1, Vertex&amp; v_2, <span class="type">int</span> value)</span> </span>&#123;</span><br><span class="line">		<span class="type">uint32_t</span> i = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(v_1);</span><br><span class="line">		<span class="type">uint32_t</span> j = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(v_2);</span><br><span class="line">		matrix[i][j] = value;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">removeVertex</span><span class="params">(Vertex&amp; v)</span> </span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">removeEdge</span><span class="params">(Vertex&amp; v_1, Vertex&amp; v_2)</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">std::vector&lt;Vertex&gt; <span class="title">getNeighbors</span><span class="params">(Vertex&amp; v)</span> </span>&#123;</span><br><span class="line">		std::vector&lt;Vertex&gt; ret;</span><br><span class="line">		<span class="type">uint32_t</span> i = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(v);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0u</span>; j &lt; <span class="keyword">this</span>-&gt;matrix.<span class="built_in">size</span>();++j) &#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>-&gt;_if_connected(i, j)) &#123;</span><br><span class="line">				ret.<span class="built_in">push_back</span>(<span class="built_in">Vertex</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getValue</span>(j)));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">uint32_t</span> <span class="title">getNumberOfVertices</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> matrix.<span class="built_in">size</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">uint32_t</span> <span class="title">getNumberOfEdges</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="type">uint32_t</span> ret = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; matrix.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0u</span>; j &lt; matrix.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">				<span class="keyword">if</span> (_if_connected(i, j)) &#123;</span><br><span class="line">					ret++;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">clearGraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		matrix.<span class="built_in">clear</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	std::vector&lt;std::vector&lt;<span class="type">uint32_t</span>&gt;&gt; matrix;</span><br><span class="line">	</span><br><span class="line">	<span class="type">bool</span> _if_connected(<span class="type">uint32_t</span> index_1, <span class="type">uint32_t</span> index_2) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;matrix[index_1][index_2] != UNCONNECTED &amp;&amp; index_1 != index_2;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	std::vector&lt;<span class="type">uint32_t</span>&gt; _get_neighbors(<span class="type">uint32_t</span> index) &#123;</span><br><span class="line">		std::vector&lt;<span class="type">uint32_t</span>&gt; ret;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; matrix[index].<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">			<span class="keyword">if</span> (_if_connected(index, i)) &#123;</span><br><span class="line">				ret.<span class="built_in">push_back</span>(i);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">int</span> _get_value(<span class="type">uint32_t</span> pos_1, <span class="type">uint32_t</span> pos_2) &#123;</span><br><span class="line">		<span class="keyword">return</span> matrix[pos_1][pos_2];</span><br><span class="line">	&#125;</span><br><span class="line">	std::vector&lt;IndexEdge&gt; _get_all_edges() &#123;</span><br><span class="line">		std::vector&lt;IndexEdge&gt; ret;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;matrix.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> j = i + <span class="number">1</span>; j &lt; <span class="keyword">this</span>-&gt;matrix.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">				<span class="keyword">if</span> (matrix[i][j] != UNCONNECTED) &#123;</span><br><span class="line">					ret.<span class="built_in">push_back</span>(<span class="built_in">IndexEdge</span>(i, j, matrix[i][j]));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="图上的8种泛型算法"><a class="markdownIt-Anchor" href="#图上的8种泛型算法"></a> 图上的8种泛型算法</h2>
 <h3 id="前言-2"><a class="markdownIt-Anchor" href="#前言-2"></a> 前言</h3>
 <p>我们实现了8种泛型图算法。“泛型”一词的意思是，这算法不与特定具体实现相关。只要特定具体实现实现了我们在算法中用到的各种函数，就可以使用该算法。</p>
 <p>这是怎么做到的呢？这里采用了继承的方法。</p>
 <p>我们首先将图中的每个元素与序号（一个整数）建立映射关系，下面的算法就都使用序号进行操作。这个行为被封装为IndexMapping类：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;&gt;
-class IndexMapping &#123;
-public:
-	uint32_t getIndex(Vertex&amp; v) &#123;
-		return this-&gt;valueToIndex.at(v.val);
-	&#125;
-	value getValue(uint32_t index) &#123;
-		return this-&gt;indexToValue.at(index);
-	&#125;
-	uint32_t addVertexToMap(Vertex&amp; v) &#123;
-		this-&gt;indexToValue.push_back(v.val);
-		this-&gt;valueToIndex.insert(
-			std::pair&lt;value, uint32_t&gt;(v.val, this-&gt;indexToValue.size() - 1));
-		return this-&gt;indexToValue.size() - 1;
-	&#125;
-	uint32_t removeVertexFromMap(Vertex&amp; v) &#123;
-		int index_v &#x3D; this-&gt;getIndex(v);
-		this-&gt;indexToValue.erase(indexToValue.begin() + index_v);
-		for (auto i &#x3D; valueToIndex.begin(); i !&#x3D; valueToIndex.end();) &#123;
-			if ((*i).second &#x3D;&#x3D; index_v) &#123;
-				i &#x3D; valueToIndex.erase(i);
-			&#125;
-			else &#123;
-				if ((*i).second &gt; index_v) &#123;
-					(*i).second--;
-				&#125;
-				i++;
-			&#125;
-		&#125;
-		return index_v;
-	&#125;
-private:
-	std::map&lt;value, uint32_t&gt; valueToIndex;
-	std::vector&lt;value&gt; indexToValue;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>, <span class="keyword">class</span> <span class="title class_">Vertex</span> = stdVertex&lt;value&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> IndexMapping &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">uint32_t</span> <span class="built_in">getIndex</span>(Vertex&amp; v) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;valueToIndex.<span class="built_in">at</span>(v.val);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function">value <span class="title">getValue</span><span class="params">(<span class="type">uint32_t</span> index)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;indexToValue.<span class="built_in">at</span>(index);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">uint32_t</span> <span class="title">addVertexToMap</span><span class="params">(Vertex&amp; v)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;indexToValue.<span class="built_in">push_back</span>(v.val);</span><br><span class="line">		<span class="keyword">this</span>-&gt;valueToIndex.<span class="built_in">insert</span>(</span><br><span class="line">			std::<span class="built_in">pair</span>&lt;value, <span class="type">uint32_t</span>&gt;(v.val, <span class="keyword">this</span>-&gt;indexToValue.<span class="built_in">size</span>() - <span class="number">1</span>));</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;indexToValue.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">uint32_t</span> <span class="title">removeVertexFromMap</span><span class="params">(Vertex&amp; v)</span> </span>&#123;</span><br><span class="line">		<span class="type">int</span> index_v = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(v);</span><br><span class="line">		<span class="keyword">this</span>-&gt;indexToValue.<span class="built_in">erase</span>(indexToValue.<span class="built_in">begin</span>() + index_v);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = valueToIndex.<span class="built_in">begin</span>(); i != valueToIndex.<span class="built_in">end</span>();) &#123;</span><br><span class="line">			<span class="keyword">if</span> ((*i).second == index_v) &#123;</span><br><span class="line">				i = valueToIndex.<span class="built_in">erase</span>(i);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> ((*i).second &gt; index_v) &#123;</span><br><span class="line">					(*i).second--;</span><br><span class="line">				&#125;</span><br><span class="line">				i++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> index_v;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	std::map&lt;value, <span class="type">uint32_t</span>&gt; valueToIndex;</span><br><span class="line">	std::vector&lt;value&gt; indexToValue;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>然后，用IndexGraph继承IndexMapping类和Graph类：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt; &gt;
-class IndexGraph : public Graph&lt;Vertex&gt;, public IndexMapping&lt;value, Vertex&gt; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>, <span class="keyword">class</span> <span class="title class_">Vertex</span> = stdVertex&lt;value&gt; &gt;</span><br><span class="line"><span class="keyword">class</span> IndexGraph : <span class="keyword">public</span> Graph&lt;Vertex&gt;, <span class="keyword">public</span> IndexMapping&lt;value, Vertex&gt; </span><br></pre></td></tr></table></figure>
 <p>最后，用一个具体类继承IndexGraph类：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">template&lt;class value, class Vertex &#x3D; stdVertex&lt;value&gt;, class VertexInner &#x3D; stdVertex&lt;uint32_t&gt;&gt;
-class ListGraph : public IndexGraph&lt;value, Vertex&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">value</span>, <span class="keyword">class</span> <span class="title class_">Vertex</span> = stdVertex&lt;value&gt;, <span class="keyword">class</span> VertexInner = stdVertex&lt;<span class="type">uint32_t</span>&gt;&gt;</span><br><span class="line"><span class="keyword">class</span> ListGraph : <span class="keyword">public</span> IndexGraph&lt;value, Vertex&gt;</span><br></pre></td></tr></table></figure>
 <p>有开发经验的人恐怕立刻就会想到我要做什么了。现在只要在IndexGraph类中实现基于整形标记的各种图上算法，各个具体子类就会自动地获得运行这些算法的能力！</p>
 <p>下面，我们就来实际地看一下这些算法。</p>
 <p>注：所有算法都是IndexGraph的成员函数，public, private, protected是c++成员函数可见性的声明。</p>
@@ -551,88 +281,21 @@ class ListGraph : public IndexGraph&lt;value, Vertex&gt;<span aria-hidden="true"
 <p>深度优先搜索算法（英语：Depth-First-Search，DFS）是一种用于遍历或搜索树或图的算法。沿着树的深度遍历树的节点，尽可能深的搜索树的分支。当节点v的所在边都己被探寻过，搜索将回溯到发现节点v的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止。<br />
 我们实现如下：</p>
 </blockquote>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
-	&#x2F;* Depth First Search *&#x2F;
-	void DFS(std::function&lt;void(Vertex)&gt; do_something, Vertex start) &#123;
-		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), false);
-		uint32_t start_index &#x3D; this-&gt;getIndex(start);
-		this-&gt;STD_DFS(do_something, start_index);
-	&#125;
-private:
-	void STD_DFS(std::function&lt;void(Vertex)&gt; do_something, uint32_t vertex) &#123;
-		do_something(Vertex(this-&gt;getValue(vertex)));
-		help_vec_8[vertex] &#x3D; true;
-		std::vector&lt;uint32_t&gt; list &#x3D; this-&gt;_get_neighbors(vertex);
-		for (auto i : list) &#123;
-			if (help_vec_8[i] &#x3D;&#x3D; false) &#123;
-				STD_DFS(do_something, i);
-			&#125;
-		&#125;
-	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">/* Depth First Search */</span></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">DFS</span><span class="params">(std::function&lt;<span class="type">void</span>(Vertex)&gt; do_something, Vertex start)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;help_vec_8 = std::<span class="built_in">vector</span>&lt;<span class="type">uint8_t</span>&gt;(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(), <span class="literal">false</span>);</span><br><span class="line">		<span class="type">uint32_t</span> start_index = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(start);</span><br><span class="line">		<span class="keyword">this</span>-&gt;<span class="built_in">STD_DFS</span>(do_something, start_index);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">STD_DFS</span><span class="params">(std::function&lt;<span class="type">void</span>(Vertex)&gt; do_something, <span class="type">uint32_t</span> vertex)</span> </span>&#123;</span><br><span class="line">		<span class="built_in">do_something</span>(<span class="built_in">Vertex</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getValue</span>(vertex)));</span><br><span class="line">		help_vec_8[vertex] = <span class="literal">true</span>;</span><br><span class="line">		std::vector&lt;<span class="type">uint32_t</span>&gt; list = <span class="keyword">this</span>-&gt;_get_neighbors(vertex);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i : list) &#123;</span><br><span class="line">			<span class="keyword">if</span> (help_vec_8[i] == <span class="literal">false</span>) &#123;</span><br><span class="line">				<span class="built_in">STD_DFS</span>(do_something, i);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>这里用到了一个函数_get_neighbors(uint32_t v)这个函数会返所有与v相邻的点。声明为：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">virtual std::vector&lt;uint32_t&gt; _get_neighbors(uint32_t index) &#x3D; 0;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">virtual</span> std::vector&lt;<span class="type">uint32_t</span>&gt; _get_neighbors(<span class="type">uint32_t</span> index) = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
 <h3 id="图的广度优先搜索算法"><a class="markdownIt-Anchor" href="#图的广度优先搜索算法"></a> 图的广度优先搜索算法</h3>
 <blockquote>
 <p>广度优先搜索算法（英语：Breadth-First-Search，缩写为BFS），又译作宽度优先搜索，或横向优先搜索，是一种图形搜索算法。简单的说，BFS是从根节点开始，沿着树的宽度遍历树的节点。如果所有节点均被访问，则算法中止。<br />
 我们实现如下：</p>
 </blockquote>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
-	void BFS(std::function&lt;void(Vertex)&gt; do_something, Vertex start) &#123;
-		auto _start &#x3D; this-&gt;getIndex(start);
-		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), 0);
-		std::queue&lt;uint32_t&gt; help_quene;
-		help_quene.push(_start);
-		for (;!help_quene.empty();) &#123;
-			uint32_t now &#x3D; help_quene.front();
-			help_quene.pop();
-			help_vec_8[now] &#x3D; true;
-			do_something(Vertex(this-&gt;getValue(now)));
-			auto neighbors &#x3D; this-&gt;_get_neighbors(now);
-			for (auto i : neighbors) &#123;
-				if (help_vec_8[i] !&#x3D; true) &#123;
-					help_quene.push(i);
-				&#125;
-			&#125;
-		&#125;
-	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">BFS</span><span class="params">(std::function&lt;<span class="type">void</span>(Vertex)&gt; do_something, Vertex start)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> _start = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(start);</span><br><span class="line">		<span class="keyword">this</span>-&gt;help_vec_8 = std::<span class="built_in">vector</span>&lt;<span class="type">uint8_t</span>&gt;(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(), <span class="number">0</span>);</span><br><span class="line">		std::queue&lt;<span class="type">uint32_t</span>&gt; help_quene;</span><br><span class="line">		help_quene.<span class="built_in">push</span>(_start);</span><br><span class="line">		<span class="keyword">for</span> (;!help_quene.<span class="built_in">empty</span>();) &#123;</span><br><span class="line">			<span class="type">uint32_t</span> now = help_quene.<span class="built_in">front</span>();</span><br><span class="line">			help_quene.<span class="built_in">pop</span>();</span><br><span class="line">			help_vec_8[now] = <span class="literal">true</span>;</span><br><span class="line">			<span class="built_in">do_something</span>(<span class="built_in">Vertex</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getValue</span>(now)));</span><br><span class="line">			<span class="keyword">auto</span> neighbors = <span class="keyword">this</span>-&gt;_get_neighbors(now);</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> i : neighbors) &#123;</span><br><span class="line">				<span class="keyword">if</span> (help_vec_8[i] != <span class="literal">true</span>) &#123;</span><br><span class="line">					help_quene.<span class="built_in">push</span>(i);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="用深度优先搜索判断是否有环"><a class="markdownIt-Anchor" href="#用深度优先搜索判断是否有环"></a> 用深度优先搜索判断是否有环</h3>
 <p>这个算法很简单，大意是将每个点分为三种状态:</p>
 <p>{已遍历，未遍历，遍历中}</p>
 <p>如果出现了一个{遍历中}的点被再次遍历的情况，那么有环，反之无环。</p>
 <p>实现如下：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
-#define RED 1
-#define WHITE 0
-#define GREEN -1
-	&#x2F;* if the graph have a ring *&#x2F;
-	bool ifRing() &#123;
-		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), WHITE);
-		uint32_t index &#x3D; 0;
-		this-&gt;RING_DFS(index);
-		return this-&gt;ring_hit;
-	&#125;
-private:
-	void RING_DFS(uint32_t index) &#123;
-		if (ring_hit &#x3D;&#x3D; true) &#123;
-			return;
-		&#125;
-		if (help_vec_8[index] &#x3D;&#x3D; RED) &#123;
-			ring_hit &#x3D; true;
-			return;
-		&#125;
-		else &#123;
-			help_vec_8[index] &#x3D; RED;
-			std::vector&lt;uint32_t&gt; list &#x3D; this-&gt;_get_neighbors(index);
-			for (auto i : list) &#123;
-				if (help_vec_8[i] !&#x3D; GREEN)
-				&#123;
-					RING_DFS(i);
-				&#125;
-			&#125;
-			help_vec_8[index] &#x3D; GREEN;
-		&#125;
-	&#125;
-	bool ring_hit;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RED 1</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> WHITE 0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GREEN -1</span></span><br><span class="line">	<span class="comment">/* if the graph have a ring */</span></span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">ifRing</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;help_vec_8 = std::<span class="built_in">vector</span>&lt;<span class="type">uint8_t</span>&gt;(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(), WHITE);</span><br><span class="line">		<span class="type">uint32_t</span> index = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">this</span>-&gt;<span class="built_in">RING_DFS</span>(index);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>-&gt;ring_hit;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">RING_DFS</span><span class="params">(<span class="type">uint32_t</span> index)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (ring_hit == <span class="literal">true</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (help_vec_8[index] == RED) &#123;</span><br><span class="line">			ring_hit = <span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			help_vec_8[index] = RED;</span><br><span class="line">			std::vector&lt;<span class="type">uint32_t</span>&gt; list = <span class="keyword">this</span>-&gt;_get_neighbors(index);</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> i : list) &#123;</span><br><span class="line">				<span class="keyword">if</span> (help_vec_8[i] != GREEN)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="built_in">RING_DFS</span>(i);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			help_vec_8[index] = GREEN;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">bool</span> ring_hit;</span><br></pre></td></tr></table></figure>
 <h3 id="用深度优先搜索进行拓扑排序"><a class="markdownIt-Anchor" href="#用深度优先搜索进行拓扑排序"></a> 用深度优先搜索进行拓扑排序</h3>
 <p>拓扑排序有一种不使用深度优先搜索、基于引用计数的算法，这里没有实现。我们实现的是稍微不太好理解的基于深度优先搜索的算法。</p>
 <p>这算法简单来说，就是基于这样一个事实</p>
@@ -641,35 +304,7 @@ private:
 </blockquote>
 <p>这个事实告诉我们，如果在一个点搜索完成时将这个点压入结果栈中，那么这个结果栈的顺序必然是一个拓扑排序序列的反序列<br />
 实现如下：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">public:
-&#x2F;* Topological Sort *&#x2F;
-	std::vector&lt;Vertex&gt; TopoSort() &#123;
-		if (ifRing()) &#123; throw std::runtime_error(&quot;can&#39;t sort because of ring!&quot;); &#125;
-		this-&gt;help_vec_8 &#x3D; std::vector&lt;uint8_t&gt;(this-&gt;getNumberOfVertices(), 0);
-		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
-			if (help_vec_8[i] !&#x3D; 1) &#123;
-				SORT_DFS(i);
-			&#125;
-		&#125;
-		std::reverse(this-&gt;sort_result_vec.begin(), this-&gt;sort_result_vec.end());
-		std::vector&lt;Vertex&gt; result_vec;
-		for (auto i : sort_result_vec) &#123;
-			result_vec.push_back(Vertex(this-&gt;getValue(i)));
-		&#125;
-		return result_vec;
-	&#125;
-private:
-		void SORT_DFS(uint32_t index)&#123;
-		this-&gt;help_vec_8[index] &#x3D; 1;
-		std::vector&lt;uint32_t&gt; neighbor &#x3D; this-&gt;_get_neighbors(index);
-		for (auto i : neighbor) &#123;
-			if (help_vec_8[i] !&#x3D; 1) &#123;
-				SORT_DFS(i);
-			&#125;
-		&#125;
-		sort_result_vec.push_back(index);
-	&#125;
-	std::vector&lt;int&gt; sort_result_vec;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">/* Topological Sort */</span></span><br><span class="line">	<span class="function">std::vector&lt;Vertex&gt; <span class="title">TopoSort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (ifRing()) &#123; <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;can&#x27;t sort because of ring!&quot;</span>); &#125;</span><br><span class="line">		<span class="keyword">this</span>-&gt;help_vec_8 = std::<span class="built_in">vector</span>&lt;<span class="type">uint8_t</span>&gt;(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(), <span class="number">0</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++i) &#123;</span><br><span class="line">			<span class="keyword">if</span> (help_vec_8[i] != <span class="number">1</span>) &#123;</span><br><span class="line">				<span class="built_in">SORT_DFS</span>(i);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		std::<span class="built_in">reverse</span>(<span class="keyword">this</span>-&gt;sort_result_vec.<span class="built_in">begin</span>(), <span class="keyword">this</span>-&gt;sort_result_vec.<span class="built_in">end</span>());</span><br><span class="line">		std::vector&lt;Vertex&gt; result_vec;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i : sort_result_vec) &#123;</span><br><span class="line">			result_vec.<span class="built_in">push_back</span>(<span class="built_in">Vertex</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getValue</span>(i)));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result_vec;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">		<span class="function"><span class="type">void</span> <span class="title">SORT_DFS</span><span class="params">(<span class="type">uint32_t</span> index)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;help_vec_8[index] = <span class="number">1</span>;</span><br><span class="line">		std::vector&lt;<span class="type">uint32_t</span>&gt; neighbor = <span class="keyword">this</span>-&gt;_get_neighbors(index);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i : neighbor) &#123;</span><br><span class="line">			<span class="keyword">if</span> (help_vec_8[i] != <span class="number">1</span>) &#123;</span><br><span class="line">				<span class="built_in">SORT_DFS</span>(i);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		sort_result_vec.<span class="built_in">push_back</span>(index);</span><br><span class="line">	&#125;</span><br><span class="line">	std::vector&lt;<span class="type">int</span>&gt; sort_result_vec;</span><br></pre></td></tr></table></figure>
 <h3 id="最小生成树prim算法"><a class="markdownIt-Anchor" href="#最小生成树prim算法"></a> 最小生成树–Prim算法</h3>
 <p>Prim 算法和Dijkstra 算法有些相似，其基本思想是选点，也就是将整个图划分为两个集合</p>
 <ul>
@@ -677,41 +312,7 @@ private:
 <li>未选出的点</li>
 </ul>
 <p>然后每次都在未选出点集合中选出与已选出的点集合距离最近的点。选择n次后，算法结束。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; Prim() &#123;
-	std::vector&lt;bool&gt; add_list(this-&gt;getNumberOfVertices(), false);
-	std::vector&lt;uint32_t&gt; father(this-&gt;getNumberOfVertices(), INT32_MAX);
-	std::vector&lt;int&gt; distance(this-&gt;getNumberOfVertices(), INT32_MAX);
-	std::vector&lt;std::pair&lt;int, int&gt;&gt; result_vec;
-
-	distance[0] &#x3D; 0;
-	father[0] &#x3D; 0;
-	for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
-		auto pos &#x3D; 0u;
-		auto min &#x3D; INT32_MAX;
-		for (auto j &#x3D; 0u; j &lt; distance.size(); ++j) &#123;
-			if ((distance[j] &lt; min)&amp;&amp; !add_list[j]) &#123;
-				pos &#x3D; j;
-				min &#x3D; distance[j];
-			&#125;
-		&#125;
-		add_list[pos] &#x3D; true;
-		for (auto j &#x3D; 0u; j &lt; distance.size(); ++j) &#123;
-			if ((distance[j] &gt; _get_value(pos, j)) &amp;&amp; !add_list[j]) &#123;
-				father[j] &#x3D; pos;
-				distance[j] &#x3D; _get_value(pos, j);
-			&#125;
-		&#125;
-	&#125;
-
-	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;
-	for (auto i &#x3D; 1u; i &lt; add_list.size();++i) &#123;
-		Vertex v_1(this-&gt;getValue(i));
-		Vertex v_2(this-&gt;getValue(father[i]));
-		std::pair&lt;Vertex, Vertex&gt; pair(v_1, v_2);
-		ret.push_back(pair);
-	&#125;
-	return ret;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; <span class="built_in">Prim</span>() &#123;</span><br><span class="line">	<span class="function">std::vector&lt;<span class="type">bool</span>&gt; <span class="title">add_list</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), <span class="literal">false</span>)</span></span>;</span><br><span class="line">	<span class="function">std::vector&lt;<span class="type">uint32_t</span>&gt; <span class="title">father</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), INT32_MAX)</span></span>;</span><br><span class="line">	<span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">distance</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), INT32_MAX)</span></span>;</span><br><span class="line">	std::vector&lt;std::pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt;&gt; result_vec;</span><br><span class="line"></span><br><span class="line">	distance[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">	father[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++i) &#123;</span><br><span class="line">		<span class="keyword">auto</span> pos = <span class="number">0u</span>;</span><br><span class="line">		<span class="keyword">auto</span> min = INT32_MAX;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0u</span>; j &lt; distance.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">			<span class="keyword">if</span> ((distance[j] &lt; min)&amp;&amp; !add_list[j]) &#123;</span><br><span class="line">				pos = j;</span><br><span class="line">				min = distance[j];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		add_list[pos] = <span class="literal">true</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0u</span>; j &lt; distance.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">			<span class="keyword">if</span> ((distance[j] &gt; _get_value(pos, j)) &amp;&amp; !add_list[j]) &#123;</span><br><span class="line">				father[j] = pos;</span><br><span class="line">				distance[j] = _get_value(pos, j);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">1u</span>; i &lt; add_list.<span class="built_in">size</span>();++i) &#123;</span><br><span class="line">		<span class="function">Vertex <span class="title">v_1</span><span class="params">(<span class="keyword">this</span>-&gt;getValue(i))</span></span>;</span><br><span class="line">		<span class="function">Vertex <span class="title">v_2</span><span class="params">(<span class="keyword">this</span>-&gt;getValue(father[i]))</span></span>;</span><br><span class="line">		<span class="function">std::pair&lt;Vertex, Vertex&gt; <span class="title">pair</span><span class="params">(v_1, v_2)</span></span>;</span><br><span class="line">		ret.<span class="built_in">push_back</span>(pair);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="最小生成树-kruskal算法"><a class="markdownIt-Anchor" href="#最小生成树-kruskal算法"></a> 最小生成树 – Kruskal算法</h3>
 <p>这个算法的基本思想是选边。将这个图中所有的边划分为两个集合：</p>
 <ul>
@@ -720,78 +321,9 @@ private:
 </ul>
 <p>然后每一次选择时，选择未选出集合中边权最小的边加入已选出集合，然后测试，若加入后形成了环，则删掉这个边，再选择次小边，直到加入后不形成环为止。<br />
 这样选择N - 1次后，算法结束。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; Kruskal() &#123;
-	std::vector&lt;IndexEdge&gt; vec &#x3D; this-&gt;_get_all_edges();
-	std::sort(vec.begin(), vec.end());
-	auto i &#x3D; vec.begin();
-	auto count &#x3D; 0U;
-	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;
-	IndexDSet&lt;&gt; set(this-&gt;getNumberOfVertices());
-	for (; count &lt; this-&gt;getNumberOfVertices() - 1;) &#123;
-		auto v_1 &#x3D; (*i).edge.first;
-		auto v_2 &#x3D; (*i).edge.second;
-		&#x2F;* retrun true means we don&#39;t have a ring after merge *&#x2F;
-		if (set.mergeTwoSet(v_1, v_2)) &#123;
-			ret.push_back(std::pair&lt;Vertex, Vertex&gt;( 
-				Vertex(this-&gt;getValue(v_1)), Vertex(this-&gt;getValue(v_2))));
-			count++;
-		&#125;
-		i++;
-	&#125;
-	return ret;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; <span class="built_in">Kruskal</span>() &#123;</span><br><span class="line">	std::vector&lt;IndexEdge&gt; vec = <span class="keyword">this</span>-&gt;_get_all_edges();</span><br><span class="line">	std::<span class="built_in">sort</span>(vec.<span class="built_in">begin</span>(), vec.<span class="built_in">end</span>());</span><br><span class="line">	<span class="keyword">auto</span> i = vec.<span class="built_in">begin</span>();</span><br><span class="line">	<span class="keyword">auto</span> count = <span class="number">0U</span>;</span><br><span class="line">	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;</span><br><span class="line">	IndexDSet&lt;&gt; <span class="built_in">set</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>());</span><br><span class="line">	<span class="keyword">for</span> (; count &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>() - <span class="number">1</span>;) &#123;</span><br><span class="line">		<span class="keyword">auto</span> v_1 = (*i).edge.first;</span><br><span class="line">		<span class="keyword">auto</span> v_2 = (*i).edge.second;</span><br><span class="line">		<span class="comment">/* retrun true means we don&#x27;t have a ring after merge */</span></span><br><span class="line">		<span class="keyword">if</span> (set.<span class="built_in">mergeTwoSet</span>(v_1, v_2)) &#123;</span><br><span class="line">			ret.<span class="built_in">push_back</span>(std::<span class="built_in">pair</span>&lt;Vertex, Vertex&gt;( </span><br><span class="line">				<span class="built_in">Vertex</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getValue</span>(v_1)), <span class="built_in">Vertex</span>(<span class="keyword">this</span>-&gt;<span class="built_in">getValue</span>(v_2))));</span><br><span class="line">			count++;</span><br><span class="line">		&#125;</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里使用了并查集这种数据结构来判断是否有环。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#define IndexType uint32_t
-class DSNode &#123;
-public:
-	IndexType getParent() &#123;
-		return parent;
-	&#125;
-	void setParent(IndexType&amp; index) &#123;
-		this-&gt;parent &#x3D; index;
-	&#125;
-protected:
-	IndexType parent;
-&#125;;
-
-template &lt;class Node &#x3D; DSNode&gt;
-class IndexDSet &#123;
-public:
-	IndexDSet()&#123;&#125;
-	IndexDSet(IndexType count) &#123;
-		vec &#x3D; std::vector&lt;Node&gt;(count);
-		for (auto i &#x3D; 0u; i &lt; vec.size(); ++i) &#123;
-			this-&gt;vec[i].setParent(i);
-		&#125;
-	&#125;
-	IndexType getParent(IndexType target) &#123;
-		if (this-&gt;vec[target].getParent() &#x3D;&#x3D; target) &#123;
-			return target;
-		&#125;
-		else &#123;
-			return getParent(this-&gt;vec[target].getParent());
-		&#125;
-	&#125;
-	bool ifSame(IndexType ele_a, IndexType ele_b) &#123;
-		IndexType parent_a &#x3D; getParent(ele_a);
-		IndexType parent_b &#x3D; getParent(ele_b);
-		
-		return parent_a &#x3D;&#x3D; parent_b;
-	&#125;
-	bool mergeTwoSet(IndexType ele_a, IndexType ele_b)&#123;
-		IndexType parent_a &#x3D; getParent(ele_a);
-		IndexType parent_b &#x3D; getParent(ele_b);
-		if (parent_a &#x3D;&#x3D; parent_b) &#123;
-			return false;
-		&#125;
-		else &#123;
-			this-&gt;vec[parent_a].setParent(parent_b);
-			return true;
-		&#125;
-	&#125;
-protected:
-	std::vector&lt;Node&gt; vec;
-&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> IndexType uint32_t</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DSNode</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function">IndexType <span class="title">getParent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> parent;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">setParent</span><span class="params">(IndexType&amp; index)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;parent = index;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	IndexType parent;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">Node</span> = DSNode&gt;</span><br><span class="line"><span class="keyword">class</span> IndexDSet &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">IndexDSet</span>()&#123;&#125;</span><br><span class="line">	<span class="built_in">IndexDSet</span>(IndexType count) &#123;</span><br><span class="line">		vec = std::<span class="built_in">vector</span>&lt;Node&gt;(count);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; vec.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">			<span class="keyword">this</span>-&gt;vec[i].<span class="built_in">setParent</span>(i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function">IndexType <span class="title">getParent</span><span class="params">(IndexType target)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>-&gt;vec[target].<span class="built_in">getParent</span>() == target) &#123;</span><br><span class="line">			<span class="keyword">return</span> target;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="built_in">getParent</span>(<span class="keyword">this</span>-&gt;vec[target].<span class="built_in">getParent</span>());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">ifSame</span><span class="params">(IndexType ele_a, IndexType ele_b)</span> </span>&#123;</span><br><span class="line">		IndexType parent_a = <span class="built_in">getParent</span>(ele_a);</span><br><span class="line">		IndexType parent_b = <span class="built_in">getParent</span>(ele_b);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> parent_a == parent_b;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">mergeTwoSet</span><span class="params">(IndexType ele_a, IndexType ele_b)</span></span>&#123;</span><br><span class="line">		IndexType parent_a = <span class="built_in">getParent</span>(ele_a);</span><br><span class="line">		IndexType parent_b = <span class="built_in">getParent</span>(ele_b);</span><br><span class="line">		<span class="keyword">if</span> (parent_a == parent_b) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">this</span>-&gt;vec[parent_a].<span class="built_in">setParent</span>(parent_b);</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	std::vector&lt;Node&gt; vec;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="最短路径算法-dijkstra算法"><a class="markdownIt-Anchor" href="#最短路径算法-dijkstra算法"></a> 最短路径算法 – Dijkstra算法</h3>
 <p>Dijkstra 算法的基本思想是，将所有的点分为两类：</p>
 <ul>
@@ -800,78 +332,10 @@ protected:
 </ul>
 <p>使用一个集合存储所有点与源点的距离；</p>
 <p>每次都选出未选出集合中，距离源点（Prim算法中是已选出点的集合）最近的点，然后更新和这个点邻接的所有点与源点的距离。</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;PathNode&lt;value&gt;&gt; Dijkstra(Vertex&amp; start) &#123;
-		std::vector&lt;uint32_t&gt; father(this-&gt;getNumberOfVertices(), 0xffffffff);
-		std::vector&lt;int&gt; shortest(this-&gt;getNumberOfVertices(), INT_MAX);
-		std::vector&lt;bool&gt; mark(this-&gt;getNumberOfVertices(), false);
-		auto v &#x3D; this-&gt;getIndex(start);
-		bool end &#x3D; false;
-		shortest[v] &#x3D; 0;
-		father[v] &#x3D; v;
-		auto pos &#x3D; 0;
-		for (; !end;) &#123;
-			auto min &#x3D; INT_MAX;
-			end &#x3D; true;
-			for (auto i &#x3D; 0u; i &lt; shortest.size(); ++i) &#123;
-				if (mark[i] &#x3D;&#x3D; false &amp;&amp; shortest[i] !&#x3D; INT_MAX) &#123;
-					end &#x3D; false;
-				&#125;
-				if (shortest[i] &lt; min &amp;&amp; mark[i] &#x3D;&#x3D; false) &#123;
-					pos &#x3D; i;
-					min &#x3D; shortest[i];
-				&#125;
-			&#125;
-			mark[pos] &#x3D; true;
-			for (auto i &#x3D; 0u; i &lt; shortest.size(); ++i) &#123;
-				if (_get_value(pos, i) &#x3D;&#x3D; INT_MAX) &#123;
-					continue;
-				&#125;
-				if (shortest[i] &gt; shortest[pos] + _get_value(pos, i) &amp;&amp; mark[i] &#x3D;&#x3D; false) &#123;
-					father[i] &#x3D; pos;
-					shortest[i] &#x3D; shortest[pos] + _get_value(pos, i);
-				&#125;
-			&#125;
-		&#125;
-		std::vector&lt;PathNode&lt;value&gt;&gt; ret;
-		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices();++i) &#123;
-			PathNode&lt;value&gt; p(Vertex(this-&gt;getValue(father[i])), Vertex(this-&gt;getValue(i)), shortest[i]);
-			ret.push_back(p);
-		&#125;
-		return ret;
-	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;PathNode&lt;value&gt;&gt; <span class="built_in">Dijkstra</span>(Vertex&amp; start) &#123;</span><br><span class="line">		<span class="function">std::vector&lt;<span class="type">uint32_t</span>&gt; <span class="title">father</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), <span class="number">0xffffffff</span>)</span></span>;</span><br><span class="line">		<span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">shortest</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), INT_MAX)</span></span>;</span><br><span class="line">		<span class="function">std::vector&lt;<span class="type">bool</span>&gt; <span class="title">mark</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), <span class="literal">false</span>)</span></span>;</span><br><span class="line">		<span class="keyword">auto</span> v = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(start);</span><br><span class="line">		<span class="type">bool</span> end = <span class="literal">false</span>;</span><br><span class="line">		shortest[v] = <span class="number">0</span>;</span><br><span class="line">		father[v] = v;</span><br><span class="line">		<span class="keyword">auto</span> pos = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (; !end;) &#123;</span><br><span class="line">			<span class="keyword">auto</span> min = INT_MAX;</span><br><span class="line">			end = <span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; shortest.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">				<span class="keyword">if</span> (mark[i] == <span class="literal">false</span> &amp;&amp; shortest[i] != INT_MAX) &#123;</span><br><span class="line">					end = <span class="literal">false</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (shortest[i] &lt; min &amp;&amp; mark[i] == <span class="literal">false</span>) &#123;</span><br><span class="line">					pos = i;</span><br><span class="line">					min = shortest[i];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			mark[pos] = <span class="literal">true</span>;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; shortest.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">				<span class="keyword">if</span> (_get_value(pos, i) == INT_MAX) &#123;</span><br><span class="line">					<span class="keyword">continue</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (shortest[i] &gt; shortest[pos] + _get_value(pos, i) &amp;&amp; mark[i] == <span class="literal">false</span>) &#123;</span><br><span class="line">					father[i] = pos;</span><br><span class="line">					shortest[i] = shortest[pos] + _get_value(pos, i);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		std::vector&lt;PathNode&lt;value&gt;&gt; ret;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>();++i) &#123;</span><br><span class="line">			<span class="function">PathNode&lt;value&gt; <span class="title">p</span><span class="params">(Vertex(<span class="keyword">this</span>-&gt;getValue(father[i])), Vertex(<span class="keyword">this</span>-&gt;getValue(i)), shortest[i])</span></span>;</span><br><span class="line">			ret.<span class="built_in">push_back</span>(p);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="最短路径算法-flyod算法"><a class="markdownIt-Anchor" href="#最短路径算法-flyod算法"></a> 最短路径算法 – Flyod算法</h3>
 <p>这是一个很有趣的算法，也可以用来求传递闭包，这里不过多解释：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;PathNode&lt;value&gt;&gt; Floyd(Vertex v_1) &#123;
-	auto temp &#x3D; std::vector&lt;std::vector&lt;int&gt;&gt;(this-&gt;getNumberOfVertices(), 
-		std::vector&lt;int&gt;(this-&gt;getNumberOfVertices(), INT_MAX));
-	
-	for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
-		for (auto j &#x3D; 0u; j &lt; this-&gt;getNumberOfVertices(); ++j) &#123;
-			temp[i][j] &#x3D; this-&gt;_get_value(i, j);
-		&#125;
-	&#125;
-
-	for (auto k &#x3D; 0u; k &lt; this-&gt;getNumberOfVertices(); ++k) &#123;
-		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
-			for (auto j &#x3D; 0u; j &lt; this-&gt;getNumberOfVertices(); ++j) &#123;
-				if (temp[i][k] &#x3D;&#x3D; INT_MAX || temp[k][j] &#x3D;&#x3D; INT_MAX) &#123;
-					continue;
-				&#125;
-				if (temp[i][j] &gt; temp[i][k] + temp[k][j]) &#123;
-					temp[i][j] &#x3D; temp[i][k] + temp[k][j];
-				&#125;
-			&#125;
-		&#125;
-	&#125;
-
-	auto v &#x3D; this-&gt;getIndex(v_1);
-	std::vector&lt;PathNode&lt;value&gt;&gt; ret;
-	for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
-		PathNode&lt;value&gt; temp_node(Vertex(this-&gt;getValue(v)), Vertex(this-&gt;getValue(i)), temp[v][i]);
-		ret.push_back(temp_node);
-	&#125;
-	return ret;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;PathNode&lt;value&gt;&gt; <span class="built_in">Floyd</span>(Vertex v_1) &#123;</span><br><span class="line">	<span class="keyword">auto</span> temp = std::vector&lt;std::vector&lt;<span class="type">int</span>&gt;&gt;(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(), </span><br><span class="line">		std::<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(<span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(), INT_MAX));</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++i) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0u</span>; j &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++j) &#123;</span><br><span class="line">			temp[i][j] = <span class="keyword">this</span>-&gt;_get_value(i, j);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> k = <span class="number">0u</span>; k &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++k) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++i) &#123;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0u</span>; j &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++j) &#123;</span><br><span class="line">				<span class="keyword">if</span> (temp[i][k] == INT_MAX || temp[k][j] == INT_MAX) &#123;</span><br><span class="line">					<span class="keyword">continue</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (temp[i][j] &gt; temp[i][k] + temp[k][j]) &#123;</span><br><span class="line">					temp[i][j] = temp[i][k] + temp[k][j];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">auto</span> v = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(v_1);</span><br><span class="line">	std::vector&lt;PathNode&lt;value&gt;&gt; ret;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++i) &#123;</span><br><span class="line">		<span class="function">PathNode&lt;value&gt; <span class="title">temp_node</span><span class="params">(Vertex(<span class="keyword">this</span>-&gt;getValue(v)), Vertex(<span class="keyword">this</span>-&gt;getValue(i)), temp[v][i])</span></span>;</span><br><span class="line">		ret.<span class="built_in">push_back</span>(temp_node);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="两个专用算法-邻接表上的堆优化dijkstra算法和prim算法"><a class="markdownIt-Anchor" href="#两个专用算法-邻接表上的堆优化dijkstra算法和prim算法"></a> 两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</h2>
 <p>为什么要进行堆优化？可能有人会说是因为要实现<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mi>V</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Elog(V)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mclose">)</span></span></span></span>的复杂度，但对我们这种算法初学者来说，速度不是学习的重点。</p>
 <p>实际上，这是来源于我们对Dijkstra算法的实现很不自然：</p>
@@ -887,73 +351,9 @@ protected:
 <p>但是这里还有一个问题，如何更新堆中的元素呢？我们无法用std::priority_queue更新，因为它没有顺序迭代器。</p>
 <p>这个问题的答案是不需要做任何更新，而是无脑地加入。因为 <em>距离源点最小的元素会被最先选出</em> 所以即使有两个重复的元素，也是我们需要的、距离源点较近的元素先被选出，而当距离源点较远的点被选出时，<em>结果集已经被距离源点较近的点更新过了</em>，对所有与它邻接的点，都不会触发更新条件，也就对结果没有影响了。<br />
 实现代码如下：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">typedef std::pair&lt;uint32_t, int&gt; P;
-	&#x2F;* only when use listGraph, fastDijkstra is faster than normal Dijkstra *&#x2F;
-	std::vector&lt;PathNode&lt;value&gt;&gt; fastDijkstra(Vertex&amp; start) &#123;
-		std::vector&lt;uint32_t&gt; father(this-&gt;getNumberOfVertices(), 0xffffffff);
-		std::vector&lt;int&gt; shortest(this-&gt;getNumberOfVertices(), INT_MAX);
-
-		&#x2F;&#x2F; pair.first means index, pair.second means distance
-		auto cmp &#x3D; [](auto i, auto j) &#123; return i.second &gt; j.second; &#125;;
-		std::priority_queue &lt; P, std::vector&lt;P&gt;, std::function&lt;bool(P, P)&gt;&gt; que(cmp);
-
-		auto start_index &#x3D; this-&gt;getIndex(start);
-		que.push(P(start_index, 0));
-		shortest[start_index] &#x3D; 0;
-		father[start_index] &#x3D; start_index;
-
-		while (!que.empty())
-		&#123;
-			auto now &#x3D; que.top();
-			que.pop();
-
-			int distance_now &#x3D; now.second;
-			for (auto i : this-&gt;adjList[now.first]) &#123;
-				if (shortest[i.val] &gt; i.edge_value + distance_now) &#123;
-					shortest[i.val] &#x3D; i.edge_value + distance_now;
-					father[i.val] &#x3D; now.first;
-					que.push(P(i.val, shortest[i.val]));
-				&#125;
-			&#125;
-		&#125;
-		std::vector&lt;PathNode&lt;value&gt;&gt; ret;
-		for (auto i &#x3D; 0u; i &lt; this-&gt;getNumberOfVertices(); ++i) &#123;
-			PathNode&lt;value&gt; p(Vertex(this-&gt;getValue(father[i])), Vertex(this-&gt;getValue(i)), shortest[i]);
-			ret.push_back(p);
-		&#125;
-		return ret;
-	&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> std::pair&lt;<span class="type">uint32_t</span>, <span class="type">int</span>&gt; P;</span><br><span class="line">	<span class="comment">/* only when use listGraph, fastDijkstra is faster than normal Dijkstra */</span></span><br><span class="line">	std::vector&lt;PathNode&lt;value&gt;&gt; <span class="built_in">fastDijkstra</span>(Vertex&amp; start) &#123;</span><br><span class="line">		<span class="function">std::vector&lt;<span class="type">uint32_t</span>&gt; <span class="title">father</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), <span class="number">0xffffffff</span>)</span></span>;</span><br><span class="line">		<span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">shortest</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), INT_MAX)</span></span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// pair.first means index, pair.second means distance</span></span><br><span class="line">		<span class="keyword">auto</span> cmp = [](<span class="keyword">auto</span> i, <span class="keyword">auto</span> j) &#123; <span class="keyword">return</span> i.second &gt; j.second; &#125;;</span><br><span class="line">		std::priority_queue &lt; P, std::vector&lt;P&gt;, std::function&lt;<span class="type">bool</span>(P, P)&gt;&gt; <span class="built_in">que</span>(cmp);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">auto</span> start_index = <span class="keyword">this</span>-&gt;<span class="built_in">getIndex</span>(start);</span><br><span class="line">		que.<span class="built_in">push</span>(<span class="built_in">P</span>(start_index, <span class="number">0</span>));</span><br><span class="line">		shortest[start_index] = <span class="number">0</span>;</span><br><span class="line">		father[start_index] = start_index;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> (!que.<span class="built_in">empty</span>())</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">auto</span> now = que.<span class="built_in">top</span>();</span><br><span class="line">			que.<span class="built_in">pop</span>();</span><br><span class="line"></span><br><span class="line">			<span class="type">int</span> distance_now = now.second;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">auto</span> i : <span class="keyword">this</span>-&gt;adjList[now.first]) &#123;</span><br><span class="line">				<span class="keyword">if</span> (shortest[i.val] &gt; i.edge_value + distance_now) &#123;</span><br><span class="line">					shortest[i.val] = i.edge_value + distance_now;</span><br><span class="line">					father[i.val] = now.first;</span><br><span class="line">					que.<span class="built_in">push</span>(<span class="built_in">P</span>(i.val, shortest[i.val]));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		std::vector&lt;PathNode&lt;value&gt;&gt; ret;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0u</span>; i &lt; <span class="keyword">this</span>-&gt;<span class="built_in">getNumberOfVertices</span>(); ++i) &#123;</span><br><span class="line">			<span class="function">PathNode&lt;value&gt; <span class="title">p</span><span class="params">(Vertex(<span class="keyword">this</span>-&gt;getValue(father[i])), Vertex(<span class="keyword">this</span>-&gt;getValue(i)), shortest[i])</span></span>;</span><br><span class="line">			ret.<span class="built_in">push_back</span>(p);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ret;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>Prim算法同理，只不过这时需要打上标记（因为是无向图，不打上标记的话会重复选择）：</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; fastPrim() &#123;
-	std::vector&lt;temp_edge&gt; vec(this-&gt;getNumberOfVertices(), temp_edge(0xfffffff, INT32_MAX));
-	auto begin &#x3D; 0;
-	
-	auto cmp &#x3D; [](auto i, auto j) &#123; return i.second &gt; j.second; &#125;;
-	std::priority_queue&lt;P, std::vector&lt;P&gt;, std::function&lt;bool(P, P)&gt; &gt; pq(cmp);
-
-	pq.push(P(begin, 0));
-	while (!pq.empty()) &#123;
-		auto now &#x3D; pq.top();
-		pq.pop();
-		vec[now.first].mark &#x3D; true;
-		for (auto i : this-&gt;adjList[now.first]) &#123;
-			if (vec[i.val].value &gt; i.edge_value &amp;&amp; vec[i.val].mark &#x3D;&#x3D; false) &#123;
-				vec[i.val].father &#x3D; now.first;
-				vec[i.val].value &#x3D; i.edge_value;
-				pq.push(P(i.val, i.edge_value));
-			&#125;
-		&#125;
-	&#125;
-
-	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;
-	for (auto i &#x3D; 1u; i &lt; vec.size(); ++i) &#123;
-		Vertex v_1(this-&gt;getValue(i));
-		Vertex v_2(this-&gt;getValue(vec[i].father));
-		std::pair&lt;Vertex, Vertex&gt; pair(v_1, v_2);
-		ret.push_back(pair);
-	&#125;
-	return ret;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; <span class="built_in">fastPrim</span>() &#123;</span><br><span class="line">	<span class="function">std::vector&lt;temp_edge&gt; <span class="title">vec</span><span class="params">(<span class="keyword">this</span>-&gt;getNumberOfVertices(), temp_edge(<span class="number">0xfffffff</span>, INT32_MAX))</span></span>;</span><br><span class="line">	<span class="keyword">auto</span> begin = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">auto</span> cmp = [](<span class="keyword">auto</span> i, <span class="keyword">auto</span> j) &#123; <span class="keyword">return</span> i.second &gt; j.second; &#125;;</span><br><span class="line">	std::priority_queue&lt;P, std::vector&lt;P&gt;, std::function&lt;<span class="type">bool</span>(P, P)&gt; &gt; <span class="built_in">pq</span>(cmp);</span><br><span class="line"></span><br><span class="line">	pq.<span class="built_in">push</span>(<span class="built_in">P</span>(begin, <span class="number">0</span>));</span><br><span class="line">	<span class="keyword">while</span> (!pq.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">		<span class="keyword">auto</span> now = pq.<span class="built_in">top</span>();</span><br><span class="line">		pq.<span class="built_in">pop</span>();</span><br><span class="line">		vec[now.first].mark = <span class="literal">true</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> i : <span class="keyword">this</span>-&gt;adjList[now.first]) &#123;</span><br><span class="line">			<span class="keyword">if</span> (vec[i.val].value &gt; i.edge_value &amp;&amp; vec[i.val].mark == <span class="literal">false</span>) &#123;</span><br><span class="line">				vec[i.val].father = now.first;</span><br><span class="line">				vec[i.val].value = i.edge_value;</span><br><span class="line">				pq.<span class="built_in">push</span>(<span class="built_in">P</span>(i.val, i.edge_value));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	std::vector&lt;std::pair&lt;Vertex, Vertex&gt;&gt; ret;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">1u</span>; i &lt; vec.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">		<span class="function">Vertex <span class="title">v_1</span><span class="params">(<span class="keyword">this</span>-&gt;getValue(i))</span></span>;</span><br><span class="line">		<span class="function">Vertex <span class="title">v_2</span><span class="params">(<span class="keyword">this</span>-&gt;getValue(vec[i].father))</span></span>;</span><br><span class="line">		<span class="function">std::pair&lt;Vertex, Vertex&gt; <span class="title">pair</span><span class="params">(v_1, v_2)</span></span>;</span><br><span class="line">		ret.<span class="built_in">push_back</span>(pair);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     

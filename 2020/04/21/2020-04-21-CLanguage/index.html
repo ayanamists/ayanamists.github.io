@@ -15,15 +15,15 @@
 <link rel="stylesheet" href="/css/highlight.css">
 
   
-  <meta name="description" content="正确理解函数名 只有正确理解函数名，才能正确使用函数指针。 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的： typedef void(*p)();  void func()&amp;#123;&amp;#125;  p po">
+  <meta name="description" content="正确理解函数名 只有正确理解函数名，才能正确使用函数指针。 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的： 123456typedef void(*p)();void func()&amp;#123;&amp;#125;p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="谈谈C语言的两个问题">
 <meta property="og:url" content="https://ayanamists.xyz/2020/04/21/2020-04-21-CLanguage/index.html">
 <meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="正确理解函数名 只有正确理解函数名，才能正确使用函数指针。 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的： typedef void(*p)();  void func()&amp;#123;&amp;#125;  p po">
+<meta property="og:description" content="正确理解函数名 只有正确理解函数名，才能正确使用函数指针。 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的： 123456typedef void(*p)();void func()&amp;#123;&amp;#125;p">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-21T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-11T08:33:49.316Z">
+<meta property="article:modified_time" content="2022-04-11T09:04:49.975Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="C语言">
 <meta property="article:tag" content="函数指针">
@@ -74,7 +74,7 @@
           <time class="article-date" datetime="2020-04-21T00:00:00.000Z" itemprop="datePublished">2020-04-21</time>
 
           
-            × <span class="article-word-count">794 words</span>
+            × <span class="article-word-count">792 words</span>
             
             × <span class="article-time-to-read">2 minutes</span>
             
@@ -89,41 +89,17 @@
 <p>只有正确理解函数名，才能正确使用函数指针。</p>
 <p>函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。</p>
 <p>我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">void</span><span class="token punctuation">(</span><span class="token operator">*</span>p<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-
-p pointer <span class="token operator">=</span> func<span class="token punctuation">;</span> <span class="token comment">//写法1</span>
-p pointer <span class="token operator">=</span> <span class="token operator">&amp;</span>func<span class="token punctuation">;</span> <span class="token comment">//写法2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span><span class="params">(*p)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">p pointer = func; <span class="comment">//写法1</span></span><br><span class="line">p pointer = &amp;func; <span class="comment">//写法2</span></span><br></pre></td></tr></table></figure>
 <p>有些人会这样解释：对一个函数取地址仍然得到函数本身。</p>
 <p>用这个解释，我们可以解决&amp;&amp;func、&amp;&amp;&amp;func的问题，它们仍然会得到func本身。但我们很快就会觉得前一种写法本身与其他指针不太相容，比如说，你永远无法写出这样的代码：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> p <span class="token operator">=</span> a<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> p = a;</span><br></pre></td></tr></table></figure>
 <p>这么想来，我们不得不怀疑<em>对一个函数取地址仍然得到函数本身</em>这个说法的合理性。其实，问题的关键在于函数名究竟被处理为了什么。</p>
 <p>答案很简单，<strong>函数名被处理为一个地址字面量值</strong>。</p>
 <p>无论你对此有何评价，Clang、MSVC、GCC都是这样实现的。基于此，我们应该理解</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">p pointer <span class="token operator">=</span> func<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p pointer = func;</span><br></pre></td></tr></table></figure>
 <p>的真正意思是，把func的地址赋给pointer。</p>
 <p>所以，我们不能这样去写程序：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">
-<span class="token comment">//main.c</span>
-<span class="token keyword">typedef</span> <span class="token keyword">void</span><span class="token punctuation">(</span><span class="token operator">*</span>p<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">extern</span> p func<span class="token punctuation">;</span>
-
-<span class="token function">func2</span><span class="token punctuation">(</span>p func<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-  <span class="token function">func2</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">//func.c</span>
-
-<span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//main.c</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span><span class="params">(*p)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> p func;</span><br><span class="line"></span><br><span class="line">func2(p func)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">  func2(func);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//func.c</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">()</span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果这么写，你会惊喜地发现func2函数传入的是func函数编译后的二进制代码的前四位。这是因为编译器认为main.c中的func是一个变量，而对其取地址。但实际上func是一个字面量，本身就是要取的地址中的值了。</p>
 <p>你可能会问了，这种不正确的写法为什么还可以正常编译链接呢？</p>
 <p>这就要问问链接器了。</p>

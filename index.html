@@ -86,8 +86,7 @@
         <h2 id="类型推理"><a class="markdownIt-Anchor" href="#类型推理"></a> 类型推理</h2>
 <h3 id="什么是类型推理"><a class="markdownIt-Anchor" href="#什么是类型推理"></a> 什么是类型推理</h3>
 <p>程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：</p>
-<pre class="line-numbers language-fsharp" data-language="fsharp"><code class="language-fsharp"><span class="token keyword">let</span> t <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">let</span> f x <span class="token operator">=</span> x <span class="token operator">+</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> t <span class="operator">=</span> <span class="number">1</span> <span class="operator">+</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> f x <span class="operator">=</span> x <span class="operator">+</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <p>这里的<code>t</code>、<code>f</code>、<code>x</code>三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。</p>
 <p>还有一些时候，给出类型并不是很容易的事情，例如：</p>
       
@@ -105,7 +104,7 @@
 
 
   
-    <article id="blog-uni-intro-elim" class="article article-type-blog" itemprop="blogPost" itemscope>
+    <article id="post-uni-intro-elim" class="article article-type-post" itemprop="blogPost" itemscope>
   <div class="article-inner">
     
       <header class="article-header">
@@ -176,9 +175,9 @@
           <time class="article-date" datetime="2021-09-14T15:53:47.000Z" itemprop="datePublished">2021-09-14</time>
 
           
-            × <span class="article-word-count">3.8k words</span>
+            × <span class="article-word-count">3.9k words</span>
             
-            × <span class="article-time-to-read">18 minutes</span>
+            × <span class="article-time-to-read">19 minutes</span>
             
           
         </div>
@@ -189,10 +188,7 @@
       
         <h2 id="c模板与参数多态"><a class="markdownIt-Anchor" href="#c模板与参数多态"></a> c++模板与参数多态</h2>
 <p>模板(template)是一种c++语言特性，类似于：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">T</span><span class="token operator">></span>
-T <span class="token function">id</span><span class="token punctuation">(</span>T x<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">return</span> x<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="function">T <span class="title">id</span><span class="params">(T x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里的<code>T</code>可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份<a target="_blank" rel="noopener" href="https://www.cs.bham.ac.uk/~hxt/2015/c-plus-plus/templates-slides.pdf">ppt</a>和这个<a target="_blank" rel="noopener" href="https://catonmat.net/cpp-polymorphism">网页</a>。</p>
 <p>然而这篇博客中，我将会说明，<strong>无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别</strong>。</p>
 <h2 id="到底什么是参数多态"><a class="markdownIt-Anchor" href="#到底什么是参数多态"></a> 到底什么是参数多态</h2>
@@ -230,7 +226,7 @@ T <span class="token function">id</span><span class="token punctuation">(</span>
           <time class="article-date" datetime="2021-08-29T15:55:30.000Z" itemprop="datePublished">2021-08-29</time>
 
           
-            × <span class="article-word-count">1.3k words</span>
+            × <span class="article-word-count">1.4k words</span>
             
             × <span class="article-time-to-read">6 minutes</span>
             
@@ -287,9 +283,9 @@ T <span class="token function">id</span><span class="token punctuation">(</span>
           <time class="article-date" datetime="2021-02-26T20:20:35.000Z" itemprop="datePublished">2021-02-26</time>
 
           
-            × <span class="article-word-count">1.4k words</span>
+            × <span class="article-word-count">1.5k words</span>
             
-            × <span class="article-time-to-read">5 minutes</span>
+            × <span class="article-time-to-read">6 minutes</span>
             
           
         </div>
@@ -301,23 +297,9 @@ T <span class="token function">id</span><span class="token punctuation">(</span>
         <h2 id="从错误处理说起"><a class="markdownIt-Anchor" href="#从错误处理说起"></a> 从错误处理说起</h2>
 <p>错误处理是编程语言中的古老话题，从CPU的某些信号，到C++、托管平台里的<code>exception</code>，都是某种形态的错误处理。</p>
 <p>在函数式语言中，我们一般采用<code>Result</code>或者说<code>Maybe</code>一类的东西做错误处理，例如说，在Haskell中定义自然数除法，可以这样定义：</p>
-<pre class="line-numbers language-haskell" data-language="haskell"><code class="language-haskell"><span class="token keyword">data</span> <span class="token constant">Nat</span> <span class="token operator">=</span> <span class="token constant">Zero</span> <span class="token operator">|</span> <span class="token constant">S</span> <span class="token constant">Nat</span> 
-  <span class="token keyword">deriving</span> <span class="token constant">Show</span>
-  
-<span class="token hvariable">sub</span> <span class="token hvariable">n</span> <span class="token constant">Zero</span> <span class="token operator">=</span> <span class="token hvariable">n</span>
-<span class="token hvariable">sub</span> <span class="token constant">Zero</span> <span class="token hvariable">n</span> <span class="token operator">=</span> <span class="token constant">Zero</span>
-<span class="token hvariable">sub</span> <span class="token punctuation">(</span><span class="token constant">S</span> <span class="token hvariable">n</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token constant">S</span> <span class="token hvariable">n'</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token hvariable">sub</span> <span class="token hvariable">n</span> <span class="token hvariable">n'</span>
-
-<span class="token hvariable">eqb</span> <span class="token constant">Zero</span> <span class="token hvariable">n</span> <span class="token operator">=</span> <span class="token constant">False</span>
-<span class="token hvariable">eqb</span> <span class="token punctuation">(</span><span class="token constant">S</span> <span class="token hvariable">n</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token constant">Zero</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token constant">True</span>
-<span class="token hvariable">eqb</span> <span class="token punctuation">(</span><span class="token constant">S</span> <span class="token hvariable">n</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token constant">S</span> <span class="token hvariable">n'</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token hvariable">eqb</span> <span class="token hvariable">n</span> <span class="token hvariable">n'</span>
-
-<span class="token comment">--除法定义</span>
-<span class="token hvariable">ndiv</span> <span class="token constant">Zero</span> <span class="token hvariable">n'</span> <span class="token operator">=</span> <span class="token constant">Zero</span>
-<span class="token hvariable">ndiv</span> <span class="token hvariable">n</span> <span class="token hvariable">n'</span> <span class="token operator">=</span>
-  <span class="token keyword">if</span> <span class="token hvariable">eqb</span> <span class="token hvariable">n</span> <span class="token hvariable">n'</span> <span class="token keyword">then</span> <span class="token hvariable">ndiv</span> <span class="token punctuation">(</span><span class="token hvariable">sub</span> <span class="token hvariable">n</span> <span class="token hvariable">n'</span><span class="token punctuation">)</span> <span class="token hvariable">n'</span> <span class="token keyword">else</span> <span class="token hvariable">n</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Nat</span> = <span class="type">Zero</span> | <span class="type">S</span> <span class="type">Nat</span> </span></span><br><span class="line">  <span class="keyword">deriving</span> <span class="type">Show</span></span><br><span class="line">  </span><br><span class="line"><span class="title">sub</span> n <span class="type">Zero</span> = n</span><br><span class="line"><span class="title">sub</span> <span class="type">Zero</span> n = <span class="type">Zero</span></span><br><span class="line"><span class="title">sub</span> (<span class="type">S</span> n) (<span class="type">S</span> n&#x27;) = sub n n&#x27;</span><br><span class="line"></span><br><span class="line"><span class="title">eqb</span> <span class="type">Zero</span> n = <span class="type">False</span></span><br><span class="line"><span class="title">eqb</span> (<span class="type">S</span> n) (<span class="type">Zero</span>) = <span class="type">True</span></span><br><span class="line"><span class="title">eqb</span> (<span class="type">S</span> n) (<span class="type">S</span> n&#x27;) = eqb n n&#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment">--除法定义</span></span><br><span class="line"><span class="title">ndiv</span> <span class="type">Zero</span> n&#x27; = <span class="type">Zero</span></span><br><span class="line"><span class="title">ndiv</span> n n&#x27; =</span><br><span class="line">  <span class="keyword">if</span> eqb n n&#x27; <span class="keyword">then</span> ndiv (sub n n&#x27;) n&#x27; <span class="keyword">else</span> n</span><br></pre></td></tr></table></figure>
 <p>然而，这样定义并不能覆盖一个数学上无意义、计算上不停机的情况：</p>
-<pre class="line-numbers language-haskell" data-language="haskell"><code class="language-haskell"><span class="token hvariable">ndiv</span> <span class="token punctuation">(</span><span class="token constant">S</span> <span class="token constant">Zero</span><span class="token punctuation">)</span> <span class="token constant">Zero</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ndiv</span> (<span class="type">S</span> <span class="type">Zero</span>) <span class="type">Zero</span></span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -369,18 +351,7 @@ T <span class="token function">id</span><span class="token punctuation">(</span>
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span></span></span></span></span></p>
 <p>中的系数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span></span></span></span>的算法。</p>
 <p>我第一次看到的这个算法实现，来自于一位精通算法竞赛的同学，他给出的实现类似于</p>
-<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int exgcd(int a,int b,int &amp;x,int &amp;y)
-&#123;
-    if(b&#x3D;&#x3D;0)
-    &#123;
-        x &#x3D; 1; y &#x3D; 0; return a;
-    &#125;
-    int r &#x3D; exgcd(b, a % b, x, y);
-    int t &#x3D; y;
-    y &#x3D; x - (a &#x2F; b) * y;
-    x &#x3D; t;
-    return r;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">exgcd</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b,<span class="type">int</span> &amp;x,<span class="type">int</span> &amp;y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(b==<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        x = <span class="number">1</span>; y = <span class="number">0</span>; <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> r = <span class="built_in">exgcd</span>(b, a % b, x, y);</span><br><span class="line">    <span class="type">int</span> t = y;</span><br><span class="line">    y = x - (a / b) * y;</span><br><span class="line">    x = t;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -539,18 +510,9 @@ T <span class="token function">id</span><span class="token punctuation">(</span>
         <h2 id="gnu-mp库的c绑定"><a class="markdownIt-Anchor" href="#gnu-mp库的c绑定"></a> GNU MP库的C++绑定</h2>
 <p>GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。</p>
 <p>这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的<code>1+2</code>，那么应该这么写：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token class-name">mpz_t</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">;</span>
-<span class="token function">mpz_init_set_ui</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">mpz_init_set_ui</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">mpz_add</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">mpz_clear</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">mpz_clear</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">mpz_clear</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">mpz_t</span> a, b, c;</span><br><span class="line">mpz_init_set_ui(a, <span class="number">1</span>);</span><br><span class="line">mpz_init_set_ui(b, <span class="number">2</span>);</span><br><span class="line">mpz_add(c, a, b);</span><br><span class="line">mpz_clear(a);</span><br><span class="line">mpz_clear(b);</span><br><span class="line">mpz_clear(c);</span><br></pre></td></tr></table></figure>
 <p>说实话，这还不如直接写汇编来的简洁：</p>
-<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">mov $1, %eax
-mov $2, %ebx
-add %ebx, %eax
-mov %ecx, %eax<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov $1, %eax</span><br><span class="line">mov $2, %ebx</span><br><span class="line">add %ebx, %eax</span><br><span class="line">mov %ecx, %eax</span><br></pre></td></tr></table></figure>
       
     </div>
     

@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://pic.downk.cc/item/5faa41191cd1bbb86bb0d451.jpg">
 <meta property="og:image" content="https://pic.downk.cc/item/5faa41d91cd1bbb86bb10021.jpg">
 <meta property="article:published_time" content="2020-11-10T14:32:34.000Z">
-<meta property="article:modified_time" content="2022-04-11T08:33:49.320Z">
+<meta property="article:modified_time" content="2022-04-11T09:04:49.979Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="调试">
 <meta name="twitter:card" content="summary">
@@ -97,22 +97,13 @@
 <p>但是，在我的观念中，从C语言学习编程是很不正确的决定。</p>
 <p>不过从C语言开始学习编程也不是没有一点好处。如果某人从scheme等等有GC的语言开始学习编程的话的话，那么他到了某些不得不用<code>C/C++</code>写程序的时候，会陷入一些很麻烦的问题之中，其中之一，就是<code>C/C++</code>都可能会出现【裸错误】，或者说，在硬件层面、操作系统层面的错误，会毫无保留地送到程序员面前。</p>
 <p>比如说，考虑这样的C代码：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> a<span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-	a<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> a[<span class="number">10</span>];</span><br><span class="line">	a[<span class="number">10000</span>] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译运行之后，如果不出意外的话，shell会告诉你：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">➜  ~ .&#x2F;a            
-[1]    398 segmentation fault  .&#x2F;a<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./a            </span><br><span class="line">[1]    398 segmentation fault  ./a</span><br></pre></td></tr></table></figure>
 <p>这是什么意思？考虑一下scheme里类似的操作：</p>
-<pre class="line-numbers language-scheme" data-language="scheme"><code class="language-scheme"><span class="token punctuation">(</span><span class="token builtin">vector-ref</span> <span class="token punctuation">(</span><span class="token builtin">vector</span> <span class="token number">1</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token number">10000</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">vector-ref</span></span> (<span class="name"><span class="built_in">vector</span></span> <span class="number">1</span> <span class="number">2</span>) <span class="number">10000</span>)</span><br></pre></td></tr></table></figure>
 <p>scheme会告诉你：</p>
-<pre class="line-numbers language-scheme" data-language="scheme"><code class="language-scheme">> <span class="token punctuation">(</span><span class="token builtin">vector-ref</span> <span class="token punctuation">(</span><span class="token builtin">vector</span> <span class="token number">1</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token number">10000</span><span class="token punctuation">)</span>
-Exception in vector-ref: <span class="token number">10000</span> is not a valid index for #<span class="token punctuation">(</span><span class="token number">1</span> <span class="token number">2</span><span class="token punctuation">)</span>
-Type <span class="token punctuation">(</span><span class="token function">debug</span><span class="token punctuation">)</span> to enter the debugger.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">vector-ref</span></span> (<span class="name"><span class="built_in">vector</span></span> <span class="number">1</span> <span class="number">2</span>) <span class="number">10000</span>)</span><br><span class="line">Exception in vector-ref: <span class="number">10000</span> is not a valid index for #(<span class="name">1</span> <span class="number">2</span>)</span><br><span class="line">Type (<span class="name">debug</span>) to enter the debugger.</span><br></pre></td></tr></table></figure>
 <p>很显然，scheme在抱怨程序访问了<code>(vector 1 2)</code>这个只有两个元素的向量的第<code>10000</code>个元素，<strong>以一个异常（Exception）的形式</strong>。</p>
 <p>在scheme、java、C#等等几乎所有比较高级的（非纯函数式）语言中，任何的错误（这里指类似于访问两个元素是数组的<code>10000</code>个元素的错误）都会产生一个<strong>异常（Exception）</strong>，不会产生<code>segmentation fault</code>.</p>
 <p>然而，C语言没有这种能力。这来源于C语言的本质属性–原生。</p>
@@ -121,41 +112,17 @@ Type <span class="token punctuation">(</span><span class="token function">debug<
 <p>再比如说一个数组，（一般来说）它就是一段连续的内存，访问数组就是寻址。</p>
 <p>特别地，C语言里的【指针】，指针的值就是内存地址。</p>
 <p>比如说，</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> <span class="token operator">*</span>b <span class="token operator">=</span> <span class="token operator">&amp;</span>a<span class="token punctuation">;</span>
-<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%llx"</span><span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> *b = &amp;a;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%llx&quot;</span>, b);</span><br></pre></td></tr></table></figure>
 <p>运行编译好的程序会在不同时候打出不同的值，但它们的本质都是一样的 –  <code>a</code>这个变量的内存地址。</p>
 <p><img src="https://pic.downk.cc/item/5faa3b8d1cd1bbb86baf8a5c.jpg" alt="0" /></p>
 <p>到了这里，我们终于能够回答<code>segmentation fault</code>究竟是个什么东西了。实际上，这是所谓的【内存访问错误】，比如说这样的代码：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token operator">*</span>a <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-<span class="token operator">*</span>a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *a = <span class="literal">NULL</span>;</span><br><span class="line">*a = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
 <p>会出现<code>segmentation fault</code>，是因为现代计算机大都不允许使用<code>0</code>这一内存地址，访问它直接会引起操作系统层面的错误。</p>
 <p>至于它为什么叫这个名字，这和历史有关，不在此赘述。</p>
 <h2 id="原生程序的调试"><a class="markdownIt-Anchor" href="#原生程序的调试"></a> 原生程序的调试</h2>
 <p>关于如何调试原生程序，我想，首先我们要明确【为什么要进行调试】。</p>
 <p>进行调试，首先就是要<strong>确定错误位置</strong>。比如这样的代码：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-
-<span class="token keyword">void</span> <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">void</span> <span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">void</span> <span class="token function">c</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> <span class="token operator">*</span>a <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-	<span class="token operator">*</span>a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token function">c</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">b</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">c</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> *a = <span class="literal">NULL</span>;</span><br><span class="line">	*a = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	a();</span><br><span class="line">	b();</span><br><span class="line">	c();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>现在程序出了错误，你如何判断这个错误是在<code>a()</code>，还是在<code>b()</code>，抑或是在<code>c()</code>里触发的呢？</p>
 <p>有人会说，这不简单？看一眼就知道了。呵呵，这确实没有那么简单，如果<code>a(),b(),c()</code>每一个都有<code>1000</code>行呢？</p>
 <p>这个时候，我们必须借助调试器的力量。</p>
@@ -176,23 +143,9 @@ Type <span class="token punctuation">(</span><span class="token function">debug<
 <p><img src="https://pic.downk.cc/item/5faa3f501cd1bbb86bb07555.jpg" alt="4" /></p>
 <p>哈哈，原来是因为<code>a</code>这个变量里装的是<code>0x0</code>，所以才会引起错误。</p>
 <p>用这几招，我们可以解决大部分的<code>segmentation fault</code>问题。不过有些时候，我们还需要更进一步，比如下面的程序：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-
-<span class="token keyword">int</span> <span class="token function">div</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span> <span class="token keyword">int</span> b<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> c <span class="token operator">=</span> a <span class="token operator">/</span> b<span class="token punctuation">;</span>
-	<span class="token keyword">return</span> c<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">1000</span> <span class="token operator">-</span> <span class="token number">1000</span><span class="token punctuation">;</span>
-	<span class="token keyword">int</span> b <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token function">div</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">div</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> c = a / b;</span><br><span class="line">	<span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">1000</span> - <span class="number">1000</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">10</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, div(b, a));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这会造成：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">➜  <span class="token operator">~</span> <span class="token punctuation">.</span><span class="token operator">/</span>a            
-<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>    <span class="token number">567</span> floating point exception  <span class="token punctuation">.</span><span class="token operator">/</span>a<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./a            </span><br><span class="line">[<span class="number">1</span>]    <span class="number">567</span> floating point exception  ./a</span><br></pre></td></tr></table></figure>
 <p>用gdb调试，会出现:</p>
 <p><img src="https://pic.downk.cc/item/5faa41191cd1bbb86bb0d451.jpg" alt="5" /></p>
 <p>我们可以知道是因为<code>b=0</code>所以出了问题, 但我们更想知道, <strong>这问题到底是怎么发生的</strong>， 或者说， <strong>为什么</strong><code>b=0</code>了呢?</p>
