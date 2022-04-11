@@ -1,17 +1,220 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#7350B9"><meta name="author" content="ayanamists"><meta name="copyright" content="ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>aya ⊢ blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
-  [".post-card",".post-content img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
-});
-</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#7350B9"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/js/ui/banner.js" as="script"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
-    const Yun = window.Yun || {};
-    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":false},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta property="og:type" content="website">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>aya ⊢ blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta property="og:type" content="website">
 <meta property="og:title" content="aya ⊢ blog">
 <meta property="og:url" content="https://ayanamists.xyz/page/6/index.html">
 <meta property="og:site_name" content="aya ⊢ blog">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="ayanamists">
-<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<meta name="twitter:card" content="summary">
+  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+<!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-<!-- hexo injector head_end end --></head><body class="is-home"><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info"><a class="site-author-avatar" href="/about/" title="ayanamists"><img width="96" loading="lazy" src="/avatar.jpg" alt="ayanamists"></a><div class="site-author-name"><a href="/about/">ayanamists</a></div><span class="site-name">aya ⊢ blog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">52</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">54</span></a></div><a class="site-state-item hty-icon-button" href="/about/" title="关于"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-information-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/ayanamists" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:ayanamists@gmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/191397140/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/woodwardchenxi" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/288120032" title="哔哩哔哩动画" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友情链接" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-heart-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div></aside><main class="sidebar-translate" id="content"><section class="hty-layout-grid" id="recent-posts"><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/index.php/2019/07/17/maxituan/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="aya ⊢ blog"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/index.php/2019/07/17/maxituan/">魔偶马戏团：不幸的动画与伟大的原作</a></h2><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-07-17 14:23:16" itemprop="dateCreated datePublished" datetime="2019-07-17T14:23:16+00:00">2019-07-17</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-11-26 13:10:58" itemprop="dateModified" datetime="2021-11-26T13:10:58+00:00">2021-11-26</time></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%A8%B1%E4%B9%90/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">娱乐</span></a></span></div><div class="post-card-tag"><a class="tag-item" href="/tags/%E5%8A%A8%E7%94%BB/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">动画</span></a><a class="tag-item" href="/tags/%E6%BC%AB%E7%94%BB/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">漫画</span></a></div></div></article></div><div class="hty-layout-grid__cell hty-layout-grid__cell--span-12"><article class="post-card" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/index.php/2019/07/16/g-bug/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="aya ⊢ blog"></span><div class="post-card-header"><header class="post-header"><h2 class="post-title" itemprop="name headline"><a class="post-title-link" itemprop="url" href="/index.php/2019/07/16/g-bug/">消失的__free_hook=NULL:一个G++编译优化的BUG</a></h2><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2019-07-16 12:48:39" itemprop="dateCreated datePublished" datetime="2019-07-16T12:48:39+00:00">2019-07-16</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-11-26 13:10:58" itemprop="dateModified" datetime="2021-11-26T13:10:58+00:00">2021-11-26</time></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header></div><div class="post-card-content text-center"><div class="post-card-excerpt markdown-body"></div></div><div class="hty-card__actions post-card__actions"><div class="post-card-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%8A%80%E6%9C%AF/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">技术</span></a></span></div><div class="post-card-tag"><a class="tag-item" href="/tags/C/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">C++</span></a><a class="tag-item" href="/tags/%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">编译优化</span></a></div></div></article></div></section><nav class="pagination"><a class="extend prev" rel="prev" href="/page/5/"><svg class="icon"><use xlink:href="#icon-arrow-left-s-line" aria-label="Prev"></use></svg></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span></nav></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="Total Visitors"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="Total Views"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#7350B9" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">aya ⊢ blog</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      
+  
+    <article id="post-2019-07-17-maxituan" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="name">
+      <a href="/index.php/2019/07/17/maxituan/">魔偶马戏团：不幸的动画与伟大的原作</a>
+      
+        
+      
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2019-07-17T14:23:16.000Z" itemprop="datePublished">2019-07-17</time>
+
+          
+            × <span class="article-word-count">1.2k words</span>
+            
+            × <span class="article-time-to-read">4 minutes</span>
+            
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <p>去年的十月新番中，有一部叫 《魔偶马戏团》的漫改动画特别地吸引我的目光。</p><figure class="wp-block-image"><p></p>
+<p><img src="https://image.gcores.com/c57c5b7f-d9e7-434e-88de-a78fa889543f.jpg?x-oss-process=style/original_hsat2x" alt="Related image"> </p></figure><p></p>
+<p>为什么呢？看到那个银发小姐姐了吗？她的声优正是曾经饰演过灰原哀、绫波丽、FAYE的林原惠美。这也是林原女王多年（自《昭和元禄落语君中》）后再次在长篇电视动画中担任主役。</p>
+<div class="wp-block-image">
+  <figure class="aligncenter is-resized"><img src="http://img31.mtime.cn/ph/2016/08/25/114404.68927057_290X440X4.jpg" alt="Image result for æåæ ç¾" width="184" height="279"><figcaption>林原惠美</figcaption></figure>
+</div>
+<p>可惜，它失败的命运似乎从一开始就注定了。《魔偶马戏团》的原作是由著名漫画家藤田和日郎自1997年至2006年连载，用8年时间精心创作的、<strong>总计43卷、91幕</strong>的超长篇漫画，而动画组只做了<strong>36集</strong>。</p>
+      
+    </div>
+    
+      <div class="article-more-link">
+        <a href="/index.php/2019/07/17/maxituan/#more">read more</a>
+      </div>
+    
+    
+    
+  </div>
+</article>
+
+
+
+  
+    <article id="post-2019-07-16-g-bug" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="name">
+      <a href="/index.php/2019/07/16/g-bug/">消失的__free_hook=NULL:一个G++编译优化的BUG</a>
+      
+        
+      
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2019-07-16T12:48:39.000Z" itemprop="datePublished">2019-07-16</time>
+
+          
+            × <span class="article-word-count">1.6k words</span>
+            
+            × <span class="article-time-to-read">7 minutes</span>
+            
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <p>我的C++大作业是实现一个自己的STL deque，由于构造函数过慢（STL20ns，笔者200ns），笔者自己实现了一个针对于0x1010大小的内存分配器。为了不大量修改代码，我使用了__malloc_hook和\__free_hook这两个全局变量。大致的思路是使用一个全局对象，在其构造函数里先用mmap分配一个区域，然后在这个区域里建好一个0x1010大小的chunk链表：</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="atomic" data-enlighter-highlight data-enlighter-linenumbers="false" data-enlighter-lineoffset data-enlighter-title data-enlighter-group>chxAlloc::chxAlloc()
+{
+    //std::cout &lt;&lt; "invoke chxAlloc\n";
+    void *begin =
+        mmap(NULL, sizeof(allocChunk) * INIT_NUMBER + 0X10,
+             PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    if ((long long)begin == -1)
+    {
+        std::cout &lt;&lt; "error occur in mmap\n";
+        exit(-1);
+    }
+
+    for (int i = 0; i &lt; INIT_NUMBER; ++i)
+    {
+        allocChunk *temp = (allocChunk *)begin;
+        temp->nextPtr = fast_TARGET;
+        fast_TARGET = temp;
+        temp->sign = -TARGET;
+        begin = ((char *)begin + sizeof(allocChunk));
+    }
+}</pre>
+<p>对GLIBC有了解的读者应该知道，这样其实是手工建立了一个大小为0x1010的fast_chunk链表。由于我不太了解全局对象的构造和其他初始化阶段的顺序，为避免出现问题，我在第一次调用deque的函数时才将malloc和free钩住。</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="atomic" data-enlighter-highlight data-enlighter-linenumbers="false" data-enlighter-lineoffset data-enlighter-title data-enlighter-group>if (__builtin_expect(count == 0, 0))
+    {
+        __malloc_hook = chx.chenxiAlloc;
+        __free_hook = chx.chenxiFree;
+        count++;
+    }</pre>
+<p>在这样钩住之后，调用malloc就会调用到chenxiAlloc，调用free就会调用到chenxiFree. 如果申请或释放的大小不是0x1010（这里我们将自己的chunk_size设为-0x1010，在free的时候就可以检测到），我们就调用GLIBC的malloc和free:</p>
+<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="atomic" data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>__malloc_hook = NULL;
+void *ret = malloc(size);
+if (ret == NULL)
+{
+    std::cout &lt;&lt; "error occur in glibc malloc\n";
+    exit(0);
+}
+__malloc_hook = &chenxiAlloc;
+return ret;</pre>
+      
+    </div>
+    
+      <div class="article-more-link">
+        <a href="/index.php/2019/07/16/g-bug/#more">read more</a>
+      </div>
+    
+    
+    
+  </div>
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav" class="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/5/">« Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+  </nav>
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>

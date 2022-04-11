@@ -1,12 +1,21 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#7350B9"><meta name="author" content="ayanamists"><meta name="copyright" content="ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>802.11i 无线网络安全（二）-- 802.1x eap认证 | aya ⊢ blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
-  [".post-card",".post-content img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
-});
-</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#7350B9"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
-    const Yun = window.Yun || {};
-    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="为什么需要EAP认证 本文要搞清楚的主要问题 对整个802.1x EAP认证架构的简单介绍 搭建使用EAP的802.11无线网络  搭建supplicant 搭建Radius Server 搭建AP 说明   连接到这个无线网路  使用PEAP方法 使用EAP－TLS方法   分析EAP－TLS方法的全过程  Clinet Certificate与tls1.2中的Client Certifica">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>802.11i 无线网络安全（二）-- 802.1x eap认证 | aya ⊢ blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="为什么需要EAP认证 本文要搞清楚的主要问题 对整个802.1x EAP认证架构的简单介绍 搭建使用EAP的802.11无线网络  搭建supplicant 搭建Radius Server 搭建AP 说明   连接到这个无线网路  使用PEAP方法 使用EAP－TLS方法   分析EAP－TLS方法的全过程  Clinet Certificate与tls1.2中的Client Certifica">
 <meta property="og:type" content="article">
 <meta property="og:title" content="802.11i 无线网络安全（二）-- 802.1x eap认证">
 <meta property="og:url" content="https://ayanamists.xyz/2020/02/14/2020-02-14-eap/index.html">
@@ -39,13 +48,69 @@
 <meta property="og:image" content="https://pic.downk.cc/item/5e46868248b86553ee262794.png">
 <meta property="og:image" content="https://pic.downk.cc/item/5e4686bc48b86553ee264917.png">
 <meta property="article:published_time" content="2020-02-14T00:00:00.000Z">
-<meta property="article:modified_time" content="2021-11-26T13:10:58.115Z">
+<meta property="article:modified_time" content="2022-04-11T08:20:48.651Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="无线安全">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.loli.net/2020/02/14/qM7h4IWTSYptlAC.png"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<meta name="twitter:image" content="https://i.loli.net/2020/02/14/qM7h4IWTSYptlAC.png">
+  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+<!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="ayanamists"><img width="96" loading="lazy" src="/avatar.jpg" alt="ayanamists"></a><div class="site-author-name"><a href="/about/">ayanamists</a></div><span class="site-name">aya ⊢ blog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">52</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">54</span></a></div><a class="site-state-item hty-icon-button" href="/about/" title="关于"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-information-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/ayanamists" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:ayanamists@gmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/191397140/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/woodwardchenxi" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/288120032" title="哔哩哔哩动画" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友情链接" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-heart-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81eap%E8%AE%A4%E8%AF%81"><span class="toc-number">1.</span> <span class="toc-text"> 为什么需要EAP认证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E8%A6%81%E6%90%9E%E6%B8%85%E6%A5%9A%E7%9A%84%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text"> 本文要搞清楚的主要问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%95%B4%E4%B8%AA8021x-eap%E8%AE%A4%E8%AF%81%E6%9E%B6%E6%9E%84%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.</span> <span class="toc-text"> 对整个802.1x EAP认证架构的简单介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E4%BD%BF%E7%94%A8eap%E7%9A%8480211%E6%97%A0%E7%BA%BF%E7%BD%91%E7%BB%9C"><span class="toc-number">4.</span> <span class="toc-text"> 搭建使用EAP的802.11无线网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BAsupplicant"><span class="toc-number">4.1.</span> <span class="toc-text"> 搭建supplicant</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BAradius-server"><span class="toc-number">4.2.</span> <span class="toc-text"> 搭建Radius Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BAap"><span class="toc-number">4.3.</span> <span class="toc-text"> 搭建AP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">4.4.</span> <span class="toc-text"> 说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E5%88%B0%E8%BF%99%E4%B8%AA%E6%97%A0%E7%BA%BF%E7%BD%91%E8%B7%AF"><span class="toc-number">5.</span> <span class="toc-text"> 连接到这个无线网路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8peap%E6%96%B9%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text"> 使用PEAP方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8eap-tls%E6%96%B9%E6%B3%95"><span class="toc-number">5.2.</span> <span class="toc-text"> 使用EAP－TLS方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90eap-tls%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text"> 分析EAP－TLS方法的全过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#clinet-certificate%E4%B8%8Etls12%E4%B8%AD%E7%9A%84client-certificate-certificate-verify%E5%B8%A7"><span class="toc-number">6.1.</span> <span class="toc-text"> Clinet Certificate与tls1.2中的Client Certificate、Certificate Verify帧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eap-tls%E6%96%B9%E6%B3%95%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%81"><span class="toc-number">6.2.</span> <span class="toc-text"> EAP-TLS方法如何进行双向认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eap-tls%E6%96%B9%E6%B3%95%E7%9A%84%E5%8D%8F%E8%AE%AE%E6%A0%88"><span class="toc-number">6.3.</span> <span class="toc-text"> EAP-TLS方法的协议栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5-%E5%8F%91%E9%80%81%E8%BA%AB%E4%BB%BD%E4%BF%A1%E6%81%AF"><span class="toc-number">6.4.</span> <span class="toc-text"> 第一阶段 ：发送身份信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5-%E5%8D%8F%E5%95%86eap%E6%96%B9%E6%B3%95"><span class="toc-number">6.5.</span> <span class="toc-text"> 第二阶段 ：协商EAP方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5-eap-tls%E8%BF%87%E7%A8%8B"><span class="toc-number">6.6.</span> <span class="toc-text"> 第三阶段 ：EAP-TLS过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E9%98%B6%E6%AE%B5-eap%E6%88%90%E5%8A%9F%E5%A4%B1%E8%B4%A5"><span class="toc-number">6.7.</span> <span class="toc-text"> 第四阶段 ：EAP成功／失败</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#eap-tls%E5%A6%82%E4%BD%95%E4%B8%BA80211i%E7%9A%84key-hierarchy%E8%BF%87%E7%A8%8B%E6%8F%90%E4%BE%9Bpmk"><span class="toc-number">7.</span> <span class="toc-text"> EAP-TLS如何为802.11i的Key Hierarchy过程提供PMK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text"> 总结</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/2020/02/14/2020-02-14-eap/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="aya ⊢ blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">802.11i 无线网络安全（二）-- 802.1x eap认证</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-02-14 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-14T00:00:00+00:00">2020-02-14</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-11-26 13:10:58" itemprop="dateModified" datetime="2021-11-26T13:10:58+00:00">2021-11-26</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%8A%80%E6%9C%AF/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">技术</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">无线安全</span></a></span></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#7350B9;"><ul>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">aya ⊢ blog</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      
+<article id="post-2020-02-14-eap" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="headline name">
+      802.11i 无线网络安全（二）-- 802.1x eap认证
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2020-02-14T00:00:00.000Z" itemprop="datePublished">2020-02-14</time>
+
+          
+            × <span class="article-word-count">4k words</span>
+            
+            × <span class="article-time-to-read">15 minutes</span>
+            
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <ul>
 <li><a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81eap%e8%ae%a4%e8%af%81">为什么需要EAP认证</a></li>
 <li><a href="#%e6%9c%ac%e6%96%87%e8%a6%81%e6%90%9e%e6%b8%85%e6%a5%9a%e7%9a%84%e4%b8%bb%e8%a6%81%e9%97%ae%e9%a2%98">本文要搞清楚的主要问题</a></li>
 <li><a href="#%e5%af%b9%e6%95%b4%e4%b8%aa8021x-eap%e8%ae%a4%e8%af%81%e6%9e%b6%e6%9e%84%e7%9a%84%e7%ae%80%e5%8d%95%e4%bb%8b%e7%bb%8d">对整个802.1x EAP认证架构的简单介绍</a></li>
@@ -96,12 +161,12 @@
 <p>EAP这个东西，是古董。在PPP链路大行其道的时代，EAP就出现了。它最初就是为了解决PPP的认证问题而引入的。对它的具体描述，参见<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc3748">rfc3748</a>。EAP叫做“可扩展认证协议”，它只规定了一个壳子，我们可以通过各种方法改造它以适应我们的要求。</p>
 <p>而802.1x，是所谓的“基于端口的介质访问控制”ieee标准。什么意思呢？就是说，在客户端没有认证之前，客户端只能通过“被控制的端口”（controlled port）和网络接入点（比如AP、交换机、路由器等等）进行通信。这就说是，在没有认证之前，网络接入点只接受客户端发来的802.1x帧（在以太网里，TYPE字段值为0x888e），其他的一律扔掉。这样一来，客户端虽然在物理上可以和网络接入点进行通信，但是只能进行认证而不能和别的终端进行通信。如果客户端进行了认证，那么，客户端就可以从不被控制的端口（uncontrolled port）通信，简单地来说就是可以上网了。这样一来，802.1x就提供了一种在以太网上进行访问控制的方法。</p>
 <p>那么，802.1x和EAP的关系是怎么样的呢？这是一个略复杂的问题。我们说，在以太网上，TYPE字段设置为0x888e就代表上层协议是802.1x。而它上层的协议包，被称为EAPOL（EAP over LAN），也就是EAP在Lan上的实现。它的包格式被802.1x规定如下：</p>
-<p><img src="https://i.loli.net/2020/02/14/qM7h4IWTSYptlAC.png" alt="1.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/qM7h4IWTSYptlAC.png" alt="1.PNG" /></p>
 <p>可是令人迷惑的是，EAP协议有自己的包格式：</p>
-<p><img src="https://i.loli.net/2020/02/14/5XSJcP9bneWv7LQ.png" alt="2.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/5XSJcP9bneWv7LQ.png" alt="2.PNG" /></p>
 <p>那么，在以太网或者802.11无线网中，使用的包格式究竟是哪一套呢？</p>
 <p>答案很简单，这两套都使用。而且这两套包的层次是不同的。简单地说，802.1x的作用是“访问控制”，EAP的作用是“认证”。我们先按下不表，看看这个认证体系的拓扑架构：</p>
-<p><img src="https://i.loli.net/2020/02/14/TJhdktbIyjoqQuz.png" alt="3.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/TJhdktbIyjoqQuz.png" alt="3.PNG" /></p>
 <p>我们发现，在这个架构里，有三个角色：</p>
 <ul>
 <li>host – 客户</li>
@@ -109,11 +174,11 @@
 <li>Authentication Server – 认证服务器</li>
 </ul>
 <p>这三个角色的作用和它的名字基本一样。那么，我们发现，在这个体系中，“认证”是委托给认证服务器做的。但认证服务器和客户的通信必须借助<strong>NAS</strong>的转发。而<strong>NAS</strong>转发的包，就是EAP包；客户和<strong>NAS</strong>的通信，是802.1x,或者说是EAPOL包, EAP包被封装在EAPOL包中；<strong>NAS</strong>和认证服务器的通信，是RADIUS包。实际上，整个协议栈可以如下示意：</p>
-<p><img src="https://slideplayer.com/slide/4802754/15/images/19/Through+the+protocol+stack.jpg" alt="4.PNG" / loading="lazy"></p>
+<p><img src="https://slideplayer.com/slide/4802754/15/images/19/Through+the+protocol+stack.jpg" alt="4.PNG" /></p>
 <p>实际上，如果仔细看802.1x-2010的话, 当EAPOL包的TYPE字段被设置为0时, 这个包的PacketBody字段就会是一个EAP包:</p>
-<p><img src="https://i.loli.net/2020/02/14/GN7PgKzLWIib3fZ.png" alt="5.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/GN7PgKzLWIib3fZ.png" alt="5.PNG" /></p>
 <p>我们用wireshark抓包也会看到这一点:</p>
-<p><img src="https://i.loli.net/2020/02/14/IcFwZpj9BxTDl3b.png" alt="6.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/IcFwZpj9BxTDl3b.png" alt="6.PNG" /></p>
 <p>为什么说EAP是用来认证的?因为EAP包是客户和认证服务器用来作认证通信的。理解了这一点，让我们暂时放下理论，先搭建一套使用EAP的802.11无线网络吧。</p>
 <h2 id="搭建使用eap的80211无线网络"><a class="markdownIt-Anchor" href="#搭建使用eap的80211无线网络"></a> 搭建使用EAP的802.11无线网络</h2>
 <p>根据802.1x认证的构成要件，这里的无线网络至少要由三个部分：</p>
@@ -181,26 +246,26 @@ make<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 <h3 id="使用eap-tls方法"><a class="markdownIt-Anchor" href="#使用eap-tls方法"></a> 使用EAP－TLS方法</h3>
 <p>为什么要使用EAP－TLS方法呢？因为PEAP方法会第一阶段会创造tls信道，第二阶段分析起来不太方便。我们对TLS也相当熟悉，所以决定使用EAP-TLS方法进行分析整个连接过程。如果要分析，就必须先连接上。这里使用Windows平台进行连接。</p>
 <p>在上一步的配置中，freeradius会产生一堆证书：</p>
-<p><img src="https://i.loli.net/2020/02/14/h2xVkQqc7KiEOUT.png" alt="7.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/h2xVkQqc7KiEOUT.png" alt="7.PNG" /></p>
 <p>将clinet.p12复制一份到windows平台下，双击，进行安装。注意选择“标记为可导出的证书”选项。</p>
-<p><img src="https://i.loli.net/2020/02/14/brgWiSUOe2FK6nX.png" alt="8.PNG" / loading="lazy"></p>
+<p><img src="https://i.loli.net/2020/02/14/brgWiSUOe2FK6nX.png" alt="8.PNG" /></p>
 <p>然后在控制面版中新建一个无线连接：</p>
-<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20df.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20df.png" alt="" /></p>
 <p>填写相关参数，并选择<strong>下一步</strong>：</p>
-<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e2.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e2.png" alt="" /></p>
 <p>选择<strong>更改连接设置</strong>：</p>
-<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e4.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e4.png" alt="" /></p>
 <p>在这个界面需要更改两个内容：</p>
-<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e6.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e6.png" alt="" /></p>
 <ol>
 <li>
 <p>在<strong>高级设置</strong>中将<strong>指定身份验证模式</strong>改为<strong>用户身份验证</strong></p>
-<p><img src="https://pic.downk.cc/item/5e4647ff48b86553ee0f1597.png" alt="14.png" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e4647ff48b86553ee0f1597.png" alt="14.png" /></p>
 </li>
 <li>
 <p>在<strong>选择网络身份验证方法</strong>中选择<strong>Microsoft智能卡或其他证书</strong>，并点击<strong>设置</strong></p>
 <p>在<strong>设置</strong>页面取消对<strong>通过验证证书验证服务器的身份</strong>的选择：</p>
-<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e8.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46481848b86553ee0f20e8.png" alt="" /></p>
 </li>
 </ol>
 <p>然后，在GUI中直接连接。</p>
@@ -230,24 +295,24 @@ make<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 <h3 id="eap-tls方法的协议栈"><a class="markdownIt-Anchor" href="#eap-tls方法的协议栈"></a> EAP-TLS方法的协议栈</h3>
 <p>既然这个方法名字叫做EAP-TLS，那么就是使用TLS来进行双向认证的。这里有个问题，那就是我们现在无法使用IP协议和TCP协议，如何使用TLS呢？这里采取的方法是，将TLS的帧封装在EAP协议中。</p>
 <p>用wireshark抓包，可以很清晰地看出这个情况：</p>
-<p><img src="https://pic.downk.cc/item/5e4650f348b86553ee1226df.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e4650f348b86553ee1226df.png" alt="" /></p>
 <p>下面我们来分析认证的全过程。</p>
 <h3 id="第一阶段-发送身份信息"><a class="markdownIt-Anchor" href="#第一阶段-发送身份信息"></a> 第一阶段 ：发送身份信息</h3>
 <p>首先需要说明，以下所有的通信都是发生于Radius Server（认证服务器）和STA之间的，AP只是起转发作用。</p>
 <p>在做完<strong>NULL　Authentication</strong>之后，STA发送EAPOL_Start帧，表明开始进行802.1x认证：</p>
-<p><img src="https://pic.downk.cc/item/5e4684c748b86553ee250255.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e4684c748b86553ee250255.png" alt="" /></p>
 <p>之后，STA回应AP的Request Identity消息，发送自己的身份信息：</p>
-<p><img src="https://pic.downk.cc/item/5e46850f48b86553ee2521c4.png" alt="" / loading="lazy"><br />
-<img src="https://pic.downk.cc/item/5e46850f48b86553ee2521c6.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46850f48b86553ee2521c4.png" alt="" /><br />
+<img src="https://pic.downk.cc/item/5e46850f48b86553ee2521c6.png" alt="" /></p>
 <p>如果身份信息合法，进入下一阶段</p>
 <h3 id="第二阶段-协商eap方法"><a class="markdownIt-Anchor" href="#第二阶段-协商eap方法"></a> 第二阶段 ：协商EAP方法</h3>
 <p>AP发送Request-MD5-Challenge消息，要求使用EAP-MD5-Challenge方法：</p>
-<p><img src="https://pic.downk.cc/item/5e46859d48b86553ee2562c3.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46859d48b86553ee2562c3.png" alt="" /></p>
 <p>客户端不同意，发送NAK消息，并指出自己想使用EAP-TLS方法：</p>
-<p><img src="https://pic.downk.cc/item/5e4685cf48b86553ee257d24.png" alt="" / loading="lazy"></p>
-<p><img src="https://pic.downk.cc/item/5e4685cf48b86553ee257d27.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e4685cf48b86553ee257d24.png" alt="" /></p>
+<p><img src="https://pic.downk.cc/item/5e4685cf48b86553ee257d27.png" alt="" /></p>
 <p>AP换用EAP-tls方法，发送Request-eap-tls消息：</p>
-<p><img src="https://pic.downk.cc/item/5e4685f548b86553ee25ad82.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e4685f548b86553ee25ad82.png" alt="" /></p>
 <p>下面的消息就全部是tls协议帧了。</p>
 <h3 id="第三阶段-eap-tls过程"><a class="markdownIt-Anchor" href="#第三阶段-eap-tls过程"></a> 第三阶段 ：EAP-TLS过程</h3>
 <p>eap-tls由rfc2716定义，现在通行的是<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2548">rfc5216</a>。</p>
@@ -258,10 +323,10 @@ make<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
 <li>同时进行EAP-TLS Key Hierarchy过程。注意，这并不是说TLS的Key Hierarchy过程就不进行了，而是说另外地进行其他的Key Hierarchy过程。由于握手过程的最后一帧finished是加密的，所以标准的TLS的Key Hierarchy也是必须的。</li>
 </ul>
 <p>抓包结果如下：</p>
-<p><img src="https://pic.downk.cc/item/5e46865748b86553ee260de9.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46865748b86553ee260de9.png" alt="" /></p>
 <h3 id="第四阶段-eap成功失败"><a class="markdownIt-Anchor" href="#第四阶段-eap成功失败"></a> 第四阶段 ：EAP成功／失败</h3>
 <p>如果成功，AP向STA发送EAP　Success消息，如果失败，AP向STA发送EAP Failure消息。</p>
-<p><img src="https://pic.downk.cc/item/5e46868248b86553ee262794.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e46868248b86553ee262794.png" alt="" /></p>
 <h2 id="eap-tls如何为80211i的key-hierarchy过程提供pmk"><a class="markdownIt-Anchor" href="#eap-tls如何为80211i的key-hierarchy过程提供pmk"></a> EAP-TLS如何为802.11i的Key Hierarchy过程提供PMK</h2>
 <p>我们知道，在802.11i无线网络中，Key Hierachy的起点是<strong>PMK</strong>(Pairwise Master Key)。如果使用<strong>PSK</strong>方法，那么<strong>PMK</strong>就是<strong>PSK</strong>。如果使用EAP方法呢？802.11-2007并没有说得很明白，而是使用了May这样的词，但从“密码”到<strong>PSK</strong>所使用的哈希函数也是may，所以还是很有参考价值的。它指向了一个很奇怪的记号：<strong>MS-MPPE-Recv-Key</strong>。这个<strong>MS</strong>恐怕指的就是<strong>Microsoft</strong>了，而这个符号实际上来源于PEAP，是PEAP第一阶段（也是用TLS，只不过没有用Cilent Certificate校验客户端）通过Key Hierarchy产生的密钥。</p>
 <p>EAP-TLS提供了一种和标准TLS不同的方法，来生成PMK，在rfc-5216的2.3节中被这样定义：</p>
@@ -283,7 +348,7 @@ Enc-SEND-Key &#x3D; MSK(32,63)
 <p>为什么<strong>MS-MPPE-Recv-Key</strong>成了事实上的<strong>PMK</strong>呢？这似乎有历史原因，我并没有找到一个解释或是说明。但事实就是这样，我们的好奇心也不必过于旺盛。</p>
 <p>这时，所有的问题都解决了吗？确实解决了。但是我们又有了新的问题：tls握手是在Authentication Server和Client之间发生的，AP是如何得到Enc-RECV-Key的呢？下一阶段的Key Hierarchy是AP进行的，它必须得到PMK。</p>
 <p>我们仔细研究一下Radius Server发给AP的最后一帧：</p>
-<p><img src="https://pic.downk.cc/item/5e4686bc48b86553ee264917.png" alt="" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5e4686bc48b86553ee264917.png" alt="" /></p>
 <p>图中确实看到了MS-MPPE-RECV-KEY字段，但为什么长度不是0x22(32byte的Key, 1byte的Id，1byte的length)，而是0x34（52）呢？这是因为它不是明文传的，而是加密+padding后的结果。具体是如何加密的，可以参考<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2548">rfc2548</a>，此处就不赘述了。</p>
 <h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
 <p>研究EAP是一件不那么轻松的事，主要原因一是资料少，二是资料基本都是英文的，中文搜索几乎没有什么有用结果。通过写这篇文章、研究这些内容，我已经基本搞清楚了802.11i认证过程的所有过程，不过还有很多坑待填，譬如最后产生的GTK究竟有什么用、如何处理漫游等等问题。不过，相信在不远的将来，我会完全研究清楚这些问题。</p>
@@ -293,6 +358,75 @@ Enc-SEND-Key &#x3D; MSK(32,63)
 <li>我们必须勾选“允许导出”选项，不然不会使用这张证书。</li>
 <li>我们必须设置“用户认证”，不然windows会将我们计算机的主机名在eap identity里传过去。</li>
 </ul>
-</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://ayanamists.xyz/2020/02/14/2020-02-14-eap/" title="802.11i 无线网络安全（二）-- 802.1x eap认证">https://ayanamists.xyz/2020/02/14/2020-02-14-eap/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/02/15/2020-02-15-speed-2/" rel="prev" title="谈谈网速（二）不得不首先研究清楚的问题"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">谈谈网速（二）不得不首先研究清楚的问题</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/01/02/2020-1-2-sort/" rel="next" title="数据结构 -- 排序 -- 笔记"><span class="post-nav-text">数据结构 -- 排序 -- 笔记</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div><style>.utterances {
-  max-width: 100%;
-}</style><script src="https://utteranc.es/client.js" repo="ayanamists/ayanamists.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="Total Visitors"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="Total Views"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#7350B9" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
+
+      
+    </div>
+    
+    
+    <div class="article-category">
+      
+        <b>Categories:</b>
+        <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <br/>
+      
+      
+        <b>Tags:</b>
+        <a class="article-tag-none-link" href="/tags/%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8/" rel="tag">无线安全</a>
+      
+    </div>
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2020/02/15/2020-02-15-speed-2/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          谈谈网速（二）不得不首先研究清楚的问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/02/2020-1-2-sort/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          数据结构 -- 排序 -- 笔记
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>

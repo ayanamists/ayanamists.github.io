@@ -1,12 +1,21 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#7350B9"><meta name="author" content="ayanamists"><meta name="copyright" content="ayanamists"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>谈谈写作软件 | aya ⊢ blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
-  [".post-card",".post-content img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
-});
-</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#7350B9"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
-    const Yun = window.Yun || {};
-    window.CONFIG = {"hostname":"ayanamists.xyz","root":"/","title":"云游君的小站","version":"1.6.2","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。  排版，一个不应该存在的问题 本文探讨的是【写作系统】。在所谓的【写作】和【排版】之间，是有一道不可逾越的鸿沟的。【写作】时，我们只需要集中精力来【写作】即可。这里的【写作】可以被定义为【输入文本和符号】。【输入文本和符号】这个定义要求我们不能手工调节【文本和符号的属性】，也即是字号、行间距、字体之类的东">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>谈谈写作软件 | aya ⊢ blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。  排版，一个不应该存在的问题 本文探讨的是【写作系统】。在所谓的【写作】和【排版】之间，是有一道不可逾越的鸿沟的。【写作】时，我们只需要集中精力来【写作】即可。这里的【写作】可以被定义为【输入文本和符号】。【输入文本和符号】这个定义要求我们不能手工调节【文本和符号的属性】，也即是字号、行间距、字体之类的东">
 <meta property="og:type" content="article">
 <meta property="og:title" content="谈谈写作软件">
 <meta property="og:url" content="https://ayanamists.xyz/2020/08/20/2020-8-20-writting/index.html">
@@ -39,13 +48,69 @@
 <meta property="og:image" content="https://pic.downk.cc/item/5f3def0d14195aa594528f40.jpg">
 <meta property="og:image" content="https://pic.downk.cc/item/5f3def6a14195aa59452c141.jpg">
 <meta property="article:published_time" content="2020-08-20T00:00:00.000Z">
-<meta property="article:modified_time" content="2021-11-26T13:10:58.119Z">
+<meta property="article:modified_time" content="2022-04-11T08:20:48.651Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="写作">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.downk.cc/item/5f3dcdea14195aa59431c130.jpg"><script src="/js/ui/mode.js"></script><!-- hexo injector head_end start -->
+<meta name="twitter:image" content="https://pic.downk.cc/item/5f3dcdea14195aa59431c130.jpg">
+  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+<!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-<!-- hexo injector head_end end --></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="ayanamists"><img width="96" loading="lazy" src="/avatar.jpg" alt="ayanamists"></a><div class="site-author-name"><a href="/about/">ayanamists</a></div><span class="site-name">aya ⊢ blog</span><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">52</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">54</span></a></div><a class="site-state-item hty-icon-button" href="/about/" title="关于"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-information-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/ayanamists" title="GitHub" target="_blank" style="color:#181717"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:ayanamists@gmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/people/191397140/" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/people/woodwardchenxi" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/288120032" title="哔哩哔哩动画" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友情链接" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-heart-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E7%89%88%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%BA%94%E8%AF%A5%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text"> 排版，一个不应该存在的问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#a"><span class="toc-number"></span> <span class="toc-text"> a</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#aa"><span class="toc-number">1.</span> <span class="toc-text"> aa</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#aaa"><span class="toc-number">1.1.</span> <span class="toc-text"> aaa</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#aaaa"><span class="toc-number">1.1.1.</span> <span class="toc-text"> aaaa</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#aaaaa"><span class="toc-number">1.1.1.1.</span> <span class="toc-text"> aaaaa</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#aaaaaa"><span class="toc-number">1.1.1.1.1.</span> <span class="toc-text"> aaaaaa</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BC%96%E8%BE%91"><span class="toc-number">2.</span> <span class="toc-text"> 更进一步：可视化编辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%BA%BB%E7%83%A6%E4%BA%8B%E5%85%AC%E5%BC%8F%E7%BC%96%E8%BE%91"><span class="toc-number">3.</span> <span class="toc-text"> 真正的麻烦事：公式编辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gnu-texmacs%E7%BB%93%E6%9E%84%E5%8C%96%E7%BC%96%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text"> GNU TEXMACS：结构化编辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text"> 总结</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://ayanamists.xyz/2020/08/20/2020-8-20-writting/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="ayanamists"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="aya ⊢ blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">谈谈写作软件</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-08-20 00:00:00" itemprop="dateCreated datePublished" datetime="2020-08-20T00:00:00+00:00">2020-08-20</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-11-26 13:10:58" itemprop="dateModified" datetime="2021-11-26T13:10:58+00:00">2021-11-26</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="Views"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%B7%A5%E5%85%B7/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">工具</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E5%86%99%E4%BD%9C/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">写作</span></a></span></div><div class="post-author"><span class="author-name">ayanamists</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#7350B9;"><p>这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。</p>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">aya ⊢ blog</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      
+<article id="post-2020-8-20-writting" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="headline name">
+      谈谈写作软件
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2020-08-20T00:00:00.000Z" itemprop="datePublished">2020-08-20</time>
+
+          
+            × <span class="article-word-count">2.5k words</span>
+            
+            × <span class="article-time-to-read">8 minutes</span>
+            
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <p>这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。</p>
 <h2 id="排版一个不应该存在的问题"><a class="markdownIt-Anchor" href="#排版一个不应该存在的问题"></a> 排版，一个不应该存在的问题</h2>
 <p>本文探讨的是【写作系统】。在所谓的【写作】和【排版】之间，是有一道不可逾越的鸿沟的。【写作】时，我们只需要集中精力来【写作】即可。这里的【写作】可以被定义为【输入文本和符号】。【输入文本和符号】这个定义要求我们不能手工调节【文本和符号的属性】，也即是字号、行间距、字体之类的东西。</p>
 <p>【写作】时，不应该进行【排版】，但【排版】的问题却是实实在在地【存在】着的。比如说，如何使得本段的标题【排版，一个不应该存在的问题】字号比文章的字号更大、并加粗呢？如果我想要<strong>加粗</strong>某一个词语，又该怎么做呢？<em>斜体</em>又该如何创造呢？</p>
@@ -57,7 +122,7 @@
 <p>有了这样的抽象以后，我们就无需自己【决定展示层】，我们只需要【决定逻辑层】即可。而相比于指定具体文本的【格式】来说，指定具体文本的【性质】是简单地多的。</p>
 <p>那么，应该如何指定文本的【性质】呢？答案就是输入【控制字符】。以书写本文所采用的Markdown系统为例，本文开头的的源码是：</p>
 <pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
-<span class="token font-matter yaml language-yaml">author: ayanamists
+<span class="token front-matter yaml language-yaml">author: ayanamists
 date: 2020-08-20
 title: 谈谈写作软件</span>
 <span class="token punctuation">---</span></span>
@@ -99,7 +164,7 @@ title: 谈谈写作软件</span>
 <p>可以看到，这些东西都非常简单。</p>
 <h2 id="更进一步可视化编辑"><a class="markdownIt-Anchor" href="#更进一步可视化编辑"></a> 更进一步：可视化编辑</h2>
 <p>读到这里，读者也许会有些疑问，难道对于作者来说，写文章是在【带控制字符的文本，或者说源代码】吗？在2019年10月我刚刚接触到markdown时，确实是如此。我在vscode中编辑markdown代码，那三篇数据结构的笔记就是这样写出来的：</p>
-<p><img src="https://pic.downk.cc/item/5f3dcdea14195aa59431c130.jpg" alt="1" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dcdea14195aa59431c130.jpg" alt="1" /></p>
 <p>时至今日，我已经不再使用它了，而是使用更加简单的写作软件–Typora。</p>
 <p>Typora主要实现了两个功能：</p>
 <ul>
@@ -108,24 +173,24 @@ title: 谈谈写作软件</span>
 </ul>
 <p>下面我们就来重点描述一下这两个特性。</p>
 <p>所谓的【可视化编辑】，就是说，我们编辑的文本是【被渲染以后】的文本。比如说，我现在所写的这篇博客是这样的：</p>
-<p><img src="https://pic.downk.cc/item/5f3dd0cd14195aa59434915a.jpg" alt="2" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dd0cd14195aa59434915a.jpg" alt="2" /></p>
 <p><strong>它实际上编辑的仍然是markdown代码</strong>。按下<code>ctrl+/</code>，可以看到文章的源代码：</p>
-<p><img src="https://pic.downk.cc/item/5f3dd20d14195aa59435cbe5.jpg" alt="3" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dd20d14195aa59435cbe5.jpg" alt="3" /></p>
 <p>在非源代码模式下，要插入【具有某种属性的文本】，有两种方式。以插入一个无序列表为例：</p>
 <ol>
 <li>
 <p>用鼠标操作GUI：</p>
-<p><img src="https://pic.downk.cc/item/5f3dd46b14195aa594381c92.gif" alt="g" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dd46b14195aa594381c92.gif" alt="g" /></p>
 </li>
 <li>
 <p>按下<code>ctrl+shift+]</code>快捷键：</p>
-<p><img src="https://pic.downk.cc/item/5f3dd57d14195aa594392ba1.gif" alt="k" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dd57d14195aa594392ba1.gif" alt="k" /></p>
 </li>
 </ol>
 <p>这样一来，只要你记忆了为数不多的快捷键，你就可以极为流畅地在好看的GUI中进行编辑了。</p>
 <p>不过，这种【可视化编辑】并不是完全【所见即所得】的，由于我的博客和Typora的配置不同，Typora中的效果不是我的博客最终展示出来的效果。</p>
 <p>在Typora中，也可以更改【主题】，来选择最好看的【展示层配置】：</p>
-<p><img src="https://pic.downk.cc/item/5f3dd70414195aa5943aad96.gif" alt="theme" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dd70414195aa5943aad96.gif" alt="theme" /></p>
 <h2 id="真正的麻烦事公式编辑"><a class="markdownIt-Anchor" href="#真正的麻烦事公式编辑"></a> 真正的麻烦事：公式编辑</h2>
 <p>下面所说的【公式】，指的是【不能直接通过键盘输入的东西】。比如说</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">a^2
@@ -145,7 +210,7 @@ title: 谈谈写作软件</span>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>x</mi><mo separator="true">,</mo><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\forall{x},P(x)
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∀</span><span class="mord"><span class="mord mathdefault">x</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span></span></p>
 <p>在tex\latex\markdown中，都是用<code>$$</code>或者<code>$</code>来指示【被围住的块是要渲染的公式】：</p>
-<p><img src="https://pic.downk.cc/item/5f3dda0d14195aa5943dc3a3.jpg" alt="gongshi" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dda0d14195aa5943dc3a3.jpg" alt="gongshi" /></p>
 <p>TeX系统以及衍生出的LaTeX系统是世界上使用最为广泛的数学排版系统。但是，它有不少问题：</p>
 <ul>
 <li>符号没有语义，例如在TeX中没有【整除】符号， 表达【整除】的是【竖线】</li>
@@ -157,50 +222,50 @@ title: 谈谈写作软件</span>
 <h2 id="gnu-texmacs结构化编辑"><a class="markdownIt-Anchor" href="#gnu-texmacs结构化编辑"></a> GNU TEXMACS：结构化编辑</h2>
 <p>一篇文章，或者说一本书是有一个大致固定的结构的。对于文章来说，最简单的结构是【标题+正文】，稍微麻烦一点的结构是【标题+（次级标题+正文）+（次级标题+正文）】。GNU TEXMACS把这种【结构】融入到了编辑的过程中。</p>
 <p>面对一个空的文档，GNU TEXMACS会指示你写标题：</p>
-<p><img src="https://pic.downk.cc/item/5f3de08514195aa5944389f7.jpg" alt="t1" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de08514195aa5944389f7.jpg" alt="t1" /></p>
 <p>点击【标题】，我们进入了【标题环境】：</p>
-<p><img src="https://pic.downk.cc/item/5f3de0ae14195aa59443a9ab.jpg" alt="t2" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de0ae14195aa59443a9ab.jpg" alt="t2" /></p>
 <p>随便打一个标题：</p>
-<p><img src="https://pic.downk.cc/item/5f3de0e814195aa59443ddeb.jpg" alt="t3" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de0e814195aa59443ddeb.jpg" alt="t3" /></p>
 <p>按下键盘上的<code>enter</code>键，我们惊奇地发现，它自动地进入了【作者】环境：</p>
-<p><img src="https://pic.downk.cc/item/5f3de13714195aa5944429c6.jpg" alt="t4" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de13714195aa5944429c6.jpg" alt="t4" /></p>
 <p>输入作者，按下<code>left</code>键，离开【标题环境】。</p>
 <p>再次按下<code>enter</code>键，GNU TEXMACS会提示我们写摘要：</p>
-<p><img src="https://pic.downk.cc/item/5f3de1c014195aa59444abd6.jpg" alt="t5" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de1c014195aa59444abd6.jpg" alt="t5" /></p>
 <p>我一般不写摘要，所以直接无视这个提示。之后，GNU TEXMACS就不会再给你文档结构上的指示了（在【普通文档】模式下）。</p>
 <p>经过上面的一番解说，读者应该明白了【结构化编辑】大概是什么意思。下面我们介绍GNU TEXMACS中【结构化编辑】思想的杀手级应用 – 数学公式输入。</p>
 <p>按下<code>alt+$</code>键可以进入单行公式环境：</p>
-<p><img src="https://pic.downk.cc/item/5f3de36014195aa5944637a3.jpg" alt="t6" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de36014195aa5944637a3.jpg" alt="t6" /></p>
 <p>如果你要打之前提到的【任意】符号，应该如何去做呢？我们知道，$$\forall$$符号是倒着的A, 所以先打一个大写的A：</p>
-<p><img src="https://pic.downk.cc/item/5f3de3fd14195aa59446ad86.jpg" alt="t7" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3de3fd14195aa59446ad86.jpg" alt="t7" /></p>
 <p>然后，按下<code>tab</code>，它会变成非斜体的A：</p>
-<p><img src="https://pic.downk.cc/item/5f3dea7614195aa5944dc207.jpg" alt="t7" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dea7614195aa5944dc207.jpg" alt="t7" /></p>
 <p>再次按下<code>tab</code>，我们惊喜地发现，<strong>它竟然变成了【任意】符号！</strong></p>
-<p><img src="https://pic.downk.cc/item/5f3deab814195aa5944e0869.jpg" alt="t8" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3deab814195aa5944e0869.jpg" alt="t8" /></p>
 <p>这就是GNU TEXMACS在数学符号输入上的第一个创新 – 类似符号轮换。</p>
 <p>在输入一个符号以后，按下<code>tab</code>是做类似符号轮换，按下别的符号会怎么样呢？我们这里来打一个【大于等于号】：</p>
 <p>首先输入一个大于号：</p>
-<p><img src="https://pic.downk.cc/item/5f3dec5c14195aa5944fd220.jpg" alt="t9" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dec5c14195aa5944fd220.jpg" alt="t9" /></p>
 <p>然后，按下键盘上的<code>=</code>号，我们再次惊奇地发现：</p>
-<p><img src="https://pic.downk.cc/item/5f3deca214195aa59450248b.jpg" alt="t10" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3deca214195aa59450248b.jpg" alt="t10" /></p>
 <p>大于号也可以极为方便地打出来。</p>
 <p>下面，我们来说一个GNU TEXMACS最好用的功能：公式表格。</p>
 <p>首先来看看效果：</p>
-<p><img src="https://pic.downk.cc/item/5f3deda014195aa594513011.gif" alt="t11" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3deda014195aa594513011.gif" alt="t11" /></p>
 <p>如果读者使用过TeX的矩阵，就会知道这样输入矩阵是多么的简单。</p>
 <p>这是如何做到的呢？首先，按下<code>alt+t</code>键，我们可以插入一个【表格】。这个【表格】有五种形式，可以用<code>tab</code>键轮换：</p>
-<p><img src="https://pic.downk.cc/item/5f3dee5f14195aa59451fef8.jpg" alt="t12" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dee5f14195aa59451fef8.jpg" alt="t12" /></p>
 <p>这是无边框格式；</p>
-<p><img src="https://pic.downk.cc/item/5f3dee8714195aa5945224ca.jpg" alt="t13" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3dee8714195aa5945224ca.jpg" alt="t13" /></p>
 <p>这是圆括号格式；</p>
-<p><img src="https://pic.downk.cc/item/5f3deeae14195aa594524e89.jpg" alt="t14" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3deeae14195aa594524e89.jpg" alt="t14" /></p>
 <p>这是行列式格式；</p>
-<p><img src="https://pic.downk.cc/item/5f3deedf14195aa594527201.jpg" alt="t15" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3deedf14195aa594527201.jpg" alt="t15" /></p>
 <p>这是方括号（一般矩阵用这个）格式；</p>
-<p><img src="https://pic.downk.cc/item/5f3def0d14195aa594528f40.jpg" alt="t16" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3def0d14195aa594528f40.jpg" alt="t16" /></p>
 <p>这是选择（比如说分段函数之类的）格式；</p>
 <p>在任何一种格式下，按下<code>esc+left</code>是在左边插入一个新的单元格：</p>
-<p><img src="https://pic.downk.cc/item/5f3def6a14195aa59452c141.jpg" alt="t15" / loading="lazy"></p>
+<p><img src="https://pic.downk.cc/item/5f3def6a14195aa59452c141.jpg" alt="t15" /></p>
 <p>其他<code>esc+方向键</code>是向对应方向插入单元格。</p>
 <p>GNU TEXMACS还有很多好用的功能，这里就不一一介绍了。总之，【结构化编辑】的思想在最大程度上简化了输入，只要你记忆了那些快捷键，整个输入过程将变得极为流畅。</p>
 <h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
@@ -215,6 +280,75 @@ title: 谈谈写作软件</span>
 <li>提供演草系统，给写作者把笔纸扔掉的机会</li>
 <li>最理想的数学系统的符号是完全语义化的，并可以作为mathematica之类的前端，让写作者彻底把笔纸扔掉。</li>
 </ul>
-</div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>ayanamists</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://ayanamists.xyz/2020/08/20/2020-8-20-writting/" title="谈谈写作软件">https://ayanamists.xyz/2020/08/20/2020-8-20-writting/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/08/30/2020-08-30-pl5/" rel="prev" title="让我们实现编程语言吧(五) 解释器模型"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">让我们实现编程语言吧(五) 解释器模型</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/08/08/2020-8-8-parser3/" rel="next" title="解析CFG，不必复杂解析器"><span class="post-nav-text">解析CFG，不必复杂解析器</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div><style>.utterances {
-  max-width: 100%;
-}</style><script src="https://utteranc.es/client.js" repo="ayanamists/ayanamists.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> ayanamists</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.2</span></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="Total Visitors"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="Total Views"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#7350B9" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
+
+      
+    </div>
+    
+    
+    <div class="article-category">
+      
+        <b>Categories:</b>
+        <a class="article-category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+      
+      
+        <br/>
+      
+      
+        <b>Tags:</b>
+        <a class="article-tag-none-link" href="/tags/%E5%86%99%E4%BD%9C/" rel="tag">写作</a>
+      
+    </div>
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2020/08/30/2020-08-30-pl5/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          让我们实现编程语言吧(五) 解释器模型
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/08/08/2020-8-8-parser3/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          解析CFG，不必复杂解析器
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>
