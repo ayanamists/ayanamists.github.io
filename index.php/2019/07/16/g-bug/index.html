@@ -23,7 +23,7 @@
 <meta property="og:description" content="我的C++大作业是实现一个自己的STL deque，由于构造函数过慢（STL20ns，笔者200ns），笔者自己实现了一个针对于0x1010大小的内存分配器。为了不大量修改代码，我使用了__malloc_hook和\__free_hook这两个全局变量。大致的思路是使用一个全局对象，在其构造函数里先用mmap分配一个区域，然后在这个区域里建好一个0x1010大小的chunk链表： chxAlloc">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-07-16T12:48:39.000Z">
-<meta property="article:modified_time" content="2022-04-11T08:20:48.651Z">
+<meta property="article:modified_time" content="2022-04-11T08:33:49.316Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="编译优化">
