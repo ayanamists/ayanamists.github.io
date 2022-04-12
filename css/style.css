@@ -11,9 +11,8 @@
   --link-hover-color: #618794;
   --link-bg-color: #dae4e7;
   --selection-color: #dae4e7;
-  --body-stack: "Garamond", "Lora", "Georgia", "Times New Roman", serif;
+  --body-stack: "source-serif-pro", "Garamond", "Lora", "Georgia", "Times New Roman", serif;
   --secondary-stack: "mononoki", "Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif;
-  --title-stack: "Playfair Display SC", "Georgia", serif;
   --title-stack: "STKaiti" ,"KaiTi", "KaiTi_GB2312", "Garamond", "Lora", "Georgia", "Times New Roman", serif;
   --std-width: 48em;
 }
