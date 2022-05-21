@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在1951年如何编程--以EDSAC为例 | aya ⊢ blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="EDSAC EDSAC是剑桥大学数学实验室设计并建造的计算机。1949年，项目组成功地用EDSAC生成并打印了平方数表[1]，象征着EDSAC正式投入使用。  EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为：  具有32个箱（Tank），每个箱存储32个字（Word），注意这里的字是18个比特，而非x86平台上的16个比特。这32个箱类似于现代计算机的内存（下文用“内存”来称呼这3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在1951年如何编程--以EDSAC为例">
+<meta property="og:url" content="https://ayanamists.xyz/2022/05/21/edsac/index.html">
+<meta property="og:site_name" content="aya ⊢ blog">
+<meta property="og:description" content="EDSAC EDSAC是剑桥大学数学实验室设计并建造的计算机。1949年，项目组成功地用EDSAC生成并打印了平方数表[1]，象征着EDSAC正式投入使用。  EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为：  具有32个箱（Tank），每个箱存储32个字（Word），注意这里的字是18个比特，而非x86平台上的16个比特。这32个箱类似于现代计算机的内存（下文用“内存”来称呼这3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6263ebe6239250f7c5fbde45.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/62888b4109475431290607f6.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/62889b4a094754312911aa46.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6288a103094754312915a9f4.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6288a515094754312918d654.jpg">
+<meta property="article:published_time" content="2022-05-21T00:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-21T09:05:40.012Z">
+<meta property="article:author" content="ayanamists">
+<meta property="article:tag" content="早期计算机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/6263ebe6239250f7c5fbde45.jpg">
+  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">aya ⊢ blog</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+    
+  </nav>
+</header>
+
+    <div id="content">
+      
+<article id="post-edsac" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="headline name">
+      在1951年如何编程--以EDSAC为例
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2022-05-21T00:00:00.000Z" itemprop="datePublished">2022-05-21</time>
+
+          
+            × <span class="article-word-count">2.8k words</span>
+            
+            × <span class="article-time-to-read">10 minutes</span>
+            
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h2 id="edsac"><a class="markdownIt-Anchor" href="#edsac"></a> EDSAC</h2>
+<p>EDSAC是剑桥大学数学实验室设计并建造的计算机。1949年，项目组成功地用EDSAC生成并打印了平方数表<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>，象征着EDSAC正式投入使用。</p>
+<p><img src="https://pic.imgdb.cn/item/6263ebe6239250f7c5fbde45.jpg" alt="x^2" /></p>
+<p>EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为：</p>
+<ol>
+<li>具有32个箱（Tank），每个箱存储32个字（Word），注意这里的字是18个比特，而非x86平台上的16个比特。这32个箱类似于现代计算机的内存（下文用“内存”来称呼这32个箱）。</li>
+<li>具有5个寄存器，其中两个寄存器（指令寄存器、指令地址寄存器）用来控制，三个寄存器用来计算。</li>
+<li>计算被表现为顺序地执行指令（Order），每条指令占1个字，其中最高位不使用，所以每条指令占17个比特。所有的指令与数据都放在之前所说的内存中（事实上，在EDSAC的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。</li>
+<li>EDSAC的输入设备是五点式打孔纸带，这种纸带同时也承担了输入程序（具体是什么意思下文会解释）的作用。EDSAC的输出设备是电传式打印机。它还配备了一个电话，这个电话可以用来进行“人机交互”，在EDSAC上实现的世界上的第一个电子游戏–井字棋（有争议）就是通过电话来进行交互的。</li>
+</ol>
+<h2 id="edsac的程序"><a class="markdownIt-Anchor" href="#edsac的程序"></a> EDSAC的程序</h2>
+<p>前文已经说过，在EDSAC的设计中，“计算”就是“顺序地执行指令”，那么这些指令是存储在哪里的呢？和当今的计算机一样，这些指令是存储在“内存”中的。但，“内存”中的程序又是从何而来的呢？</p>
+<p>答案是，“内存”中的程序是通过纸带读入的。EDSAC所采用的纸带，是“五点式纸带”，大概长这样：</p>
+<p><img src="https://pic.imgdb.cn/item/62888b4109475431290607f6.jpg" alt="1" /></p>
+<p>纸带的每个单元都有5个孔，如果被打孔，代表1，没被打孔代表0. 所以，理论上来说，我们可以把纸带看作一个0-31的列表。</p>
+<p>直接通过给纸带打孔来写程序，实在是难度太大。EDSAC采用的方法是，先把文本形式的程序写在纸上，再通过keypunch（打孔机）把文本形式的程序打在纸带上。</p>
+<p>那么，文本形式的程序又是什么样的呢？这种程序类似于今天的汇编语言程序，一个输出“HI”的程序如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">T64K</span><br><span class="line">GK</span><br><span class="line">ZF</span><br><span class="line">O5θ</span><br><span class="line">O6θ</span><br><span class="line">O7θ</span><br><span class="line">ZF</span><br><span class="line">*F</span><br><span class="line">HF</span><br><span class="line">IF</span><br><span class="line">EZ</span><br><span class="line">PF</span><br></pre></td></tr></table></figure>
+<p>这都什么乱七八糟的？确实，这种形式的程序仍然十分难以阅读。我们一点一点来看。</p>
+<p>首先，这个程序的每一行都代表三种情况之一：</p>
+<ol>
+<li>指令</li>
+<li>伪指令</li>
+<li>数据</li>
+</ol>
+<p>伪指令类似于今天汇编语言中的伪指令，它是<strong>给初始化指令提供必要信息</strong>的。初始化指令（initial orders）是我们下面要讨论的重点，暂时可以把它理解为一种汇编器。</p>
+<p>我们把上面的程序稍加注释：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">T64K        伪指令，含义是把当前的程序加载到第64个字（第2个箱的第0个字）</span><br><span class="line">GK          伪指令，设置重定位参数（θ参数）为当前位置（下一行，此处为ZF的位置）</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">ZF          停机                                             &#125;            </span><br><span class="line">O5θ         设置打印机的偏移方式为“字母偏移”（Letter shift）     &#125;     </span><br><span class="line">O6θ         让打印机打印位置6的最高5位代表的字母（H）            &#125;</span><br><span class="line">O7θ         让打印机打印位置6的最高5位代表的字母（I）            &#125;      这些行被实际加载到内存中</span><br><span class="line">ZF          停机                                             &#125;</span><br><span class="line">*F          O5θ指令索引的数据                                 &#125;</span><br><span class="line">HF          O6θ指令索引的数据                                 &#125;</span><br><span class="line">IF          O7θ指令索引的数据                                 &#125;   </span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">EZ          伪指令，EZ PF这两个同时使用的时候的作用是告诉初始化指令将当前要执行的指令设置为θ参数的位置</span><br><span class="line">PF          同上</span><br></pre></td></tr></table></figure>
+<p>可见，想要理解这个程序，我们就必须理解纸带与EDSAC的关系，以及初始化指令到底是做什么的。</p>
+<h2 id="初始化指令"><a class="markdownIt-Anchor" href="#初始化指令"></a> 初始化指令</h2>
+<p>初始化指令是EDSAC系统中最核心的一段代码，一个程序，以今天的眼光去看，它可以说是EDSAC的操作系统、一个可重定位的汇编器与加载器。初始化指令有两个版本，分别叫做初始化指令1与初始化指令2。由于上面介绍的文字形式程序是由初始化指令读取的，所以不同的初始化指令读取的文字形式程序也是不一样的。</p>
+<p>为了理解初始化指令，我们最好站在初始化指令的角度去观察纸带上的程序究竟是什么样的。首先，纸带上的程序是文字形式程序的直接转译，纸带上的每个单元都对应着一个字母或者数字。例如说，<code>T64K</code>这一行再纸带上就会产生四个与之对应的单元。这么看来，初始化指令拿到的程序和文字形式程序其实没有任何区别，初始化指令需要自己将它翻译为18个比特的指令，并加载到内存中。</p>
+<p>初始化指令通过以<code>I</code>开头的指令读取纸带上的数。例如说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I2S</span><br></pre></td></tr></table></figure>
+<p>就代表把纸带头的数据读到位置2的最低5位。（<code>S</code>的含义下面会解释）</p>
+<p>这样一来我们立刻会产生一个疑问，英文字母有26个，加上10个数字，还有4个希腊字母（θ ϕ Δ π），要给这每一个符号都唯一编码，起码需要40个数，难道五点式纸带（最多32个数）不会出现不够用的情况吗？</p>
+<p>事实上，打孔器在打孔的时候，P和0，Q和1，W和2，E和3，一直到O和9，都打相同的孔：</p>
+<p><img src="https://pic.imgdb.cn/item/62889b4a094754312911aa46.jpg" alt="2" /></p>
+<p>这难道不会出问题吗？站在初始化指令的角度上，我如何区分读入的一个数是P还是0呢？</p>
+<p>答案是，初始化指令并不需要区分。文字形式程序的每一行都是有特定格式的，用形式文法表示一下就是：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi mathvariant="sans-serif">O</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">d</mi><mi mathvariant="sans-serif">e</mi><mi mathvariant="sans-serif">r</mi></mrow><mo>→</mo><mrow><mi mathvariant="sans-serif">P</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">e</mi></mrow><mtext> </mtext><msup><mi mathvariant="sans-serif">N</mi><mo>∗</mo></msup><mtext> </mtext><mrow><mi mathvariant="sans-serif">P</mi><mi mathvariant="sans-serif">o</mi><mi mathvariant="sans-serif">s</mi><mi mathvariant="sans-serif">t</mi></mrow></mrow><annotation encoding="application/x-tex">\mathsf{Order} \rightarrow \mathsf{Pre}\ \mathsf{N}^*\ \mathsf{Post}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathsf">O</span><span class="mord mathsf" style="margin-right:0.01389em;">r</span><span class="mord mathsf">d</span><span class="mord mathsf">e</span><span class="mord mathsf" style="margin-right:0.01389em;">r</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.738696em;vertical-align:0em;"></span><span class="mord"><span class="mord mathsf">P</span><span class="mord mathsf" style="margin-right:0.01389em;">r</span><span class="mord mathsf">e</span></span><span class="mspace"> </span><span class="mord"><span class="mord"><span class="mord mathsf">N</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.738696em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord"><span class="mord mathsf">P</span><span class="mord mathsf">o</span><span class="mord mathsf">s</span><span class="mord mathsf">t</span></span></span></span></span></span></p>
+<p>其中：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="sans-serif">P</mi><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">e</mi></mrow><annotation encoding="application/x-tex">\mathsf{Pre}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathsf">P</span><span class="mord mathsf" style="margin-right:0.01389em;">r</span><span class="mord mathsf">e</span></span></span></span></span>代表的是指令的类型，比如<code>I</code>就是从纸带读入，<code>O</code>就是从打印机输出。</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="sans-serif">N</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex">\mathsf{N}^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathsf">N</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.688696em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span>代表多个（可以没有，没有的话这一块就是0）0-9的整数，代表地址。</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="sans-serif">P</mi><mi mathvariant="sans-serif">o</mi><mi mathvariant="sans-serif">s</mi><mi mathvariant="sans-serif">t</mi></mrow><annotation encoding="application/x-tex">\mathsf{Post}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathsf">P</span><span class="mord mathsf">o</span><span class="mord mathsf">s</span><span class="mord mathsf">t</span></span></span></span></span>则是每条指令的后缀，在初始化指令1的设计中，它用来区分短指令和长指令，<code>S</code>为短指令，<code>L</code>为长指令；在初始化指令2的设计中，<code>F</code>代表短指令，<code>D</code>代表长指令，<code>θ</code>代表这条指令的地址要加上θ参数。</li>
+</ul>
+<p>这三个部分，实际上对应着真正机器码的18个比特的划分：</p>
+<p><img src="https://pic.imgdb.cn/item/6288a103094754312915a9f4.jpg" alt="3" /></p>
+<p>稍加思考，我们会发现，只要保证<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="sans-serif">P</mi><mi mathvariant="sans-serif">o</mi><mi mathvariant="sans-serif">s</mi><mi mathvariant="sans-serif">t</mi></mrow><annotation encoding="application/x-tex">\mathsf{Post}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathsf">P</span><span class="mord mathsf">o</span><span class="mord mathsf">s</span><span class="mord mathsf">t</span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="sans-serif">N</mi></mrow><annotation encoding="application/x-tex">\mathsf{N}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathsf">N</span></span></span></span></span>不会有相同的编码，那就不会产生歧义。而这是非常容易满足的。</p>
+<h2 id="函数调用"><a class="markdownIt-Anchor" href="#函数调用"></a> 函数调用？</h2>
+<p>1951年的计算机，竟然已经具有函数调用的能力，这无疑是非常令人惊讶的。让人稍感心安的是，这种函数调用不能进行嵌套。</p>
+<p>函数调用这种复杂的特性是如何在EDSAC上实现的呢？其实，使用初始化指令1的程序是不能进行函数调用的，而初始化指令2的出现主要就是为了解决这个问题。</p>
+<p>初始化指令2究竟用了什么魔法呢？让我们回忆一下之前说的θ参数。如果一条指令以θ结尾，那么它的地址在翻译时就要加上θ参数当前的值。这个机制，今天叫做“重定位”技术。这使得每一个程序都具有了相对独立性，每个程序都可以引用<strong>相对地址</strong>而非绝对地址，这样一来，简单地进行复制即可实现函数调用。</p>
+<p>具体来说，EDSAC有一套标准库，每当程序员想用某个库函数的时候，他会在在文字形式的程序里注记一下。而操作打孔器的操作员打到这个位置时，他会用纸带复制器把库函数复制到这条纸带的对应位置<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup>：</p>
+<p><img src="https://pic.imgdb.cn/item/6288a515094754312918d654.jpg" alt="4" /></p>
+<h2 id="自举"><a class="markdownIt-Anchor" href="#自举"></a> 自举？</h2>
+<blockquote>
+<p>天下有信数三：一曰智有所有不能立，二曰力有所不能举，三曰强有所有不能胜。故虽有尧之智而无众人之助，大功不立；有乌获之劲而不得人助，不能自举；有贲、育之强而无法术，不得长胜。故势有不可得，事有不可成。故乌获轻千钧而重其身，非其重于千钧也，势不便也。离硃易百步而难眉睫，非百步近而眉睫远也，道不可也。故明主不穷乌获以其不能自举，不困离硃以其不能自见。因可势，求易道，故用力寡而功名立。时有满虚，事有利害，物有生死，人主为三者发喜怒之色，则金石之士离心焉。圣贤之朴深矣。古明主观人，不使人观己。明于尧不能独成，<strong>乌获之不能自举</strong>，贲育之不能自胜，以法术则观行之道毕矣。</p>
+</blockquote>
+<p>乌获是一个大力士，大力士能举起很多东西，那么，他能不能举起他自己呢？</p>
+<p>根据直觉，这当然是不行的。形式化一下，我们可以说，“举起”关系是反自反的。</p>
+<p>编译器的“自举”正是来源于这个典故。假设L语言的编译器A是由L语言写成的，那么用A编译A就是“自举”。</p>
+<p>初始化指令同样有“自举”的问题。没有初始化指令，纸带上的程序根本没法被执行，但目前为止，我们介绍的程序输入方法只有一种：从纸带输入。没有初始化指令，就没法读纸带；没法读纸带，就没法将初始化指令输入EDSAC.</p>
+<p>如何解决这个问题呢？论文<sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup>提到：</p>
+<blockquote>
+<p>These orders are known as the initial orders and are permanently wired on a set of uniselectors. When the starting button is pressed, these orders are automatically transferred to the store and they then cause the input tape to be read.</p>
+</blockquote>
+<p>可见，初始化指令是通过一组叫做uniselectors的设备直接写入EDSAC的内存的。这个uniselectors又叫步进开关（stepping switch），由于作者缺乏电子相关知识，暂时没法给出完整的介绍。</p>
+<h2 id="一个小问题"><a class="markdownIt-Anchor" href="#一个小问题"></a> 一个小问题</h2>
+<p>看到这里，读者觉得如此伟大的初始化指令2到底会有多少行，或者说多少条指令呢？不妨自己估计一下，然后查阅一下相关资料，你也许会感到非常惊讶的。</p>
+<hr class="footnotes-sep" />
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>现存于伦敦的科学博物馆（science museum），本文中的图片大部分源于EDSAC模拟器的<a target="_blank" rel="noopener" href="https://www.dcs.warwick.ac.uk/~edsac/Software/EdsacTG.pdf">官方文档</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1VL4y1V7gf?spm_id_from=333.999.0.0">这个视频</a>录制于1951年，是介绍EDSAC使用方法的视频，由作者搬运自youtube. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>Programme Organization and Initial Orders for the EDSAC, Stable URL: <a target="_blank" rel="noopener" href="https://www.jstor.org/stable/98551">https://www.jstor.org/stable/98551</a> <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+      
+    </div>
+    
+    
+    <div class="article-category">
+      
+        <b>Categories:</b>
+        <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%86%E5%8F%B2/">计算机历史</a>
+      
+      
+        <br/>
+      
+      
+        <b>Tags:</b>
+        <a class="article-tag-none-link" href="/tags/%E6%97%A9%E6%9C%9F%E8%AE%A1%E7%AE%97%E6%9C%BA/" rel="tag">早期计算机</a>
+      
+    </div>
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+  
+  
+    <a href="/2021/11/25/hindley-milner/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          十分钟搞懂 Hindley-Milner 类型系统
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>
