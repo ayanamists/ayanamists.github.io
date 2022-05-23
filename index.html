@@ -73,7 +73,7 @@
           <time class="article-date" datetime="2022-05-21T00:00:00.000Z" itemprop="datePublished">2022-05-21</time>
 
           
-            × <span class="article-word-count">2.8k words</span>
+            × <span class="article-word-count">2.9k words</span>
             
             × <span class="article-time-to-read">10 minutes</span>
             
@@ -91,7 +91,7 @@
 <ol>
 <li>具有32个箱（Tank），每个箱存储32个字（Word），注意这里的字是18个比特，而非x86平台上的16个比特。这32个箱类似于现代计算机的内存（下文用“内存”来称呼这32个箱）。</li>
 <li>具有5个寄存器，其中两个寄存器（指令寄存器、指令地址寄存器）用来控制，三个寄存器用来计算。</li>
-<li>计算被表现为顺序地执行指令（Order），每条指令占1个字，其中最高位不使用，所以每条指令占17个比特。所有的指令与数据都放在之前所说的内存中（事实上，在EDSAC的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。</li>
+<li>计算被表现为顺序地执行指令（Order），每条指令占1个字，其中有一位不使用，所以每条指令占17个比特。所有的指令与数据都放在之前所说的内存中（事实上，在EDSAC的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。</li>
 <li>EDSAC的输入设备是五点式打孔纸带，这种纸带同时也承担了输入程序（具体是什么意思下文会解释）的作用。EDSAC的输出设备是电传式打印机。它还配备了一个电话，这个电话可以用来进行“人机交互”，在EDSAC上实现的世界上的第一个电子游戏–井字棋（有争议）就是通过电话来进行交互的。</li>
 </ol>
 <h2 id="edsac的程序"><a class="markdownIt-Anchor" href="#edsac的程序"></a> EDSAC的程序</h2>

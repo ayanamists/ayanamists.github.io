@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://pic.imgdb.cn/item/6288a103094754312915a9f4.jpg">
 <meta property="og:image" content="https://pic.imgdb.cn/item/6288a515094754312918d654.jpg">
 <meta property="article:published_time" content="2022-05-21T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-21T09:05:40.012Z">
+<meta property="article:modified_time" content="2022-05-23T13:36:41.385Z">
 <meta property="article:author" content="ayanamists">
 <meta property="article:tag" content="早期计算机">
 <meta name="twitter:card" content="summary">
@@ -80,7 +80,7 @@
           <time class="article-date" datetime="2022-05-21T00:00:00.000Z" itemprop="datePublished">2022-05-21</time>
 
           
-            × <span class="article-word-count">2.8k words</span>
+            × <span class="article-word-count">2.9k words</span>
             
             × <span class="article-time-to-read">10 minutes</span>
             
@@ -98,15 +98,15 @@
 <ol>
 <li>具有32个箱（Tank），每个箱存储32个字（Word），注意这里的字是18个比特，而非x86平台上的16个比特。这32个箱类似于现代计算机的内存（下文用“内存”来称呼这32个箱）。</li>
 <li>具有5个寄存器，其中两个寄存器（指令寄存器、指令地址寄存器）用来控制，三个寄存器用来计算。</li>
-<li>计算被表现为顺序地执行指令（Order），每条指令占1个字，其中最高位不使用，所以每条指令占17个比特。所有的指令与数据都放在之前所说的内存中（事实上，在EDSAC的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。</li>
+<li>计算被表现为顺序地执行指令（Order），每条指令占1个字，其中有一位不使用，所以每条指令占17个比特。所有的指令与数据都放在之前所说的内存中（事实上，在EDSAC的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。</li>
 <li>EDSAC的输入设备是五点式打孔纸带，这种纸带同时也承担了输入程序（具体是什么意思下文会解释）的作用。EDSAC的输出设备是电传式打印机。它还配备了一个电话，这个电话可以用来进行“人机交互”，在EDSAC上实现的世界上的第一个电子游戏–井字棋（有争议）就是通过电话来进行交互的。</li>
 </ol>
 <h2 id="edsac的程序"><a class="markdownIt-Anchor" href="#edsac的程序"></a> EDSAC的程序</h2>
 <p>前文已经说过，在EDSAC的设计中，“计算”就是“顺序地执行指令”，那么这些指令是存储在哪里的呢？和当今的计算机一样，这些指令是存储在“内存”中的。但，“内存”中的程序又是从何而来的呢？</p>
 <p>答案是，“内存”中的程序是通过纸带读入的。EDSAC所采用的纸带，是“五点式纸带”，大概长这样：</p>
 <p><img src="https://pic.imgdb.cn/item/62888b4109475431290607f6.jpg" alt="1" /></p>
-<p>纸带的每个单元都有5个孔，如果被打孔，代表1，没被打孔代表0. 所以，理论上来说，我们可以把纸带看作一个0-31的列表。</p>
-<p>直接通过给纸带打孔来写程序，实在是难度太大。EDSAC采用的方法是，先把文本形式的程序写在纸上，再通过keypunch（打孔机）把文本形式的程序打在纸带上。</p>
+<p>纸带的每个单元都有5个孔，如果被打孔，代表1，没被打孔代表0. 所以，理论上来说，我们可以把纸带看作一个列表，列表的每个元素都是0-31的自然数。</p>
+<p>纸带表示的不是机器码（18位的指令），而是“文本程序”的直接编码。在EDSAC的年代，程序员首先需要把文本形式的程序写在纸上，再通过keypunch（打孔机）把文本形式的程序打在纸带上。</p>
 <p>那么，文本形式的程序又是什么样的呢？这种程序类似于今天的汇编语言程序，一个输出“HI”的程序如下：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">T64K</span><br><span class="line">GK</span><br><span class="line">ZF</span><br><span class="line">O5θ</span><br><span class="line">O6θ</span><br><span class="line">O7θ</span><br><span class="line">ZF</span><br><span class="line">*F</span><br><span class="line">HF</span><br><span class="line">IF</span><br><span class="line">EZ</span><br><span class="line">PF</span><br></pre></td></tr></table></figure>
 <p>这都什么乱七八糟的？确实，这种形式的程序仍然十分难以阅读。我们一点一点来看。</p>
