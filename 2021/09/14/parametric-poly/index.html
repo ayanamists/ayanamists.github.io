@@ -1,96 +1,59 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>c++模板与参数多态的根本区别 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="c++模板与参数多态 模板(template)是一种c++语言特性，类似于： 1234template &lt;class T&gt;T id(T x) &amp;#123;    return x;&amp;#125; 这里的T可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份ppt和这个网页。 然而这篇博">
-<meta property="og:type" content="article">
-<meta property="og:title" content="c++模板与参数多态的根本区别">
-<meta property="og:url" content="https://ayanamists.xyz/2021/09/14/parametric-poly/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="c++模板与参数多态 模板(template)是一种c++语言特性，类似于： 1234template &lt;class T&gt;T id(T x) &amp;#123;    return x;&amp;#125; 这里的T可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份ppt和这个网页。 然而这篇博">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://homepages.inf.ed.ac.uk/wadler/gj/gj-front-full.jpg">
-<meta property="article:published_time" content="2021-09-14T15:53:47.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="c++">
-<meta property="article:tag" content="编程语言基础">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://homepages.inf.ed.ac.uk/wadler/gj/gj-front-full.jpg">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="blog-parametric-poly" class="article article-type-blog" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      c++模板与参数多态的根本区别
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-09-14T15:53:47.000Z" itemprop="datePublished">2021-09-14</time>
-
-          
-            × <span class="article-word-count">3.9k words</span>
-            
-            × <span class="article-time-to-read">19 minutes</span>
-            
-          
+        <div class="post-main-title">
+            c++模板与参数多态的根本区别
         </div>
-      </header>
+        <div class="post-meta">
+            2021-09-14
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="c模板与参数多态"><a class="markdownIt-Anchor" href="#c模板与参数多态"></a> c++模板与参数多态</h2>
 <p>模板(template)是一种c++语言特性，类似于：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="function">T <span class="title">id</span><span class="params">(T x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;
+<span class="hljs-title">T</span> <span class="hljs-title">id</span>(<span class="hljs-title">T</span> <span class="hljs-title">x</span>) &#123;</span>
+    <span class="hljs-keyword">return</span> x;
+&#125;
+</code></pre>
 <p>这里的<code>T</code>可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份<a target="_blank" rel="noopener" href="https://www.cs.bham.ac.uk/~hxt/2015/c-plus-plus/templates-slides.pdf">ppt</a>和这个<a target="_blank" rel="noopener" href="https://catonmat.net/cpp-polymorphism">网页</a>。</p>
 <p>然而这篇博客中，我将会说明，<strong>无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别</strong>。</p>
 <h2 id="到底什么是参数多态"><a class="markdownIt-Anchor" href="#到底什么是参数多态"></a> 到底什么是参数多态</h2>
@@ -102,9 +65,13 @@
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace"> </span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="mspace"> </span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span></span></span></span></span></p>
 <p>虽然有了构想，但是直到1970年代的Jean-Yves Girard的二阶直觉主义命题逻辑（second order propositional logic，注意不要和二阶逻辑⁽second order logic⁾搞混）和John C. Reynolds的系统F（System F），这种特性才得到了理论阐释。最终在1975年的ML语言中得到实现。</p>
 <p>在ML类语言中，一个函数的类型中可以含有类型变量，例如如下的<code>id</code>函数：</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> id (x:<span class="symbol">&#x27;a</span>) = x</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ocaml"><span class="hljs-keyword">let</span> id (x:<span class="hljs-symbol">'a</span>) = x
+</code></pre>
 <p><code>id</code>函数的类型是<code>'a -&gt; 'a</code>，其中<code>'a</code>就是一个类型变量，它可以与<strong>任意</strong>类型相匹配，所以得到</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id <span class="number">1</span></span><br><span class="line">id <span class="string">&quot;ssdfs&quot;</span></span><br><span class="line">id <span class="number">1.23</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ocaml">id <span class="hljs-number">1</span>
+id <span class="hljs-string">"ssdfs"</span>
+id <span class="hljs-number">1.23</span>
+</code></pre>
 <p>都是合法的表达式。ML类语言的类型系统可以看作是对System F进行限制和扩展后的系统。System F可以看作对λ表达式的扩展，在system F中，λ表达式的每个绑定变量都必须给定一个类型，而这个类型则是通过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Λ</mi></mrow><annotation encoding="application/x-tex">Λ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">Λ</span></span></span></span>（大写的λ）引入的。</p>
 <p>具体来说，最基本的λ表达式<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi><mi>x</mi><mi mathvariant="normal">.</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">λx.x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord">.</span><span class="mord mathdefault">x</span></span></span></span>在System F中应该写作：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Λ</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>λ</mi><mo stretchy="false">(</mo><mi>x</mi><mo>:</mo><mi>t</mi><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">Λt.λ (x:t).x
@@ -146,22 +113,85 @@
 <h2 id="c模板满足命题1吗"><a class="markdownIt-Anchor" href="#c模板满足命题1吗"></a> C++模板满足命题1.吗？</h2>
 <p>答案是很显然的：<strong>不满足</strong>。这也就是为什么C++模板不是参数多态的一个原因。</p>
 <p>例如说，<code>id</code>函数可以写成：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="function">T <span class="title">id</span><span class="params">(T x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;
+<span class="hljs-title">T</span> <span class="hljs-title">id</span>(<span class="hljs-title">T</span> <span class="hljs-title">x</span>) &#123;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">10</span>;
+&#125;
+</code></pre>
 <p>如果之前没有写过，你可能会惊讶地发现，这竟然是<strong>不会报错</strong>的！事实上，无论怎么写，它都不会报错：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">id</span><span class="params">(T x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;
+<span class="hljs-title">int</span> <span class="hljs-title">id</span>(<span class="hljs-title">T</span> <span class="hljs-title">x</span>) &#123;</span>
+    <span class="hljs-keyword">return</span> x;
+&#125;
+</code></pre>
 <p>它真正报错的位置，是在对<code>id</code>函数进行使用的时候：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> x = <span class="built_in">id</span>(<span class="string">&quot;sdfsdf&quot;</span>);</span><br><span class="line"></span><br><span class="line">------------------------</span><br><span class="line">.\test.cpp:<span class="number">5</span>:<span class="number">10</span>: error: cannot initialize <span class="keyword">return</span> object of type <span class="string">&#x27;const char *&#x27;</span></span><br><span class="line">      with an rvalue of type <span class="string">&#x27;int&#x27;</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">         ^~</span><br><span class="line">.\test.cpp:<span class="number">9</span>:<span class="number">14</span>: note: in instantiation of function <span class="keyword">template</span> specialization       </span><br><span class="line">      <span class="string">&#x27;id&lt;const char *&gt;&#x27;</span> requested here</span><br><span class="line">    <span class="keyword">auto</span> y = <span class="built_in">id</span>(<span class="string">&quot;s&quot;</span>);</span><br><span class="line">             ^</span><br><span class="line"><span class="number">1</span> error generated.</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-keyword">auto</span> x = id(<span class="hljs-string">"sdfsdf"</span>);
+
+------------------------
+.\test.cpp:<span class="hljs-number">5</span>:<span class="hljs-number">10</span>: error: cannot initialize <span class="hljs-keyword">return</span> object of type <span class="hljs-string">'const char *'</span>
+      with an rvalue of type <span class="hljs-string">'int'</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-number">10</span>;
+         ^~
+.\test.cpp:<span class="hljs-number">9</span>:<span class="hljs-number">14</span>: note: in instantiation of function <span class="hljs-keyword">template</span> specialization       
+      <span class="hljs-string">'id&lt;const char *&gt;'</span> requested here
+    <span class="hljs-keyword">auto</span> y = id(<span class="hljs-string">"s"</span>);
+             ^
+<span class="hljs-number">1</span> error generated.
+</code></pre>
 <p>这诉说了一个无情的真相：C++编译器不会对模板函数进行类型检查，只会在<strong>特化</strong>的时候进行类型检查。而这使得命题1.无法成立，因为我们根本没有保证在<code>T</code>是一个类型，<code>x</code>是<code>T</code>类型的情况下，可以推出<code>id</code>函数体（也就是<code>return x</code>）的类型是<code>T</code>.</p>
 <p>相反，ocaml会无视泛型参数：</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">let</span> id (x: <span class="symbol">&#x27;a</span>) : <span class="built_in">int</span> = x ;;</span><br><span class="line"><span class="keyword">val</span> id : <span class="built_in">int</span> -&gt; <span class="built_in">int</span> = &lt;<span class="keyword">fun</span>&gt;</span><br></pre></td></tr></table></figure>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">let</span> id (x: <span class="symbol">&#x27;a</span>) : <span class="symbol">&#x27;a</span> = <span class="number">10</span> ;;</span><br><span class="line"><span class="keyword">val</span> id : <span class="built_in">int</span> -&gt; <span class="built_in">int</span> = &lt;<span class="keyword">fun</span>&gt;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ocaml"># <span class="hljs-keyword">let</span> id (x: <span class="hljs-symbol">'a</span>) : <span class="hljs-built_in">int</span> = x ;;
+<span class="hljs-keyword">val</span> id : <span class="hljs-built_in">int</span> -&gt; <span class="hljs-built_in">int</span> = &lt;<span class="hljs-keyword">fun</span>&gt;
+</code></pre>
+<pre class="highlight"><code class="ocaml"># <span class="hljs-keyword">let</span> id (x: <span class="hljs-symbol">'a</span>) : <span class="hljs-symbol">'a</span> = <span class="hljs-number">10</span> ;;
+<span class="hljs-keyword">val</span> id : <span class="hljs-built_in">int</span> -&gt; <span class="hljs-built_in">int</span> = &lt;<span class="hljs-keyword">fun</span>&gt;
+</code></pre>
 <p>Haskell会报错：</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Prelude</span>&gt; :&#123;</span><br><span class="line"><span class="type">Prelude</span>| id :: a -&gt; a</span><br><span class="line"><span class="type">Prelude</span>| id x = <span class="number">10</span></span><br><span class="line"><span class="type">Prelude</span>| :&#125;</span><br><span class="line"></span><br><span class="line">&lt;interactive&gt;:<span class="number">6</span>:<span class="number">8</span>: error:</span><br><span class="line">    • <span class="type">No</span> <span class="keyword">instance</span> for (<span class="type">Num</span> a) arising from the literal ‘<span class="number">10</span>’</span><br><span class="line">      <span class="type">Possible</span> fix:</span><br><span class="line">        add (<span class="type">Num</span> a) to the context <span class="keyword">of</span></span><br><span class="line">          the <span class="class"><span class="keyword">type</span> signature for:</span></span><br><span class="line">            id :: <span class="keyword">forall</span> a. a -&gt; a</span><br><span class="line">    • <span class="type">In</span> the expression: <span class="number">10</span></span><br><span class="line">      <span class="type">In</span> an equation for ‘id’: id x = <span class="number">10</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Prelude</span>&gt; :&#123;</span><br><span class="line"><span class="type">Prelude</span>| id :: a -&gt; <span class="type">Int</span></span><br><span class="line"><span class="type">Prelude</span>| id x = x</span><br><span class="line"><span class="type">Prelude</span>| :&#125;</span><br><span class="line"></span><br><span class="line">&lt;interactive&gt;:<span class="number">12</span>:<span class="number">8</span>: error:</span><br><span class="line">    • <span class="type">Couldn&#x27;t</span> match expected <span class="class"><span class="keyword">type</span> ‘<span class="type">Int</span>’ with actual <span class="keyword">type</span> ‘a’</span></span><br><span class="line">      ‘a’ is a rigid <span class="class"><span class="keyword">type</span> variable bound by</span></span><br><span class="line">        the <span class="class"><span class="keyword">type</span> signature for:</span></span><br><span class="line">          id :: <span class="keyword">forall</span> a. a -&gt; <span class="type">Int</span></span><br><span class="line">        at &lt;interactive&gt;:<span class="number">11</span>:<span class="number">1</span>-<span class="number">14</span></span><br><span class="line">    • <span class="type">In</span> the expression: x</span><br><span class="line">      <span class="type">In</span> an equation for ‘id’: id x = x</span><br><span class="line">    • <span class="type">Relevant</span> bindings include</span><br><span class="line">        x :: a (bound at &lt;interactive&gt;:<span class="number">12</span>:<span class="number">4</span>)</span><br><span class="line">        id :: a -&gt; <span class="type">Int</span> (bound at &lt;interactive&gt;:<span class="number">12</span>:<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="haskell"><span class="hljs-type">Prelude</span>&gt; :&#123;
+<span class="hljs-type">Prelude</span>| id :: a -&gt; a
+<span class="hljs-type">Prelude</span>| id x = <span class="hljs-number">10</span>
+<span class="hljs-type">Prelude</span>| :&#125;
+
+&lt;interactive&gt;:<span class="hljs-number">6</span>:<span class="hljs-number">8</span>: error:
+    • <span class="hljs-type">No</span> <span class="hljs-keyword">instance</span> for (<span class="hljs-type">Num</span> a) arising from the literal ‘<span class="hljs-number">10</span>’
+      <span class="hljs-type">Possible</span> fix:
+        add (<span class="hljs-type">Num</span> a) to the context <span class="hljs-keyword">of</span>
+          the <span class="hljs-class"><span class="hljs-keyword">type</span> signature for:</span>
+            id :: <span class="hljs-keyword">forall</span> a. a -&gt; a
+    • <span class="hljs-type">In</span> the expression: <span class="hljs-number">10</span>
+      <span class="hljs-type">In</span> an equation for ‘id’: id x = <span class="hljs-number">10</span>
+</code></pre>
+<pre class="highlight"><code class="haskell"><span class="hljs-type">Prelude</span>&gt; :&#123;
+<span class="hljs-type">Prelude</span>| id :: a -&gt; <span class="hljs-type">Int</span>
+<span class="hljs-type">Prelude</span>| id x = x
+<span class="hljs-type">Prelude</span>| :&#125;
+
+&lt;interactive&gt;:<span class="hljs-number">12</span>:<span class="hljs-number">8</span>: error:
+    • <span class="hljs-type">Couldn't</span> match expected <span class="hljs-class"><span class="hljs-keyword">type</span> ‘<span class="hljs-type">Int</span>’ with actual <span class="hljs-keyword">type</span> ‘a’</span>
+      ‘a’ is a rigid <span class="hljs-class"><span class="hljs-keyword">type</span> variable bound by</span>
+        the <span class="hljs-class"><span class="hljs-keyword">type</span> signature for:</span>
+          id :: <span class="hljs-keyword">forall</span> a. a -&gt; <span class="hljs-type">Int</span>
+        at &lt;interactive&gt;:<span class="hljs-number">11</span>:<span class="hljs-number">1</span><span class="hljs-number">-14</span>
+    • <span class="hljs-type">In</span> the expression: x
+      <span class="hljs-type">In</span> an equation for ‘id’: id x = x
+    • <span class="hljs-type">Relevant</span> bindings include
+        x :: a (bound at &lt;interactive&gt;:<span class="hljs-number">12</span>:<span class="hljs-number">4</span>)
+        id :: a -&gt; <span class="hljs-type">Int</span> (bound at &lt;interactive&gt;:<span class="hljs-number">12</span>:<span class="hljs-number">1</span>)
+</code></pre>
 <p>可见，c++并不是参数多态，它的模板系统和ML类语言中的泛型系统完全不在一个层次上。</p>
 <h2 id="类型类影响问题吗"><a class="markdownIt-Anchor" href="#类型类影响问题吗"></a> 类型类影响问题吗？</h2>
 <p>有人可能会说了，Haskell的类型类不是也会出现“在使用的时候才报错”这一现象吗？比如说</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">max</span> :: <span class="type">Ord</span> p =&gt; p -&gt; p -&gt; p</span><br><span class="line"><span class="title">max</span> x y = <span class="keyword">if</span> y &gt; x <span class="keyword">then</span> y <span class="keyword">else</span> x</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">X</span> = <span class="type">I</span> | <span class="type">J</span></span></span><br><span class="line"></span><br><span class="line"><span class="title">max</span> <span class="type">I</span> <span class="type">J</span> <span class="comment">-- 这里报错</span></span><br><span class="line"><span class="comment">-- error:</span></span><br><span class="line"><span class="comment">--    • No instance for (Ord X) arising from a use of ‘max’</span></span><br><span class="line"><span class="comment">--    • In the expression: max I J</span></span><br><span class="line"><span class="comment">--      In an equation for ‘it’: it = max I J</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="haskell"><span class="hljs-title">max</span> :: <span class="hljs-type">Ord</span> p =&gt; p -&gt; p -&gt; p
+<span class="hljs-title">max</span> x y = <span class="hljs-keyword">if</span> y &gt; x <span class="hljs-keyword">then</span> y <span class="hljs-keyword">else</span> x
+
+<span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">X</span> = <span class="hljs-type">I</span> | <span class="hljs-type">J</span></span>
+
+<span class="hljs-title">max</span> <span class="hljs-type">I</span> <span class="hljs-type">J</span> <span class="hljs-comment">-- 这里报错</span>
+<span class="hljs-comment">-- error:</span>
+<span class="hljs-comment">--    • No instance for (Ord X) arising from a use of ‘max’</span>
+<span class="hljs-comment">--    • In the expression: max I J</span>
+<span class="hljs-comment">--      In an equation for ‘it’: it = max I J</span>
+</code></pre>
 <p>这个错误简单来说，就是自定义类型<code>X</code>没有实现<code>Ord</code>类型类，而<code>max</code>的<strong>类型签名</strong>中需要类型类<code>Ord</code>，所以报错。这和c++模板仍然很不一样。根本性的区别是，在对<code>max I J</code>进行类型检查的时候，只需要<code>max :: Ord p =&gt; p -&gt; p -&gt; p</code>这一个信息就够了，不需要知道<code>max</code>的函数体是什么，更不需要“特化”这个函数，这仍是在类型系统中的推导。</p>
 <h2 id="真假泛型性能更好"><a class="markdownIt-Anchor" href="#真假泛型性能更好"></a> 真假泛型？性能更好？</h2>
 <p>虽然我很不喜欢java语言，但是java语言的泛型系统（在一般情况下）满足命题1.，它是真正的参数多态。这是因为java泛型的前身–Generic Java（GJ）是由Philip Wadler等真正的编程语言专家设计的。</p>
@@ -174,91 +204,171 @@
 <li>内联(inlining)</li>
 </ul>
 <p>特化可以看作是一个部分求值的例子。ocaml和Haskell的IR很难打印出来，而F#则可以通过字节码反编译回C#，在<a target="_blank" rel="noopener" href="https://sharplab.io">sharplab</a>中，可以发现</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> select x y <span class="operator">=</span> x</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> select2 (x<span class="operator">:</span><span class="type">int</span>) (y<span class="operator">:</span><span class="type">int</span>) <span class="operator">=</span> select x y</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> select x y = x
+
+<span class="hljs-keyword">let</span> select2 (x:int) (y:int) = select x y
+</code></pre>
 <p>这样的例子会得到：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Reflection;</span><br><span class="line"><span class="keyword">using</span> Microsoft.FSharp.Core;</span><br><span class="line"></span><br><span class="line">[<span class="meta">assembly: FSharpInterfaceDataVersion(2, 0, 0)</span>]</span><br><span class="line">[<span class="meta">assembly: AssemblyVersion(<span class="string">&quot;0.0.0.0&quot;</span>)</span>]</span><br><span class="line">[<span class="meta">CompilationMapping(SourceConstructFlags.Module)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> @_</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">CompilationArgumentCounts(new int[</span>] &#123;</span><br><span class="line">        <span class="number">1</span>,</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">    &#125;)]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> a <span class="title">select</span>&lt;<span class="title">a</span>, <span class="title">b</span>&gt;(<span class="params">a x, b y</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">CompilationArgumentCounts(new int[</span>] &#123;</span><br><span class="line">        <span class="number">1</span>,</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">    &#125;)]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> <span class="title">select2</span>(<span class="params"><span class="built_in">int</span> x, <span class="built_in">int</span> y</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> &lt;<span class="title">StartupCode</span>$_&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> $_</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="csharp"><span class="hljs-keyword">using</span> System.Reflection;
+<span class="hljs-keyword">using</span> Microsoft.FSharp.Core;
+
+[<span class="hljs-meta">assembly: FSharpInterfaceDataVersion(2, 0, 0)</span>]
+[<span class="hljs-meta">assembly: AssemblyVersion(<span class="hljs-meta-string">"0.0.0.0"</span>)</span>]
+[<span class="hljs-meta">CompilationMapping(SourceConstructFlags.Module)</span>]
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> @_
+&#123;
+    [<span class="hljs-meta">CompilationArgumentCounts(new int[</span>] &#123;
+        <span class="hljs-number">1</span>,
+        <span class="hljs-number">1</span>
+    &#125;)]
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> a <span class="hljs-keyword">select</span>&lt;a, b&gt;(a x, b y)
+    &#123;
+        <span class="hljs-keyword">return</span> x;
+    &#125;
+
+    [<span class="hljs-meta">CompilationArgumentCounts(new int[</span>] &#123;
+        <span class="hljs-number">1</span>,
+        <span class="hljs-number">1</span>
+    &#125;)]
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">select2</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y</span>)</span>
+    &#123;
+        <span class="hljs-keyword">return</span> x;
+    &#125;
+&#125;
+<span class="hljs-keyword">namespace</span> &lt;<span class="hljs-title">StartupCode</span>$_&gt;
+&#123;
+    <span class="hljs-keyword">internal</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> $_
+    &#123;
+    &#125;
+&#125;
+</code></pre>
 <p><code>select2</code>难道不是对<code>select</code>的“特化”吗？由此看来，c++模板的“性能更好”也是很难说清楚的问题。</p>
 <h2 id="concept-能解决问题吗"><a class="markdownIt-Anchor" href="#concept-能解决问题吗"></a> concept: 能解决问题吗？</h2>
 <p>是否是参数多态，似乎只是一个学术问题。不是参数多态，主要导致的是使用一个参数化类型（parametric type，也就是含有∀的类型）时的潜在错误，pararmetricity不成立，某些定理（比如<code>map f . map g = map (f . g)</code>）也不成立。</p>
 <p>之前已经提到了，Haskell也有会出错的问题。其他ML家族的语言，如果不算上类似F#的object系统的扩展，则基本没有出错的问题，但是需要传递更多参数。比如<code>List.sortWith</code>的类型就是<code>(('a -&gt; 'a -&gt; int) -&gt; 'a list -&gt; 'a list)</code>，对于任何<code>'a</code>都不会出错，但是需要显式地传递一个comparer. 所以不是参数多态，可能也不是特别大的问题。</p>
 <p>但说到c++，不是参数多态确实带来了一个相当严重的问题，那就是模板系统给出的报错信息常常令人无从下手。</p>
 <p>例如这样的程序：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::vector&lt;A&gt; v;</span><br><span class="line">    std::<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> &#123;</span>&#125;;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;A&gt; v;
+    <span class="hljs-built_in">std</span>::sort(v.begin(), v.end());
+&#125;
+</code></pre>
 <p>会产生200行，19kb的报错：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In file included from .\test.cpp:3:</span><br><span class="line">C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\algorithm:7361:32: error: no matching function for call to object of type &#x27;std::less&lt;&gt;&#x27;</span><br><span class="line">            if (_DEBUG_LT_PRED(_Pred, _Val, *_First)) &#123; // found new earliest element, move to front</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="text">In file included from .\test.cpp:3:
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\include\algorithm:7361:32: error: no matching function for call to object of type 'std::less&lt;&gt;'
+            if (_DEBUG_LT_PRED(_Pred, _Val, *_First)) &#123; // found new earliest element, move to front
+...
+</code></pre>
 <p>为了解决这个问题，c++20引入了concept，concept借鉴了类型类和java泛型的设计，可以使得我们能写出类似于之前Haskell的<code>max</code>那样的程序：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;concepts&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt; <span class="function"><span class="keyword">requires</span> std::equality_comparable&lt;T&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">max</span><span class="params">(T x, T y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &gt; y) &#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;concepts&gt;</span></span>
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt; <span class="hljs-title">requires</span> <span class="hljs-title">std</span>:</span>:<span class="hljs-function">equality_comparable&lt;T&gt;
+<span class="hljs-keyword">bool</span> <span class="hljs-title">max</span><span class="hljs-params">(T x, T y)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (x &gt; y) &#123;
+        <span class="hljs-keyword">return</span> x;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span> y;
+    &#125;
+&#125;
+</code></pre>
 <p>如果这时写出：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">max</span>(<span class="built_in">A</span>(), <span class="built_in">A</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span>&#123;</span>&#125;;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+    max(A(), A());
+&#125;
+</code></pre>
 <p>编译器会报错：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">source&gt;: In function &#x27;int main()&#x27;:</span><br><span class="line">&lt;source&gt;:17:8: error: no matching function for call to &#x27;max(A, A)&#x27;</span><br><span class="line">   17 |     max(A(), A());</span><br><span class="line">      |     ~~~^~~~~~~~~~</span><br><span class="line">&lt;source&gt;:6:6: note: candidate: &#x27;template&lt;class T&gt;  requires  equality_comparable&lt;T&gt; bool max(T, T)&#x27;</span><br><span class="line">    6 | bool max(T x, T y) &#123;</span><br><span class="line">      |      ^~~</span><br><span class="line">&lt;source&gt;:6:6: note:   template argument deduction/substitution failed:</span><br><span class="line">&lt;source&gt;:6:6: note: constraints not satisfied</span><br><span class="line">In file included from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/compare:39,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_pair.h:65,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algobase.h:64,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/char_traits.h:39,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ios:40,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ostream:38,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/iostream:39,</span><br><span class="line">                 from &lt;source&gt;:1:</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts: In substitution of &#x27;template&lt;class T&gt;  requires  equality_comparable&lt;T&gt; bool max(T, T) [with T = A]&#x27;:</span><br><span class="line">&lt;source&gt;:17:8:   required from here</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:280:15:   required for the satisfaction of &#x27;__weakly_eq_cmp_with&lt;_Tp, _Tp&gt;&#x27; [with _Tp = A]</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:290:13:   required for the satisfaction of &#x27;equality_comparable&lt;T&gt;&#x27; [with T = A]</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:281:4:   in requirements with &#x27;std::remove_reference_t&lt;_Tp&gt;&amp; __t&#x27;, &#x27;std::remove_reference_t&lt;_Up&gt;&amp; __u&#x27; [with _Up = A; _Tp = A]</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:282:17: note: the required expression &#x27;(__t == __u)&#x27; is invalid</span><br><span class="line">  282 |           &#123; __t == __u &#125; -&gt; __boolean_testable;</span><br><span class="line">      |             ~~~~^~~~~~</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:283:17: note: the required expression &#x27;(__t != __u)&#x27; is invalid</span><br><span class="line">  283 |           &#123; __t != __u &#125; -&gt; __boolean_testable;</span><br><span class="line">      |             ~~~~^~~~~~</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:284:17: note: the required expression &#x27;(__u == __t)&#x27; is invalid</span><br><span class="line">  284 |           &#123; __u == __t &#125; -&gt; __boolean_testable;</span><br><span class="line">      |             ~~~~^~~~~~</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:285:17: note: the required expression &#x27;(__u != __t)&#x27; is invalid</span><br><span class="line">  285 |           &#123; __u != __t &#125; -&gt; __boolean_testable;</span><br><span class="line">      |             ~~~~^~~~~~</span><br><span class="line">cc1plus: note: set &#x27;-fconcepts-diagnostics-depth=&#x27; to at least 2 for more detail</span><br><span class="line">Compiler returned: 1</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="text">source&gt;: In function 'int main()':
+&lt;source&gt;:17:8: error: no matching function for call to 'max(A, A)'
+   17 |     max(A(), A());
+      |     ~~~^~~~~~~~~~
+&lt;source&gt;:6:6: note: candidate: 'template&lt;class T&gt;  requires  equality_comparable&lt;T&gt; bool max(T, T)'
+    6 | bool max(T x, T y) &#123;
+      |      ^~~
+&lt;source&gt;:6:6: note:   template argument deduction/substitution failed:
+&lt;source&gt;:6:6: note: constraints not satisfied
+In file included from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/compare:39,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_pair.h:65,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algobase.h:64,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/char_traits.h:39,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ios:40,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ostream:38,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/iostream:39,
+                 from &lt;source&gt;:1:
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts: In substitution of 'template&lt;class T&gt;  requires  equality_comparable&lt;T&gt; bool max(T, T) [with T = A]':
+&lt;source&gt;:17:8:   required from here
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:280:15:   required for the satisfaction of '__weakly_eq_cmp_with&lt;_Tp, _Tp&gt;' [with _Tp = A]
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:290:13:   required for the satisfaction of 'equality_comparable&lt;T&gt;' [with T = A]
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:281:4:   in requirements with 'std::remove_reference_t&lt;_Tp&gt;&amp; __t', 'std::remove_reference_t&lt;_Up&gt;&amp; __u' [with _Up = A; _Tp = A]
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:282:17: note: the required expression '(__t == __u)' is invalid
+  282 |           &#123; __t == __u &#125; -&gt; __boolean_testable;
+      |             ~~~~^~~~~~
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:283:17: note: the required expression '(__t != __u)' is invalid
+  283 |           &#123; __t != __u &#125; -&gt; __boolean_testable;
+      |             ~~~~^~~~~~
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:284:17: note: the required expression '(__u == __t)' is invalid
+  284 |           &#123; __u == __t &#125; -&gt; __boolean_testable;
+      |             ~~~~^~~~~~
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:285:17: note: the required expression '(__u != __t)' is invalid
+  285 |           &#123; __u != __t &#125; -&gt; __boolean_testable;
+      |             ~~~~^~~~~~
+cc1plus: note: set '-fconcepts-diagnostics-depth=' to at least 2 for more detail
+Compiler returned: 1
+</code></pre>
 <p>这里会直接表明A不满足<code>std::equality_comparable</code>的约束。虽然如此，噪音还是非常的多。更重要的是，对于库函数–这种我们不想研究源码的函数，效果还是一般：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">n file included from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algobase.h:71,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/char_traits.h:39,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ios:40,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ostream:38,</span><br><span class="line">                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/iostream:39,</span><br><span class="line">                 from &lt;source&gt;:1:</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/predefined_ops.h: In instantiation of &#x27;constexpr bool __gnu_cxx::__ops::_Iter_less_iter::operator()(_Iterator1, _Iterator2) const [with _Iterator1 = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Iterator2 = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;]&#x27;:</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:1826:14:   required from &#x27;constexpr void std::__insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]&#x27;</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:1866:25:   required from &#x27;constexpr void std::__final_insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]&#x27;</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:1957:31:   required from &#x27;constexpr void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]&#x27;</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:4842:18:   required from &#x27;constexpr void std::sort(_RAIter, _RAIter) [with _RAIter = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;]&#x27;</span><br><span class="line">&lt;source&gt;:10:14:   required from here</span><br><span class="line">/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/predefined_ops.h:45:23: error: no match for &#x27;operator&lt;&#x27; (operand types are &#x27;A&#x27; and &#x27;A&#x27;)</span><br><span class="line">   45 |       &#123; return *__it1 &lt; *__it2; &#125;</span><br><span class="line">      |                ~~~~~~~^~~~~~~~</span><br><span class="line"></span><br><span class="line">剩下还有80多行</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="text">n file included from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algobase.h:71,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/char_traits.h:39,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ios:40,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ostream:38,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/iostream:39,
+                 from &lt;source&gt;:1:
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/predefined_ops.h: In instantiation of 'constexpr bool __gnu_cxx::__ops::_Iter_less_iter::operator()(_Iterator1, _Iterator2) const [with _Iterator1 = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Iterator2 = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;]':
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:1826:14:   required from 'constexpr void std::__insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]'
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:1866:25:   required from 'constexpr void std::__final_insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]'
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:1957:31:   required from 'constexpr void std::__sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;; _Compare = __gnu_cxx::__ops::_Iter_less_iter]'
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algo.h:4842:18:   required from 'constexpr void std::sort(_RAIter, _RAIter) [with _RAIter = __gnu_cxx::__normal_iterator&lt;A*, std::vector&lt;A&gt; &gt;]'
+&lt;source&gt;:10:14:   required from here
+/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/predefined_ops.h:45:23: error: no match for 'operator&lt;' (operand types are 'A' and 'A')
+   45 |       &#123; return *__it1 &lt; *__it2; &#125;
+      |                ~~~~~~~^~~~~~~~
+
+剩下还有80多行
+</code></pre>
 <p>事实上，当c++引入模板机制而不进行类型检查的那一刻，这种修修补补也很难解决问题的情形已经被决定了。希望c++模板的引起的种种问题，能够给后世的语言设计者以警醒和教训。</p>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/c/" rel="tag">c++</a>, <a class="article-tag-none-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/" rel="tag">编程语言基础</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2021/09/20/uni-intro-elim/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          高中数学题与全称量词的引入/消除规则
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/08/29/combinator/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          Frege/Hilbert系统与组合子逻辑
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

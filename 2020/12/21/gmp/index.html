@@ -1,155 +1,227 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>栈式RAII不能取代GC：谈GMP的C++绑定 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="GNU MP库的C++绑定 GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。 这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的1+2，那么应该这么写： 1234567mpz_t a, b,">
-<meta property="og:type" content="article">
-<meta property="og:title" content="栈式RAII不能取代GC：谈GMP的C++绑定">
-<meta property="og:url" content="https://ayanamists.xyz/2020/12/21/gmp/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="GNU MP库的C++绑定 GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。 这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的1+2，那么应该这么写： 1234567mpz_t a, b,">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-12-21T19:31:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="C++">
-<meta property="article:tag" content="GC">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-gmp" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      栈式RAII不能取代GC：谈GMP的C++绑定
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-12-21T19:31:00.000Z" itemprop="datePublished">2020-12-21</time>
-
-          
-            × <span class="article-word-count">3.5k words</span>
-            
-            × <span class="article-time-to-read">14 minutes</span>
-            
-          
+        <div class="post-main-title">
+            栈式RAII不能取代GC：谈GMP的C++绑定
         </div>
-      </header>
+        <div class="post-meta">
+            2020-12-21
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="gnu-mp库的c绑定"><a class="markdownIt-Anchor" href="#gnu-mp库的c绑定"></a> GNU MP库的C++绑定</h2>
 <p>GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。</p>
 <p>这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的<code>1+2</code>，那么应该这么写：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">mpz_t</span> a, b, c;</span><br><span class="line">mpz_init_set_ui(a, <span class="number">1</span>);</span><br><span class="line">mpz_init_set_ui(b, <span class="number">2</span>);</span><br><span class="line">mpz_add(c, a, b);</span><br><span class="line">mpz_clear(a);</span><br><span class="line">mpz_clear(b);</span><br><span class="line">mpz_clear(c);</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-keyword">mpz_t</span> a, b, c;
+mpz_init_set_ui(a, <span class="hljs-number">1</span>);
+mpz_init_set_ui(b, <span class="hljs-number">2</span>);
+mpz_add(c, a, b);
+mpz_clear(a);
+mpz_clear(b);
+mpz_clear(c);
+</code></pre>
 <p>说实话，这还不如直接写汇编来的简洁：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov $1, %eax</span><br><span class="line">mov $2, %ebx</span><br><span class="line">add %ebx, %eax</span><br><span class="line">mov %ecx, %eax</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="asm">mov $1, %eax
+mov $2, %ebx
+add %ebx, %eax
+mov %ecx, %eax
+</code></pre>
 <p>这种情况的根本原因是，C语言中没有方便的手段来进行内存资源管理和快速结构构造（当然，新的标准也有了一些），导致C语言虽然可以实现<em>表达式求值模型</em>，但无法方便地实现<em>自定义类型的表达式求值模型</em>。</p>
 <p>而表达式求值模型和寄存器机模型之间的变换就是编译的本质，用C语言这样写代码，相当于是在自己进行部分编译器进行的变换（比如ANF）。所以，喜欢这样写代码的人要么是喜欢写汇编，要么是喜欢自己进行手动编译器变换。</p>
 <p>C++绑定这时堪称救世主，在不得不使用C/C++的场合（比如我校的《现代密码学实验》课程），用C++绑定可以避免这种尴尬：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> mpz_class a &#123;<span class="number">1</span>&#125;, b &#123;<span class="number">2</span>&#125;;</span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> c = a + b;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">const</span> mpz_class a &#123;<span class="hljs-number">1</span>&#125;, b &#123;<span class="hljs-number">2</span>&#125;;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span> c = a + b;
+</code></pre>
 <p>这段代码可以执行和上面C语言代码<strong>完全相同</strong>的行为。这是因为C++相比C有了几个优良特性，其中最优秀的的当属所谓的RAII，也就是<strong>R</strong>esource <strong>A</strong>cquisition <strong>I</strong>s <strong>I</strong>nitialization，获取资源即初始化。在这里和运行栈一起配合，简单来说说就是构造函数和析构函数的配合，使得栈上的对象在构造时（手动引入一个绑定时）获取资源，在析构时（退出当前作用域时自动析构）释放资源。对内存这种资源来说，这样一来我们好似在使用一种『有GC的语言』，无须关心任何内存问题一样。</p>
 <p>自然而然的一个问题是，栈式RAII真的能够代替GC吗？通过下文对GMP的解说，想必读者能够给出自己的答案。</p>
 <h2 id="一个让人大呼怪哉的问题"><a class="markdownIt-Anchor" href="#一个让人大呼怪哉的问题"></a> 一个让人大呼『怪哉』的问题</h2>
 <p>已经说过，我使用GNU MP库的主要目的是为了进行密码学实验。我们的密码学实验中有一个计算DLP（离散对数）的问题，规模非常大，运行速度是比较重要的因素。由此我必须使用GNU MP这种速度有保证的库。然而，在实验中，我遇到了一个非常奇怪的问题，那就是有时候某些代码常常出现不正确的结果，而我反复检查代码也不能发现问题的由来。更严重的是，这些问题像幽灵一样，有时出现有时不出现，出现时的结果有时是<em>不相同</em>的。</p>
 <p>对此，我第一反应是出了一些内存问题。可我立刻就否定了这种想法。GNU MP这种『身经百战』，『背负着GNU之名』的库，怎么会出现这种问题？可是我的代码中只有简单的计算，类似于：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Pohlig-Hellman algorithm for Group of prime power order</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">mpz_class</span></span><br><span class="line"><span class="function"><span class="title">pohligHellmanP</span><span class="params">(<span class="type">const</span> mpz_class&amp; g, <span class="type">const</span> mpz_class&amp; h,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="type">const</span> mpz_class&amp; pn, <span class="type">const</span> mpz_class&amp; en,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="type">const</span> mpz_class&amp; p)</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> y = <span class="built_in">fastPow</span>(g, <span class="built_in">Pow</span>(pn, en - <span class="number">1</span>), p);</span><br><span class="line">    <span class="built_in">assert</span> (<span class="built_in">fastPow</span>(y, pn, p) == <span class="number">1</span>);</span><br><span class="line">    mpz_class x&#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0</span>; i &lt; en; ++i) &#123;</span><br><span class="line">        <span class="keyword">auto</span> hi = <span class="built_in">fastPow</span>(<span class="built_in">Inverse</span>(<span class="built_in">fastPow</span>(g, x, p), p) * h,</span><br><span class="line">                          <span class="built_in">Pow</span>(pn, en - <span class="number">1</span> - i), p);</span><br><span class="line">        <span class="keyword">auto</span> di = <span class="built_in">pDlp</span>(y, hi, pn, p);</span><br><span class="line">        x = x + <span class="built_in">Pow</span>(pn, i) * di;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/*
+ * Pohlig-Hellman algorithm for Group of prime power order
+ */</span>
+<span class="hljs-function">mpz_class
+<span class="hljs-title">pohligHellmanP</span><span class="hljs-params">(<span class="hljs-keyword">const</span> mpz_class&amp; g, <span class="hljs-keyword">const</span> mpz_class&amp; h,
+               <span class="hljs-keyword">const</span> mpz_class&amp; pn, <span class="hljs-keyword">const</span> mpz_class&amp; en,
+               <span class="hljs-keyword">const</span> mpz_class&amp; p)</span> </span>&#123;
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span> y = fastPow(g, Pow(pn, en - <span class="hljs-number">1</span>), p);
+    assert (fastPow(y, pn, p) == <span class="hljs-number">1</span>);
+    mpz_class x&#123;<span class="hljs-number">0</span>&#125;;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> i = <span class="hljs-number">0</span>; i &lt; en; ++i) &#123;
+        <span class="hljs-keyword">auto</span> hi = fastPow(Inverse(fastPow(g, x, p), p) * h,
+                          Pow(pn, en - <span class="hljs-number">1</span> - i), p);
+        <span class="hljs-keyword">auto</span> di = pDlp(y, hi, pn, p);
+        x = x + Pow(pn, i) * di;
+    &#125;
+    <span class="hljs-keyword">return</span> x;
+&#125;
+</code></pre>
 <p>怎么想也不会出现问题。在经过了一番艰险的探索后，我确定了一个『最小问题结构』。『最小问题结构』时说，触发这个问题的最简单、行数最少的代码。它是：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">mpz_class <span class="title">nothing</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">const</span> <span class="keyword">auto</span> a = mpz_class &#123; <span class="number">1</span> &#125; + mpz_class &#123; <span class="number">2</span> &#125;;</span><br><span class="line">  std::cout &lt;&lt; a &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">nothing</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function">mpz_class <span class="hljs-title">nothing</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span> a = mpz_class &#123; <span class="hljs-number">1</span> &#125; + mpz_class &#123; <span class="hljs-number">2</span> &#125;;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+  <span class="hljs-keyword">return</span> a;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; nothing();
+&#125;
+</code></pre>
 <p>在我的计算机上，这段代码会给出非常惊人的结果：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  gmp_error git:(master) ✗ g++ test.cpp -o a -g -lgmp -O0 -lgmpxx</span><br><span class="line">➜  gmp_error git:(master) ✗ ./a                                   </span><br><span class="line">94361021124304</span><br><span class="line"><span class="meta prompt_">94361021124336%</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="shell">➜  gmp_error git:(master) ✗ g++ test.cpp -o a -g -lgmp -O0 -lgmpxx
+➜  gmp_error git:(master) ✗ ./a                                   
+94361021124304
+<span class="hljs-meta">94361021124336%</span>
+</code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>94361021124304</mn></mrow><annotation encoding="application/x-tex">1+2=94361021124304</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mord">4</span><span class="mord">3</span><span class="mord">6</span><span class="mord">1</span><span class="mord">0</span><span class="mord">2</span><span class="mord">1</span><span class="mord">1</span><span class="mord">2</span><span class="mord">4</span><span class="mord">3</span><span class="mord">0</span><span class="mord">4</span></span></span></span>，还是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>94361021124336</mn></mrow><annotation encoding="application/x-tex">1+2=94361021124336%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mord">4</span><span class="mord">3</span><span class="mord">6</span><span class="mord">1</span><span class="mord">0</span><span class="mord">2</span><span class="mord">1</span><span class="mord">1</span><span class="mord">2</span><span class="mord">4</span><span class="mord">3</span><span class="mord">3</span><span class="mord">6</span></span></span></span>？</p>
 <p>如此简单的代码却产生了如此诡异的错误，真是怪哉！</p>
 <h2 id="gnu-mp库的设计"><a class="markdownIt-Anchor" href="#gnu-mp库的设计"></a> GNU MP库的设计</h2>
 <p>要破解这个谜团，我们应该从另一个怪现象下手，那即是：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">mpz_class <span class="title">nothing</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">const</span> mpz_class a = mpz_class &#123; <span class="number">1</span> &#125; + mpz_class &#123; <span class="number">2</span> &#125;;</span><br><span class="line">  std::cout &lt;&lt; a &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">nothing</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function">mpz_class <span class="hljs-title">nothing</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-keyword">const</span> mpz_class a = mpz_class &#123; <span class="hljs-number">1</span> &#125; + mpz_class &#123; <span class="hljs-number">2</span> &#125;;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;
+  <span class="hljs-keyword">return</span> a;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; nothing();
+&#125;
+</code></pre>
 <p>这段代码竟然毫无问题？恐怕读者难以相信这个事实，然而它就是真正的现实：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  gmp_error git:(master) ✗ g++ test.cpp -o a -g -lgmp -O0 -lgmpxx</span><br><span class="line">➜  gmp_error git:(master) ✗ ./a                                   </span><br><span class="line">3</span><br><span class="line"><span class="meta prompt_">3%</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="shell">➜  gmp_error git:(master) ✗ g++ test.cpp -o a -g -lgmp -O0 -lgmpxx
+➜  gmp_error git:(master) ✗ ./a                                   
+3
+<span class="hljs-meta">3%</span>
+</code></pre>
 <p>这样一来问题就很明朗了。<code>auto</code>这个关键字究竟会将<code>a</code>推导为什么类型？用IDE或者c++filt查看，答案更是让人一头雾水：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> __gmp_expr&lt;<span class="type">mpz_t</span>, __gmp_binary_expr&lt;mpz_class, mpz_class, __gmp_binary_plus&gt;&gt; a</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">const</span> __gmp_expr&lt;<span class="hljs-keyword">mpz_t</span>, __gmp_binary_expr&lt;mpz_class, mpz_class, __gmp_binary_plus&gt;&gt; a
+</code></pre>
 <p>这类型是什么？看来必须到<code>gmpxx.h</code>这个文件里寻找答案了。</p>
 <p>在<code>gmpxx.h</code>中，我们会看到，<code>mpz_class</code>实际上是<code>mpz_expr&lt;mpz_t, mpz_t&gt;</code>:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**************** mpz_class -- wrapper for mpz_t ****************/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;&gt; <span class="comment">// line 1572</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__gmp_expr</span>&lt;<span class="type">mpz_t</span>, <span class="type">mpz_t</span>&gt;&#123; ... &#125;; </span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> __gmp_expr&lt;<span class="type">mpz_t</span>, <span class="type">mpz_t</span>&gt; mpz_class; <span class="comment">// line 1756</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/**************** mpz_class -- wrapper for mpz_t ****************/</span>
+
+<span class="hljs-keyword">template</span> &lt;&gt; <span class="hljs-comment">// line 1572</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> __<span class="hljs-title">gmp_expr</span>&lt;mpz_t, mpz_t&gt;&#123;</span> ... &#125;; 
+
+<span class="hljs-keyword">typedef</span> __gmp_expr&lt;<span class="hljs-keyword">mpz_t</span>, <span class="hljs-keyword">mpz_t</span>&gt; mpz_class; <span class="hljs-comment">// line 1756</span>
+</code></pre>
 <p>那么，这个<code>__gmp_expr</code>高阶类型（理论上来说这确实相当于高阶类型）恐怕还有一些其他的特化，果不其然，这个文件中还定义了很多<code>__gmp_expr</code>的特化，比如说，我们前面看到的<code>a</code>，实际上的类型是：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">Op</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__gmp_expr</span></span><br><span class="line">&lt;T, __gmp_binary_expr&lt;__gmp_expr&lt;T, T&gt;, __gmp_expr&lt;T, T&gt;, Op&gt; &gt;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>, <span class="hljs-title">class</span> <span class="hljs-title">Op</span>&gt;
+<span class="hljs-title">class</span> __<span class="hljs-title">gmp_expr</span>
+&lt;T, __gmp_binary_expr&lt;__gmp_expr&lt;T, T&gt;, __gmp_expr&lt;T, T&gt;, Op&gt; &gt;
+</span></code></pre>
 <p>我们观察一下这个类的构造函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__gmp_expr(<span class="type">const</span> val1_type &amp;val1, <span class="type">const</span> val2_type &amp;val2)</span><br><span class="line">    : <span class="built_in">expr</span>(val1, val2) &#123; &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++">__gmp_expr(<span class="hljs-keyword">const</span> val1_type &amp;val1, <span class="hljs-keyword">const</span> val2_type &amp;val2)
+    : expr(val1, val2) &#123; &#125;
+</code></pre>
 <p><code>expr</code>是类的成员变量，它声明为：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__gmp_binary_expr&lt;val1_type, val2_type, Op&gt; expr;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++">__gmp_binary_expr&lt;val1_type, val2_type, Op&gt; expr;
+</code></pre>
 <p>这个<code>__gmp_binary_expr</code>又是何方神圣呢？它定义如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">U</span>, <span class="keyword">class</span> <span class="title class_">Op</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">__gmp_binary_expr</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">typename</span> __gmp_resolve_ref&lt;T&gt;::ref_type val1;</span><br><span class="line">  <span class="keyword">typename</span> __gmp_resolve_ref&lt;U&gt;::ref_type val2;</span><br><span class="line"></span><br><span class="line">  __gmp_binary_expr(<span class="type">const</span> T &amp;v1, <span class="type">const</span> U &amp;v2) : <span class="built_in">val1</span>(v1), <span class="built_in">val2</span>(v2) &#123; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  __gmp_binary_expr();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>, <span class="hljs-title">class</span> <span class="hljs-title">U</span>, <span class="hljs-title">class</span> <span class="hljs-title">Op</span>&gt;
+<span class="hljs-title">struct</span> __<span class="hljs-title">gmp_binary_expr</span>
+&#123;</span>
+  <span class="hljs-keyword">typename</span> __gmp_resolve_ref&lt;T&gt;::ref_type val1;
+  <span class="hljs-keyword">typename</span> __gmp_resolve_ref&lt;U&gt;::ref_type val2;
+
+  __gmp_binary_expr(<span class="hljs-keyword">const</span> T &amp;v1, <span class="hljs-keyword">const</span> U &amp;v2) : val1(v1), val2(v2) &#123; &#125;
+<span class="hljs-keyword">private</span>:
+  __gmp_binary_expr();
+&#125;;
+</code></pre>
 <p>这有点令人一头雾水，定义这样的一个只有构造函数的类似乎没有什么特别的意义，我们需要寻找到用到它的函数。之前提到过，如果右值的类型是<code>mpz_class</code>，那么就不会产生问题。从，<code>mpz_expr&lt;..&gt;</code>变成<code>mpz_class</code>，一定发生了一个类型转换。这个类型转换的函数在哪里呢？再回到<code>mpz_class</code>的定义当中：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line">__gmp_expr(<span class="type">const</span> __gmp_expr&lt;<span class="type">mpz_t</span>, T&gt; &amp;expr)</span><br><span class="line">&#123; <span class="built_in">mpz_init</span>(mp); __gmp_set_expr(mp, expr); &#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">U</span>&gt;</span><br><span class="line"><span class="keyword">explicit</span> __gmp_expr(<span class="type">const</span> __gmp_expr&lt;T, U&gt; &amp;expr)</span><br><span class="line">&#123; <span class="built_in">mpz_init</span>(mp); __gmp_set_expr(mp, expr); &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;
+__<span class="hljs-title">gmp_expr</span>(<span class="hljs-title">const</span> __<span class="hljs-title">gmp_expr</span>&lt;mpz_t, T&gt; &amp;<span class="hljs-title">expr</span>)
+&#123;</span> mpz_init(mp); __gmp_set_expr(mp, expr); &#125;
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>, <span class="hljs-title">class</span> <span class="hljs-title">U</span>&gt;
+<span class="hljs-title">explicit</span> __<span class="hljs-title">gmp_expr</span>(<span class="hljs-title">const</span> __<span class="hljs-title">gmp_expr</span>&lt;T, U&gt; &amp;<span class="hljs-title">expr</span>)
+&#123;</span> mpz_init(mp); __gmp_set_expr(mp, expr); &#125;
+</code></pre>
 <p>这个函数毫无疑问是在将<code>__gmp_expr&lt;...&gt;</code>转换为<code>mpz_class</code>. 那么<code>__gmp_set_expr</code>又是在做什么呢？</p>
 <p>查看其定义：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="type">void</span> __gmp_set_expr(mpz_ptr z, <span class="type">const</span> __gmp_expr&lt;<span class="type">mpz_t</span>, T&gt; &amp;expr)</span><br><span class="line">&#123;</span><br><span class="line">  expr.<span class="built_in">eval</span>(z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;
+<span class="hljs-title">inline</span> <span class="hljs-title">void</span> __<span class="hljs-title">gmp_set_expr</span>(<span class="hljs-title">mpz_ptr</span> <span class="hljs-title">z</span>, <span class="hljs-title">const</span> __<span class="hljs-title">gmp_expr</span>&lt;mpz_t, T&gt; &amp;<span class="hljs-title">expr</span>)
+&#123;</span>
+  expr.eval(z);
+&#125;
+</code></pre>
 <p>嗯？这个<code>eval</code>函数看起来是<code>__gmp_expr&lt;T ...&gt;</code>中定义的，我们再查看一下刚才的定义：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">eval</span><span class="params">(<span class="keyword">typename</span> __gmp_resolve_expr&lt;T&gt;::ptr_type p)</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123; Op::<span class="built_in">eval</span>(p, expr.val1.__get_mp(), expr.val2.__get_mp()); &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">eval</span><span class="hljs-params">(<span class="hljs-keyword">typename</span> __gmp_resolve_expr&lt;T&gt;::ptr_type p)</span> <span class="hljs-keyword">const</span>
+</span>&#123; Op::eval(p, expr.val1.__get_mp(), expr.val2.__get_mp()); &#125;
+</code></pre>
 <p>转发到了<code>Op::eval</code>这个函数上。之前类型的<code>Op</code>是<code>__gmp_binary_plus</code>，它的<code>eval</code>函数是如何定义的呢？</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">__gmp_binary_plus</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">eval</span><span class="params">(mpz_ptr z, mpz_srcptr w, mpz_srcptr v)</span></span></span><br><span class="line"><span class="function">  </span>&#123; <span class="built_in">mpz_add</span>(z, w, v); &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> __<span class="hljs-title">gmp_binary_plus</span>
+&#123;</span>
+  <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">eval</span><span class="hljs-params">(mpz_ptr z, mpz_srcptr w, mpz_srcptr v)</span>
+  </span>&#123; mpz_add(z, w, v); &#125;
+</code></pre>
 <p>这实在是十分亲切，我们终于搞明白了这一套组合拳到底是在做些什么事情。</p>
 <p>首先，<code>__gmp_expr&lt; ... &gt;</code>相当于一个语法树，它记录了所有的操作信息。当这个类型的值被转换为<code>mpz_class</code>时，进行求值，求完的值被放到了转换后的绑定中。</p>
 <p>可是，这究竟有何意义？在我看来，这样的代码没有简化任何逻辑。C++编译器完全可以保证不产生多余的复制，实际上，如此复杂的构造和直白地写一个类并重载运算符的效果几乎是完全一致的。</p>
 <p>唯一的好处，就是当变量使用<code>auto</code>而不是<code>mpz_class</code>时，变量本身是语法树而不是值，只有当需要这个表达式的值时（也就是进行类型转换时）才进行求值。这就是所谓的『惰性求值』。</p>
 <p>我很难理解在数值计算任务上进行惰性求值究竟有什么好处。惰性求值最大的好处就是不会算出不必要的值，比如说：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">f</span>) (<span class="name">f</span>))</span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">g</span> t1 t2) (<span class="name">t2</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">g</span> (<span class="name">f</span>) <span class="number">1</span>) <span class="comment">;在scheme中，无限循环</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">f</span> = f</span><br><span class="line"><span class="title">g</span> t1 t2 = t2</span><br><span class="line"><span class="title">g</span> f <span class="number">1</span> <span class="comment">--在haskell中，这会得到 1</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">f</span>) (<span class="hljs-name">f</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">g</span> t1 t2) (<span class="hljs-name">t2</span>))
+
+(<span class="hljs-name">g</span> (<span class="hljs-name">f</span>) <span class="hljs-number">1</span>) <span class="hljs-comment">;在scheme中，无限循环</span>
+</code></pre>
+<pre class="highlight"><code class="haskell"><span class="hljs-title">f</span> = f
+<span class="hljs-title">g</span> t1 t2 = t2
+<span class="hljs-title">g</span> f <span class="hljs-number">1</span> <span class="hljs-comment">--在haskell中，这会得到 1</span>
+</code></pre>
 <p>可是，在这样的数值计算任务中，我们一般不会进行任何多余的计算。惰性求值本身不能简化必要计算，从性能上来说，这毫无优势。</p>
 <p>而且，这设计会产生刚才的严重错误。这是因为，每个<code>__gmp_binary_expr</code>保存的实际上是两个变量的<code>const</code>引用，而从根本上来说，<code>const</code>引用是无法捕获一个右值的。调用</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__gmp_binary_expr(<span class="type">const</span> T &amp;v1, <span class="type">const</span> U &amp;v2) : <span class="built_in">val1</span>(v1), <span class="built_in">val2</span>(v2) &#123; &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++">__gmp_binary_expr(<span class="hljs-keyword">const</span> T &amp;v1, <span class="hljs-keyword">const</span> U &amp;v2) : val1(v1), val2(v2) &#123; &#125;
+</code></pre>
 <p>只会把指向<code>v1</code>的指针赋值给<code>val1</code>，把指向<code>v2</code>的指针赋值给<code>val2</code>。</p>
 <p>回过头来再看这句代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="keyword">auto</span> a = mpz_class &#123; <span class="number">1</span> &#125; + mpz_class &#123; <span class="number">2</span> &#125;;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span> a = mpz_class &#123; <span class="hljs-number">1</span> &#125; + mpz_class &#123; <span class="hljs-number">2</span> &#125;;
+...
+</code></pre>
 <p>它实际上会变成：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mpz_class temp1 &#123;<span class="number">1</span>&#125;, temp2 &#123;<span class="number">2</span>&#125;;</span><br><span class="line">a = temp1 + temp2;</span><br><span class="line">~<span class="built_in">temp1</span>(); ~<span class="built_in">temp2</span>();</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++">mpz_class temp1 &#123;<span class="hljs-number">1</span>&#125;, temp2 &#123;<span class="hljs-number">2</span>&#125;;
+a = temp1 + temp2;
+~temp1(); ~temp2();
+...
+</code></pre>
 <p>当析构函数执行之后，<code>a</code>这棵语法树中节点所指向的目标已经被完全析构，访问这些对象的代码全部是错误的。换句话说，<code>a</code>合法的时光仅存在于当前语句执行完、下一条语句还未执行的那一瞬间而已。</p>
 <h2 id="解决问题"><a class="markdownIt-Anchor" href="#解决问题"></a> 解决问题</h2>
 <p>要解决问题，有两个方法：</p>
@@ -160,90 +232,102 @@
 <p>不过，即使修改这个文件，<code>const&amp;</code>不能捕获右值的问题仍然是无法解决的。</p>
 <p>把<code>__gmp_binary_expr</code>改为值语义怎么样？换句话说，我们让<code>val1</code>，<code>val2</code>不再是<code>const &amp;T</code>和<code>const &amp;U</code>而是真正的<code>T</code>和<code>U</code>.</p>
 <p>这可以无痛地解决<code>const auto a = mpz_class &#123; 1 &#125; + mpz_class &#123; 2 &#125;;</code>的问题。因为<code>mpz_class&#123;1&#125;</code>和<code>mpz_class&#123;2&#125;</code>都是『右值』，或者说是『X值』，有『右值引用』这个方法可以无痛地交接资源。实际上，如果只是解决加法的问题，我们只需要修改几个地方即可：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 修改这个宏，使得加法有右值引用的版本 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __GMPP_DEFINE_BINARY_FUNCTION(fun, eval_fun)                   \</span></span><br><span class="line"><span class="meta">                                                                       \</span></span><br><span class="line"><span class="meta">template <span class="string">&lt;class T, class U, class V, class W&gt;</span>                          \</span></span><br><span class="line"><span class="meta">inline __gmp_expr<span class="string">&lt;typename __gmp_resolve_expr&lt;T, V&gt;</span>::value_type,       \</span></span><br><span class="line"><span class="meta">__gmp_binary_expr<span class="string">&lt;__gmp_expr&lt;T, U&gt;</span>, __gmp_expr<span class="string">&lt;V, W&gt;</span>, eval_fun&gt; &gt;      \</span></span><br><span class="line"><span class="meta">fun(const __gmp_expr<span class="string">&lt;T, U&gt;</span> &amp;expr1, const __gmp_expr<span class="string">&lt;V, W&gt;</span> &amp;expr2)      \</span></span><br><span class="line"><span class="meta">&#123;                                                                      \</span></span><br><span class="line"><span class="meta">  return __gmp_expr<span class="string">&lt;typename __gmp_resolve_expr&lt;T, V&gt;</span>::value_type,     \</span></span><br><span class="line"><span class="meta">     __gmp_binary_expr<span class="string">&lt;__gmp_expr&lt;T, U&gt;</span>, __gmp_expr<span class="string">&lt;V, W&gt;</span>, eval_fun&gt; &gt; \</span></span><br><span class="line"><span class="meta">    (expr1, expr2);                                                    \</span></span><br><span class="line"><span class="meta">&#125;                                                                      \</span></span><br><span class="line"><span class="meta">template <span class="string">&lt;class T, class U, class V, class W&gt;</span>                          \</span></span><br><span class="line"><span class="meta">inline __gmp_expr<span class="string">&lt;typename __gmp_resolve_expr&lt;T, V&gt;</span>::value_type,       \</span></span><br><span class="line"><span class="meta">__gmp_binary_expr<span class="string">&lt;__gmp_expr&lt;T, U&gt;</span>, __gmp_expr<span class="string">&lt;V, W&gt;</span>, eval_fun&gt; &gt;      \</span></span><br><span class="line"><span class="meta">fun(__gmp_expr<span class="string">&lt;T, U&gt;</span> &amp;&amp;expr1, __gmp_expr<span class="string">&lt;V, W&gt;</span> &amp;&amp;expr2)                \</span></span><br><span class="line"><span class="meta">&#123;                                                                      \</span></span><br><span class="line"><span class="meta">  return __gmp_expr<span class="string">&lt;typename __gmp_resolve_expr&lt;T, V&gt;</span>::value_type,     \</span></span><br><span class="line"><span class="meta">     __gmp_binary_expr<span class="string">&lt;__gmp_expr&lt;T, U&gt;</span>, __gmp_expr<span class="string">&lt;V, W&gt;</span>, eval_fun&gt; &gt; \</span></span><br><span class="line"><span class="meta">    (std::move(expr1), std::move(expr2));                              \</span></span><br><span class="line"><span class="meta">&#125;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 修改这个类，使得构造函数有右值引用的版本 */</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, <span class="keyword">class</span> <span class="title class_">Op</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">__gmp_expr</span></span><br><span class="line">&lt;T, __gmp_binary_expr&lt;__gmp_expr&lt;T, T&gt;, __gmp_expr&lt;T, T&gt;, Op&gt; &gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">typedef</span> __gmp_expr&lt;T, T&gt; val1_type;</span><br><span class="line">  <span class="keyword">typedef</span> __gmp_expr&lt;T, T&gt; val2_type;</span><br><span class="line"></span><br><span class="line">  __gmp_binary_expr&lt;val1_type, val2_type, Op&gt; expr;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  __gmp_expr(<span class="type">const</span> val1_type &amp;val1, <span class="type">const</span> val2_type &amp;val2)</span><br><span class="line">    : <span class="built_in">expr</span>(val1, val2) &#123; &#125; </span><br><span class="line">  __gmp_expr(val1_type &amp;&amp;val1, val2_type &amp;&amp;val2) <span class="comment">// 新加入的构造函数</span></span><br><span class="line">    : <span class="built_in">expr</span>(std::<span class="built_in">move</span>(val1), std::<span class="built_in">move</span>(val2)) &#123; &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">Op</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">__gmp_binary_expr</span>&lt;mpz_class, mpz_class, Op&gt;</span><br><span class="line">&#123;</span><br><span class="line">  mpz_class val1;</span><br><span class="line">  mpz_class val2;</span><br><span class="line">  __gmp_binary_expr(<span class="type">const</span> mpz_class &amp;v1, <span class="type">const</span> mpz_class &amp;v2) </span><br><span class="line">    : <span class="built_in">val1</span>(v1), <span class="built_in">val2</span>(v2) &#123; &#125;</span><br><span class="line">  __gmp_binary_expr(mpz_class &amp;&amp;v1, mpz_class &amp;&amp;v2) </span><br><span class="line">    : <span class="built_in">val1</span>(std::<span class="built_in">move</span>(v1)), <span class="built_in">val2</span>(std::<span class="built_in">move</span>(v2)) &#123; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  __gmp_binary_expr();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* 修改这个宏，使得加法有右值引用的版本 */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __GMPP_DEFINE_BINARY_FUNCTION(fun, eval_fun)                   \
+                                                                       \
+template <span class="hljs-meta-string">&lt;class T, class U, class V, class W&gt;                          \</span></span>
+<span class="hljs-keyword">inline</span> __gmp_expr&lt;<span class="hljs-keyword">typename</span> __gmp_resolve_expr&lt;T, V&gt;::value_type,       \
+__gmp_binary_expr&lt;__gmp_expr&lt;T, U&gt;, __gmp_expr&lt;V, W&gt;, eval_fun&gt; &gt;      \
+fun(<span class="hljs-keyword">const</span> __gmp_expr&lt;T, U&gt; &amp;expr1, <span class="hljs-keyword">const</span> __gmp_expr&lt;V, W&gt; &amp;expr2)      \
+&#123;                                                                      \
+  <span class="hljs-keyword">return</span> __gmp_expr&lt;<span class="hljs-keyword">typename</span> __gmp_resolve_expr&lt;T, V&gt;::value_type,     \
+     __gmp_binary_expr&lt;__gmp_expr&lt;T, U&gt;, __gmp_expr&lt;V, W&gt;, eval_fun&gt; &gt; \
+    (expr1, expr2);                                                    \
+&#125;                                                                      \
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>, <span class="hljs-title">class</span> <span class="hljs-title">U</span>, <span class="hljs-title">class</span> <span class="hljs-title">V</span>, <span class="hljs-title">class</span> <span class="hljs-title">W</span>&gt;                          \
+<span class="hljs-title">inline</span> __<span class="hljs-title">gmp_expr</span>&lt;typename __gmp_resolve_expr&lt;T, V&gt;::value_type,       \
+__gmp_binary_expr&lt;__gmp_expr&lt;T, U&gt;, __gmp_expr&lt;V, W&gt;, eval_fun&gt; &gt;      \
+<span class="hljs-title">fun</span>(__<span class="hljs-title">gmp_expr</span>&lt;T, U&gt; &amp;&amp;<span class="hljs-title">expr1</span>, __<span class="hljs-title">gmp_expr</span>&lt;V, W&gt; &amp;&amp;<span class="hljs-title">expr2</span>)                \
+&#123;</span>                                                                      \
+  <span class="hljs-keyword">return</span> __gmp_expr&lt;<span class="hljs-keyword">typename</span> __gmp_resolve_expr&lt;T, V&gt;::value_type,     \
+     __gmp_binary_expr&lt;__gmp_expr&lt;T, U&gt;, __gmp_expr&lt;V, W&gt;, eval_fun&gt; &gt; \
+    (<span class="hljs-built_in">std</span>::<span class="hljs-built_in">move</span>(expr1), <span class="hljs-built_in">std</span>::<span class="hljs-built_in">move</span>(expr2));                              \
+&#125;
+</code></pre>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* 修改这个类，使得构造函数有右值引用的版本 */</span>
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>, <span class="hljs-title">class</span> <span class="hljs-title">Op</span>&gt;
+<span class="hljs-title">class</span> __<span class="hljs-title">gmp_expr</span>
+&lt;T, __gmp_binary_expr&lt;__gmp_expr&lt;T, T&gt;, __gmp_expr&lt;T, T&gt;, Op&gt; &gt;
+&#123;</span>
+<span class="hljs-keyword">private</span>:
+  <span class="hljs-keyword">typedef</span> __gmp_expr&lt;T, T&gt; val1_type;
+  <span class="hljs-keyword">typedef</span> __gmp_expr&lt;T, T&gt; val2_type;
+
+  __gmp_binary_expr&lt;val1_type, val2_type, Op&gt; expr;
+<span class="hljs-keyword">public</span>:
+  __gmp_expr(<span class="hljs-keyword">const</span> val1_type &amp;val1, <span class="hljs-keyword">const</span> val2_type &amp;val2)
+    : expr(val1, val2) &#123; &#125; 
+  __gmp_expr(val1_type &amp;&amp;val1, val2_type &amp;&amp;val2) <span class="hljs-comment">// 新加入的构造函数</span>
+    : expr(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">move</span>(val1), <span class="hljs-built_in">std</span>::<span class="hljs-built_in">move</span>(val2)) &#123; &#125;
+</code></pre>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Op</span>&gt;
+<span class="hljs-title">struct</span> __<span class="hljs-title">gmp_binary_expr</span>&lt;mpz_class, mpz_class, Op&gt;
+&#123;</span>
+  mpz_class val1;
+  mpz_class val2;
+  __gmp_binary_expr(<span class="hljs-keyword">const</span> mpz_class &amp;v1, <span class="hljs-keyword">const</span> mpz_class &amp;v2) 
+    : val1(v1), val2(v2) &#123; &#125;
+  __gmp_binary_expr(mpz_class &amp;&amp;v1, mpz_class &amp;&amp;v2) 
+    : val1(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">move</span>(v1)), val2(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">move</span>(v2)) &#123; &#125;
+<span class="hljs-keyword">private</span>:
+  __gmp_binary_expr();
+&#125;;
+</code></pre>
 <p>自定义一个<code>__gmp_binary_expr</code>的特化，处理两个都是<code>mpz_class</code>的场合。</p>
 <p>这样就可以使得上述代码得到正确的<code>3</code>.</p>
 <p>然而，先不说都修正完的工作量，如此修正我们必然会遇到一个问题：<em>如果传入的是左值，则无法进行『无痛』的移动，要进行复制，这是不利于性能的</em>。</p>
 <p>怎样解决这个问题呢？答案是（至少我）解决不了。</p>
 <h2 id="gc与raii"><a class="markdownIt-Anchor" href="#gc与raii"></a> GC与RAII</h2>
 <p>上面的问题在有GC的语言中，简单来说不算问题。即使是在python这样的语言中，不断地得到一个资源的绑定并不会产生任何复制：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">b = a</span><br><span class="line">c = b</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="python">a = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+b = a
+c = b
+</code></pre>
 <p>当然，这是因为<code>a</code>、<code>b</code>、<code>c</code>实际上都是指向同一个对象的，类似于<code>const &amp;</code>.</p>
 <p>可是，有GC语言里的<code>const &amp;</code>可以完美地解决『不能捕获右值』的问题：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, arr</span>):</span><br><span class="line">        self.arr = arr</span><br><span class="line">        </span><br><span class="line">a = A([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, arr)</span>:</span>
+        self.arr = arr
+        
+a = A([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>])
+</code></pre>
 <p>从根本上来说，RAII不能使得同一个栈上的对象被两个绑定所同时『拥有』，栈上的对象被消除的规则是严格的作用域规则，不能出现『从栈上借对象』这样的情况。而有GC语言由于『对象』和『对象所拥有的资源』都在堆上，甚至是一体的，所以不会出现这个问题。</p>
 <p>这样来看，RAII是不能替代GC的。当然，Rust等语言可能可以通过一些别的办法来解决这个问题。不过，我们可以下这个结论：在C++中，RAII的能力终究是有限的。</p>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%AD%A6%E6%9C%AF/">学术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/C/" rel="tag">C++</a>, <a class="article-tag-none-link" href="/tags/GC/" rel="tag">GC</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/12/26/pascal/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          帕斯卡的恩惠
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/12/08/hc/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          看点什么（三）寒蝉鸣泣之时
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

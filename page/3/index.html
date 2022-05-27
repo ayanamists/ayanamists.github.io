@@ -1,678 +1,289 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="aya ⊢ blog">
-<meta property="og:url" content="https://ayanamists.xyz/page/3/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="ayanamists">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
-    
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-  
-    <article id="post-2020-8-8-parser3" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <ul class="nav">
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/08/08/2020-8-8-parser3/">解析CFG，不必复杂解析器</a>
-      
+        <li><a href="/">首页</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-08-08T00:00:00.000Z" itemprop="datePublished">2020-08-08</time>
-
-          
-            × <span class="article-word-count">1.3k words</span>
-            
-            × <span class="article-time-to-read">5 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="最简单的解析器"><a class="markdownIt-Anchor" href="#最简单的解析器"></a> 最简单的解析器</h2>
-<p>什么样的解析器是【最简单的解析器】呢？我认为，【最简单的解析器】是【递归向下解析器】。 无论你使用的解析方法是回退还是LL，递归向下总能使得解析器轻量化、简单、能够快速构造。</p>
-<p>但是，这种解析器有几个问题：</p>
-<ul>
-<li>不能处理左递归文法</li>
-<li>文法不一定是LL(1)的，效率上和实现上都有些问题</li>
-<li>用过程式编程语言时，不能很好地进行抽象，导致重复代码</li>
-</ul>
-<p>这篇文章通过介绍三个变换，解决了第一个问题，在某种程度上解决了第二个问题。至于第三个问题，这是一个纯粹的工程问题，我们就不在这里研究了。</p>
-<h2 id="第0变换"><a class="markdownIt-Anchor" href="#第0变换"></a> 第0变换</h2>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/08/08/2020-8-8-parser3/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-07-14-uni" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+        <li><a href="/archives">归档</a></li>
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/07/14/2020-07-14-uni/">大学生活的前两年</a>
-      
+        <li><a href="/about">关于</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-07-14T00:00:00.000Z" itemprop="datePublished">2020-07-14</time>
-
-          
-            × <span class="article-word-count">3.1k words</span>
-            
-            × <span class="article-time-to-read">10 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%E5%AD%A6%E4%B9%A0">学习</a>
-<ul>
-<li><a href="#%E4%B8%8A%E8%AF%BE%E5%BC%8F%E5%AD%A6%E4%B9%A0">上课式学习</a></li>
-<li><a href="#%E8%87%AA%E5%AD%A6">自学</a></li>
-</ul>
-</li>
-<li><a href="#%E7%94%9F%E6%B4%BB">生活</a>
-<ul>
-<li><a href="#%E9%A3%9F">食</a></li>
-<li><a href="#%E4%BD%8F">住</a></li>
-<li><a href="#%E8%A1%8C">行</a></li>
-</ul>
-</li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
-</ul>
-<p>这几天一直在写作业，今天才有点时间来写写博客。这次我们不谈技术，谈点更有意思的东西：我的大学生活。</p>
-<h2 id="学习"><a class="markdownIt-Anchor" href="#学习"></a> 学习</h2>
-<h3 id="上课式学习"><a class="markdownIt-Anchor" href="#上课式学习"></a> 上课式学习</h3>
-<p>这两年在课上我学了不少知识，其主要的方面还是计算机和数学。我感受最深的一点是，很多学习过的知识都在期末考试之后就被束之高阁了。</p>
-<p>比如说，我们的《数学分析》有三个学期的课程，主要是讲一些分析学的基础知识，也就是实数理论、极限、微积分、级数这些东西。这个课程每周有两节，一节1.5小时，这样算来，我上这门课所花费的时间为：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/07/14/2020-07-14-uni/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-07-04-young" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/07/04/2020-07-04-young/">一个喜欢网上冲浪的小孩子</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-07-04T00:00:00.000Z" itemprop="datePublished">2020-07-04</time>
-
-          
-            × <span class="article-word-count">3.8k words</span>
-            
-            × <span class="article-time-to-read">12 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%E6%97%B6%E9%9A%94%E5%A4%9A%E5%B9%B4%E7%9A%84%E5%86%8D%E6%AC%A1%E7%99%BB%E5%BD%95">时隔多年的再次登录</a></li>
-<li><a href="#%E6%95%B4%E6%B4%BB%E9%92%93%E9%B1%BC%E5%BC%95%E6%88%98%E6%9A%B4%E8%AE%BA">整活、钓鱼、引战、暴论</a></li>
-<li><a href="#%E5%85%B3%E4%BA%8E%E7%BE%BD%E9%BB%91%E5%90%A7">关于【羽黑吧】</a></li>
-<li><a href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%A2%AB%E7%BD%91%E7%BB%9C%E6%9A%B4%E5%8A%9B">第一次被网络暴力</a></li>
-<li><a href="#%E5%AF%B9%E5%B0%8F%E5%AD%A9%E5%AD%90%E5%A4%9A%E4%B8%80%E7%82%B9%E5%8C%85%E5%AE%B9">对小孩子多一点包容</a></li>
-</ul>
-<h2 id="时隔多年的再次登录"><a class="markdownIt-Anchor" href="#时隔多年的再次登录"></a> 时隔多年的再次登录</h2>
-<p>这些天想做的事太多，但都懒得做。我进入了一种类似于【贤者时间】的状态。加之上个月一直在北京，那个家的学习条件没有济南好，我就自然地划水了几天。在这几天里，我登录了<a target="_blank" rel="noopener" href="https://tieba.baidu.com/home/main?id=tb.1.4ed0c736.NG49TDIYDddGwZ4-3OPVEg?t=1389416124&amp;fr=userbar">小时候用的百度贴吧账号</a>，看了看在2012年至2016年间的帖子，不由得感慨万千，记录于此。</p>
-<h2 id="整活-钓鱼-引战-暴论"><a class="markdownIt-Anchor" href="#整活-钓鱼-引战-暴论"></a> 整活、钓鱼、引战、暴论</h2>
-<p>不得不说，小时候的我的整活能力，或者说搞笑能力，是远胜于今天的我的。请看我在2014年在<a target="_blank" rel="noopener" href="https://tieba.baidu.com/f?kw=%E5%9D%9A%E5%86%B3%E5%8F%8D%E5%AF%B9%E6%88%92%E8%89%B2">坚决反对戒色吧</a>发的<a target="_blank" rel="noopener" href="https://tieba.baidu.com/p/3231938966?fid=11668183&amp;pid=55691344790&amp;cid=0&amp;red_tag=2449367415#55691344790">学好文件抓住纲（戒色内部文件）</a>:</p>
-<blockquote>
-<p>戒色邪教教主和导师飞翔的胡诌著作《戒为良药》这个邪恶文件发表以来，全体邪教人员热烈欢呼，衷心拥护，普遍进行了学习和讨论。当前，各级邪教组织正在加强领导，更加广泛地误导群众，紧密地混淆本地区、本部门、本单位的实际，进一步把这个邪恶文件认真学习好，宣传好，贯彻执行好，在这个邪恶文件的指导下，把本地区、本部门、本单位戒色的邪教运动更加深入地开展起来。学好文件抓住纲，深入误导青少年，这是邪教完成2014年传教任务的关键。</p>
-</blockquote>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/07/04/2020-07-04-young/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-06-23-tramp" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/06/23/2020-06-23-tramp/">谈谈【蹦床】技术</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-06-23T00:00:00.000Z" itemprop="datePublished">2020-06-23</time>
-
-          
-            × <span class="article-word-count">990 words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="过程式语言中的尾调用"><a class="markdownIt-Anchor" href="#过程式语言中的尾调用"></a> 过程式语言中的尾调用</h2>
-<p>在scheme中，尾调用完全是循环的：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> factor</span><br><span class="line">  (<span class="name"><span class="built_in">lambda</span></span> (n result)</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">&lt;</span></span> n <span class="number">2</span>)</span><br><span class="line">      result</span><br><span class="line">      (<span class="name">factor</span> (<span class="name"><span class="built_in">-</span></span> n <span class="number">1</span>) (<span class="name"><span class="built_in">*</span></span> result n)))))</span><br></pre></td></tr></table></figure>
-<p>这段代码和</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">factor</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">  <span class="type">int</span> result = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span>(n &gt;= <span class="number">2</span>) &#123;</span><br><span class="line">    result = n * result;</span><br><span class="line">    n--;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>具有完全相同的时间和空间复杂度。这是由于scheme中使用的不是【栈】，而是【继续】(continuation)。如果读者不知道什么是【继续】，可以继续关注我的博客，我会写另外一篇文章来专门解释这个问题。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/06/23/2020-06-23-tramp/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-05-23-ref" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/05/23/2020-05-23-ref/">“引用类型”、“指针类型”与“值类型”</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-05-23T00:00:00.000Z" itemprop="datePublished">2020-05-23</time>
-
-          
-            × <span class="article-word-count">3.4k words</span>
-            
-            × <span class="article-time-to-read">13 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e5%b0%86%e7%ac%a6%e5%8f%b7%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%80%bc">将符号解释为值</a></li>
-<li><a href="#%e5%b0%86%e7%ac%a6%e5%8f%b7%e7%bb%91%e5%ae%9a%e4%b8%bair%e7%b1%bb%e5%9e%8b%e4%bb%8d%e7%84%b6%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%80%bc%e7%b1%bb%e5%9e%8b">将符号绑定为IR类型，仍然解释为值类型</a>
-<ul>
-<li><a href="#%e7%bb%91%e5%ae%9a%e4%b8%8a%e5%92%8c%e8%a7%a3%e9%87%8a%e4%b8%ba%e7%9a%84%e5%8c%ba%e5%88%ab">“绑定上”和“解释为”的区别</a></li>
-<li><a href="#ir%e7%b1%bb%e5%9e%8b%e5%92%8cer%e7%b1%bb%e5%9e%8b">IR类型和ER类型</a></li>
-<li><a href="#%e4%bb%8e%e7%bb%91%e5%ae%9a%e5%80%bc%e5%88%b0%e8%a7%a3%e9%87%8a%e5%80%bc">从绑定值到解释值</a></li>
-</ul>
-</li>
-<li><a href="#%e5%b0%86%e7%ac%a6%e5%8f%b7%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b">将符号解释为引用类型</a></li>
-<li><a href="#%e4%bc%a0%e5%80%bccall-by-value%e5%92%8c%e4%bc%a0%e5%bc%95%e7%94%a8call-by-reference">传值（call-by-value）和传引用（call-by-reference）</a>
-<ul>
-<li><a href="#%e4%bc%a0%e5%80%bc">传值</a></li>
-<li><a href="#%e4%bc%a0%e5%bc%95%e7%94%a8">传引用</a></li>
-</ul>
-</li>
-<li><a href="#%e6%9f%90%e4%ba%9b%e5%85%b7%e6%9c%89gc%e7%9a%84%e8%af%ad%e8%a8%80%e5%b0%86%e7%ac%a6%e5%8f%b7%e7%bb%91%e5%ae%9a%e5%88%b0%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b%e8%a7%a3%e9%87%8a%e4%b8%ba%e5%80%bc%e6%88%96%e5%bc%95%e7%94%a8%e7%b1%bb%e5%9e%8b">某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</a>
-<ul>
-<li><a href="#ier%e7%b1%bb%e5%9e%8b">IER类型</a></li>
-<li><a href="#ier%e7%b1%bb%e5%9e%8b%e7%9a%84%e5%a5%bd%e5%a4%84">IER类型的好处</a></li>
-<li><a href="#c%e4%b8%ad%e7%9a%84%e4%bc%a0%e5%bc%95%e7%94%a8">C#中的传引用</a></li>
-</ul>
-</li>
-<li><a href="#%e7%9c%9f%e6%ad%a3%e7%9a%84%e5%80%bc%e7%b1%bb%e5%9e%8b">真正的值类型</a></li>
-</ul>
-<p>在众多编程语言复杂而不统一的设计的影响下，“引用类型”和“值类型”的问题，已经是一个相当混乱的问题了。在这里简单讲一下我的理解。</p>
-<p>首先，我们必须知道这两个概念是什么意思。</p>
-<ul>
-<li>绑定(binding)。绑定是编程语言里一个符号的解释。</li>
-<li>环境(environment)。环境是所有绑定的形成的复合数据结构。</li>
-</ul>
-<p>简单地说，在scheme里，我们使用</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> x <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">+</span></span> x <span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/05/23/2020-05-23-ref/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-04-27-what-to-watch-2" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/04/27/2020-04-27-what-to-watch-2/">看点什么（二）那些让我不那么满意的作品</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-27T00:00:00.000Z" itemprop="datePublished">2020-04-27</time>
-
-          
-            × <span class="article-word-count">2k words</span>
-            
-            × <span class="article-time-to-read">6 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
-<p>这次谈的是“那些让我不那么满意的作品”，注意，这些作品我仍然是喜欢的，只是他们多多少少有些地方让我不那么满意。至于那些我不喜欢的作品，我可能甚至不会去讨论它们。</p>
-<h2 id="第一型深刻的题材浅薄的描写"><a class="markdownIt-Anchor" href="#第一型深刻的题材浅薄的描写"></a> 第一型：深刻的题材，浅薄的描写</h2>
-<p>想到一个深刻的问题，比解决它可能更有价值。我欣赏能提出严肃问题的作者，更欣赏其作品。</p>
-<p>但是，很多作品的状态是提出了一个严肃的问题，却给出轻佻的解答。我一直都会觉得这种作品很可惜，也为作者感到遗憾。不过有些时候，不是作者不想给出认真的解答，而是他没有给出解答的能力，或者说，现在还没到能够解答这个问题的时候。</p>
-<h3 id="逃避可耻但有用"><a class="markdownIt-Anchor" href="#逃避可耻但有用"></a> 《逃避可耻但有用》</h3>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/04/27/2020-04-27-what-to-watch-2/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-04-27-竹笋" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/04/27/2020-04-27-%E7%AB%B9%E7%AC%8B/">如何正确地烹制春笋</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-27T00:00:00.000Z" itemprop="datePublished">2020-04-27</time>
-
-          
-            × <span class="article-word-count">1.1k words</span>
-            
-            × <span class="article-time-to-read">3 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="我的竹笋记忆"><a class="markdownIt-Anchor" href="#我的竹笋记忆"></a> 我的竹笋记忆</h2>
-<p>笋是我最喜欢的食物之一。记得小时侯在聊城，不时去“永宁酒家”饭店吃饭。酒席上最抓住我味蕾的一道菜是“杂烩”，其中的竹笋片味道鲜香、口感嫩滑，在我的饮食记忆里留下了浓墨重彩的一笔。</p>
-<p>高中的时候学化学竞赛，17年5月赴杭州参加“培尖教育”组织的化学竞赛培训。当时的三餐是培训所在酒店提供的。令我印象深刻的是几乎每餐都会有的炒竹笋片，或者应该是叫“油焖竹笋”。它的口感和“杂烩”里的又不同。首先，“杂烩”中的竹笋片，是用很多相交于底面圆心的直径切割圆锥形的竹笋所得的，而杭州的竹笋片，则似乎是用平行于直径的线切割竹笋所得的。其次，杭州的竹笋有浓厚的油香，所谓“素食火腿”大概就是那种感觉。</p>
-<p>这两道竹笋菜，使我喜欢上了竹笋这种食材。</p>
-<h2 id="一般方法的溃败"><a class="markdownIt-Anchor" href="#一般方法的溃败"></a> 一般方法的溃败</h2>
-<p>疫情以来，我常常在家中掌勺。自然地，烹制竹笋也被我列上了计划日程。春天到来之后，在市场上就时常看到鲜嫩春笋的身影。我的第一次尝试，就在这时开始了。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/04/27/2020-04-27-%E7%AB%B9%E7%AC%8B/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-4-25-parser2" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/04/25/2020-4-25-parser2/">让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-25T00:00:00.000Z" itemprop="datePublished">2020-04-25</time>
-
-          
-            × <span class="article-word-count">4.4k words</span>
-            
-            × <span class="article-time-to-read">17 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e8%af%8d%e6%b3%95%e5%88%86%e6%9e%90%e5%99%a8">词法分析器</a>
-<ul>
-<li><a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e6%9c%89%e8%af%8d%e6%b3%95%e5%88%86%e6%9e%90%e5%99%a8">为什么要有词法分析器</a></li>
-<li><a href="#%e5%a6%82%e4%bd%95%e6%9e%84%e5%bb%ba%e4%b8%80%e4%b8%aa%e8%af%8d%e6%b3%95%e5%88%86%e6%9e%90%e5%99%a8">如何构建一个词法分析器</a></li>
-</ul>
-</li>
-<li><a href="#%e8%af%ad%e6%b3%95%e5%88%86%e6%9e%90%e5%99%a8">语法分析器</a>
-<ul>
-<li><a href="#%e8%af%ad%e6%b3%95%e5%88%86%e6%9e%90%e5%99%a8%e7%9a%84%e5%9f%ba%e6%9c%ac%e9%97%ae%e9%a2%98">语法分析器的基本问题</a></li>
-<li><a href="#%e5%b8%82%e9%9d%a2%e4%b8%8a%e7%9a%84%e5%b8%b8%e8%a7%81parser">市面上的常见Parser</a></li>
-<li><a href="#%e9%80%92%e5%bd%92%e5%90%91%e4%b8%8b%e8%a7%a3%e6%9e%90%e5%99%a8">递归向下解析器</a></li>
-<li><a href="#parser-combinator">Parser Combinator</a></li>
-<li><a href="#parser-generator">Parser Generator</a></li>
-<li><a href="#%e7%ae%97%e7%ac%a6%e4%bc%98%e5%85%88%e7%ba%a7%e8%a7%a3%e6%9e%90%e5%99%a8">算符优先级解析器</a></li>
-</ul>
-</li>
-<li><a href="#%e4%bb%8e%e8%a7%a3%e6%9e%90%e6%a0%91%e5%88%b0%e8%af%ad%e6%b3%95%e6%a0%91">从解析树到语法树</a>
-<ul>
-<li><a href="#%e9%80%92%e5%bd%92%e5%90%91%e4%b8%8b%e8%a7%a3%e6%9e%90%e5%99%a8%e7%9a%84%e6%83%85%e5%86%b5">递归向下解析器的情况</a></li>
-<li><a href="#yacc%e7%9a%84%e6%83%85%e5%86%b5">Yacc的情况</a></li>
-</ul>
-</li>
-<li><a href="#%e9%9c%80%e8%a6%81%e6%b3%a8%e6%84%8f%e7%9a%84%e5%87%a0%e4%b8%aa%e9%97%ae%e9%a2%98">需要注意的几个问题</a>
-<ul>
-<li><a href="#%e4%b8%8d%e8%a6%81%e7%bb%99parser%e5%a2%9e%e5%8a%a0%e5%a4%aa%e5%a4%9a%e8%b4%9f%e6%8b%85">不要给Parser增加太多负担</a></li>
-<li><a href="#%e6%9c%80%e5%a5%bd%e4%b8%8d%e8%a6%81%e5%ae%9e%e7%8e%b0parser">最好不要实现Parser</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="词法分析器"><a class="markdownIt-Anchor" href="#词法分析器"></a> 词法分析器</h2>
-<p>词法分析器，是将输入的字符串解析为符号串的工具；语法分析器，即parser，是将符号串解析为解析树（并将解析树映射为语法树）的工具。</p>
-<h3 id="为什么要有词法分析器"><a class="markdownIt-Anchor" href="#为什么要有词法分析器"></a> 为什么要有词法分析器</h3>
-<p>一般的编译器教科书，常常是先讲词法分析器，再讲语法分析器，顺带着讲讲生成文法。个人认为这是<strong>完全错误</strong>的。</p>
-<p>我们必须要知道，我们这里提到的Parser解析的全部都是<strong>上下文无关文法</strong>（CFG），而词法分析器解析的是<strong>正则文法</strong>，我们还知道，<strong>所有的正则文法都是上下文无关文法</strong>，那么这就得出一个结论，因为Parser也可以解析正则文法，所以词法分析起是完全不需要的。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/04/25/2020-4-25-parser2/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-04-21-CLanguage" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/04/21/2020-04-21-CLanguage/">谈谈C语言的两个问题</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-21T00:00:00.000Z" itemprop="datePublished">2020-04-21</time>
-
-          
-            × <span class="article-word-count">792 words</span>
-            
-            × <span class="article-time-to-read">2 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="正确理解函数名"><a class="markdownIt-Anchor" href="#正确理解函数名"></a> 正确理解函数名</h2>
-<p>只有正确理解函数名，才能正确使用函数指针。</p>
-<p>函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。</p>
-<p>我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span><span class="params">(*p)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">p pointer = func; <span class="comment">//写法1</span></span><br><span class="line">p pointer = &amp;func; <span class="comment">//写法2</span></span><br></pre></td></tr></table></figure>
-<p>有些人会这样解释：对一个函数取地址仍然得到函数本身。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/04/21/2020-04-21-CLanguage/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-04-03-net_class" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/04/03/2020-04-03-net_class/">也谈我校在疫情期间不开设网课的诸问题</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-03T00:00:00.000Z" itemprop="datePublished">2020-04-03</time>
-
-          
-            × <span class="article-word-count">1.4k words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="从一篇文章谈起"><a class="markdownIt-Anchor" href="#从一篇文章谈起"></a> 从一篇文章谈起</h2>
-<p>我校，即中山大学，在2020年2月8日–应该开学而没有开学的日子–起，至今没有组织<strong>全校性的</strong>、<strong>算学分的</strong>网课。几乎两个月过去了，我过着田园牧歌式的生活。每天读读书、看看动画、搞搞逆向，尽力做好吃的饭，写优雅的代码，颇有几分“采菊东篱下，悠然见南山”的乐趣。</p>
-<p>不过，我们必须承认，这种景象是暗流涌动、危机四伏的。有一位同学就看到了这种危机，奋笔疾书、笔力千钧地写出了一篇文章，痛斥我校教务部不作为，<strong>不过不知道为什么，他已经自己删除了这篇文章</strong>。</p>
-<p><img src="https://pic.downk.cc/item/5e86e16a504f4bcb04a6f014.jpg" alt="0"></p>
-<p>我对这个文章所反映的问题的评价，正如截图上说的那样：</p>
-<p><img src="https://pic.downk.cc/item/5e86e5bc504f4bcb04aa5991.jpg" alt="1"></p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/04/03/2020-04-03-net_class/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav" class="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/2/">« Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">Next »</a>
-  </nav>
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
+    </ul>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                
+                <div class="post-list">
+    
+    <div class="post">
+        <a class="post-title" href="/2020/08/08/2020-8-8-parser3/">解析CFG，不必复杂解析器</a>
+        <div class="post-except">
+             最简单的解析器
+什么样的解析器是【最简单的解析器】呢？我认为，【最简单的解析器】是【递归向下解析器】。 无论你使用的解析方法是回退还是LL，递归向下总能使得解析器轻量化、简单、能够快速构造。
+但是，这种解析器有几个问题：
+
+不能处理左递归文法
+文法不一定是LL(1)的，效率上和实现上都有些问题
+用过程式编程语言时，不能很好地进行抽象，导致重复代码
+
+这篇文章通过介绍三个变换，解决了第一个问题，在某种程度上解决了第二个问题。至于第三个问题，这是一个纯粹的工程问题，我们就不在这
+            <a class="read-more" href="/2020/08/08/2020-8-8-parser3/"> ... </a>
+        </div>
+        <div class="post-date">2020.08.08</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/07/14/2020-07-14-uni/">大学生活的前两年</a>
+        <div class="post-except">
+            
+学习
+
+上课式学习
+自学
+
+
+生活
+
+食
+住
+行
+
+
+总结
+
+这几天一直在写作业，今天才有点时间来写写博客。这次我们不谈技术，谈点更有意思的东西：我的大学生活。
+ 学习
+ 上课式学习
+这两年在课上我学了不少知识，其主要的方面还是计算机和数学。我感受最深的一点是，很多学习过的知识都在期末考试之后就被束之高阁了。
+比如说，我们的《数学分析》有三个学期的课程，主要是讲一些分析学的基础知识，也就是实数理论、极限、微积分、级数这些东西。这个课程每周有两节，一节1.5小时，这样算来，我
+            <a class="read-more" href="/2020/07/14/2020-07-14-uni/"> ... </a>
+        </div>
+        <div class="post-date">2020.07.14</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/07/04/2020-07-04-young/">一个喜欢网上冲浪的小孩子</a>
+        <div class="post-except">
+            
+时隔多年的再次登录
+整活、钓鱼、引战、暴论
+关于【羽黑吧】
+第一次被网络暴力
+对小孩子多一点包容
+
+ 时隔多年的再次登录
+这些天想做的事太多，但都懒得做。我进入了一种类似于【贤者时间】的状态。加之上个月一直在北京，那个家的学习条件没有济南好，我就自然地划水了几天。在这几天里，我登录了小时候用的百度贴吧账号，看了看在2012年至2016年间的帖子，不由得感慨万千，记录于此。
+ 整活、钓鱼、引战、暴论
+不得不说，小时候的我的整活能力，或者说搞笑能力，是远胜于今天的我的。请看我在
+            <a class="read-more" href="/2020/07/04/2020-07-04-young/"> ... </a>
+        </div>
+        <div class="post-date">2020.07.04</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/06/23/2020-06-23-tramp/">谈谈【蹦床】技术</a>
+        <div class="post-except">
+             过程式语言中的尾调用
+在scheme中，尾调用完全是循环的：
+(define factor
+  (lambda (n result)
+    (if (&lt; n 2)
+      result
+      (factor (- n 1) (* result n)))))
+
+这段代码和
+int factor(int n)&#123;
+  int result = 1;
+  while(n &gt;= 2) &#123;
+    result = n * result;
+ 
+            <a class="read-more" href="/2020/06/23/2020-06-23-tramp/"> ... </a>
+        </div>
+        <div class="post-date">2020.06.23</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/05/23/2020-05-23-ref/">“引用类型”、“指针类型”与“值类型”</a>
+        <div class="post-except">
+            
+将符号解释为值
+将符号绑定为IR类型，仍然解释为值类型
+
+“绑定上”和“解释为”的区别
+IR类型和ER类型
+从绑定值到解释值
+
+
+将符号解释为引用类型
+传值（call-by-value）和传引用（call-by-reference）
+
+传值
+传引用
+
+
+某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型
+
+IER类型
+IER类型的好处
+C#中的传引用
+
+
+真正的值类型
+
+在众多编程语言复杂而不统一的设计的影响下，“引用类型”和“值类型”的问题，已经是一个相当混乱的
+            <a class="read-more" href="/2020/05/23/2020-05-23-ref/"> ... </a>
+        </div>
+        <div class="post-date">2020.05.23</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/04/27/2020-04-27-what-to-watch-2/">看点什么（二）那些让我不那么满意的作品</a>
+        <div class="post-except">
+             前言
+这次谈的是“那些让我不那么满意的作品”，注意，这些作品我仍然是喜欢的，只是他们多多少少有些地方让我不那么满意。至于那些我不喜欢的作品，我可能甚至不会去讨论它们。
+ 第一型：深刻的题材，浅薄的描写
+想到一个深刻的问题，比解决它可能更有价值。我欣赏能提出严肃问题的作者，更欣赏其作品。
+但是，很多作品的状态是提出了一个严肃的问题，却给出轻佻的解答。我一直都会觉得这种作品很可惜，也为作者感到遗憾。不过有些时候，不是作者不想给出认真的解答，而是他没有给出解答的能力，或者说，现在
+            <a class="read-more" href="/2020/04/27/2020-04-27-what-to-watch-2/"> ... </a>
+        </div>
+        <div class="post-date">2020.04.27</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/04/27/2020-04-27-%E7%AB%B9%E7%AC%8B/">如何正确地烹制春笋</a>
+        <div class="post-except">
+             我的竹笋记忆
+笋是我最喜欢的食物之一。记得小时侯在聊城，不时去“永宁酒家”饭店吃饭。酒席上最抓住我味蕾的一道菜是“杂烩”，其中的竹笋片味道鲜香、口感嫩滑，在我的饮食记忆里留下了浓墨重彩的一笔。
+高中的时候学化学竞赛，17年5月赴杭州参加“培尖教育”组织的化学竞赛培训。当时的三餐是培训所在酒店提供的。令我印象深刻的是几乎每餐都会有的炒竹笋片，或者应该是叫“油焖竹笋”。它的口感和“杂烩”里的又不同。首先，“杂烩”中的竹笋片，是用很多相交于底面圆心的直径切割圆锥形的竹笋所得的，而
+            <a class="read-more" href="/2020/04/27/2020-04-27-%E7%AB%B9%E7%AC%8B/"> ... </a>
+        </div>
+        <div class="post-date">2020.04.27</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/04/25/2020-4-25-parser2/">让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树</a>
+        <div class="post-except">
+            
+词法分析器
+
+为什么要有词法分析器
+如何构建一个词法分析器
+
+
+语法分析器
+
+语法分析器的基本问题
+市面上的常见Parser
+递归向下解析器
+Parser Combinator
+Parser Generator
+算符优先级解析器
+
+
+从解析树到语法树
+
+递归向下解析器的情况
+Yacc的情况
+
+
+需要注意的几个问题
+
+不要给Parser增加太多负担
+最好不要实现Parser
+
+
+
+ 词法分析器
+词法分析器，是将输入的字符串解析为符号串的工具；语法分析器，即parser，是将符
+            <a class="read-more" href="/2020/04/25/2020-4-25-parser2/"> ... </a>
+        </div>
+        <div class="post-date">2020.04.25</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/04/21/2020-04-21-CLanguage/">谈谈C语言的两个问题</a>
+        <div class="post-except">
+             正确理解函数名
+只有正确理解函数名，才能正确使用函数指针。
+函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。
+我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的：
+typedef void(*p)();
+
+void func()&#123;&#125;
+
+p pointer = func; //写法1
+p pointer = &amp;fun
+            <a class="read-more" href="/2020/04/21/2020-04-21-CLanguage/"> ... </a>
+        </div>
+        <div class="post-date">2020.04.21</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/04/03/2020-04-03-net_class/">也谈我校在疫情期间不开设网课的诸问题</a>
+        <div class="post-except">
+             从一篇文章谈起
+我校，即中山大学，在2020年2月8日–应该开学而没有开学的日子–起，至今没有组织全校性的、算学分的网课。几乎两个月过去了，我过着田园牧歌式的生活。每天读读书、看看动画、搞搞逆向，尽力做好吃的饭，写优雅的代码，颇有几分“采菊东篱下，悠然见南山”的乐趣。
+不过，我们必须承认，这种景象是暗流涌动、危机四伏的。有一位同学就看到了这种危机，奋笔疾书、笔力千钧地写出了一篇文章，痛斥我校教务部不作为，不过不知道为什么，他已经自己删除了这篇文章。
+
+我对这个文章所反映的问
+            <a class="read-more" href="/2020/04/03/2020-04-03-net_class/"> ... </a>
+        </div>
+        <div class="post-date">2020.04.03</div>
+    </div>
+    
+</div>
+
+<div class="paginator">
+    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
+</div>
+
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

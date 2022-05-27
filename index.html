@@ -1,616 +1,237 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="aya ⊢ blog">
-<meta property="og:url" content="https://ayanamists.xyz/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="ayanamists">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
-    
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-  
-    <article id="post-edsac" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <ul class="nav">
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2022/05/21/edsac/">在1951年如何编程--以EDSAC为例</a>
-      
+        <li><a href="/">首页</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2022-05-21T00:00:00.000Z" itemprop="datePublished">2022-05-21</time>
-
-          
-            × <span class="article-word-count">2.9k words</span>
-            
-            × <span class="article-time-to-read">10 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="edsac"><a class="markdownIt-Anchor" href="#edsac"></a> EDSAC</h2>
-<p>EDSAC是剑桥大学数学实验室设计并建造的计算机。1949年，项目组成功地用EDSAC生成并打印了平方数表<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>，象征着EDSAC正式投入使用。</p>
-<p><img src="https://pic.imgdb.cn/item/6263ebe6239250f7c5fbde45.jpg" alt="x^2"></p>
-<p>EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为：</p>
-<ol>
-<li>具有32个箱（Tank），每个箱存储32个字（Word），注意这里的字是18个比特，而非x86平台上的16个比特。这32个箱类似于现代计算机的内存（下文用“内存”来称呼这32个箱）。</li>
-<li>具有5个寄存器，其中两个寄存器（指令寄存器、指令地址寄存器）用来控制，三个寄存器用来计算。</li>
-<li>计算被表现为顺序地执行指令（Order），每条指令占1个字，其中有一位不使用，所以每条指令占17个比特。所有的指令与数据都放在之前所说的内存中（事实上，在EDSAC的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。</li>
-<li>EDSAC的输入设备是五点式打孔纸带，这种纸带同时也承担了输入程序（具体是什么意思下文会解释）的作用。EDSAC的输出设备是电传式打印机。它还配备了一个电话，这个电话可以用来进行“人机交互”，在EDSAC上实现的世界上的第一个电子游戏–井字棋（有争议）就是通过电话来进行交互的。</li>
-</ol>
-<h2 id="edsac的程序"><a class="markdownIt-Anchor" href="#edsac的程序"></a> EDSAC的程序</h2>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2022/05/21/edsac/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-hindley-milner" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+        <li><a href="/archives">归档</a></li>
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/11/25/hindley-milner/">十分钟搞懂 Hindley-Milner 类型系统</a>
-      
+        <li><a href="/about">关于</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-11-25T00:00:00.000Z" itemprop="datePublished">2021-11-25</time>
-
-          
-            × <span class="article-word-count">2.9k words</span>
-            
-            × <span class="article-time-to-read">11 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="类型推理"><a class="markdownIt-Anchor" href="#类型推理"></a> 类型推理</h2>
-<h3 id="什么是类型推理"><a class="markdownIt-Anchor" href="#什么是类型推理"></a> 什么是类型推理</h3>
-<p>程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> t <span class="operator">=</span> <span class="number">1</span> <span class="operator">+</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> f x <span class="operator">=</span> x <span class="operator">+</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>这里的<code>t</code>、<code>f</code>、<code>x</code>三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。</p>
-<p>还有一些时候，给出类型并不是很容易的事情，例如：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/11/25/hindley-milner/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-uni-intro-elim" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/09/20/uni-intro-elim/">高中数学题与全称量词的引入/消除规则</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-09-20T17:16:28.000Z" itemprop="datePublished">2021-09-20</time>
-
-          
-            × <span class="article-word-count">1.2k words</span>
-            
-            × <span class="article-time-to-read">5 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="一道高中数学题"><a class="markdownIt-Anchor" href="#一道高中数学题"></a> 一道高中数学题</h2>
-<p>有这样一道高中数学题：</p>
-<p><strong>问题1.</strong> 考虑一个定义域为实数的函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>，如果对于任意的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>∈</mo><mi mathvariant="double-struck">R</mi></mrow><annotation encoding="application/x-tex">x ∈ \mathbb{R}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68889em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbb">R</span></span></span></span></span>，有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x + 1)=-f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">f(1) = 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>，问：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mn>2021</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(2021)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord">2</span><span class="mord">0</span><span class="mord">2</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>等于多少？</p>
-<p>首先可以看到，这个问题是不宜问“周期是多少”的，因为怎么问都不严谨。如果问最小正周期的话，立刻可以给出这样的例子：</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f(x) = 0
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></span></p>
-<p>它毫无疑问地满足<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x + 1) = -f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>，然而这个函数的最小正周期不存在。另一种选择是问周期，但周期的话无疑会导致多个答案正确。所以不如问个具体的值。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/09/20/uni-intro-elim/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="blog-parametric-poly" class="article article-type-blog" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/09/14/parametric-poly/">c++模板与参数多态的根本区别</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-09-14T15:53:47.000Z" itemprop="datePublished">2021-09-14</time>
-
-          
-            × <span class="article-word-count">3.9k words</span>
-            
-            × <span class="article-time-to-read">19 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="c模板与参数多态"><a class="markdownIt-Anchor" href="#c模板与参数多态"></a> c++模板与参数多态</h2>
-<p>模板(template)是一种c++语言特性，类似于：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="function">T <span class="title">id</span><span class="params">(T x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里的<code>T</code>可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份<a target="_blank" rel="noopener" href="https://www.cs.bham.ac.uk/~hxt/2015/c-plus-plus/templates-slides.pdf">ppt</a>和这个<a target="_blank" rel="noopener" href="https://catonmat.net/cpp-polymorphism">网页</a>。</p>
-<p>然而这篇博客中，我将会说明，<strong>无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别</strong>。</p>
-<h2 id="到底什么是参数多态"><a class="markdownIt-Anchor" href="#到底什么是参数多态"></a> 到底什么是参数多态</h2>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/09/14/parametric-poly/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-combinator" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/08/29/combinator/">Frege/Hilbert系统与组合子逻辑</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-08-29T15:55:30.000Z" itemprop="datePublished">2021-08-29</time>
-
-          
-            × <span class="article-word-count">1.4k words</span>
-            
-            × <span class="article-time-to-read">6 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="fregehilbert系统"><a class="markdownIt-Anchor" href="#fregehilbert系统"></a> Frege/Hilbert系统</h2>
-<p>Frege/Hilbert系统是一个证明系统，是最古老、最简单的证明系统之一。简单来说，这个系统中的证明都是一个命题序列，命题序列中的每个命题<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">P_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>都是</p>
-<ul>
-<li>一个公理</li>
-<li>由命题序列 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><msub><mi>k</mi><mn>1</mn></msub></msub></mrow><annotation encoding="application/x-tex">P_{k_1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><msub><mi>k</mi><mn>2</mn></msub></msub></mrow><annotation encoding="application/x-tex">P_{k_2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>(其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>k</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>k</mi><mn>2</mn></msub><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">k_1, k_2 \in [1, i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03148em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">i</span><span class="mclose">)</span></span></span></span>) 通过modus ponens得到的命题</li>
-</ul>
-<p>这所谓的modus ponens是指，如果<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><msub><mi>k</mi><mn>1</mn></msub></msub></mrow><annotation encoding="application/x-tex">P_{k_1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span>，而<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><msub><mi>k</mi><mn>2</mn></msub></msub></mrow><annotation encoding="application/x-tex">P_{k_2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93343em;vertical-align:-0.2501em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.03148em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2501em;"><span></span></span></span></span></span></span></span></span></span>是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>→</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a → b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span></span></span></span>，那么可以得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span></span></span></span></p>
-<p>例如说，一个Frege系统由以下两条公理构成：</p>
-<ol>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>→</mo><mi>b</mi><mo>→</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">a → b → a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span></li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>→</mo><mi>b</mi><mo stretchy="false">)</mo><mo>→</mo><mo stretchy="false">(</mo><mi>a</mi><mo>→</mo><mi>b</mi><mo>→</mo><mi>c</mi><mo stretchy="false">)</mo><mo>→</mo><mi>a</mi><mo>→</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">(a → b) → (a → b → c) → a → c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">c</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">c</span></span></span></span></li>
-</ol>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/08/29/combinator/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-monad" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/02/26/monad/">从实用的角度看Monad（一）</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-02-26T20:20:35.000Z" itemprop="datePublished">2021-02-26</time>
-
-          
-            × <span class="article-word-count">1.5k words</span>
-            
-            × <span class="article-time-to-read">6 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="从错误处理说起"><a class="markdownIt-Anchor" href="#从错误处理说起"></a> 从错误处理说起</h2>
-<p>错误处理是编程语言中的古老话题，从CPU的某些信号，到C++、托管平台里的<code>exception</code>，都是某种形态的错误处理。</p>
-<p>在函数式语言中，我们一般采用<code>Result</code>或者说<code>Maybe</code>一类的东西做错误处理，例如说，在Haskell中定义自然数除法，可以这样定义：</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Nat</span> = <span class="type">Zero</span> | <span class="type">S</span> <span class="type">Nat</span> </span></span><br><span class="line">  <span class="keyword">deriving</span> <span class="type">Show</span></span><br><span class="line">  </span><br><span class="line"><span class="title">sub</span> n <span class="type">Zero</span> = n</span><br><span class="line"><span class="title">sub</span> <span class="type">Zero</span> n = <span class="type">Zero</span></span><br><span class="line"><span class="title">sub</span> (<span class="type">S</span> n) (<span class="type">S</span> n&#x27;) = sub n n&#x27;</span><br><span class="line"></span><br><span class="line"><span class="title">eqb</span> <span class="type">Zero</span> n = <span class="type">False</span></span><br><span class="line"><span class="title">eqb</span> (<span class="type">S</span> n) (<span class="type">Zero</span>) = <span class="type">True</span></span><br><span class="line"><span class="title">eqb</span> (<span class="type">S</span> n) (<span class="type">S</span> n&#x27;) = eqb n n&#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment">--除法定义</span></span><br><span class="line"><span class="title">ndiv</span> <span class="type">Zero</span> n&#x27; = <span class="type">Zero</span></span><br><span class="line"><span class="title">ndiv</span> n n&#x27; =</span><br><span class="line">  <span class="keyword">if</span> eqb n n&#x27; <span class="keyword">then</span> ndiv (sub n n&#x27;) n&#x27; <span class="keyword">else</span> n</span><br></pre></td></tr></table></figure>
-<p>然而，这样定义并不能覆盖一个数学上无意义、计算上不停机的情况：</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ndiv</span> (<span class="type">S</span> <span class="type">Zero</span>) <span class="type">Zero</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/02/26/monad/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-ext-gcd" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/01/22/ext-gcd/">谈谈扩展欧几里得算法</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-01-22T09:57:40.000Z" itemprop="datePublished">2021-01-22</time>
-
-          
-            × <span class="article-word-count">2.2k words</span>
-            
-            × <span class="article-time-to-read">10 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="扩展欧几里得算法"><a class="markdownIt-Anchor" href="#扩展欧几里得算法"></a> 扩展欧几里得算法</h2>
-<p>“欧几里得算法”是数论中用于求得两个整数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span></span></span></span>的最大公约数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c=(a,b)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">c</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span></span></span></span>的算法。我之前的文章中已经介绍了这个算法的正确性来源于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mo>−</mo><mi>k</mi><mi>b</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mi>k</mi><mo>∈</mo><mi mathvariant="double-struck">Z</mi></mrow><annotation encoding="application/x-tex">(a,b)=(a-k b), k\in \Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68889em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbb">Z</span></span></span></span></span>。而“扩展欧几里得算法”是一个可以得到</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>a</mi><mo>+</mo><mi>t</mi><mi>b</mi><mo>=</mo><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">sa+t b=(a,b)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span></span></span></span></span></p>
-<p>中的系数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span></span></span></span>的算法。</p>
-<p>我第一次看到的这个算法实现，来自于一位精通算法竞赛的同学，他给出的实现类似于</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">exgcd</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b,<span class="type">int</span> &amp;x,<span class="type">int</span> &amp;y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(b==<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        x = <span class="number">1</span>; y = <span class="number">0</span>; <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> r = <span class="built_in">exgcd</span>(b, a % b, x, y);</span><br><span class="line">    <span class="type">int</span> t = y;</span><br><span class="line">    y = x - (a / b) * y;</span><br><span class="line">    x = t;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/01/22/ext-gcd/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="blog-little" class="article article-type-blog" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2021/01/03/little/">费马小定理的（部分）直观解释</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-01-03T12:30:51.000Z" itemprop="datePublished">2021-01-03</time>
-
-          
-            × <span class="article-word-count">1.1k words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="费马小定理"><a class="markdownIt-Anchor" href="#费马小定理"></a> 费马小定理</h2>
-<p>费马小定理是初等数论里面一个很重要的结论。它声称：</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>p</mi><mo separator="true">,</mo><mi>a</mi><mo separator="true">,</mo><mi>P</mi><mi>r</mi><mi>i</mi><mi>m</mi><mi>e</mi><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo><mo>→</mo><msup><mi>a</mi><mi>p</mi></msup><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">\forall p, a,Prime(p) \rightarrow a^{p}=a
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∀</span><span class="mord mathdefault">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">i</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.714392em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714392em;"><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span></span></p>
-<p>我仍然记得大一下学期的时候，初遇这个定理，顿觉手足无措、无所适从。我想要『理解』这个定理，换句话说，我想知道这些东西：</p>
-<ul>
-<li>这个定理是如何被发现的？</li>
-<li>有没有一个直观的理解可以让人『接受』这个事实？</li>
-<li>能不能从自然数的其他地方找到对这个事实的解释？</li>
-</ul>
-<p>一般来说，定理的证明中有这些信息。然而，如果你搜索这个定理的证明，你会感觉到这证明实在是有点神奇：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2021/01/03/little/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-pascal" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/12/26/pascal/">帕斯卡的恩惠</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-12-26T21:22:03.000Z" itemprop="datePublished">2020-12-26</time>
-
-          
-            × <span class="article-word-count">997 words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="从二项式定理说起"><a class="markdownIt-Anchor" href="#从二项式定理说起"></a> 从二项式定理说起</h2>
-<p>下列等式是显然成立的：</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup><mspace linebreak="newline"/><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi><mo>+</mo><mn>3</mn><mi>a</mi><msup><mi>b</mi><mn>2</mn></msup><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">(a+b)(a+b) = a^2+2 ab +b^2 \\
-(a+b)(a+b)(a+b) = a^2 + 3a^2b+3ab^2+b^2
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mord mathdefault">a</span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8641079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.9474379999999999em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8641079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></p>
-<p>看到这如此规整的式子，自然会问，</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>+</mo><mi>b</mi><msup><mo stretchy="false">)</mo><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">(a+b)^n 
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7143919999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></p>
-<p>它的每一项有没有一个简单的表示呢？</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/12/26/pascal/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-gmp" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/12/21/gmp/">栈式RAII不能取代GC：谈GMP的C++绑定</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-12-21T19:31:00.000Z" itemprop="datePublished">2020-12-21</time>
-
-          
-            × <span class="article-word-count">3.5k words</span>
-            
-            × <span class="article-time-to-read">14 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="gnu-mp库的c绑定"><a class="markdownIt-Anchor" href="#gnu-mp库的c绑定"></a> GNU MP库的C++绑定</h2>
-<p>GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。</p>
-<p>这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的<code>1+2</code>，那么应该这么写：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">mpz_t</span> a, b, c;</span><br><span class="line">mpz_init_set_ui(a, <span class="number">1</span>);</span><br><span class="line">mpz_init_set_ui(b, <span class="number">2</span>);</span><br><span class="line">mpz_add(c, a, b);</span><br><span class="line">mpz_clear(a);</span><br><span class="line">mpz_clear(b);</span><br><span class="line">mpz_clear(c);</span><br></pre></td></tr></table></figure>
-<p>说实话，这还不如直接写汇编来的简洁：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov $1, %eax</span><br><span class="line">mov $2, %ebx</span><br><span class="line">add %ebx, %eax</span><br><span class="line">mov %ecx, %eax</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/12/21/gmp/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav" class="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next »</a>
-  </nav>
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
+    </ul>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                
+                <div class="post-list">
+    
+    <div class="post">
+        <a class="post-title" href="/2022/05/21/edsac/">在1951年如何编程--以 EDSAC 为例</a>
+        <div class="post-except">
+             EDSAC
+EDSAC 是剑桥大学数学实验室设计并建造的计算机。1949年，项目组成功地用 EDSAC 生成并打印了平方数表[1]，象征着 EDSAC 正式投入使用。
+
+EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为：
+
+具有 32 个箱（Tank），每个箱存储 32 个字（Word），注意这里的字是 18 个比特，而非 x86 平台上的 16 个比特。这 32 个箱类似于现代计算机的内存（下文用“内存”来称呼这32个箱）。
+具有 5 个寄存器，其中两个寄存器
+            <a class="read-more" href="/2022/05/21/edsac/"> ... </a>
+        </div>
+        <div class="post-date">2022.05.21</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/11/25/hindley-milner/">十分钟搞懂 Hindley-Milner 类型系统</a>
+        <div class="post-except">
+             类型推理
+ 什么是类型推理
+程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：
+let t = 1 + 1
+let f x = x + 1
+
+这里的t、f、x三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。
+还有一些时候，给出类型并不是很容易的事情，例如：
+let s f g x = f x (g x)
+let k x y = x
+let i = s k k
+let ϕ = s (k (s i)) k
+
+请问，ϕ的类型是什么？
+ϕ的类型是可
+            <a class="read-more" href="/2021/11/25/hindley-milner/"> ... </a>
+        </div>
+        <div class="post-date">2021.11.25</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/09/20/uni-intro-elim/">高中数学题与全称量词的引入/消除规则</a>
+        <div class="post-except">
+             一道高中数学题
+有这样一道高中数学题：
+问题1. 考虑一个定义域为实数的函数f(x)f(x)f(x)，如果对于任意的x∈Rx ∈ \mathbb{R}x∈R，有f(x+1)=−f(x)f(x + 1)=-f(x)f(x+1)=−f(x)，f(1)=2f(1) = 2f(1)=2，问：f(2021)f(2021)f(2021)等于多少？
+首先可以看到，这个问题是不宜问“周期是多少”的，因为怎么问都不严谨。如果问最小正周期的话，立刻可以给出这样的例子：
+f(x)=0f(x) =
+            <a class="read-more" href="/2021/09/20/uni-intro-elim/"> ... </a>
+        </div>
+        <div class="post-date">2021.09.20</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/09/14/parametric-poly/">c++模板与参数多态的根本区别</a>
+        <div class="post-except">
+             c++模板与参数多态
+模板(template)是一种c++语言特性，类似于：
+template &lt;class T&gt;
+T id(T x) &#123;
+    return x;
+&#125;
+
+这里的T可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份ppt和这个网页。
+然而这篇博客中，我将会说明，无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本
+            <a class="read-more" href="/2021/09/14/parametric-poly/"> ... </a>
+        </div>
+        <div class="post-date">2021.09.14</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/08/29/combinator/">Frege/Hilbert系统与组合子逻辑</a>
+        <div class="post-except">
+             Frege/Hilbert系统
+Frege/Hilbert系统是一个证明系统，是最古老、最简单的证明系统之一。简单来说，这个系统中的证明都是一个命题序列，命题序列中的每个命题PiP_iPi​都是
+
+一个公理
+由命题序列 Pk1P_{k_1}Pk1​​和Pk2P_{k_2}Pk2​​(其中k1,k2∈[1,i)k_1, k_2 \in [1, i)k1​,k2​∈[1,i)) 通过modus ponens得到的命题
+
+这所谓的modus ponens是指，如果Pk1P_{k_
+            <a class="read-more" href="/2021/08/29/combinator/"> ... </a>
+        </div>
+        <div class="post-date">2021.08.29</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/02/26/monad/">从实用的角度看Monad（一）</a>
+        <div class="post-except">
+             从错误处理说起
+错误处理是编程语言中的古老话题，从CPU的某些信号，到C++、托管平台里的exception，都是某种形态的错误处理。
+在函数式语言中，我们一般采用Result或者说Maybe一类的东西做错误处理，例如说，在Haskell中定义自然数除法，可以这样定义：
+data Nat = Zero | S Nat 
+  deriving Show
+  
+sub n Zero = n
+sub Zero n = Zero
+sub (S n) (S n') = sub n n
+            <a class="read-more" href="/2021/02/26/monad/"> ... </a>
+        </div>
+        <div class="post-date">2021.02.26</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/01/22/ext-gcd/">谈谈扩展欧几里得算法</a>
+        <div class="post-except">
+             扩展欧几里得算法
+“欧几里得算法”是数论中用于求得两个整数aaa和bbb的最大公约数c=(a,b)c=(a,b)c=(a,b)的算法。我之前的文章中已经介绍了这个算法的正确性来源于(a,b)=(a−kb),k∈Z(a,b)=(a-k b), k\in \Z(a,b)=(a−kb),k∈Z。而“扩展欧几里得算法”是一个可以得到
+sa+tb=(a,b)sa+t b=(a,b)
+sa+tb=(a,b)
+中的系数sss和ttt的算法。
+我第一次看到的这个算法实现，来自于一位精通算法
+            <a class="read-more" href="/2021/01/22/ext-gcd/"> ... </a>
+        </div>
+        <div class="post-date">2021.01.22</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2021/01/03/little/">费马小定理的（部分）直观解释</a>
+        <div class="post-except">
+             费马小定理
+费马小定理是初等数论里面一个很重要的结论。它声称：
+∀p,a,Prime(p)→ap=a\forall p, a,Prime(p) \rightarrow a^{p}=a
+∀p,a,Prime(p)→ap=a
+我仍然记得大一下学期的时候，初遇这个定理，顿觉手足无措、无所适从。我想要『理解』这个定理，换句话说，我想知道这些东西：
+
+这个定理是如何被发现的？
+有没有一个直观的理解可以让人『接受』这个事实？
+能不能从自然数的其他地方找到对这个事实的解释？
+
+一般来说，
+            <a class="read-more" href="/2021/01/03/little/"> ... </a>
+        </div>
+        <div class="post-date">2021.01.03</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/12/26/pascal/">帕斯卡的恩惠</a>
+        <div class="post-except">
+             从二项式定理说起
+下列等式是显然成立的：
+(a+b)(a+b)=a2+2ab+b2(a+b)(a+b)(a+b)=a2+3a2b+3ab2+b2(a+b)(a+b) = a^2+2 ab +b^2 \\
+(a+b)(a+b)(a+b) = a^2 + 3a^2b+3ab^2+b^2
+(a+b)(a+b)=a2+2ab+b2(a+b)(a+b)(a+b)=a2+3a2b+3ab2+b2
+看到这如此规整的式子，自然会问，
+(a+b)n(a+b)^n 
+(a+b)n
+它的每一项有
+            <a class="read-more" href="/2020/12/26/pascal/"> ... </a>
+        </div>
+        <div class="post-date">2020.12.26</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/12/21/gmp/">栈式RAII不能取代GC：谈GMP的C++绑定</a>
+        <div class="post-except">
+             GNU MP库的C++绑定
+GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。
+这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的1+2，那么应该这么写：
+mpz_t a, b, c;
+mpz_init_set_ui(a, 1);
+mpz_init_set_ui(b, 2)
+            <a class="read-more" href="/2020/12/21/gmp/"> ... </a>
+        </div>
+        <div class="post-date">2020.12.21</div>
+    </div>
+    
+</div>
+
+<div class="paginator">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+</div>
+
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

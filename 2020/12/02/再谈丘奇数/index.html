@@ -1,91 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>再谈丘奇数 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="自然数的表示 理论上来说，任何可以『数出来』的东西，都可以用来表示自然数。当然，给『数出来』找一个严格的说法恐怕是很困难，甚至是『不可能解决』的问题。 这样看来，能够编码自然数的结构实在是太多太多了，数学家们喜欢用集合来编码，比如说： 0&#x3D;∅S(n)&#x3D;{n}0 &#x3D; \emptyset \\ S(n) &#x3D; \{ n \} 0&#x3D;∅S(n)&#x3D;{n} 这样一来111就是{∅}\{  \emptyset">
-<meta property="og:type" content="article">
-<meta property="og:title" content="再谈丘奇数">
-<meta property="og:url" content="https://ayanamists.xyz/2020/12/02/%E5%86%8D%E8%B0%88%E4%B8%98%E5%A5%87%E6%95%B0/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="自然数的表示 理论上来说，任何可以『数出来』的东西，都可以用来表示自然数。当然，给『数出来』找一个严格的说法恐怕是很困难，甚至是『不可能解决』的问题。 这样看来，能够编码自然数的结构实在是太多太多了，数学家们喜欢用集合来编码，比如说： 0&#x3D;∅S(n)&#x3D;{n}0 &#x3D; \emptyset \\ S(n) &#x3D; \{ n \} 0&#x3D;∅S(n)&#x3D;{n} 这样一来111就是{∅}\{  \emptyset">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-12-02T23:53:15.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="计算理论">
-<meta property="article:tag" content="λ表达式">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-再谈丘奇数" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      再谈丘奇数
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-12-02T23:53:15.000Z" itemprop="datePublished">2020-12-02</time>
-
-          
-            × <span class="article-word-count">1.6k words</span>
-            
-            × <span class="article-time-to-read">6 minutes</span>
-            
-          
+        <div class="post-main-title">
+            再谈丘奇数
         </div>
-      </header>
+        <div class="post-meta">
+            2020-12-02
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="自然数的表示"><a class="markdownIt-Anchor" href="#自然数的表示"></a> 自然数的表示</h2>
 <p>理论上来说，任何可以『数出来』的东西，都可以用来表示自然数。当然，给『数出来』找一个严格的说法恐怕是很困难，甚至是『不可能解决』的问题。</p>
 <p>这样看来，能够编码自然数的结构实在是太多太多了，数学家们喜欢用集合来编码，比如说：</p>
@@ -125,7 +86,13 @@ S(n)+m = S(n + m)
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mord mathdefault">d</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">n</span></span></span></span></span></p>
 <p>但是，『朴素<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>自然数』不具有第二个能力。为什么呢？要回答这个问题，需要考察一下在普通的编程语言中是如何赋予自然数第二个能力的：</p>
 <p>例如说，在Haskell中定义自然数：</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">data</span> <span class="type">Nat</span> = <span class="type">Zero</span> | <span class="type">S</span> <span class="type">Nat</span></span></span><br><span class="line">  <span class="keyword">deriving</span> (<span class="type">Show</span>)</span><br><span class="line"></span><br><span class="line"><span class="title">nAdd</span> :: <span class="type">Nat</span> -&gt; <span class="type">Nat</span> -&gt; <span class="type">Nat</span></span><br><span class="line"><span class="title">nAdd</span> (<span class="type">S</span> n) m = <span class="type">S</span> (nAdd n m)</span><br><span class="line"><span class="title">nAdd</span> <span class="type">Zero</span> m = m</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="haskell"><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">Nat</span> = <span class="hljs-type">Zero</span> | <span class="hljs-type">S</span> <span class="hljs-type">Nat</span></span>
+  <span class="hljs-keyword">deriving</span> (<span class="hljs-type">Show</span>)
+
+<span class="hljs-title">nAdd</span> :: <span class="hljs-type">Nat</span> -&gt; <span class="hljs-type">Nat</span> -&gt; <span class="hljs-type">Nat</span>
+<span class="hljs-title">nAdd</span> (<span class="hljs-type">S</span> n) m = <span class="hljs-type">S</span> (nAdd n m)
+<span class="hljs-title">nAdd</span> <span class="hljs-type">Zero</span> m = m
+</code></pre>
 <p>注意到这两个<code>nAdd</code> ，它们是<em>相同</em>的函数，但却对不同的输入有不同的处理方式。</p>
 <p>这样的需求在编程语言中被实现为</p>
 <ul>
@@ -139,7 +106,15 @@ false = \lambda xy.y \\
 if = \lambda xyz.x y z
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord">.</span><span class="mord mathdefault">x</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">s</span><span class="mord mathdefault">e</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mord">.</span><span class="mord mathdefault">x</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span></span></span></span></span></p>
 <p>结合上面的『朴素<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>自然数』，可以发现：这种实现风格最大的特点是<strong>把计算的逻辑编码进数据中</strong>。这样实现出来的的数据可以叫做『函数式数据』。比如说这里的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">true</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span></span></span></span>就是一个函数式数据，它和那种『头等（primitive）』的数据不同，头等数据本身并不具有计算能力，需要用一些<strong>操作头等数据的函数</strong>进行计算。比如scheme中的<code>bool</code>值：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; #t</span><br><span class="line">#t</span><br><span class="line">&gt; #f</span><br><span class="line">#f</span><br><span class="line">&gt; (<span class="name"><span class="built_in">if</span></span> <span class="literal">#t</span> <span class="number">1</span> <span class="number">2</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line">&gt; (<span class="name"><span class="built_in">if</span></span> <span class="literal">#f</span> <span class="number">1</span> <span class="number">2</span>)</span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; #t
+#t
+&gt; #f
+#f
+&gt; (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> <span class="hljs-literal">#t</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>)
+<span class="hljs-number">1</span>
+&gt; (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> <span class="hljs-literal">#f</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>)
+<span class="hljs-number">2</span>
+</code></pre>
 <p>这里的<code>#t</code>，<code>#f</code>都是头等数据，要用<code>if</code>这个操作符（或者说函数）来进行操作，<strong>本身并不编码任何计算逻辑</strong>。</p>
 <p>所以，如果把『朴素<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>自然数』当成一种头等数据，那么它确实具有第二个能力。但是，<strong>在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>表达式中不存在任何『头等数据』</strong>。所以，『朴素<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>自然数』必须完全地视作一种函数式数据。如此一来，这种模式匹配的能力必须由它自己给出，或者说必须编码在它自己的结构之中。</p>
 <p>为了完成这样的任务，自然会想到引入一个新的参数。不仅如此，还需要设计一套逻辑，使得为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>的时候可以得到第一个参数的值，为其他的时候可以得到第二个参数的值。这里说的『得到』是严格的语句，它对应于『通过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span>-规约，或者说函数调用得到』：</p>
@@ -155,74 +130,30 @@ n \not= 0 \rightarrow nxy=y
 <p>这样一来，如果使得<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>增长，换句话说就是构造<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>x</mi><mi>n</mi></msup><mi>y</mi></mrow><annotation encoding="application/x-tex">x^n y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.858832em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span></span>的结构，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi><mi>x</mi><mi>y</mi><mi mathvariant="normal">.</mi><msup><mi>x</mi><mi>n</mi></msup><mi>y</mi></mrow><annotation encoding="application/x-tex">\lambda xy.x^ny</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord">.</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span></span>就满足了前面所要求的性质（的一种变种）。</p>
 <p>邱奇数不是唯一一种能够编码自然数的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>表达式结构，但它也许是最简单、最直接的正确结构。然而这种结构大部分人恐怕绝对不会喜欢，可见<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>表达式这种『函数式数据』不是什么特别好的设计。当然，它是证明<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi></mrow><annotation encoding="application/x-tex">\lambda</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">λ</span></span></span></span>表达式潜力无穷的有力武器，但在现实世界中实在是难堪大用。也许，scheme的日渐式微也与此有关吧～</p>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%AD%A6%E6%9C%AF/">学术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%CE%BB%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="tag">λ表达式</a>, <a class="article-tag-none-link" href="/tags/%E8%AE%A1%E7%AE%97%E7%90%86%E8%AE%BA/" rel="tag">计算理论</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/12/08/hc/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          看点什么（三）寒蝉鸣泣之时
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/11/10/debug/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          原生程序的错误与调试
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

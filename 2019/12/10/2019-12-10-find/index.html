@@ -1,90 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>数据结构 -- 查找 -- 笔记 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="前言 查找的基本定义 查找算法的分析和设计 顺序查找算法 二分查找算法与二叉查找树 分块查找 堆&#x2F;优先队列  堆的概念与实现 堆可以用来做什么？   散列表  哈希表的定义 哈希函数 碰撞处理 哈希表的实现 – 我实现的c++版本 Ruby中的哈希表实现  st_table 的哈希函数 st_table的碰撞处理 st_table的扩容 总结       前言 这一章，我们学习了查找这种基本操作">
-<meta property="og:type" content="article">
-<meta property="og:title" content="数据结构 -- 查找 -- 笔记">
-<meta property="og:url" content="https://ayanamists.xyz/2019/12/10/2019-12-10-find/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="前言 查找的基本定义 查找算法的分析和设计 顺序查找算法 二分查找算法与二叉查找树 分块查找 堆&#x2F;优先队列  堆的概念与实现 堆可以用来做什么？   散列表  哈希表的定义 哈希函数 碰撞处理 哈希表的实现 – 我实现的c++版本 Ruby中的哈希表实现  st_table 的哈希函数 st_table的碰撞处理 st_table的扩容 总结       前言 这一章，我们学习了查找这种基本操作">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-12-10T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.732Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="算法">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2019-12-10-find" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      数据结构 -- 查找 -- 笔记
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-12-10T00:00:00.000Z" itemprop="datePublished">2019-12-10</time>
-
-          
-            × <span class="article-word-count">5.7k words</span>
-            
-            × <span class="article-time-to-read">24 minutes</span>
-            
-          
+        <div class="post-main-title">
+            数据结构 -- 查找 -- 笔记
         </div>
-      </header>
+        <div class="post-meta">
+            2019-12-10
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <ul>
 <li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
 <li><a href="#%e6%9f%a5%e6%89%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e5%ae%9a%e4%b9%89">查找的基本定义</a></li>
@@ -142,13 +104,45 @@
 <h2 id="顺序查找算法"><a class="markdownIt-Anchor" href="#顺序查找算法"></a> 顺序查找算法</h2>
 <p>顺序查找是最朴素的查找，可以用在各种线性表上。在MSVC的stl中，我们有std::find函数实现这个算法：</p>
 <p><em>以下代码来自&lt;algorithm&gt;</em></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_InIt</span>, <span class="keyword">class</span> <span class="title class_">_Ty</span>&gt;</span><br><span class="line"><span class="function">_NODISCARD <span class="keyword">inline</span> _InIt <span class="title">find</span><span class="params">(_InIt _First, <span class="type">const</span> _InIt _Last, <span class="type">const</span> _Ty&amp; _Val)</span> </span>&#123; <span class="comment">// find first matching _Val</span></span><br><span class="line">    _Adl_verify_range(_First, _Last);</span><br><span class="line">    _Seek_wrapped(_First, _Find_unchecked(_Get_unwrapped(_First), _Get_unwrapped(_Last), _Val));</span><br><span class="line">    <span class="keyword">return</span> _First;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">InIt</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Ty</span>&gt;
+_<span class="hljs-title">NODISCARD</span> <span class="hljs-title">inline</span> _<span class="hljs-title">InIt</span> <span class="hljs-title">find</span>(_<span class="hljs-title">InIt</span> _<span class="hljs-title">First</span>, <span class="hljs-title">const</span> _<span class="hljs-title">InIt</span> _<span class="hljs-title">Last</span>, <span class="hljs-title">const</span> _<span class="hljs-title">Ty</span>&amp; _<span class="hljs-title">Val</span>) &#123;</span> <span class="hljs-comment">// find first matching _Val</span>
+    _Adl_verify_range(_First, _Last);
+    _Seek_wrapped(_First, _Find_unchecked(_Get_unwrapped(_First), _Get_unwrapped(_Last), _Val));
+    <span class="hljs-keyword">return</span> _First;
+&#125;
+</code></pre>
 <p>_Adl_verify_range是检查参数范围是否有效，_Seek_wrapped函数简单来说是把后一个参数的值赋给前一个参数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_Ty</span>&gt;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">void</span> _Seek_wrapped(_Ty*&amp; _It, _Ty* <span class="type">const</span> _UIt) &#123;</span><br><span class="line">    _It = _UIt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++">
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">Ty</span>&gt;
+<span class="hljs-title">constexpr</span> <span class="hljs-title">void</span> _<span class="hljs-title">Seek_wrapped</span>(_<span class="hljs-title">Ty</span>*&amp; _<span class="hljs-title">It</span>, _<span class="hljs-title">Ty</span>* <span class="hljs-title">const</span> _<span class="hljs-title">UIt</span>) &#123;</span>
+    _It = _UIt;
+&#125;
+</code></pre>
 <p>实际查找过程在_Find_unchecked函数中：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_InIt</span>, <span class="keyword">class</span> <span class="title class_">_Ty</span>&gt;</span><br><span class="line"><span class="keyword">inline</span> _InIt _Find_unchecked(<span class="type">const</span> _InIt _First, <span class="type">const</span> _InIt _Last, <span class="type">const</span> _Ty&amp; _Val) &#123;</span><br><span class="line">    <span class="comment">// find first matching _Val; choose optimization</span></span><br><span class="line">    <span class="comment">// activate optimization for pointers to (const) bytes and integral values</span></span><br><span class="line">    <span class="keyword">using</span> _Memchr_opt = bool_constant&lt;</span><br><span class="line">        is_integral_v&lt;_Ty&gt; &amp;&amp; _Is_any_of_v&lt;_InIt, <span class="type">char</span>*, <span class="type">signed</span> <span class="type">char</span>*, <span class="type">unsigned</span> <span class="type">char</span>*, <span class="comment">//</span></span><br><span class="line">            <span class="type">const</span> <span class="type">char</span>*, <span class="type">const</span> <span class="type">signed</span> <span class="type">char</span>*, <span class="type">const</span> <span class="type">unsigned</span> <span class="type">char</span>*&gt;&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> _Find_unchecked1(_First, _Last, _Val, _Memchr_opt&#123;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">InIt</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Ty</span>&gt;
+<span class="hljs-title">inline</span> _<span class="hljs-title">InIt</span> _<span class="hljs-title">Find_unchecked</span>(<span class="hljs-title">const</span> _<span class="hljs-title">InIt</span> _<span class="hljs-title">First</span>, <span class="hljs-title">const</span> _<span class="hljs-title">InIt</span> _<span class="hljs-title">Last</span>, <span class="hljs-title">const</span> _<span class="hljs-title">Ty</span>&amp; _<span class="hljs-title">Val</span>) &#123;</span>
+    <span class="hljs-comment">// find first matching _Val; choose optimization</span>
+    <span class="hljs-comment">// activate optimization for pointers to (const) bytes and integral values</span>
+    <span class="hljs-keyword">using</span> _Memchr_opt = bool_constant&lt;
+        is_integral_v&lt;_Ty&gt; &amp;&amp; _Is_any_of_v&lt;_InIt, <span class="hljs-keyword">char</span>*, <span class="hljs-keyword">signed</span> <span class="hljs-keyword">char</span>*, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>*, <span class="hljs-comment">//</span>
+            <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>*, <span class="hljs-keyword">const</span> <span class="hljs-keyword">signed</span> <span class="hljs-keyword">char</span>*, <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>*&gt;&gt;;
+
+    <span class="hljs-keyword">return</span> _Find_unchecked1(_First, _Last, _Val, _Memchr_opt&#123;&#125;);
+&#125;
+</code></pre>
 <p>而这个函数实际上又调用了_Find_unchecked1函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_InIt</span>, <span class="keyword">class</span> <span class="title class_">_Ty</span>&gt;</span><br><span class="line"><span class="keyword">inline</span> _InIt _Find_unchecked1(_InIt _First, <span class="type">const</span> _InIt _Last, <span class="type">const</span> _Ty&amp; _Val, false_type) &#123;</span><br><span class="line">    <span class="comment">// find first matching _Val</span></span><br><span class="line">    <span class="keyword">for</span> (; _First != _Last; ++_First) &#123;</span><br><span class="line">        <span class="keyword">if</span> (*_First == _Val) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> _First;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">InIt</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Ty</span>&gt;
+<span class="hljs-title">inline</span> _<span class="hljs-title">InIt</span> _<span class="hljs-title">Find_unchecked1</span>(_<span class="hljs-title">InIt</span> _<span class="hljs-title">First</span>, <span class="hljs-title">const</span> _<span class="hljs-title">InIt</span> _<span class="hljs-title">Last</span>, <span class="hljs-title">const</span> _<span class="hljs-title">Ty</span>&amp; _<span class="hljs-title">Val</span>, <span class="hljs-title">false_type</span>) &#123;</span>
+    <span class="hljs-comment">// find first matching _Val</span>
+    <span class="hljs-keyword">for</span> (; _First != _Last; ++_First) &#123;
+        <span class="hljs-keyword">if</span> (*_First == _Val) &#123;
+            <span class="hljs-keyword">break</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-keyword">return</span> _First;
+&#125;
+</code></pre>
 <p>谢天谢地，_Find_unchecked1函数就是主要实现了。我们可以看到整个过程非常简单，就是顺序地查找整个表，如果找到了就退出。</p>
 <p>由于模板的存在，在c++中，只要定义了迭代器，一个类就可以使用这个函数进行查找。这也正是对我们抽象描述–查找线性表–的抽象实现。</p>
 <p>如果假设等概率，这个算法有</p>
@@ -164,11 +158,48 @@
 </blockquote>
 <p>这样一来，下一次的查询就可以不管这些元素，直接查询<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mi>r</mi><mi>r</mi><mi>a</mi><mi>y</mi><mo stretchy="false">[</mo><mi>f</mi><mi>l</mi><mi>o</mi><mi>o</mi><mi>r</mi><mo stretchy="false">(</mo><mi>n</mi><mi mathvariant="normal">/</mi><mn>2</mn><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">array[floor(n/2) + 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mord">/</span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mi>r</mi><mi>r</mi><mi>a</mi><mi>y</mi><mo stretchy="false">[</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">array[n - 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mopen">[</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>这个区间了。</p>
 <p>这实际上已经是一个递归算法了。这个算法的实现很简单，但我们还是来研究一下c++ stl中std::binary_search的实现：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_FwdIt</span>, <span class="keyword">class</span> <span class="title class_">_Ty</span>&gt;</span><br><span class="line"><span class="function">_NODISCARD <span class="keyword">inline</span> <span class="type">bool</span> <span class="title">binary_search</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    _FwdIt _First, _FwdIt _Last, <span class="type">const</span> _Ty&amp; _Val)</span> </span>&#123; <span class="comment">// test if _Val equivalent to some element, using operator&lt;</span></span><br><span class="line">    <span class="keyword">return</span> _STD <span class="built_in">binary_search</span>(_First, _Last, _Val, less&lt;&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">FwdIt</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Ty</span>&gt;
+_<span class="hljs-title">NODISCARD</span> <span class="hljs-title">inline</span> <span class="hljs-title">bool</span> <span class="hljs-title">binary_search</span>(
+    _<span class="hljs-title">FwdIt</span> _<span class="hljs-title">First</span>, _<span class="hljs-title">FwdIt</span> _<span class="hljs-title">Last</span>, <span class="hljs-title">const</span> _<span class="hljs-title">Ty</span>&amp; _<span class="hljs-title">Val</span>) &#123;</span> <span class="hljs-comment">// test if _Val equivalent to some element, using operator&lt;</span>
+    <span class="hljs-keyword">return</span> _STD binary_search(_First, _Last, _Val, less&lt;&gt;());
+&#125;
+</code></pre>
 <p>下面这个binary_search是一个重载的函数，它才是真正用来实现的函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FUNCTION TEMPLATE binary_search</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_FwdIt</span>, <span class="keyword">class</span> <span class="title class_">_Ty</span>, <span class="keyword">class</span> <span class="title class_">_Pr</span>&gt;</span><br><span class="line"><span class="function">_NODISCARD <span class="keyword">inline</span> <span class="type">bool</span> <span class="title">binary_search</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    _FwdIt _First, _FwdIt _Last, <span class="type">const</span> _Ty&amp; _Val, _Pr _Pred)</span> </span>&#123; <span class="comment">// test if _Val equivalent to some element, using _Pred</span></span><br><span class="line">    _Adl_verify_range(_First, _Last);</span><br><span class="line">    <span class="keyword">auto</span> _UFirst      = _Get_unwrapped(_First);</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> _ULast = _Get_unwrapped(_Last);</span><br><span class="line">    _UFirst           = _STD <span class="built_in">lower_bound</span>(_UFirst, _ULast, _Val, _Pass_fn(_Pred));</span><br><span class="line">    <span class="keyword">return</span> _UFirst != _ULast &amp;&amp; !_Pred(_Val, *_UFirst);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">// FUNCTION TEMPLATE binary_search</span>
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">FwdIt</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Ty</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Pr</span>&gt;
+_<span class="hljs-title">NODISCARD</span> <span class="hljs-title">inline</span> <span class="hljs-title">bool</span> <span class="hljs-title">binary_search</span>(
+    _<span class="hljs-title">FwdIt</span> _<span class="hljs-title">First</span>, _<span class="hljs-title">FwdIt</span> _<span class="hljs-title">Last</span>, <span class="hljs-title">const</span> _<span class="hljs-title">Ty</span>&amp; _<span class="hljs-title">Val</span>, _<span class="hljs-title">Pr</span> _<span class="hljs-title">Pred</span>) &#123;</span> <span class="hljs-comment">// test if _Val equivalent to some element, using _Pred</span>
+    _Adl_verify_range(_First, _Last);
+    <span class="hljs-keyword">auto</span> _UFirst      = _Get_unwrapped(_First);
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span> _ULast = _Get_unwrapped(_Last);
+    _UFirst           = _STD lower_bound(_UFirst, _ULast, _Val, _Pass_fn(_Pred));
+    <span class="hljs-keyword">return</span> _UFirst != _ULast &amp;&amp; !_Pred(_Val, *_UFirst);
+&#125;
+</code></pre>
 <p>这看起来并不是直接递归，而是使用了一个lower_bound函数。这个函数是干什么的呢？显然的，lower_bound的意思是下界，它定义如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FUNCTION TEMPLATE lower_bound</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">_FwdIt</span>, <span class="keyword">class</span> <span class="title class_">_Ty</span>, <span class="keyword">class</span> <span class="title class_">_Pr</span>&gt;</span><br><span class="line"><span class="function">_NODISCARD <span class="keyword">inline</span> _FwdIt <span class="title">lower_bound</span><span class="params">(_FwdIt _First, <span class="type">const</span> _FwdIt _Last, <span class="type">const</span> _Ty&amp; _Val, _Pr _Pred)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// find first element not before _Val, using _Pred</span></span><br><span class="line">    _Adl_verify_range(_First, _Last);</span><br><span class="line">    <span class="keyword">auto</span> _UFirst                = _Get_unwrapped(_First);</span><br><span class="line">    _Iter_diff_t&lt;_FwdIt&gt; _Count = _STD <span class="built_in">distance</span>(_UFirst, _Get_unwrapped(_Last));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">0</span> &lt; _Count) &#123; <span class="comment">// divide and conquer, find half that contains answer</span></span><br><span class="line">        <span class="type">const</span> _Iter_diff_t&lt;_FwdIt&gt; _Count2 = _Count &gt;&gt; <span class="number">1</span>; <span class="comment">// TRANSITION, VSO#433486</span></span><br><span class="line">        <span class="type">const</span> <span class="keyword">auto</span> _UMid                   = _STD <span class="built_in">next</span>(_UFirst, _Count2);</span><br><span class="line">        <span class="keyword">if</span> (_Pred(*_UMid, _Val)) &#123; <span class="comment">// try top half</span></span><br><span class="line">            _UFirst = _Next_iter(_UMid);</span><br><span class="line">            _Count -= _Count2 + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            _Count = _Count2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _Seek_wrapped(_First, _UFirst);</span><br><span class="line">    <span class="keyword">return</span> _First;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">// FUNCTION TEMPLATE lower_bound</span>
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> _<span class="hljs-title">FwdIt</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Ty</span>, <span class="hljs-title">class</span> _<span class="hljs-title">Pr</span>&gt;
+_<span class="hljs-title">NODISCARD</span> <span class="hljs-title">inline</span> _<span class="hljs-title">FwdIt</span> <span class="hljs-title">lower_bound</span>(_<span class="hljs-title">FwdIt</span> _<span class="hljs-title">First</span>, <span class="hljs-title">const</span> _<span class="hljs-title">FwdIt</span> _<span class="hljs-title">Last</span>, <span class="hljs-title">const</span> _<span class="hljs-title">Ty</span>&amp; _<span class="hljs-title">Val</span>, _<span class="hljs-title">Pr</span> _<span class="hljs-title">Pred</span>) &#123;</span>
+    <span class="hljs-comment">// find first element not before _Val, using _Pred</span>
+    _Adl_verify_range(_First, _Last);
+    <span class="hljs-keyword">auto</span> _UFirst                = _Get_unwrapped(_First);
+    _Iter_diff_t&lt;_FwdIt&gt; _Count = _STD distance(_UFirst, _Get_unwrapped(_Last));
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">0</span> &lt; _Count) &#123; <span class="hljs-comment">// divide and conquer, find half that contains answer</span>
+        <span class="hljs-keyword">const</span> _Iter_diff_t&lt;_FwdIt&gt; _Count2 = _Count &gt;&gt; <span class="hljs-number">1</span>; <span class="hljs-comment">// TRANSITION, VSO#433486</span>
+        <span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span> _UMid                   = _STD next(_UFirst, _Count2);
+        <span class="hljs-keyword">if</span> (_Pred(*_UMid, _Val)) &#123; <span class="hljs-comment">// try top half</span>
+            _UFirst = _Next_iter(_UMid);
+            _Count -= _Count2 + <span class="hljs-number">1</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            _Count = _Count2;
+        &#125;
+    &#125;
+
+    _Seek_wrapped(_First, _UFirst);
+    <span class="hljs-keyword">return</span> _First;
+&#125;
+</code></pre>
 <p>这个函数比较麻烦，它返回的是第一个不满足_Pred条件的元素。这里_Pred条件是&lt;，所以返回的是第一个大于等于这个元素的迭代器，<br />
 然后binary_search函数就用!(_Pred(_Val, *_Ufirst))这个条件来判断是否相等，这相当于构造了</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>&gt;</mo><mo>=</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a &gt;= b
@@ -199,13 +230,81 @@
 </ul>
 <p>其实，第二个特点表明堆可以化为一颗二叉树，这颗二叉树的父亲节点都大于它的子节点。</p>
 <p>我们这里用ruby语言实现了一个简单的堆：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> BinaryHeapable</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">insert_to_heap</span> element</span><br><span class="line">    target = <span class="variable language_">self</span>.length</span><br><span class="line">    <span class="keyword">while</span> <span class="variable language_">self</span>[target / <span class="number">2</span>] &lt; element &amp;&amp; target != <span class="number">0</span></span><br><span class="line">      <span class="variable language_">self</span>[target] = <span class="variable language_">self</span>[target/<span class="number">2</span>]</span><br><span class="line">      target /= <span class="number">2</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="variable language_">self</span>[target] = element</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">remove_from_heap</span></span><br><span class="line">    ret = <span class="variable language_">self</span>[<span class="number">0</span>]</span><br><span class="line">    <span class="variable language_">self</span>[<span class="number">0</span>] = <span class="variable language_">self</span>[-<span class="number">1</span>]</span><br><span class="line">    <span class="variable language_">self</span>.pop</span><br><span class="line">    heap_construct <span class="number">0</span></span><br><span class="line">    ret</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">convert_to_heap</span></span><br><span class="line">    i = <span class="variable language_">self</span>.length / <span class="number">2</span> - <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> i &gt;= <span class="number">0</span></span><br><span class="line">      heap_construct i</span><br><span class="line">      i -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="variable language_">self</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  private</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">heap_construct</span> target</span><br><span class="line">    what = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> target * <span class="number">2</span> + <span class="number">1</span> &lt; <span class="variable language_">self</span>.length</span><br><span class="line">      <span class="keyword">if</span> target * <span class="number">2</span> + <span class="number">2</span> &lt; <span class="variable language_">self</span>.length</span><br><span class="line">        what = <span class="variable language_">self</span>[target * <span class="number">2</span> + <span class="number">1</span>] &gt; <span class="variable language_">self</span>[target * <span class="number">2</span> + <span class="number">2</span>] ? target * <span class="number">2</span> + <span class="number">1</span> : target * <span class="number">2</span> + <span class="number">2</span></span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        what = target * <span class="number">2</span> + <span class="number">1</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">break</span> <span class="keyword">if</span> <span class="variable language_">self</span>[target] &gt; <span class="variable language_">self</span>[what]</span><br><span class="line">      temp = <span class="variable language_">self</span>[target]</span><br><span class="line">      <span class="variable language_">self</span>[target] = <span class="variable language_">self</span>[what]</span><br><span class="line">      <span class="variable language_">self</span>[what] = temp</span><br><span class="line">      target = what</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    what</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby"><span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">BinaryHeapable</span></span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">insert_to_heap</span> <span class="hljs-title">element</span></span>
+    target = <span class="hljs-keyword">self</span>.length
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">self</span>[target / <span class="hljs-number">2</span>] &lt; element &amp;&amp; target != <span class="hljs-number">0</span>
+      <span class="hljs-keyword">self</span>[target] = <span class="hljs-keyword">self</span>[target/<span class="hljs-number">2</span>]
+      target /= <span class="hljs-number">2</span>
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">self</span>[target] = element
+  <span class="hljs-keyword">end</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">remove_from_heap</span></span>
+    ret = <span class="hljs-keyword">self</span>[<span class="hljs-number">0</span>]
+    <span class="hljs-keyword">self</span>[<span class="hljs-number">0</span>] = <span class="hljs-keyword">self</span>[-<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">self</span>.pop
+    heap_construct <span class="hljs-number">0</span>
+    ret
+  <span class="hljs-keyword">end</span>
+  
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">convert_to_heap</span></span>
+    i = <span class="hljs-keyword">self</span>.length / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>
+    <span class="hljs-keyword">while</span> i &gt;= <span class="hljs-number">0</span>
+      heap_construct i
+      i -= <span class="hljs-number">1</span>
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">self</span>
+  <span class="hljs-keyword">end</span>
+
+  private
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">heap_construct</span> <span class="hljs-title">target</span></span>
+    what = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span> target * <span class="hljs-number">2</span> + <span class="hljs-number">1</span> &lt; <span class="hljs-keyword">self</span>.length
+      <span class="hljs-keyword">if</span> target * <span class="hljs-number">2</span> + <span class="hljs-number">2</span> &lt; <span class="hljs-keyword">self</span>.length
+        what = <span class="hljs-keyword">self</span>[target * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>] &gt; <span class="hljs-keyword">self</span>[target * <span class="hljs-number">2</span> + <span class="hljs-number">2</span>] ? target * <span class="hljs-number">2</span> + <span class="hljs-number">1</span> : target * <span class="hljs-number">2</span> + <span class="hljs-number">2</span>
+      <span class="hljs-keyword">else</span>
+        what = target * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>
+      <span class="hljs-keyword">end</span>
+      <span class="hljs-keyword">break</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>[target] &gt; <span class="hljs-keyword">self</span>[what]
+      temp = <span class="hljs-keyword">self</span>[target]
+      <span class="hljs-keyword">self</span>[target] = <span class="hljs-keyword">self</span>[what]
+      <span class="hljs-keyword">self</span>[what] = temp
+      target = what
+    <span class="hljs-keyword">end</span>
+    what
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
 <p>ruby 中的module是mix-in思想的载体。只要我们让一个类include这个模块，这个类就获得了“堆化”的能力。特别地，ruby的数组被封装为Array类，而所有的自带类都是可以修改的：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Array</span></span><br><span class="line">  <span class="keyword">include</span> BinaryHeapable</span><br><span class="line"><span class="keyword">end</span> </span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Array</span></span>
+  <span class="hljs-keyword">include</span> BinaryHeapable
+<span class="hljs-keyword">end</span> 
+</code></pre>
 <p>这样一来，我们就可以按照以下方法使用数组：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">arr = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">1</span>].convert_to_heap</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> arr.length != <span class="number">0</span></span><br><span class="line">  pp arr.remove_from_heap</span><br><span class="line">  pp arr</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby">arr = [<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">8</span>, <span class="hljs-number">6</span>, <span class="hljs-number">1</span>].convert_to_heap
+
+<span class="hljs-keyword">while</span> arr.length != <span class="hljs-number">0</span>
+  pp arr.remove_from_heap
+  pp arr
+<span class="hljs-keyword">end</span>
+</code></pre>
 <p>这段代码会打出：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">8</span></span><br><span class="line">[<span class="number">6</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>]</span><br><span class="line"><span class="number">6</span></span><br><span class="line">[<span class="number">5</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line"><span class="number">5</span></span><br><span class="line">[<span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line"><span class="number">3</span></span><br><span class="line">[<span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line"><span class="number">3</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line"><span class="number">1</span></span><br><span class="line">[<span class="number">0</span>]</span><br><span class="line"><span class="number">0</span></span><br><span class="line">[]</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby"><span class="hljs-number">8</span>
+[<span class="hljs-number">6</span>, <span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>]
+<span class="hljs-number">6</span>
+[<span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>]
+<span class="hljs-number">5</span>
+[<span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>]
+<span class="hljs-number">3</span>
+[<span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>]
+<span class="hljs-number">3</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">0</span>]
+<span class="hljs-number">1</span>
+[<span class="hljs-number">0</span>]
+<span class="hljs-number">0</span>
+[]
+</code></pre>
 <p>在上面的代码中我们看到，堆只需要实现一个操作，就可以搞定建堆和取出堆顶。</p>
 <p>这个操作是什么呢？就是如下的操作：</p>
 <p>假设一个堆节点的左子树与右子树均已经满足堆序，把以这个堆节点为根的子树调整成堆序。</p>
@@ -278,55 +377,223 @@
 具体讨论略。</li>
 </ol>
 <h3 id="哈希表的实现-我实现的c版本"><a class="markdownIt-Anchor" href="#哈希表的实现-我实现的c版本"></a> 哈希表的实现 – 我实现的c++版本</h3>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hashtable.h */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TYPE_KEY char *</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TYPE_VALUE char *</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MD5 md5</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NOT_FIND NULL</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NUM_NOT_FIND -1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">uint64_t</span> <span class="params">(*HASH_FUNC)</span><span class="params">(<span class="type">char</span> *)</span></span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HashTable</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">insertTo</span><span class="params">(std::pair&lt;TYPE_KEY, TYPE_VALUE&gt; &amp;pair)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">deleteFrom</span><span class="params">(TYPE_KEY key)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">uint64_t</span> <span class="title">findByKey</span><span class="params">(TYPE_KEY key)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> TYPE_VALUE <span class="title">getValueByKey</span><span class="params">(TYPE_KEY key)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkHashTableNode</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    T value;</span><br><span class="line">    LinkHashTableNode *next;</span><br><span class="line">    <span class="built_in">LinkHashTableNode</span>(T value)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;value = value;</span><br><span class="line">        <span class="keyword">this</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkedHashTable</span> : <span class="keyword">public</span> HashTable</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">insertTo</span><span class="params">(std::pair&lt;TYPE_KEY, TYPE_VALUE&gt; &amp;pair)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">deleteFrom</span><span class="params">(TYPE_KEY key)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> TYPE_VALUE <span class="title">getValueByKey</span><span class="params">(TYPE_KEY key)</span></span>;</span><br><span class="line">    <span class="built_in">LinkedHashTable</span>(uint value, HASH_FUNC hashFunction);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">uint64_t</span> <span class="title">findByKey</span><span class="params">(TYPE_KEY key)</span></span>;</span><br><span class="line">    std::function&lt;<span class="type">uint64_t</span>(TYPE_KEY)&gt; hash;</span><br><span class="line">    std::vector&lt;LinkHashTableNode&lt;TYPE_VALUE&gt; *&gt; nodePool;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hashtable.cpp */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;./hashtable.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;md5.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">LinkedHashTable::<span class="built_in">LinkedHashTable</span>(uint size, HASH_FUNC hashFunction) : <span class="built_in">nodePool</span>(size, <span class="literal">NULL</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">this</span>-&gt;hash = hashFunction;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">uint64_t</span> <span class="title">LinkedHashTable::findByKey</span><span class="params">(TYPE_KEY key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">uint64_t</span> hash_value = <span class="keyword">this</span>-&gt;<span class="built_in">hash</span>(key);</span><br><span class="line">    hash_value = hash_value % <span class="keyword">this</span>-&gt;nodePool.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;nodePool[hash_value] == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> NUM_NOT_FIND;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> hash_value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">LinkedHashTable::insertTo</span><span class="params">(std::pair&lt;TYPE_KEY, TYPE_VALUE&gt; &amp;pair)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">uint64_t</span> hash_value = <span class="keyword">this</span>-&gt;<span class="built_in">hash</span>(pair.first);</span><br><span class="line">    hash_value = hash_value % <span class="keyword">this</span>-&gt;nodePool.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">auto</span> new_node = <span class="keyword">new</span> <span class="built_in">LinkHashTableNode</span>&lt;TYPE_VALUE&gt;(pair.second);</span><br><span class="line">    new_node-&gt;next = <span class="keyword">this</span>-&gt;nodePool[hash_value];</span><br><span class="line">    <span class="keyword">this</span>-&gt;nodePool[hash_value] = new_node;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">LinkedHashTable::deleteFrom</span><span class="params">(TYPE_KEY key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> hash_value = <span class="keyword">this</span>-&gt;<span class="built_in">findByKey</span>(key);</span><br><span class="line">    <span class="keyword">if</span> (hash_value == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">auto</span> begin = <span class="keyword">this</span>-&gt;nodePool[hash_value];</span><br><span class="line">        <span class="keyword">this</span>-&gt;nodePool[hash_value] = begin-&gt;next;</span><br><span class="line">        <span class="keyword">delete</span> begin;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">TYPE_VALUE <span class="title">LinkedHashTable::getValueByKey</span><span class="params">(TYPE_KEY key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> hash_value = <span class="keyword">this</span>-&gt;<span class="built_in">findByKey</span>(key);</span><br><span class="line">    <span class="keyword">if</span> (hash_value == NUM_NOT_FIND)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> NOT_FIND;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>-&gt;nodePool[hash_value]-&gt;value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* hashtable.h */</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;bits/stdc++.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TYPE_KEY char *</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TYPE_VALUE char *</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MD5 md5</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NOT_FIND NULL</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NUM_NOT_FIND -1</span>
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">uint64_t</span> <span class="hljs-params">(*HASH_FUNC)</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *)</span></span>;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HashTable</span>
+&#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">insertTo</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::pair&lt;TYPE_KEY, TYPE_VALUE&gt; &amp;pair)</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">deleteFrom</span><span class="hljs-params">(TYPE_KEY key)</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">uint64_t</span> <span class="hljs-title">findByKey</span><span class="hljs-params">(TYPE_KEY key)</span> </span>= <span class="hljs-number">0</span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> TYPE_VALUE <span class="hljs-title">getValueByKey</span><span class="hljs-params">(TYPE_KEY key)</span> </span>= <span class="hljs-number">0</span>;
+&#125;;
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LinkHashTableNode</span>
+&#123;</span>
+<span class="hljs-keyword">public</span>:
+    T value;
+    LinkHashTableNode *next;
+    LinkHashTableNode(T value)
+    &#123;
+        <span class="hljs-keyword">this</span>-&gt;value = value;
+        <span class="hljs-keyword">this</span>-&gt;next = <span class="hljs-literal">NULL</span>;
+    &#125;
+&#125;;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LinkedHashTable</span> :</span> <span class="hljs-keyword">public</span> HashTable
+&#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">insertTo</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::pair&lt;TYPE_KEY, TYPE_VALUE&gt; &amp;pair)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">deleteFrom</span><span class="hljs-params">(TYPE_KEY key)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> TYPE_VALUE <span class="hljs-title">getValueByKey</span><span class="hljs-params">(TYPE_KEY key)</span></span>;
+    LinkedHashTable(uint value, HASH_FUNC hashFunction);
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">uint64_t</span> <span class="hljs-title">findByKey</span><span class="hljs-params">(TYPE_KEY key)</span></span>;
+    <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">uint64_t</span>(TYPE_KEY)&gt; hash;
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;LinkHashTableNode&lt;TYPE_VALUE&gt; *&gt; nodePool;
+&#125;;
+</code></pre>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* hashtable.cpp */</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"./hashtable.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"md5.h"</span></span>
+
+LinkedHashTable::LinkedHashTable(uint <span class="hljs-built_in">size</span>, HASH_FUNC hashFunction) : nodePool(<span class="hljs-built_in">size</span>, <span class="hljs-literal">NULL</span>)
+&#123;
+    <span class="hljs-keyword">this</span>-&gt;hash = hashFunction;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">uint64_t</span> <span class="hljs-title">LinkedHashTable::findByKey</span><span class="hljs-params">(TYPE_KEY key)</span>
+</span>&#123;
+    <span class="hljs-keyword">uint64_t</span> hash_value = <span class="hljs-keyword">this</span>-&gt;hash(key);
+    hash_value = hash_value % <span class="hljs-keyword">this</span>-&gt;nodePool.<span class="hljs-built_in">size</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>-&gt;nodePool[hash_value] == <span class="hljs-literal">NULL</span>)
+    &#123;
+        <span class="hljs-keyword">return</span> NUM_NOT_FIND;
+    &#125;
+    <span class="hljs-keyword">else</span>
+    &#123;
+        <span class="hljs-keyword">return</span> hash_value;
+    &#125;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">LinkedHashTable::insertTo</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::pair&lt;TYPE_KEY, TYPE_VALUE&gt; &amp;pair)</span>
+</span>&#123;
+    <span class="hljs-keyword">uint64_t</span> hash_value = <span class="hljs-keyword">this</span>-&gt;hash(pair.first);
+    hash_value = hash_value % <span class="hljs-keyword">this</span>-&gt;nodePool.<span class="hljs-built_in">size</span>();
+    <span class="hljs-keyword">auto</span> new_node = <span class="hljs-keyword">new</span> LinkHashTableNode&lt;TYPE_VALUE&gt;(pair.second);
+    new_node-&gt;next = <span class="hljs-keyword">this</span>-&gt;nodePool[hash_value];
+    <span class="hljs-keyword">this</span>-&gt;nodePool[hash_value] = new_node;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">LinkedHashTable::deleteFrom</span><span class="hljs-params">(TYPE_KEY key)</span>
+</span>&#123;
+    <span class="hljs-keyword">auto</span> hash_value = <span class="hljs-keyword">this</span>-&gt;findByKey(key);
+    <span class="hljs-keyword">if</span> (hash_value == <span class="hljs-number">-1</span>)
+    &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    &#125;
+    <span class="hljs-keyword">else</span>
+    &#123;
+        <span class="hljs-keyword">auto</span> <span class="hljs-built_in">begin</span> = <span class="hljs-keyword">this</span>-&gt;nodePool[hash_value];
+        <span class="hljs-keyword">this</span>-&gt;nodePool[hash_value] = <span class="hljs-built_in">begin</span>-&gt;next;
+        <span class="hljs-keyword">delete</span> <span class="hljs-built_in">begin</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    &#125;
+&#125;
+
+<span class="hljs-function">TYPE_VALUE <span class="hljs-title">LinkedHashTable::getValueByKey</span><span class="hljs-params">(TYPE_KEY key)</span>
+</span>&#123;
+    <span class="hljs-keyword">auto</span> hash_value = <span class="hljs-keyword">this</span>-&gt;findByKey(key);
+    <span class="hljs-keyword">if</span> (hash_value == NUM_NOT_FIND)
+    &#123;
+        <span class="hljs-keyword">return</span> NOT_FIND;
+    &#125;
+    <span class="hljs-keyword">else</span>
+    &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>-&gt;nodePool[hash_value]-&gt;value;
+    &#125;
+&#125;
+</code></pre>
 <p>我们实现了一个很简单的哈希表，采用链地址法进行碰撞处理，采用MD5（这是一个密码学哈希函数）作为哈希函数。</p>
 <h3 id="ruby中的哈希表实现"><a class="markdownIt-Anchor" href="#ruby中的哈希表实现"></a> Ruby中的哈希表实现</h3>
 <p>我们实现的哈希表，玩具色彩浓厚，特别是直接采用MD5算法这种愚蠢行为，每次查询时，都需要做至少64轮循环，效率是很差的。</p>
 <p>所以，本笔记的最后一部分就集中精力来讨论一个工业级哈希表 – ruby中的哈希表。</p>
 <p>ruby中的哈希表使用为:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hash = &#123;<span class="symbol">:a</span> =&gt; <span class="string">&quot;haha&quot;</span>, <span class="symbol">:b</span> =&gt; <span class="string">&quot;hahaha&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby">hash = &#123;<span class="hljs-symbol">:a</span> =&gt; <span class="hljs-string">"haha"</span>, <span class="hljs-symbol">:b</span> =&gt; <span class="hljs-string">"hahaha"</span>&#125;
+</code></pre>
 <p>这个数据结构在ruby程序中，使用得特别广泛、特别频繁。如果没有一个优秀的内部实现，ruby程序的性能将会受到很大影响。</p>
 <p>笔记篇幅所限，这里不能完整地讨论ruby哈希表底层实现ruby/st.c中1000多行代码的全部内容。这里仅仅讨论一些最重要、和我们所学习内容关系最大的内容。</p>
 <p><strong>下面所称 st_table 指的就是ruby内部的哈希表</strong></p>
 <h4 id="st_table-的哈希函数"><a class="markdownIt-Anchor" href="#st_table-的哈希函数"></a> st_table 的哈希函数</h4>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 537行 */</span></span><br><span class="line">    hash_val = do_hash(key, table);</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 537行 */</span>
+    hash_val = do_hash(key, table);
+</code></pre>
 <p>上面这段代码表明哈希函数就是do_hash.我们来看一下这个函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 88行 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> do_hash(key,table) (st_index_t)(*(table)-&gt;type-&gt;hash)((key))</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 88行 */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> do_hash(key,table) (st_index_t)(*(table)-&gt;type-&gt;hash)((key))</span>
+</code></pre>
 <p>这段代码似乎不是很好理解，我们来一点点地看：</p>
 <p>首先这是一个宏定义，传入两个参数key和table，给出一个值，其类型为st_index_t，也就是哈希表的具体位置（数组下标）</p>
 <p>然后来看具体的内容</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(*(table)-&gt;type-&gt;hash)((key))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">(*(table)-&gt;type-&gt;hash)((key))
+</code></pre>
 <p>这个语法其实是一个函数调用。(table)-&gt;type-&gt;hash是一个函数指针，指向hash函数，key是其参数。</p>
 <p>那么想要找到真正的哈希函数，就必须要找到初始化时这个table-&gt;type-&gt;hash被赋了什么值：</p>
 <p>哈希表的初始化有些复杂，但是为了讨论的方便还是介绍一下：</p>
 <p>首先，所有的初始化都最终被转发到这个函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">st_table*</span><br><span class="line"><span class="title function_">st_init_table_with_size</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> st_hash_type *type, <span class="type">st_index_t</span> size)</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-function">st_table*
+<span class="hljs-title">st_init_table_with_size</span><span class="hljs-params">(<span class="hljs-keyword">const</span> struct st_hash_type *type, <span class="hljs-keyword">st_index_t</span> <span class="hljs-built_in">size</span>)</span>
+</span></code></pre>
 <p>然后实际使用时有三种初始化方法：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">st_table*</span><br><span class="line"><span class="title function_">st_init_numtable_with_size</span><span class="params">(<span class="type">st_index_t</span> size)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> st_init_table_with_size(&amp;type_numhash, size);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">st_table*</span><br><span class="line"><span class="title function_">st_init_strtable_with_size</span><span class="params">(<span class="type">st_index_t</span> size)</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">st_table*</span><br><span class="line"><span class="title function_">st_init_strcasetable_with_size</span><span class="params">(<span class="type">st_index_t</span> size)</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-function">st_table*
+<span class="hljs-title">st_init_numtable_with_size</span><span class="hljs-params">(<span class="hljs-keyword">st_index_t</span> <span class="hljs-built_in">size</span>)</span>
+</span>&#123;
+    <span class="hljs-keyword">return</span> st_init_table_with_size(&amp;type_numhash, <span class="hljs-built_in">size</span>);
+&#125;
+</code></pre>
+<pre class="highlight"><code class="c"><span class="hljs-function">st_table*
+<span class="hljs-title">st_init_strtable_with_size</span><span class="hljs-params">(<span class="hljs-keyword">st_index_t</span> <span class="hljs-built_in">size</span>)</span>
+</span></code></pre>
+<pre class="highlight"><code class="c"><span class="hljs-function">st_table*
+<span class="hljs-title">st_init_strcasetable_with_size</span><span class="hljs-params">(<span class="hljs-keyword">st_index_t</span> <span class="hljs-built_in">size</span>)</span>
+</span></code></pre>
 <p>我们这里只研究第一种st_init_numtable_with_size。这一种看名字就知道是整数对整数的映射。<br />
 它传入了一个type_numhash，这看起来是一个全局常量：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> type_numhash st_hashtype_num</span></span><br><span class="line"><span class="type">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">st_hash_type</span> <span class="title">st_hashtype_num</span> =</span> &#123;</span><br><span class="line">    st_numcmp,</span><br><span class="line">    st_numhash,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> type_numhash st_hashtype_num</span>
+<span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">st_hash_type</span> <span class="hljs-title">st_hashtype_num</span> = &#123;</span>
+    st_numcmp,
+    st_numhash,
+&#125;;
+</code></pre>
 <p>那么，整数对整数的映射实际上应该调用到st_numhash这个函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 1666 - 1683行 */</span></span><br><span class="line"><span class="type">st_index_t</span></span><br><span class="line"><span class="title function_">st_numhash</span><span class="params">(<span class="type">st_data_t</span> n)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * This hash function is lightly-tuned for Ruby.  Further tuning</span></span><br><span class="line"><span class="comment">     * should be possible.  Notes:</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * - (n &gt;&gt; 3) alone is great for heap objects and OK for fixnum,</span></span><br><span class="line"><span class="comment">     *   however symbols perform poorly.</span></span><br><span class="line"><span class="comment">     * - (n &gt;&gt; (RUBY_SPECIAL_SHIFT+3)) was added to make symbols hash well,</span></span><br><span class="line"><span class="comment">     *   n.b.: +3 to remove ID scope, +1 worked well initially, too</span></span><br><span class="line"><span class="comment">     * - (n &lt;&lt; 3) was finally added to avoid losing bits for fixnums</span></span><br><span class="line"><span class="comment">     * - avoid expensive modulo instructions, it is currently only</span></span><br><span class="line"><span class="comment">     *   shifts and bitmask operations.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">return</span> (<span class="type">st_index_t</span>)((n&gt;&gt;(RUBY_SPECIAL_SHIFT+<span class="number">3</span>)|(n&lt;&lt;<span class="number">3</span>)) ^ (n&gt;&gt;<span class="number">3</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 1666 - 1683行 */</span>
+<span class="hljs-function"><span class="hljs-keyword">st_index_t</span>
+<span class="hljs-title">st_numhash</span><span class="hljs-params">(<span class="hljs-keyword">st_data_t</span> n)</span>
+</span>&#123;
+    <span class="hljs-comment">/*
+     * This hash function is lightly-tuned for Ruby.  Further tuning
+     * should be possible.  Notes:
+     *
+     * - (n &gt;&gt; 3) alone is great for heap objects and OK for fixnum,
+     *   however symbols perform poorly.
+     * - (n &gt;&gt; (RUBY_SPECIAL_SHIFT+3)) was added to make symbols hash well,
+     *   n.b.: +3 to remove ID scope, +1 worked well initially, too
+     * - (n &lt;&lt; 3) was finally added to avoid losing bits for fixnums
+     * - avoid expensive modulo instructions, it is currently only
+     *   shifts and bitmask operations.
+     */</span>
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">st_index_t</span>)((n&gt;&gt;(RUBY_SPECIAL_SHIFT+<span class="hljs-number">3</span>)|(n&lt;&lt;<span class="hljs-number">3</span>)) ^ (n&gt;&gt;<span class="hljs-number">3</span>));
+&#125;
+</code></pre>
 <p>这个函数看起来倒是很简单，就是用n做了一些位运算。不过不属于教师讲述的6中方法之一。</p>
 <p>这很大程度地激起了我的好奇心：难道Index是32位的整数吗？这个函数没有任何取模操作，如果传入一个很大的n,它该如何处理呢？</p>
 <p>不要着急，让我们继续追踪吧：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 584 - 588行 */</span></span><br><span class="line">    <span class="keyword">if</span> (ptr == <span class="number">0</span>) &#123;</span><br><span class="line">key = (*func)(key);</span><br><span class="line">add_direct(table, key, value, hash_val, bin_pos);</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 584 - 588行 */</span>
+    <span class="hljs-keyword">if</span> (ptr == <span class="hljs-number">0</span>) &#123;
+key = (*func)(key);
+add_direct(table, key, value, hash_val, bin_pos);
+<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    &#125;
+</code></pre>
 <p>我们注意到bin_pos这个参数，因为在add_direct函数中，它会调用new_entry函数，最后会执行这个语句：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 445 行 */</span> </span><br><span class="line">entry-&gt;next = table-&gt;bins[bin_pos];</span><br><span class="line">table-&gt;bins[bin_pos] = entry;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 445 行 */</span> 
+entry-&gt;next = table-&gt;bins[bin_pos];
+table-&gt;bins[bin_pos] = entry;
+</code></pre>
 <p>显然地，bin_pos才是数组查找的真正下标！那么bin_pos是在哪里被设置的呢？一个出乎预料的答案是在FIND_ENTRY宏中：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 582行*/</span></span><br><span class="line">    FIND_ENTRY(table, ptr, hash_val, bin_pos);</span><br></pre></td></tr></table></figure>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 344行 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FIND_ENTRY(table, ptr, hash_val, bin_pos) \</span></span><br><span class="line"><span class="meta">    ((ptr) = find_entry((table), key, (hash_val), ((bin_pos) = hash_pos(hash_val, (table)-&gt;num_bins))))</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 582行*/</span>
+    FIND_ENTRY(table, ptr, hash_val, bin_pos);
+</code></pre>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 344行 */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FIND_ENTRY(table, ptr, hash_val, bin_pos) \
+    ((ptr) = find_entry((table), key, (hash_val), ((bin_pos) = hash_pos(hash_val, (table)-&gt;num_bins))))</span>
+</code></pre>
 <p>经历了千辛万苦，我们终于来到了真正获取下标的hash_pos宏：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 89行 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> hash_pos(h,n) ((h) &amp; (n - 1))</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 89行 */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> hash_pos(h,n) ((h) &amp; (n - 1))</span>
+</code></pre>
 <p>这里可以看到，实际的下标是和哈希表的长度与之后的结果。</p>
 <p>有人可能会问，为什么要有两套键（一个hash_val，一个bin_pos）呢？我们下面会谈到，这里埋个伏笔。不过在谈到这个问题之前，我们先要看看它的碰撞处理。</p>
 <h4 id="st_table的碰撞处理"><a class="markdownIt-Anchor" href="#st_table的碰撞处理"></a> st_table的碰撞处理</h4>
 <p>如果FIND_ENTRY宏找到了该key，st_table会如何处理呢？其实，这个问题在add_direct调用的new_enrty函数那里就可以看出来：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 445 - 446行 */</span></span><br><span class="line">    entry-&gt;next = table-&gt;bins[bin_pos];</span><br><span class="line">    table-&gt;bins[bin_pos] = entry;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 445 - 446行 */</span>
+    entry-&gt;next = table-&gt;bins[bin_pos];
+    table-&gt;bins[bin_pos] = entry;
+</code></pre>
 <p>这写法显然是链表的头插法，所以是链地址法。</p>
 <h4 id="st_table的扩容"><a class="markdownIt-Anchor" href="#st_table的扩容"></a> st_table的扩容</h4>
 <p>在我们实现的哈希表中，真正的哈希算法为：</p>
@@ -335,29 +602,102 @@
 <p>这样一来带来一个很麻烦的问题 – 扩容时必须重新计算哈希值。</p>
 <p>而我们可以猜想到，得益于ruby哈希表中hash_val和bin_pos的分离，扩容时只需要重新计算bin_pos，而不需要重新计算哈希值。</p>
 <p>真的是这样吗？让我们再看看源代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 459 - 462行 */</span></span><br><span class="line">    <span class="keyword">if</span> (table-&gt;num_entries &gt; ST_DEFAULT_MAX_DENSITY * table-&gt;num_bins) &#123;</span><br><span class="line">rehash(table);</span><br><span class="line">    bin_pos = hash_pos(hash_val, table-&gt;num_bins);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 459 - 462行 */</span>
+    <span class="hljs-keyword">if</span> (table-&gt;num_entries &gt; ST_DEFAULT_MAX_DENSITY * table-&gt;num_bins) &#123;
+rehash(table);
+    bin_pos = hash_pos(hash_val, table-&gt;num_bins);
+    &#125;
+</code></pre>
 <p>可以清楚地看到，如果现在的哈希表项数大于可以容纳的最大数量 * 一个密度常数，那么就用rehash()函数重新对这个表作哈希，而rehash()函数定义如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 609 - 627行 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span></span><br><span class="line"><span class="title function_">rehash</span><span class="params">(<span class="keyword">register</span> st_table *table)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">register</span> st_table_entry *ptr, **new_bins;</span><br><span class="line">    <span class="type">st_index_t</span> new_num_bins, hash_val;</span><br><span class="line"></span><br><span class="line">    new_num_bins = new_size(table-&gt;num_bins+<span class="number">1</span>);</span><br><span class="line">    new_bins = st_realloc_bins(table-&gt;bins, new_num_bins, table-&gt;num_bins);</span><br><span class="line">    table-&gt;num_bins = new_num_bins;</span><br><span class="line">    table-&gt;bins = new_bins;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((ptr = table-&gt;head) != <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">	    hash_val = hash_pos(ptr-&gt;hash, new_num_bins);</span><br><span class="line">	    ptr-&gt;next = new_bins[hash_val];</span><br><span class="line">	    new_bins[hash_val] = ptr;</span><br><span class="line">	&#125; <span class="keyword">while</span> ((ptr = ptr-&gt;fore) != <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 609 - 627行 */</span>
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>
+<span class="hljs-title">rehash</span><span class="hljs-params">(<span class="hljs-keyword">register</span> st_table *table)</span>
+</span>&#123;
+    <span class="hljs-keyword">register</span> st_table_entry *ptr, **new_bins;
+    <span class="hljs-keyword">st_index_t</span> new_num_bins, hash_val;
+
+    new_num_bins = new_size(table-&gt;num_bins+<span class="hljs-number">1</span>);
+    new_bins = st_realloc_bins(table-&gt;bins, new_num_bins, table-&gt;num_bins);
+    table-&gt;num_bins = new_num_bins;
+    table-&gt;bins = new_bins;
+
+    <span class="hljs-keyword">if</span> ((ptr = table-&gt;head) != <span class="hljs-number">0</span>) &#123;
+	<span class="hljs-keyword">do</span> &#123;
+	    hash_val = hash_pos(ptr-&gt;hash, new_num_bins);
+	    ptr-&gt;next = new_bins[hash_val];
+	    new_bins[hash_val] = ptr;
+	&#125; <span class="hljs-keyword">while</span> ((ptr = ptr-&gt;fore) != <span class="hljs-number">0</span>);
+    &#125;
+&#125;
+</code></pre>
 <p>这段代码有两个地方需要研究</p>
 <ol>
 <li>new_size是如何实现的，新的大小和现大小是什么关系？</li>
 <li>现在的哈希表是如何迁移到新的哈希表的？</li>
 </ol>
 <p>首先研究第一个问题，我们直接研究new_size函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 157 - 172行 */</span></span><br><span class="line"><span class="type">static</span> <span class="type">st_index_t</span></span><br><span class="line"><span class="title function_">new_size</span><span class="params">(<span class="type">st_index_t</span> size)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">st_index_t</span> n;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (size &amp;&amp; (size &amp; ~(size - <span class="number">1</span>)) == size) <span class="comment">/* already a power-of-two? */</span></span><br><span class="line">	<span class="keyword">return</span> size;</span><br><span class="line"></span><br><span class="line">    n = next_pow2(size);</span><br><span class="line">    <span class="keyword">if</span> (n &gt; size)</span><br><span class="line">	<span class="keyword">return</span> n;</span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NOT_RUBY</span></span><br><span class="line">    rb_raise(rb_eRuntimeError, <span class="string">&quot;st_table too big&quot;</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;			<span class="comment">/* should raise exception */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 157 - 172行 */</span>
+<span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">st_index_t</span>
+<span class="hljs-title">new_size</span><span class="hljs-params">(<span class="hljs-keyword">st_index_t</span> <span class="hljs-built_in">size</span>)</span>
+</span>&#123;
+    <span class="hljs-keyword">st_index_t</span> n;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">size</span> &amp;&amp; (<span class="hljs-built_in">size</span> &amp; ~(<span class="hljs-built_in">size</span> - <span class="hljs-number">1</span>)) == <span class="hljs-built_in">size</span>) <span class="hljs-comment">/* already a power-of-two? */</span>
+	<span class="hljs-keyword">return</span> <span class="hljs-built_in">size</span>;
+
+    n = next_pow2(<span class="hljs-built_in">size</span>);
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-built_in">size</span>)
+	<span class="hljs-keyword">return</span> n;
+<span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> NOT_RUBY</span>
+    rb_raise(rb_eRuntimeError, <span class="hljs-string">"st_table too big"</span>);
+<span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;			<span class="hljs-comment">/* should raise exception */</span>
+&#125;
+</code></pre>
 <p>可以看到，下一个大小是next_pow2算出来的。也就是说，新的大小和旧的大小有如下关系：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>i</mi><mi>z</mi><msub><mi>e</mi><mrow><mi>n</mi><mi>e</mi><mi>w</mi></mrow></msub><mo>=</mo><mn>2</mn><mo>×</mo><mi>s</mi><mi>i</mi><mi>z</mi><msub><mi>e</mi><mrow><mi>f</mi><mi>o</mi><mi>r</mi><mi>m</mi><mi>e</mi><mi>r</mi></mrow></msub></mrow><annotation encoding="application/x-tex">size_{new} = 2 \times size_{former}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.15em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.02691em;">w</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.9456279999999999em;vertical-align:-0.286108em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10764em;">f</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span></span></p>
 <p>然后研究第二个问题，现在的哈希表如何迁移到新的哈希表。</p>
 <p>首先，st_realloc_bins只会重新分配内存，而不会迁移，真正的迁移在这个循环中进行：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((ptr = table-&gt;head) != <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">	    hash_val = hash_pos(ptr-&gt;hash, new_num_bins);</span><br><span class="line">	    ptr-&gt;next = new_bins[hash_val];</span><br><span class="line">	    new_bins[hash_val] = ptr;</span><br><span class="line">	&#125; <span class="keyword">while</span> ((ptr = ptr-&gt;fore) != <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-keyword">if</span> ((ptr = table-&gt;head) != <span class="hljs-number">0</span>) &#123;
+	<span class="hljs-keyword">do</span> &#123;
+	    hash_val = hash_pos(ptr-&gt;hash, new_num_bins);
+	    ptr-&gt;next = new_bins[hash_val];
+	    new_bins[hash_val] = ptr;
+	&#125; <span class="hljs-keyword">while</span> ((ptr = ptr-&gt;fore) != <span class="hljs-number">0</span>);
+&#125;
+</code></pre>
 <p>要说明白这个循环，必须认真研究一下st_table_entry：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* ruby/st.c 18 - 26行 */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">st_table_entry</span> <span class="title">st_table_entry</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">st_table_entry</span> &#123;</span></span><br><span class="line">    <span class="type">st_index_t</span> hash;</span><br><span class="line">    <span class="type">st_data_t</span> key;</span><br><span class="line">    <span class="type">st_data_t</span> record;</span><br><span class="line">    st_table_entry *next;</span><br><span class="line">    st_table_entry *fore, *back;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-comment">/* ruby/st.c 18 - 26行 */</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">st_table_entry</span> <span class="hljs-title">st_table_entry</span>;</span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">st_table_entry</span> &#123;</span>
+    <span class="hljs-keyword">st_index_t</span> hash;
+    <span class="hljs-keyword">st_data_t</span> key;
+    <span class="hljs-keyword">st_data_t</span> record;
+    st_table_entry *next;
+    st_table_entry *fore, *back;
+&#125;;
+</code></pre>
 <p>这个next，指向的是本bin_pos的下一个项；而fore和back，实际上是把整个哈希表中所有的项做成了一个双向链表！</p>
 <p>回过头来再看add_direct的最后一部分，我们会有种恍然大悟的感觉：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> (table-&gt;head != <span class="number">0</span>) &#123;</span><br><span class="line">entry-&gt;fore = <span class="number">0</span>;</span><br><span class="line">(entry-&gt;back = table-&gt;tail)-&gt;fore = entry;</span><br><span class="line">table-&gt;tail = entry;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">table-&gt;head = table-&gt;tail = entry;</span><br><span class="line">entry-&gt;fore = entry-&gt;back = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">    <span class="hljs-keyword">if</span> (table-&gt;head != <span class="hljs-number">0</span>) &#123;
+entry-&gt;fore = <span class="hljs-number">0</span>;
+(entry-&gt;back = table-&gt;tail)-&gt;fore = entry;
+table-&gt;tail = entry;
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+table-&gt;head = table-&gt;tail = entry;
+entry-&gt;fore = entry-&gt;back = <span class="hljs-number">0</span>;
+    &#125;
+</code></pre>
 <p>这也正是双向链表的插入操作，其中table-&gt;head是头指针，table-&gt;tail是尾指针。这样一来，所有的项都串成了一个双向链表，通过从头指针开始的遍历就可以将所有的项加入新的哈希表中，而这正是这个循环所做的事情：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">	hash_val = hash_pos(ptr-&gt;hash, new_num_bins);</span><br><span class="line">	ptr-&gt;next = new_bins[hash_val];</span><br><span class="line">	new_bins[hash_val] = ptr;</span><br><span class="line">&#125; <span class="keyword">while</span> ((ptr = ptr-&gt;fore) != <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-keyword">do</span> &#123;
+	hash_val = hash_pos(ptr-&gt;hash, new_num_bins);
+	ptr-&gt;next = new_bins[hash_val];
+	new_bins[hash_val] = ptr;
+&#125; <span class="hljs-keyword">while</span> ((ptr = ptr-&gt;fore) != <span class="hljs-number">0</span>);
+</code></pre>
 <p>特别地，我们发现它确实只是将哈希值用hash_pos宏变为了bin_pos，即下标，从而避免了再次哈希键。</p>
 <h4 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h4>
 <p>总的来说，ruby中的哈希表有这几个特性：</p>
@@ -369,74 +709,30 @@
 <li>将所有的哈希表项用一个双向链表串起来，用头指针和尾指针实现对整个哈希表的高效遍历。</li>
 </ol>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2019/12/22/2019-12-22-Graph/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          数据结构 -- 图 -- 笔记
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2019/11/02/2019-11-02-802-11i-1/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          802.11i 无线安全（一）建立RSNA
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

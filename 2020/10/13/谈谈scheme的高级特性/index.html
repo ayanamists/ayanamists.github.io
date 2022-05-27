@@ -1,91 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>谈谈scheme的高级特性 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="quote quasiquote unquote 的爱恨情仇  quote 经常使用scheme写程序的人，一般都会知道【符号】到底是指什么。但是，很多人却并不真正知道(quote A)和【符号】到底是不是一个东西。 The Scheme Programming Language对quote的描述是这样的：  &#39;*obj* is equivalent to (quote *obj*). The">
-<meta property="og:type" content="article">
-<meta property="og:title" content="谈谈scheme的高级特性">
-<meta property="og:url" content="https://ayanamists.xyz/2020/10/13/%E8%B0%88%E8%B0%88scheme%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="quote quasiquote unquote 的爱恨情仇  quote 经常使用scheme写程序的人，一般都会知道【符号】到底是指什么。但是，很多人却并不真正知道(quote A)和【符号】到底是不是一个东西。 The Scheme Programming Language对quote的描述是这样的：  &#39;*obj* is equivalent to (quote *obj*). The">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-10-13T23:43:50.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="scheme">
-<meta property="article:tag" content="函数式编程">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-谈谈scheme的高级特性" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      谈谈scheme的高级特性
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-10-13T23:43:50.000Z" itemprop="datePublished">2020-10-13</time>
-
-          
-            × <span class="article-word-count">1.1k words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
+        <div class="post-main-title">
+            谈谈scheme的高级特性
         </div>
-      </header>
+        <div class="post-meta">
+            2020-10-13
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="quote-quasiquote-unquote-的爱恨情仇"><a class="markdownIt-Anchor" href="#quote-quasiquote-unquote-的爱恨情仇"></a> <code>quote</code> <code>quasiquote</code> <code>unquote</code> 的爱恨情仇</h2>
 <h3 id="quote"><a class="markdownIt-Anchor" href="#quote"></a> quote</h3>
 <p>经常使用scheme写程序的人，一般都会知道【符号】到底是指什么。但是，很多人却并不真正知道<code>(quote A)</code>和【符号】到底是不是一个东西。</p>
@@ -106,104 +67,98 @@
 <li>是一个形如<code>(list a b ...)</code>的列表</li>
 </ul>
 <p>换句话说，我们想写得简单一点，让<code>(list 1 2 3)</code>用<code>(1 2 3)</code>就可以表达。但问题是<code>(1 2 3)</code>在自然状态下是一个【求值式】，所以直接这么搞是不行的，而要使用<code>(quote (1 2 3))</code>，而<code>(quote (1 2 3))</code>可以被简写为：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;(<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">'(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)
+</code></pre>
 <p>我们再给出几个例子：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="symbol">&#x27;1</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line">&gt; &#x27;<span class="string">&quot;a&quot;</span></span><br><span class="line"><span class="string">&quot;a&quot;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">+</span></span> (<span class="name"><span class="built_in">car</span></span> &#x27;(<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>)) <span class="number">2</span>)</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">string?</span></span> (<span class="name"><span class="built_in">car</span></span> &#x27;(<span class="string">&quot;1&quot;</span> <span class="number">2</span> <span class="number">3</span>)))</span><br><span class="line">#t</span><br></pre></td></tr></table></figure>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">vector-ref</span></span> </span><br><span class="line">   (<span class="name"><span class="built_in">car</span></span> &#x27;(#(<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>) <span class="number">2</span> <span class="number">3</span>))</span><br><span class="line">   <span class="number">0</span>)</span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; <span class="hljs-symbol">'1</span>
+<span class="hljs-number">1</span>
+&gt; '<span class="hljs-string">"a"</span>
+<span class="hljs-string">"a"</span>
+</code></pre>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> '(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)) <span class="hljs-number">2</span>)
+<span class="hljs-number">3</span>
+</code></pre>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">string?</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> '(<span class="hljs-string">"1"</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)))
+#t
+</code></pre>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">vector-ref</span></span> 
+   (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> '(#(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>) <span class="hljs-number">2</span> <span class="hljs-number">3</span>))
+   <span class="hljs-number">0</span>)
+<span class="hljs-number">1</span>
+</code></pre>
 <p>可以看到，如果<code>a</code>本身是一个【self-evaluating constants, i.e., numbers, booleans, characters, strings, and bytevectors】，那么<code>(quote a)</code>就是<code>a</code>.</p>
 <p>但是，这里还有一个问题。请思考一下下面的代码会得到什么：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">define</span></span> a <span class="number">10</span>)</span><br><span class="line">&gt; <span class="symbol">&#x27;a</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
+&gt; <span class="hljs-symbol">'a</span>
+</code></pre>
 <p>是<code>10</code>吗？<strong>请再次回忆我之前说的【不要求值】</strong></p>
 <p>在scheme中，把一个<code>identifier</code>变成其对应的值，显然就是求值。</p>
 <p>所以，这段代码不会<code>a</code>的值，它得到的是<code>a</code>本身：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">define</span></span> a <span class="number">10</span>)</span><br><span class="line">&gt; <span class="symbol">&#x27;a</span></span><br><span class="line">a</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
+&gt; <span class="hljs-symbol">'a</span>
+a
+</code></pre>
 <p>这里的【<code>a</code>本身】就是所谓的【符号】，如果<code>x</code>是一个【标识符】，那么<code>(quote x)</code>就会得到一个【符号】：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">symbol?</span></span> <span class="symbol">&#x27;x</span>)</span><br><span class="line">#t</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">symbol?</span></span> <span class="hljs-symbol">'x</span>)
+#t
+</code></pre>
 <p>看到这里，你应该明白了什么叫做【allowing <code>*obj*</code> to be employed as data】了吧？喝一杯茶，我们下面要介绍一点更好玩的东西。</p>
 <h3 id="quasiquote-unquote"><a class="markdownIt-Anchor" href="#quasiquote-unquote"></a> quasiquote &amp; unquote</h3>
 <p><code>quote</code>可以很方便地构造【self-evaluating constants】的列表，但却不能实现下面的要求：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> a <span class="number">10</span>)</span><br><span class="line">&#x27;(a a a) <span class="comment">;我们想要(list 10 10 10)而不是(list &#x27;a &#x27;a &#x27;a)</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
+'(a a a) <span class="hljs-comment">;我们想要(list 10 10 10)而不是(list 'a 'a 'a)</span>
+</code></pre>
 <p>这该如何是好呢？</p>
 <p><code>quote</code>实际上相当于引入了一个【不求值的环境】，那么，只要通过某种手段把这个【不求值的环境】变成【普通环境】，那么问题就迎刃而解了。scheme加入了<code>qusiquote</code>来支持【通过<code>unquote</code>变成普通环境】：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">define</span></span> a <span class="number">10</span>)</span><br><span class="line">&gt; (<span class="name"><span class="built_in">quasiquote</span></span> ((<span class="name">unquote</span> a) (<span class="name">unquote</span> a) (<span class="name">unquote</span> a) a))</span><br><span class="line">(<span class="name">10</span> <span class="number">10</span> <span class="number">10</span> a)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
+&gt; (<span class="hljs-name"><span class="hljs-builtin-name">quasiquote</span></span> ((<span class="hljs-name">unquote</span> a) (<span class="hljs-name">unquote</span> a) (<span class="hljs-name">unquote</span> a) a))
+(<span class="hljs-name">10</span> <span class="hljs-number">10</span> <span class="hljs-number">10</span> a)
+</code></pre>
 <p>这样有点麻烦，scheme用`表示<code>quasiquote</code>，用<code>,</code>表示<code>unquote</code>，上面的代码可以写成：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`(,a ,a ,a a)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">`(,a ,a ,a a)
+</code></pre>
 <p>用这个语法，我们就可以方便地创建列表了。</p>
 <h2 id="scheme宏系统"><a class="markdownIt-Anchor" href="#scheme宏系统"></a> scheme宏系统</h2>
 <p>scheme的宏系统是比较难以掌握的一个部分，因为你不得不认真阅读the scheme programming language关于宏系统的部分。但是scheme的卫生宏系统是还没有被各类不基于s表达式的编程语言抄回来的特性，换句话说，这是它的<em>特色</em>，不得不品尝。</p>
 <p>不过，我也懒得再写下去了，这里给出一个tspl里没有的拼字符串的例子吧：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define-syntax</span></span> 缝合</span><br><span class="line">  (<span class="name"><span class="built_in">lambda</span></span> (x)</span><br><span class="line">    (<span class="name"><span class="built_in">define</span></span> (<span class="name">get-feng-syntax</span> x y)</span><br><span class="line">      (<span class="name">datum-&gt;syntax</span> x (<span class="name">symbol-append</span> (<span class="name">syntax-&gt;datum</span> x)</span><br><span class="line">                                      (<span class="name">syntax-&gt;datum</span> y))))</span><br><span class="line">    (<span class="name"><span class="built_in">syntax-case</span></span> x ()</span><br><span class="line">      ((<span class="name">_</span> a b)</span><br><span class="line">       #`(define #,(get-feng-syntax #<span class="symbol">&#x27;a</span> #<span class="symbol">&#x27;b</span>) <span class="number">10</span>)))))</span><br><span class="line"></span><br><span class="line">(<span class="name">缝合</span> 我喜欢 拼字符串)</span><br><span class="line"></span><br><span class="line">(<span class="name">printf</span> <span class="string">&quot;~a&quot;</span> 我喜欢拼字符串) <span class="comment">;得到10</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define-syntax</span></span> 缝合
+  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x)
+    (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">get-feng-syntax</span> x y)
+      (<span class="hljs-name">datum-&gt;syntax</span> x (<span class="hljs-name">symbol-append</span> (<span class="hljs-name">syntax-&gt;datum</span> x)
+                                      (<span class="hljs-name">syntax-&gt;datum</span> y))))
+    (<span class="hljs-name"><span class="hljs-builtin-name">syntax-case</span></span> x ()
+      ((<span class="hljs-name">_</span> a b)
+       #`(define #,(get-feng-syntax #<span class="hljs-symbol">'a</span> #<span class="hljs-symbol">'b</span>) <span class="hljs-number">10</span>)))))
 
-      
-    </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/scheme/" rel="tag">scheme</a>, <a class="article-tag-none-link" href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" rel="tag">函数式编程</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
+(<span class="hljs-name">缝合</span> 我喜欢 拼字符串)
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/11/10/debug/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          原生程序的错误与调试
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/10/03/2020-10-03-mma/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          mathematica入坑指南
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
+(<span class="hljs-name">printf</span> <span class="hljs-string">"~a"</span> 我喜欢拼字符串) <span class="hljs-comment">;得到10</span>
+</code></pre>
 
     </div>
-  </div>
-  
 
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

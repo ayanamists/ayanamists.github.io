@@ -1,770 +1,263 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="aya ⊢ blog">
-<meta property="og:url" content="https://ayanamists.xyz/page/5/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="ayanamists">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
-    
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-  
-    <article id="post-2019-12-22-Graph" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <ul class="nav">
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2019/12/22/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
-      
+        <li><a href="/">首页</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-12-22T00:00:00.000Z" itemprop="datePublished">2019-12-22</time>
-
-          
-            × <span class="article-word-count">6.2k words</span>
-            
-            × <span class="article-time-to-read">29 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
-<li><a href="#%e5%9b%be%e7%9a%84%e5%ae%9a%e4%b9%89">图的定义</a>
-<ul>
-<li><a href="#%e5%9b%be%e7%9a%84%e4%b8%80%e8%88%ac%e5%ae%9a%e4%b9%89">图的一般定义</a></li>
-<li><a href="#%e5%87%a0%e7%a7%8d%e7%89%b9%e6%ae%8a%e7%9a%84%e5%9b%be">几种特殊的图</a></li>
-<li><a href="#%e8%bf%9e%e9%80%9a%e6%80%a7">连通性</a>
-<ul>
-<li><a href="#%e6%97%a0%e5%90%91%e5%9b%be">无向图</a></li>
-<li><a href="#%e6%9c%89%e5%90%91%e5%9b%be">有向图</a></li>
-</ul>
-</li>
-<li><a href="#%e7%94%9f%e6%88%90%e6%a0%91">生成树</a></li>
-</ul>
-</li>
-<li><a href="#%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8%e8%a1%a8%e7%a4%ba">图的存储表示</a>
-<ul>
-<li><a href="#adt-%e4%b8%8e-%e6%8a%bd%e8%b1%a1%e7%b1%bb%e6%8e%a5%e5%8f%a3">ADT 与 抽象类接口</a></li>
-<li><a href="#%e9%80%86%e9%82%bb%e6%8e%a5%e8%a1%a8">（逆）邻接表</a>
-<ul>
-<li><a href="#%e9%82%bb%e6%8e%a5%e8%a1%a8">邻接表</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%e5%9b%be%e4%b8%8a%e7%9a%848%e7%a7%8d%e6%b3%9b%e5%9e%8b%e7%ae%97%e6%b3%95">图上的8种泛型算法</a>
-<ul>
-<li><a href="#%e5%89%8d%e8%a8%80-1">前言</a></li>
-<li><a href="#%e5%9b%be%e7%9a%84%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e7%ae%97%e6%b3%95">图的深度优先搜索算法</a></li>
-<li><a href="#%e5%9b%be%e7%9a%84%e5%b9%bf%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e7%ae%97%e6%b3%95">图的广度优先搜索算法</a></li>
-<li><a href="#%e7%94%a8%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e5%88%a4%e6%96%ad%e6%98%af%e5%90%a6%e6%9c%89%e7%8e%af">用深度优先搜索判断是否有环</a></li>
-<li><a href="#%e7%94%a8%e6%b7%b1%e5%ba%a6%e4%bc%98%e5%85%88%e6%90%9c%e7%b4%a2%e8%bf%9b%e8%a1%8c%e6%8b%93%e6%89%91%e6%8e%92%e5%ba%8f">用深度优先搜索进行拓扑排序</a></li>
-<li><a href="#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91--prim%e7%ae%97%e6%b3%95">最小生成树–Prim算法</a></li>
-<li><a href="#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91----kruskal%e7%ae%97%e6%b3%95">最小生成树 – Kruskal算法</a></li>
-<li><a href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95----dijkstra%e7%ae%97%e6%b3%95">最短路径算法 – Dijkstra算法</a></li>
-<li><a href="#%e6%9c%80%e7%9f%ad%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95----flyod%e7%ae%97%e6%b3%95">最短路径算法 – Flyod算法</a></li>
-</ul>
-</li>
-<li><a href="#%e4%b8%a4%e4%b8%aa%e4%b8%93%e7%94%a8%e7%ae%97%e6%b3%95----%e9%82%bb%e6%8e%a5%e8%a1%a8%e4%b8%8a%e7%9a%84%e5%a0%86%e4%bc%98%e5%8c%96dijkstra%e7%ae%97%e6%b3%95%e5%92%8cprim%e7%ae%97%e6%b3%95">两个专用算法 – 邻接表上的堆优化Dijkstra算法和Prim算法</a></li>
-</ul>
-<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
-<p>这一章，我们学习了图这种数据结构。本笔记主要完成了以下工作：</p>
-<ul>
-<li>总结了图的各种知识</li>
-<li>实现了邻接矩阵和邻接表定义的Graph类</li>
-<li>实现了IndexMapping 类，使得下面的泛型图算法成为可能（把元素内容和标记分开，下面的泛型图算法实现在整形标记上）</li>
-<li>实现了8个泛型图算法，并进行了简单测试，分别是
-<ul>
-<li>DFS 深度优先搜索</li>
-<li>BFS 广度优先搜索</li>
-<li>通过深度优先搜索判断图中是否有环</li>
-<li>通过深度优先搜索进行拓扑排序</li>
-<li>Prim最小生成树算法</li>
-<li>Kruskal最小生成树算法</li>
-<li>Dijskstra 最短路径算法</li>
-<li>Floyd 最短路径算法</li>
-</ul>
-</li>
-<li>实现了两个专用图算法，分别是
-<ul>
-<li>邻接表上的堆优化Dijkstra算法</li>
-<li>邻接表上的堆优化Prim算法</li>
-</ul>
-</li>
-<li>给出了几个简单的图论算法应用</li>
-</ul>
-<h2 id="图的定义"><a class="markdownIt-Anchor" href="#图的定义"></a> 图的定义</h2>
-<h3 id="图的一般定义"><a class="markdownIt-Anchor" href="#图的一般定义"></a> 图的一般定义</h3>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2019/12/22/2019-12-22-Graph/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-12-10-find" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+        <li><a href="/archives">归档</a></li>
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2019/12/10/2019-12-10-find/">数据结构 -- 查找 -- 笔记</a>
-      
+        <li><a href="/about">关于</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-12-10T00:00:00.000Z" itemprop="datePublished">2019-12-10</time>
-
-          
-            × <span class="article-word-count">5.7k words</span>
-            
-            × <span class="article-time-to-read">24 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
-<li><a href="#%e6%9f%a5%e6%89%be%e7%9a%84%e5%9f%ba%e6%9c%ac%e5%ae%9a%e4%b9%89">查找的基本定义</a></li>
-<li><a href="#%e6%9f%a5%e6%89%be%e7%ae%97%e6%b3%95%e7%9a%84%e5%88%86%e6%9e%90%e5%92%8c%e8%ae%be%e8%ae%a1">查找算法的分析和设计</a></li>
-<li><a href="#%e9%a1%ba%e5%ba%8f%e6%9f%a5%e6%89%be%e7%ae%97%e6%b3%95">顺序查找算法</a></li>
-<li><a href="#%e4%ba%8c%e5%88%86%e6%9f%a5%e6%89%be%e7%ae%97%e6%b3%95%e4%b8%8e%e4%ba%8c%e5%8f%89%e6%9f%a5%e6%89%be%e6%a0%91">二分查找算法与二叉查找树</a></li>
-<li><a href="#%e5%88%86%e5%9d%97%e6%9f%a5%e6%89%be">分块查找</a></li>
-<li><a href="#%e5%a0%86%e4%bc%98%e5%85%88%e9%98%9f%e5%88%97">堆/优先队列</a>
-<ul>
-<li><a href="#%e5%a0%86%e7%9a%84%e6%a6%82%e5%bf%b5%e4%b8%8e%e5%ae%9e%e7%8e%b0">堆的概念与实现</a></li>
-<li><a href="#%e5%a0%86%e5%8f%af%e4%bb%a5%e7%94%a8%e6%9d%a5%e5%81%9a%e4%bb%80%e4%b9%88">堆可以用来做什么？</a></li>
-</ul>
-</li>
-<li><a href="#%e6%95%a3%e5%88%97%e8%a1%a8">散列表</a>
-<ul>
-<li><a href="#%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84%e5%ae%9a%e4%b9%89">哈希表的定义</a></li>
-<li><a href="#%e5%93%88%e5%b8%8c%e5%87%bd%e6%95%b0">哈希函数</a></li>
-<li><a href="#%e7%a2%b0%e6%92%9e%e5%a4%84%e7%90%86">碰撞处理</a></li>
-<li><a href="#%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84%e5%ae%9e%e7%8e%b0----%e6%88%91%e5%ae%9e%e7%8e%b0%e7%9a%84c%e7%89%88%e6%9c%ac">哈希表的实现 – 我实现的c++版本</a></li>
-<li><a href="#ruby%e4%b8%ad%e7%9a%84%e5%93%88%e5%b8%8c%e8%a1%a8%e5%ae%9e%e7%8e%b0">Ruby中的哈希表实现</a>
-<ul>
-<li><a href="#sttable-%e7%9a%84%e5%93%88%e5%b8%8c%e5%87%bd%e6%95%b0">st_table 的哈希函数</a></li>
-<li><a href="#sttable%e7%9a%84%e7%a2%b0%e6%92%9e%e5%a4%84%e7%90%86">st_table的碰撞处理</a></li>
-<li><a href="#sttable%e7%9a%84%e6%89%a9%e5%ae%b9">st_table的扩容</a></li>
-<li><a href="#%e6%80%bb%e7%bb%93">总结</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
-<p>这一章，我们学习了查找这种基本操作和堆、散列表这两种非常重要的数据结构。<br>
-本笔记主要完成了以下工作：</p>
-<ul>
-<li>总结了关于查找的各种知识点</li>
-<li>用ruby语言实现了一个简单的堆模块(这里的模块指module，是ruby中MIX_IN思想的主要实现模式，下面会做简短介绍)，并进行了简单测试</li>
-<li>用C++语言实现了一个简单的哈希表，并进行了简单测试</li>
-<li>讨论了ruby中哈希表的实现</li>
-<li>讨论了stl中std::find, std::binary_search等函数的实现</li>
-</ul>
-<h2 id="查找的基本定义"><a class="markdownIt-Anchor" href="#查找的基本定义"></a> 查找的基本定义</h2>
-<p>查找也可以视为搜索，wikipedia对搜索的定义是：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2019/12/10/2019-12-10-find/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-11-02-802-11i-1" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2019/11/02/2019-11-02-802-11i-1/">802.11i 无线安全（一）建立RSNA</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-11-02T08:53:03.000Z" itemprop="datePublished">2019-11-02</time>
-
-          
-            × <span class="article-word-count">2.8k words</span>
-            
-            × <span class="article-time-to-read">10 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>这学期我选了我校的公选课《无线网络安全技术》。以第二个实验为契机，我学习了一下802.11无线网络的安全。感觉网络上的中文资料太混乱、太不成体系。在这里，我用这些文章来系统地说一下这方面的东西。</p>
-<p>首先，我们要先分清楚几个名词：WEP WPA WPA2 802.11 802.11i Wifi RSN RSNA</p>
-<p>分清楚这几个东西不是很简单的事情。我们应该知道Wi-Fi是无线局域网的意思，而802.11也是无线局域网的标准，那么它们的区别是什么呢?</p>
-<p>参考这本书 <strong>Real 802.11 Security: Wi-Fi Protected Access and 802.11i</strong>的说法：</p>
-<blockquote class="wp-block-quote">
-  <p>
-    In summary, Wi-Fi defines a subset of IEEE 802.11 with some extensions
-  </p>
-</blockquote>
-<p>而会出现这种情况的原因要归结于802.11协议比较开放，没有强制规定很多问题。这也就导致一个采用部分802.11特性的设备很可能不能和令一个采用部分802.11特性的设备通信。这很糟糕。为了解决这个问题，Wi-Fi联盟成立（当时叫做 Wireless Ethernet Compatibility Alliance ，WECA）,它推出了Wi-Fi认证，并保证：两台通过Wi-Fi认证的设备可以通过无线网络相互通信。这样一来就解决了上面的问题。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2019/11/02/2019-11-02-802-11i-1/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-11-02-tls3" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/11/02/tls3/">SSL/TLS(三) 用RUBY实现TLS握手</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-11-02T02:54:04.000Z" itemprop="datePublished">2019-11-02</time>
-
-          
-            × <span class="article-word-count">2.2k words</span>
-            
-            × <span class="article-time-to-read">10 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。</p>
-<p><strong>警告：下面有大量的ruby编程细节</strong></p>
-<p>首先是将报文封装写好</p>
-<p><strong>1.record</strong></p>
-<p>Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>tlsPlainText = Class.new do 
-   attr_accessor :contentType, :protocolVersion, :length, :fragment
-end</pre>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/11/02/tls3/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-10-06-ssl-tls-2" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/10/06/ssl-tls-2/">SSL/TLS(二) 证书里都有啥</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-10-06T12:14:54.000Z" itemprop="datePublished">2019-10-06</time>
-
-          
-            × <span class="article-word-count">2.4k words</span>
-            
-            × <span class="article-time-to-read">9 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>上回说到SSL通过**证书（certificate）**验证服务器或客户端的身份。今天就来解答两个问题：</p>
-<p>1.证书是什么？</p>
-<p>2.如何使用证书验证服务器（少见地，也可能是客户端）的身份？</p>
-<h2 id="证书是什么里面有什么"><a class="markdownIt-Anchor" href="#证书是什么里面有什么"></a> <strong>证书是什么？里面有什么</strong>？</h2>
-<p>首先，我们用openssl自己造一张证书：</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="shell" data-enlighter-theme data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>openssl genrsa -out server.key</pre>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/10/06/ssl-tls-2/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-10-05-en1" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/10/05/en1/">SSL/TLS笔记(一) 加密！加密！加密！</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-10-05T15:45:17.000Z" itemprop="datePublished">2019-10-05</time>
-
-          
-            × <span class="article-word-count">3k words</span>
-            
-            × <span class="article-time-to-read">11 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。</p>
-<p>更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某种程度上的加密，那么这些服务便无法成立。基于很多类似的理由，SSL/TLS应运而生。</p>
-<p>SSL是一家公司的产品，SSLv1从未公开过，SSLv2有严重漏洞，SSLv3是SSL的最后一个版本，其后，它被IETF收编为了TLSv1.0，随后又有TLSv1.1，TLSv1.2，目前（2019年10月）TLSv1.3还未大规模部署。这篇文章主要介绍TLSv1.2。</p>
-<p>TLS，也就是传输层安全，是一个三层上的协议，但它的下层一般是TCP协议（当然其实也可以是UDP协议），上层则一般是HTTP协议。读者可能认为TLS只是用作HTTPS的加密层，实际上它的上层可以是任何协议，只不过现今多用于http协议。（这就是为什么DNS over HTTPS和DNS over TLS是不一样的）它在安全方面有三个主要目的：</p>
-<ol>
-<li>对服务器和客户端的数据进行端对端加密，使得任何中间节点无法理解数据，防止窃听。</li>
-<li>通过证书的引入，验证服务端（有时也验证客户端）的身份。</li>
-<li>通过校验的引入，保证数据在传输过程中未被篡改。</li>
-</ol>
-<p>探索TLS，就是一遍遍的问自己“TLS如何做到这三点的”。首先来解决第一个问题:</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/10/05/en1/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-10-04-trap" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/10/04/trap/">记录一下最近踩的坑</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-10-04T13:55:21.000Z" itemprop="datePublished">2019-10-04</time>
-
-          
-            × <span class="article-word-count">1.3k words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>这博客很久没更新了，一方面是由于手里有两台VPS、一个域名，一直没有想好怎么分配，怕有一天心情不好将这个WP撤掉；另一方面是因为感觉写博客有点浪费时间，平常的日子有点不太愿意写。</p>
-<p>今天终于配置好了域名分配、CDN加速等等事项，再也不用担心第一个问题。现在也正好是国庆，也有写博客的时间了，于是就有了这篇东西。</p>
-<p>最近踩了不少的坑，但是最令我痛心的是我的两次VPS误操作。为什么用痛心这么严肃的词语呢？因为这两次误操作让我不得不重装VPS的系统，直接使得我暑假对它的经营付诸东流。</p>
-<p>先看看第一次误操作吧。记得那天我将VPS上的auth.log下载到了本地，用ruby写了个脚本随便分析了一下，发现居然有1000多个ip曾经试图登录过我的主机，其中欺人最甚的218.92.0.186居然试了1192次……又联想到我的密码很弱、用户名和域名有关系，我果断将ssh的密码登录关闭了，改用公钥登录。增加安全性当然是好事情，但有时候过于追求安全反而会发生一些意想不到的情况。为了进一步提高安全性，我决定将SSH监听的端口由22改到一个大端口上。就在我修改、重启ssh完成后，敲下 ^D的一刹那，我意识到出大事了。为什么呢？我的VPS配置了防火墙，只允许几个端口入站，而我刚刚改成的那个端口，不在此列！</p>
-<p>也就是说，这次改动过后，我就无法用SSH登录了。我联系了superVPS的工作人员，得知他们也无法处理，于是只好重装系统……</p>
-<p>其实也许有一个解决问题的方法。我的VPS上不是部署了V2RAY吗？如果我们配置了</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/10/04/trap/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-08-09-nine" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/08/09/nine/">解九连环</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-08-09T07:58:22.000Z" itemprop="datePublished">2019-08-09</time>
-
-          
-            × <span class="article-word-count">911 words</span>
-            
-            × <span class="article-time-to-read">5 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>“九连环”是一种传统游戏，我上周在亲戚家发现。它的构造比较复杂，但实际上规则却很简单，即只有下面的几种情况才可以对编号为 i 的环进行操作：</p>
-<p>i == 1, 无论后面何种情况，都可以解下或放上它。</p>
-<p>i == 2，若 i<mark>1的环解下，则它可以与 i == 1的环一同被放上；若i</mark>1的环放上，则它可以同 i==1的环一同解下.</p>
-<p>i &gt; 2，当 前 i-2 个环被解下，第 i-1 个环被放上时，它可以被解下或放上。</p>
-<p>基于此，我们编写程序解决：</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>#include &lt;bits/stdc++.h>
-
-void lock(int);
-void unlock(int);
-
-int count = 0;
-void lock(int n)
-{
-    if (n == 1)
-    {
-        std::cout &lt;&lt; "lock 1\n";
-    }
-    else if (n == 2)
-    {
-        std::cout &lt;&lt; "lock 1 and 2\n";
-        count++;
-    }
-    else
-    {
-        lock(n - 1);
-        unlock(n - 2);
-        std::cout &lt;&lt; "lock" &lt;&lt; n &lt;&lt; std::endl;
-        lock(n - 2);
-    }
-    count++;
-}
-
-void unlock(int n)
-{
-    if (n == 1)
-    {
-        std::cout &lt;&lt; "unlock 1\n";
-    }
-    else if (n == 2)
-    {
-        std::cout &lt;&lt; "unlock 1 and 2\n";
-        count++;
-    }
-    else
-    {
-        unlock(n - 2);
-        std::cout &lt;&lt; "unlock" &lt;&lt; n &lt;&lt; std::endl;
-        lock(n - 2);
-        unlock(n - 1);
-    }
-    count++;
-}
-
-int main()
-{
-    int n;
-    std::cin >> n;
-    unlock(n);
-    std::cout &lt;&lt; count &lt;&lt; '\n';
-}</pre>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/08/09/nine/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-08-07-linux-net-1" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/08/07/linux-net-1/">Linux 网络编程的getaddrinfo()函数</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-08-07T09:52:57.000Z" itemprop="datePublished">2019-08-07</time>
-
-          
-            × <span class="article-word-count">853 words</span>
-            
-            × <span class="article-time-to-read">3 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。</p>
-<p>先看看声明：</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>extern int getaddrinfo (const char *__restrict __name,
-            const char *__restrict __service,
-            const struct addrinfo *__restrict __req,
-            struct addrinfo **__restrict __pai);</pre>
-<p>可以看到，第一个参数是主机名（或域名），第二个参数是服务名（端口名）。第三个和第四个参数很奇怪，一个是addrinfo* 类型，另一个则是addrinfo** 类型，这是为什么呢？</p>
-<p>这就要说起这个函数的结果如何记录的问题。addrinfo的声明如下：</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>struct addrinfo
-{
-  int ai_flags;            
-  int ai_family;        
-  int ai_socktype;       
-  int ai_protocol;        
-  socklen_t ai_addrlen;       
-  struct sockaddr *ai_addr;    
-  char *ai_canonname;       
-  struct addrinfo *ai_next;    
-};</pre>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/08/07/linux-net-1/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-08-06-iredmail" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/08/06/iredmail/">使用iRedMail配置邮箱服务器</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-08-06T08:11:40.000Z" itemprop="datePublished">2019-08-06</time>
-
-          
-            × <span class="article-word-count">532 words</span>
-            
-            × <span class="article-time-to-read">1 minute</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>iRedMail是一个一键式配置邮箱服务器的解决方案。分为iRedMail（免费）、iRedMail Easy\Pro（付费），近日，我用iRedMail配置了本站的邮箱，将过程记录在此。</p>
-<p>首先，我们要配置好一个二级域名作为邮箱服务器的主机名。鉴于后面邮箱的域名不能和主机名相同，<a target="_blank" rel="noopener" href="http://xn--mail-fb5fq0fu19b4k3bwm4b1yi3lf.mydomain.me">这里不建议使用mail.mydomain.me</a>（不然就要和我一样用别的作为邮箱的域名了）。添加一条DNS A类型记录，然后修改主机名即可。</p>
-<p>有人可能会问了，为啥主机名一定要是一个二级域名呢？原因是iRedMail会自动创建证书和网页的服务，这个时候需要一个域名，它似乎是直接将主机名作为这个域名处理的。</p>
-<p>后面的步骤很简单，直接wget下载脚本，然后bash运行即可。这里记录几个要点：</p>
-<p>1.安装完成后用chown和chgrp将iRedMail.tips设为root所有，并设置440权限。</p>
-<p>2.安装过程中iRedMail会自动设置防火墙，有别的网络服务（比如apache2服务器）时，其端口很可能会被防火墙封掉。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/08/06/iredmail/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav" class="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/4/">« Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next »</a>
-  </nav>
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
+    </ul>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                
+                <div class="post-list">
+    
+    <div class="post">
+        <a class="post-title" href="/2019/12/22/2019-12-22-Graph/">数据结构 -- 图 -- 笔记</a>
+        <div class="post-except">
+            
+前言
+图的定义
+
+图的一般定义
+几种特殊的图
+连通性
+
+无向图
+有向图
+
+
+生成树
+
+
+图的存储表示
+
+ADT 与 抽象类接口
+（逆）邻接表
+
+邻接表
+
+
+
+
+图上的8种泛型算法
+
+前言
+图的深度优先搜索算法
+图的广度优先搜索算法
+用深度优先搜索判断是否有环
+用深度优先搜索进行拓扑排序
+最小生成树–Prim算法
+最小生成树 – Kruskal算法
+最短路径算法 – Dijkstra算法
+最短路径算法 – Flyod算法
+
+
+两个专用算法 – 邻接表上的堆优化Dijkstra
+            <a class="read-more" href="/2019/12/22/2019-12-22-Graph/"> ... </a>
+        </div>
+        <div class="post-date">2019.12.22</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2019/12/10/2019-12-10-find/">数据结构 -- 查找 -- 笔记</a>
+        <div class="post-except">
+            
+前言
+查找的基本定义
+查找算法的分析和设计
+顺序查找算法
+二分查找算法与二叉查找树
+分块查找
+堆/优先队列
+
+堆的概念与实现
+堆可以用来做什么？
+
+
+散列表
+
+哈希表的定义
+哈希函数
+碰撞处理
+哈希表的实现 – 我实现的c++版本
+Ruby中的哈希表实现
+
+st_table 的哈希函数
+st_table的碰撞处理
+st_table的扩容
+总结
+
+
+
+
+
+ 前言
+这一章，我们学习了查找这种基本操作和堆、散列表这两种非常重要的数据结构。
+本笔记主要完成了以下工作：
+
+总结了关于
+            <a class="read-more" href="/2019/12/10/2019-12-10-find/"> ... </a>
+        </div>
+        <div class="post-date">2019.12.10</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2019/11/02/2019-11-02-802-11i-1/">802.11i 无线安全（一）建立RSNA</a>
+        <div class="post-except">
+            这学期我选了我校的公选课《无线网络安全技术》。以第二个实验为契机，我学习了一下802.11无线网络的安全。感觉网络上的中文资料太混乱、太不成体系。在这里，我用这些文章来系统地说一下这方面的东西。
+首先，我们要先分清楚几个名词：WEP WPA WPA2 802.11 802.11i Wifi RSN RSNA
+分清楚这几个东西不是很简单的事情。我们应该知道Wi-Fi是无线局域网的意思，而802.11也是无线局域网的标准，那么它们的区别是什么呢?
+参考这本书 Real 802.1
+            <a class="read-more" href="/2019/11/02/2019-11-02-802-11i-1/"> ... </a>
+        </div>
+        <div class="post-date">2019.11.02</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/11/02/tls3/">SSL/TLS(三) 用RUBY实现TLS握手</a>
+        <div class="post-except">
+            这部分的工作，我在月中就完成了。但在期中考试和某公选课的双重压力下，直到现在才有时间写出来。
+警告：下面有大量的ruby编程细节
+首先是将报文封装写好
+1.record
+Record是tls的基本报文格式，所有的tls报文最后都应该被封装为Record。Record的内容只有一个: tlsPlainText
+tlsPlainText = Class.new do 
+   attr_accessor :contentType, :protocolVersion, :length
+            <a class="read-more" href="/index.php/2019/11/02/tls3/"> ... </a>
+        </div>
+        <div class="post-date">2019.11.02</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/10/06/ssl-tls-2/">SSL/TLS(二) 证书里都有啥</a>
+        <div class="post-except">
+            上回说到SSL通过**证书（certificate）**验证服务器或客户端的身份。今天就来解答两个问题：
+1.证书是什么？
+2.如何使用证书验证服务器（少见地，也可能是客户端）的身份？
+ 证书是什么？里面有什么？
+首先，我们用openssl自己造一张证书：
+openssl genrsa -out server.key
+openssl是什么不用我多说，genrsa指产生rsa密钥。输出到server.key中。这个输出的文件写的是“私钥”，其实里面公私钥和生成公私钥的数应该是都
+            <a class="read-more" href="/index.php/2019/10/06/ssl-tls-2/"> ... </a>
+        </div>
+        <div class="post-date">2019.10.06</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/10/05/en1/">SSL/TLS笔记(一) 加密！加密！加密！</a>
+        <div class="post-except">
+            在互联网的上古时代，大部分协议都是不安全的，其中就包括统治当今互联网的HTTP协议。HTTP协议直接明文传输ASCII码，是窃听和篡改的极好材料。在ARP攻击等等MIMT攻击成功之后，任何用HTTP协议传输的数据都会成为攻击者的待宰羔羊。
+更糟的是，如果我们不信任ISP，那么数据的每一次路由都会产生危险。这不只是搞个弹窗吓唬人的问题，随着互联网的发展，越来越多的服务要依赖敏感信息的传输。如果没有某种程度上的加密，那么这些服务便无法成立。基于很多类似的理由，SSL/TLS应运而
+            <a class="read-more" href="/index.php/2019/10/05/en1/"> ... </a>
+        </div>
+        <div class="post-date">2019.10.05</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/10/04/trap/">记录一下最近踩的坑</a>
+        <div class="post-except">
+            这博客很久没更新了，一方面是由于手里有两台VPS、一个域名，一直没有想好怎么分配，怕有一天心情不好将这个WP撤掉；另一方面是因为感觉写博客有点浪费时间，平常的日子有点不太愿意写。
+今天终于配置好了域名分配、CDN加速等等事项，再也不用担心第一个问题。现在也正好是国庆，也有写博客的时间了，于是就有了这篇东西。
+最近踩了不少的坑，但是最令我痛心的是我的两次VPS误操作。为什么用痛心这么严肃的词语呢？因为这两次误操作让我不得不重装VPS的系统，直接使得我暑假对它的经营付诸东流。
+先
+            <a class="read-more" href="/index.php/2019/10/04/trap/"> ... </a>
+        </div>
+        <div class="post-date">2019.10.04</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/08/09/nine/">解九连环</a>
+        <div class="post-except">
+            “九连环”是一种传统游戏，我上周在亲戚家发现。它的构造比较复杂，但实际上规则却很简单，即只有下面的几种情况才可以对编号为 i 的环进行操作：
+i == 1, 无论后面何种情况，都可以解下或放上它。
+i == 2，若 i1的环解下，则它可以与 i == 1的环一同被放上；若i1的环放上，则它可以同 i==1的环一同解下.
+i &gt; 2，当 前 i-2 个环被解下，第 i-1 个环被放上时，它可以被解下或放上。
+基于此，我们编写程序解决：
+#include &lt;bits/
+            <a class="read-more" href="/index.php/2019/08/09/nine/"> ... </a>
+        </div>
+        <div class="post-date">2019.08.09</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/08/07/linux-net-1/">Linux 网络编程的getaddrinfo()函数</a>
+        <div class="post-except">
+            最近学习socket编程，首先遇到的就是getaddrinfo()这个函数。某些教程上将它的作用称为“ 它帮你设定之後需要的 struct” 。其实这个函数的作用是为了下面的工作做准备。这个函数根据已有的信息设定了了 addrinfo 这个结构体。它做的主要工作是：进行DNS查询，将主机名解析为ip地址（这需要联网），并将其他信息一并填入addrinfo结构体。
+先看看声明：
+extern int getaddrinfo (const char *__restrict __n
+            <a class="read-more" href="/index.php/2019/08/07/linux-net-1/"> ... </a>
+        </div>
+        <div class="post-date">2019.08.07</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/08/06/iredmail/">使用iRedMail配置邮箱服务器</a>
+        <div class="post-except">
+            iRedMail是一个一键式配置邮箱服务器的解决方案。分为iRedMail（免费）、iRedMail Easy\Pro（付费），近日，我用iRedMail配置了本站的邮箱，将过程记录在此。
+首先，我们要配置好一个二级域名作为邮箱服务器的主机名。鉴于后面邮箱的域名不能和主机名相同，这里不建议使用mail.mydomain.me（不然就要和我一样用别的作为邮箱的域名了）。添加一条DNS A类型记录，然后修改主机名即可。
+有人可能会问了，为啥主机名一定要是一个二级域名呢？原因是iR
+            <a class="read-more" href="/index.php/2019/08/06/iredmail/"> ... </a>
+        </div>
+        <div class="post-date">2019.08.06</div>
+    </div>
+    
+</div>
+
+<div class="paginator">
+    <a class="extend prev" rel="prev" href="/page/4/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">下一页</a>
+</div>
+
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

@@ -1,110 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>原生程序的错误与调试 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="原生程序的错误 如果学习编程的人像我以及大部分中国大陆的计算机系学生一样，从C语言开始学习编程的话，那么，他从一开始就处于了【真实世界】。 但是，在我的观念中，从C语言学习编程是很不正确的决定。 不过从C语言开始学习编程也不是没有一点好处。如果某人从scheme等等有GC的语言开始学习编程的话的话，那么他到了某些不得不用C&#x2F;C++写程序的时候，会陷入一些很麻烦的问题之中，其中之一，就是C&#x2F;C++">
-<meta property="og:type" content="article">
-<meta property="og:title" content="原生程序的错误与调试">
-<meta property="og:url" content="https://ayanamists.xyz/2020/11/10/debug/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="原生程序的错误 如果学习编程的人像我以及大部分中国大陆的计算机系学生一样，从C语言开始学习编程的话，那么，他从一开始就处于了【真实世界】。 但是，在我的观念中，从C语言学习编程是很不正确的决定。 不过从C语言开始学习编程也不是没有一点好处。如果某人从scheme等等有GC的语言开始学习编程的话的话，那么他到了某些不得不用C&#x2F;C++写程序的时候，会陷入一些很麻烦的问题之中，其中之一，就是C&#x2F;C++">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa3b8d1cd1bbb86baf8a5c.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa3d741cd1bbb86bb00378.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa3da31cd1bbb86bb00e45.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa3e6e1cd1bbb86bb03e86.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa3f501cd1bbb86bb07555.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa41191cd1bbb86bb0d451.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5faa41d91cd1bbb86bb10021.jpg">
-<meta property="article:published_time" content="2020-11-10T14:32:34.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="调试">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.downk.cc/item/5faa3b8d1cd1bbb86baf8a5c.jpg">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-debug" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      原生程序的错误与调试
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-11-10T14:32:34.000Z" itemprop="datePublished">2020-11-10</time>
-
-          
-            × <span class="article-word-count">1.5k words</span>
-            
-            × <span class="article-time-to-read">5 minutes</span>
-            
-          
+        <div class="post-main-title">
+            原生程序的错误与调试
         </div>
-      </header>
+        <div class="post-meta">
+            2020-11-10
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="原生程序的错误"><a class="markdownIt-Anchor" href="#原生程序的错误"></a> 原生程序的错误</h2>
 <p>如果学习编程的人像我以及大部分中国大陆的计算机系学生一样，从C语言开始学习编程的话，那么，他从一开始就处于了【真实世界】。</p>
 <p>但是，在我的观念中，从C语言学习编程是很不正确的决定。</p>
 <p>不过从C语言开始学习编程也不是没有一点好处。如果某人从scheme等等有GC的语言开始学习编程的话的话，那么他到了某些不得不用<code>C/C++</code>写程序的时候，会陷入一些很麻烦的问题之中，其中之一，就是<code>C/C++</code>都可能会出现【裸错误】，或者说，在硬件层面、操作系统层面的错误，会毫无保留地送到程序员面前。</p>
 <p>比如说，考虑这样的C代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> a[<span class="number">10</span>];</span><br><span class="line">	a[<span class="number">10000</span>] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+	<span class="hljs-keyword">int</span> a[<span class="hljs-number">10</span>];
+	a[<span class="hljs-number">10000</span>] = <span class="hljs-number">0</span>;
+&#125;
+</code></pre>
 <p>编译运行之后，如果不出意外的话，shell会告诉你：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./a            </span><br><span class="line">[1]    398 segmentation fault  ./a</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="shell">➜  ~ ./a            
+[1]    398 segmentation fault  ./a
+</code></pre>
 <p>这是什么意思？考虑一下scheme里类似的操作：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">vector-ref</span></span> (<span class="name"><span class="built_in">vector</span></span> <span class="number">1</span> <span class="number">2</span>) <span class="number">10000</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">vector-ref</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">vector</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-number">10000</span>)
+</code></pre>
 <p>scheme会告诉你：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; (<span class="name"><span class="built_in">vector-ref</span></span> (<span class="name"><span class="built_in">vector</span></span> <span class="number">1</span> <span class="number">2</span>) <span class="number">10000</span>)</span><br><span class="line">Exception in vector-ref: <span class="number">10000</span> is not a valid index for #(<span class="name">1</span> <span class="number">2</span>)</span><br><span class="line">Type (<span class="name">debug</span>) to enter the debugger.</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">vector-ref</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">vector</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-number">10000</span>)
+Exception in vector-ref: <span class="hljs-number">10000</span> is not a valid index for #(<span class="hljs-name">1</span> <span class="hljs-number">2</span>)
+Type (<span class="hljs-name">debug</span>) to enter the debugger.
+</code></pre>
 <p>很显然，scheme在抱怨程序访问了<code>(vector 1 2)</code>这个只有两个元素的向量的第<code>10000</code>个元素，<strong>以一个异常（Exception）的形式</strong>。</p>
 <p>在scheme、java、C#等等几乎所有比较高级的（非纯函数式）语言中，任何的错误（这里指类似于访问两个元素是数组的<code>10000</code>个元素的错误）都会产生一个<strong>异常（Exception）</strong>，不会产生<code>segmentation fault</code>.</p>
 <p>然而，C语言没有这种能力。这来源于C语言的本质属性–原生。</p>
@@ -113,17 +80,44 @@
 <p>再比如说一个数组，（一般来说）它就是一段连续的内存，访问数组就是寻址。</p>
 <p>特别地，C语言里的【指针】，指针的值就是内存地址。</p>
 <p>比如说，</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> *b = &amp;a;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%llx&quot;</span>, b);</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">	<span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;
+	<span class="hljs-keyword">int</span> *b = &amp;a;
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%llx"</span>, b);
+</code></pre>
 <p>运行编译好的程序会在不同时候打出不同的值，但它们的本质都是一样的 –  <code>a</code>这个变量的内存地址。</p>
 <p><img src="https://pic.downk.cc/item/5faa3b8d1cd1bbb86baf8a5c.jpg" alt="0" /></p>
 <p>到了这里，我们终于能够回答<code>segmentation fault</code>究竟是个什么东西了。实际上，这是所谓的【内存访问错误】，比如说这样的代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *a = <span class="literal">NULL</span>;</span><br><span class="line">*a = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-keyword">int</span> *a = <span class="hljs-literal">NULL</span>;
+*a = <span class="hljs-number">10</span>;
+</code></pre>
 <p>会出现<code>segmentation fault</code>，是因为现代计算机大都不允许使用<code>0</code>这一内存地址，访问它直接会引起操作系统层面的错误。</p>
 <p>至于它为什么叫这个名字，这和历史有关，不在此赘述。</p>
 <h2 id="原生程序的调试"><a class="markdownIt-Anchor" href="#原生程序的调试"></a> 原生程序的调试</h2>
 <p>关于如何调试原生程序，我想，首先我们要明确【为什么要进行调试】。</p>
 <p>进行调试，首先就是要<strong>确定错误位置</strong>。比如这样的代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">a</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">b</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">c</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> *a = <span class="literal">NULL</span>;</span><br><span class="line">	*a = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	a();</span><br><span class="line">	b();</span><br><span class="line">	c();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span>
+</span>&#123;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">b</span><span class="hljs-params">()</span>
+</span>&#123;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">c</span><span class="hljs-params">()</span>
+</span>&#123;
+	<span class="hljs-keyword">int</span> *a = <span class="hljs-literal">NULL</span>;
+	*a = <span class="hljs-number">0</span>;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+	a();
+	b();
+	c();
+&#125;
+</code></pre>
 <p>现在程序出了错误，你如何判断这个错误是在<code>a()</code>，还是在<code>b()</code>，抑或是在<code>c()</code>里触发的呢？</p>
 <p>有人会说，这不简单？看一眼就知道了。呵呵，这确实没有那么简单，如果<code>a(),b(),c()</code>每一个都有<code>1000</code>行呢？</p>
 <p>这个时候，我们必须借助调试器的力量。</p>
@@ -144,9 +138,25 @@
 <p><img src="https://pic.downk.cc/item/5faa3f501cd1bbb86bb07555.jpg" alt="4" /></p>
 <p>哈哈，原来是因为<code>a</code>这个变量里装的是<code>0x0</code>，所以才会引起错误。</p>
 <p>用这几招，我们可以解决大部分的<code>segmentation fault</code>问题。不过有些时候，我们还需要更进一步，比如下面的程序：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">div</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> c = a / b;</span><br><span class="line">	<span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">1000</span> - <span class="number">1000</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">10</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, div(b, a));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">div</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span>
+</span>&#123;
+	<span class="hljs-keyword">int</span> c = a / b;
+	<span class="hljs-keyword">return</span> c;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>&#123;
+	<span class="hljs-keyword">int</span> a = <span class="hljs-number">1000</span> - <span class="hljs-number">1000</span>;
+	<span class="hljs-keyword">int</span> b = <span class="hljs-number">10</span>;
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d"</span>, div(b, a));
+&#125;
+</code></pre>
 <p>这会造成：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./a            </span><br><span class="line">[<span class="number">1</span>]    <span class="number">567</span> floating point exception  ./a</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">➜  ~ ./a            
+[<span class="hljs-number">1</span>]    <span class="hljs-number">567</span> floating <span class="hljs-built_in">point</span> exception  ./a
+</code></pre>
 <p>用gdb调试，会出现:</p>
 <p><img src="https://pic.downk.cc/item/5faa41191cd1bbb86bb0d451.jpg" alt="5" /></p>
 <p>我们可以知道是因为<code>b=0</code>所以出了问题, 但我们更想知道, <strong>这问题到底是怎么发生的</strong>， 或者说， <strong>为什么</strong><code>b=0</code>了呢?</p>
@@ -159,74 +169,30 @@
 <li><a target="_blank" rel="noopener" href="https://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_toc.html">官方教程</a></li>
 </ul>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E8%B0%83%E8%AF%95/" rel="tag">调试</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/12/02/%E5%86%8D%E8%B0%88%E4%B8%98%E5%A5%87%E6%95%B0/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          再谈丘奇数
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/10/13/%E8%B0%88%E8%B0%88scheme%E7%9A%84%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          谈谈scheme的高级特性
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

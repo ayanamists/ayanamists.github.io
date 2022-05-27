@@ -1,116 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>谈谈写作软件 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。  排版，一个不应该存在的问题 本文探讨的是【写作系统】。在所谓的【写作】和【排版】之间，是有一道不可逾越的鸿沟的。【写作】时，我们只需要集中精力来【写作】即可。这里的【写作】可以被定义为【输入文本和符号】。【输入文本和符号】这个定义要求我们不能手工调节【文本和符号的属性】，也即是字号、行间距、字体之类的东">
-<meta property="og:type" content="article">
-<meta property="og:title" content="谈谈写作软件">
-<meta property="og:url" content="https://ayanamists.xyz/2020/08/20/2020-8-20-writting/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。  排版，一个不应该存在的问题 本文探讨的是【写作系统】。在所谓的【写作】和【排版】之间，是有一道不可逾越的鸿沟的。【写作】时，我们只需要集中精力来【写作】即可。这里的【写作】可以被定义为【输入文本和符号】。【输入文本和符号】这个定义要求我们不能手工调节【文本和符号的属性】，也即是字号、行间距、字体之类的东">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dcdea14195aa59431c130.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dd0cd14195aa59434915a.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dd20d14195aa59435cbe5.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dd46b14195aa594381c92.gif">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dd57d14195aa594392ba1.gif">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dd70414195aa5943aad96.gif">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dda0d14195aa5943dc3a3.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de08514195aa5944389f7.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de0ae14195aa59443a9ab.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de0e814195aa59443ddeb.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de13714195aa5944429c6.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de1c014195aa59444abd6.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de36014195aa5944637a3.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3de3fd14195aa59446ad86.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dea7614195aa5944dc207.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3deab814195aa5944e0869.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dec5c14195aa5944fd220.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3deca214195aa59450248b.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3deda014195aa594513011.gif">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dee5f14195aa59451fef8.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3dee8714195aa5945224ca.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3deeae14195aa594524e89.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3deedf14195aa594527201.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3def0d14195aa594528f40.jpg">
-<meta property="og:image" content="https://pic.downk.cc/item/5f3def6a14195aa59452c141.jpg">
-<meta property="article:published_time" content="2020-08-20T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="写作">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.downk.cc/item/5f3dcdea14195aa59431c130.jpg">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2020-8-20-writting" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      谈谈写作软件
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-08-20T00:00:00.000Z" itemprop="datePublished">2020-08-20</time>
-
-          
-            × <span class="article-word-count">2.5k words</span>
-            
-            × <span class="article-time-to-read">8 minutes</span>
-            
-          
+        <div class="post-main-title">
+            谈谈写作软件
         </div>
-      </header>
+        <div class="post-meta">
+            2020-08-20
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <p>这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。</p>
 <h2 id="排版一个不应该存在的问题"><a class="markdownIt-Anchor" href="#排版一个不应该存在的问题"></a> 排版，一个不应该存在的问题</h2>
 <p>本文探讨的是【写作系统】。在所谓的【写作】和【排版】之间，是有一道不可逾越的鸿沟的。【写作】时，我们只需要集中精力来【写作】即可。这里的【写作】可以被定义为【输入文本和符号】。【输入文本和符号】这个定义要求我们不能手工调节【文本和符号的属性】，也即是字号、行间距、字体之类的东西。</p>
@@ -122,9 +58,24 @@
 </ul>
 <p>有了这样的抽象以后，我们就无需自己【决定展示层】，我们只需要【决定逻辑层】即可。而相比于指定具体文本的【格式】来说，指定具体文本的【性质】是简单地多的。</p>
 <p>那么，应该如何指定文本的【性质】呢？答案就是输入【控制字符】。以书写本文所采用的Markdown系统为例，本文开头的的源码是：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">author: ayanamists</span><br><span class="line">date: 2020-08-20</span><br><span class="line"><span class="section">title: 谈谈写作软件</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。</span><br><span class="line"></span><br><span class="line"><span class="section">## 排版，一个不应该存在的问题</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="markdown">---
+author: ayanamists
+date: 2020-08-20
+<span class="hljs-section">title: 谈谈写作软件
+---</span>
+
+这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。
+
+<span class="hljs-section">## 排版，一个不应该存在的问题</span>
+</code></pre>
 <p>【排版，一个不应该存在的问题】这个标题的【性质】是如何被指定的呢？答案很简单–使用<code>##</code>符号。这个符号指示后面的文本是一个【二级标题】。既然有【二级标题】，那么自然也就有【一级标题】。实际上，markdown一直可以支持到6级标题：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># a</span></span><br><span class="line"><span class="section">## aa</span></span><br><span class="line"><span class="section">### aaa</span></span><br><span class="line"><span class="section">#### aaaa</span></span><br><span class="line"><span class="section">##### aaaaa</span></span><br><span class="line"><span class="section">###### aaaaaa</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="markdown"><span class="hljs-section"># a</span>
+<span class="hljs-section">## aa</span>
+<span class="hljs-section">### aaa</span>
+<span class="hljs-section">#### aaaa</span>
+<span class="hljs-section">##### aaaaa</span>
+<span class="hljs-section">###### aaaaaa</span>
+</code></pre>
 <p>在本博客的设定中，这些东西会被渲染成以下形式：</p>
 <h1 id="a"><a class="markdownIt-Anchor" href="#a"></a> a</h1>
 <h2 id="aa"><a class="markdownIt-Anchor" href="#aa"></a> aa</h2>
@@ -134,14 +85,18 @@
 <h6 id="aaaaaa"><a class="markdownIt-Anchor" href="#aaaaaa"></a> aaaaaa</h6>
 <p>这样一来，【展示层】和【逻辑层】的分离就用这种非常自然的手段达到了。从【带有控制字符的文本，即源代码】到【最终展示出来的文件】的过程，被称为【渲染】。</p>
 <p>在markdown中，还有其他的很多控制字符，不过这些东西都很简单，例如说，【无序列表】可以这样写：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">+</span> 事物1</span><br><span class="line"><span class="bullet">+</span> 事物2</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="markdown"><span class="hljs-bullet">+ </span>事物1
+<span class="hljs-bullet">+ </span>事物2
+</code></pre>
 <p>它会被渲染为：</p>
 <ul>
 <li>事物1</li>
 <li>事物2</li>
 </ul>
 <p>【有序列表】可以这样写：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 事物1</span><br><span class="line"><span class="bullet">2.</span> 事物2</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="markdown"><span class="hljs-bullet">1. </span>事物1
+<span class="hljs-bullet">2. </span>事物2
+</code></pre>
 <p>它会被渲染为:</p>
 <ol>
 <li>事物1</li>
@@ -186,12 +141,14 @@
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">∀</span></span></span></span></span></p>
 <p>这个【任意】无法通过键盘输入。</p>
 <p>为了解决这个问题，Donald Ervin Knuth发明了TeX系统，它也采用了我们上面所说的【逻辑层和表示层】思想，比如说，在Tex中，</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\forall</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="tex"><span class="hljs-tag">\<span class="hljs-name">forall</span></span>
+</code></pre>
 <p>表示的就是【任意】，它会被【渲染】为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi></mrow><annotation encoding="application/x-tex">\forall
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">∀</span></span></span></span></span></p>
 <p>写一个逻辑表达式：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\forall</span>&#123;x&#125;,P(x)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="tex"><span class="hljs-tag">\<span class="hljs-name">forall</span><span class="hljs-string">&#123;x&#125;</span></span>,P(x)
+</code></pre>
 <p>它会被渲染为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>x</mi><mo separator="true">,</mo><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\forall{x},P(x)
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∀</span><span class="mord"><span class="mord mathdefault">x</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span></span></p>
@@ -267,74 +224,30 @@
 <li>最理想的数学系统的符号是完全语义化的，并可以作为mathematica之类的前端，让写作者彻底把笔纸扔掉。</li>
 </ul>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E5%86%99%E4%BD%9C/" rel="tag">写作</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/08/30/2020-08-30-pl6/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          让我们实现编程语言吧(六) 递归函数的养成方法
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/08/08/2020-8-8-parser3/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          解析CFG，不必复杂解析器
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

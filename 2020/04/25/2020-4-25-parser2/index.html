@@ -1,92 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="词法分析器  为什么要有词法分析器 如何构建一个词法分析器   语法分析器  语法分析器的基本问题 市面上的常见Parser 递归向下解析器 Parser Combinator Parser Generator 算符优先级解析器   从解析树到语法树  递归向下解析器的情况 Yacc的情况   需要注意的几个问题  不要给Parser增加太多负担 最好不要实现Parser     词法分析器 词">
-<meta property="og:type" content="article">
-<meta property="og:title" content="让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树">
-<meta property="og:url" content="https://ayanamists.xyz/2020/04/25/2020-4-25-parser2/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="词法分析器  为什么要有词法分析器 如何构建一个词法分析器   语法分析器  语法分析器的基本问题 市面上的常见Parser 递归向下解析器 Parser Combinator Parser Generator 算符优先级解析器   从解析树到语法树  递归向下解析器的情况 Yacc的情况   需要注意的几个问题  不要给Parser增加太多负担 最好不要实现Parser     词法分析器 词">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-04-25T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="编程语言实现">
-<meta property="article:tag" content="PL">
-<meta property="article:tag" content="Parser">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2020-4-25-parser2" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-25T00:00:00.000Z" itemprop="datePublished">2020-04-25</time>
-
-          
-            × <span class="article-word-count">4.4k words</span>
-            
-            × <span class="article-time-to-read">17 minutes</span>
-            
-          
+        <div class="post-main-title">
+            让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树
         </div>
-      </header>
+        <div class="post-meta">
+            2020-04-25
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <ul>
 <li><a href="#%e8%af%8d%e6%b3%95%e5%88%86%e6%9e%90%e5%99%a8">词法分析器</a>
 <ul>
@@ -167,7 +127,42 @@
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>→</mo><mi>d</mi><mi>B</mi></mrow><annotation encoding="application/x-tex">B \rightarrow dB 
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span></span></p>
 <p>那么，你写出这种函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VALUE <span class="title">handle_A</span><span class="params">(SYMBOL * stream, <span class="type">int</span> pos)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(stream[pos] == a)&#123;</span><br><span class="line">    pos++;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">SUCCESS</span>(<span class="built_in">handle_B</span>(stream, pos)))&#123;</span><br><span class="line">      <span class="keyword">if</span>(stream[pos] == c)&#123;</span><br><span class="line">        pos++;</span><br><span class="line">        <span class="comment">// 变成语法树返回回去</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// error_handle</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="comment">// error_handle</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">// error_handle</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">VALUE <span class="built_in">handle_B</span>(SYMBOL * stream, <span class="type">int</span> pos)&#123;</span><br><span class="line">  <span class="keyword">if</span>(stream[pos] == d)&#123;</span><br><span class="line">    pos++;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">SUCCESS</span>(<span class="built_in">handle_B</span>(stream, pos)))&#123;</span><br><span class="line">      <span class="comment">// 变成语法树返回回去</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="comment">// error_handle</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">// error_handle</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function">VALUE <span class="hljs-title">handle_A</span><span class="hljs-params">(SYMBOL * stream, <span class="hljs-keyword">int</span> pos)</span></span>&#123;
+  <span class="hljs-keyword">if</span>(stream[pos] == a)&#123;
+    pos++;
+    <span class="hljs-keyword">if</span>(SUCCESS(handle_B(stream, pos)))&#123;
+      <span class="hljs-keyword">if</span>(stream[pos] == c)&#123;
+        pos++;
+        <span class="hljs-comment">// 变成语法树返回回去</span>
+      &#125;
+      <span class="hljs-keyword">else</span>&#123;
+        <span class="hljs-comment">// error_handle</span>
+      &#125;
+    &#125;
+    <span class="hljs-keyword">else</span>&#123;
+      <span class="hljs-comment">// error_handle</span>
+    &#125;
+  &#125;
+  <span class="hljs-keyword">else</span>&#123;
+    <span class="hljs-comment">// error_handle</span>
+  &#125;
+&#125;
+
+VALUE handle_B(SYMBOL * stream, <span class="hljs-keyword">int</span> pos)&#123;
+  <span class="hljs-keyword">if</span>(stream[pos] == d)&#123;
+    pos++;
+    <span class="hljs-keyword">if</span>(SUCCESS(handle_B(stream, pos)))&#123;
+      <span class="hljs-comment">// 变成语法树返回回去</span>
+    &#125;
+    <span class="hljs-keyword">else</span>&#123;
+      <span class="hljs-comment">// error_handle</span>
+    &#125;
+  &#125;
+  <span class="hljs-keyword">else</span>&#123;
+    <span class="hljs-comment">// error_handle</span>
+  &#125;
+&#125;
+</code></pre>
 <p>从外形上说，这就是把每一个非终结符写成一个函数，然后在这个函数里处理这个非终结符的内容，并返回成功或失败。</p>
 <p>从本质上说，这是一个自顶向下解析器。它是一个下推自动机，具有一个栈，以如下方式运行：</p>
 <ul>
@@ -210,19 +205,40 @@
 <p>我这里举<a target="_blank" rel="noopener" href="https://www.quanttec.com/fparsec/">FParsec</a>作为例子，看看它是如何构建解析器的：</p>
 <p>FParsec把输入流进行封装。其中最重要的概念就是“position”，即当前要处理的符号串位置。<strong>这里需要特别注意，FParsec只支持将字符串作为输入，无法使用词法分析器，这是其美中不足之处。</strong></p>
 <p>FParsec将解析器定义为一个函数，原型如下：</p>
-  <figure class="highlight f#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Parser</span><span class="operator">&lt;</span><span class="symbol">&#x27;Result</span>, <span class="symbol">&#x27;UserState</span><span class="operator">&gt;</span> <span class="operator">=</span> CharStream<span class="operator">&lt;</span><span class="symbol">&#x27;UserState</span><span class="operator">&gt;</span> <span class="operator">-&gt;</span> Reply<span class="operator">&lt;</span><span class="symbol">&#x27;Result</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="f#">type Parser&lt;'Result, 'UserState&gt; = CharStream&lt;'UserState&gt; -&gt; Reply&lt;'Result&gt;
+</code></pre>
 <p>这里的UserState是我们自己定义的State，一般设为unit（即空类型，没有内容）即可，暂时不去管他；这里的’Result是一个泛型类型，用户可以自己定义结果。</p>
 <p>这个函数的意义是，一个输入为CharStream型，输出为Reply的函数。</p>
 <p>FParsec提供了一些用来从字符构建非终结符的函数，比如说:</p>
-  <figure class="highlight f#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">internal</span> charReturnE (c<span class="operator">:</span> <span class="type">char</span>) result error <span class="operator">:</span> Parser<span class="operator">&lt;</span><span class="symbol">&#x27;a</span>,<span class="symbol">&#x27;u</span><span class="operator">&gt;</span> <span class="operator">=</span></span><br><span class="line">  <span class="keyword">fun</span> stream <span class="operator">-&gt;</span></span><br><span class="line">      <span class="keyword">if</span> stream.Skip(c) <span class="keyword">then</span> Reply(result)</span><br><span class="line">      <span class="keyword">else</span> Reply(<span class="literal">Error</span>, error)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="f#">let internal charReturnE (c: char) result error : Parser&lt;'a,'u&gt; =
+  fun stream -&gt;
+      if stream.Skip(c) then Reply(result)
+      else Reply(Error, error)
+</code></pre>
 <p>我们使用</p>
-  <figure class="highlight f#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a <span class="operator">=</span>  charReturnE <span class="string">&quot;a&quot;</span> <span class="string">&quot;a&quot;</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="f#">let a =  charReturnE &quot;a&quot; &quot;a&quot;
+</code></pre>
 <p>即是定义了非终结符a，对应的字符也是&quot;a&quot;。</p>
 <p>FParsec提供了一系列用于连接符号的函数。</p>
-  <figure class="highlight f#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> (<span class="operator">.&gt;&gt;</span>) (p<span class="operator">:</span> Parser<span class="operator">&lt;</span><span class="symbol">&#x27;a</span>,<span class="symbol">&#x27;u</span><span class="operator">&gt;</span>) (q<span class="operator">:</span> Parser<span class="operator">&lt;</span><span class="symbol">&#x27;b</span>,<span class="symbol">&#x27;u</span><span class="operator">&gt;</span>) <span class="operator">=</span></span><br><span class="line">  <span class="keyword">fun</span> stream <span class="operator">-&gt;</span></span><br><span class="line">      <span class="keyword">let</span> <span class="keyword">mutable</span> reply1 <span class="operator">=</span> p stream</span><br><span class="line">      <span class="keyword">if</span> reply1.Status <span class="operator">=</span> <span class="literal">Ok</span> <span class="keyword">then</span></span><br><span class="line">          <span class="keyword">let</span> stateTag1 <span class="operator">=</span> stream.StateTag</span><br><span class="line">          <span class="keyword">let</span> reply2 <span class="operator">=</span> q stream</span><br><span class="line">          <span class="keyword">let</span> error <span class="operator">=</span> <span class="keyword">if</span> isNull reply1.<span class="literal">Error</span> <span class="keyword">then</span> reply2.<span class="literal">Error</span></span><br><span class="line">                      <span class="keyword">elif</span> stateTag1 <span class="operator">&lt;&gt;</span> stream.StateTag <span class="keyword">then</span> reply2.<span class="literal">Error</span></span><br><span class="line">                      <span class="keyword">else</span> mergeErrors reply2.<span class="literal">Error</span> reply1.<span class="literal">Error</span></span><br><span class="line">          reply1.<span class="literal">Error</span>  <span class="operator">&lt;-</span> error</span><br><span class="line">          reply1.Status <span class="operator">&lt;-</span> reply2.Status</span><br><span class="line">      reply1</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="f#">let (.&gt;&gt;) (p: Parser&lt;'a,'u&gt;) (q: Parser&lt;'b,'u&gt;) =
+  fun stream -&gt;
+      let mutable reply1 = p stream
+      if reply1.Status = Ok then
+          let stateTag1 = stream.StateTag
+          let reply2 = q stream
+          let error = if isNull reply1.Error then reply2.Error
+                      elif stateTag1 &lt;&gt; stream.StateTag then reply2.Error
+                      else mergeErrors reply2.Error reply1.Error
+          reply1.Error  &lt;- error
+          reply1.Status &lt;- reply2.Status
+      reply1
+</code></pre>
 <p>这个符号是将两个非终结符连接起来，形成一个新的非终结符的函数。<br />
 比如说：</p>
-  <figure class="highlight f#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> A <span class="operator">=</span> charReturnE <span class="string">&quot;a&quot;</span> <span class="string">&quot;a&quot;</span></span><br><span class="line"><span class="keyword">let</span> B <span class="operator">=</span> charReturnE <span class="string">&quot;a&quot;</span> <span class="string">&quot;a&quot;</span></span><br><span class="line"><span class="keyword">let</span> C <span class="operator">=</span> A <span class="operator">.&gt;&gt;</span> B</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="f#">let A = charReturnE &quot;a&quot; &quot;a&quot;
+let B = charReturnE &quot;a&quot; &quot;a&quot;
+let C = A .&gt;&gt; B
+</code></pre>
 <p>实际上就是：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mo>→</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">A \rightarrow a 
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span></span></p>
@@ -232,7 +248,17 @@
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span></span></p>
 <p>的实现。</p>
 <p>FParsec本质上是一个回退解析器，但它的性能却相当不错。这是因为它对选择符号(&lt;|&gt;)的实现：</p>
-  <figure class="highlight f#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> (<span class="operator">&lt;|&gt;</span>) (p1<span class="operator">:</span> Parser<span class="operator">&lt;</span><span class="symbol">&#x27;a</span>,<span class="symbol">&#x27;u</span><span class="operator">&gt;</span>) (p2<span class="operator">:</span> Parser<span class="operator">&lt;</span><span class="symbol">&#x27;a</span>,<span class="symbol">&#x27;u</span><span class="operator">&gt;</span>) <span class="operator">:</span> Parser<span class="operator">&lt;</span><span class="symbol">&#x27;a</span>,<span class="symbol">&#x27;u</span><span class="operator">&gt;</span> <span class="operator">=</span></span><br><span class="line">  <span class="keyword">fun</span> stream <span class="operator">-&gt;</span></span><br><span class="line">      <span class="keyword">let</span> <span class="keyword">mutable</span> stateTag <span class="operator">=</span> stream.StateTag</span><br><span class="line">      <span class="keyword">let</span> <span class="keyword">mutable</span> reply <span class="operator">=</span> p1 stream</span><br><span class="line">      <span class="keyword">if</span> reply.Status <span class="operator">=</span> <span class="literal">Error</span> <span class="operator">&amp;&amp;</span> stateTag <span class="operator">=</span> stream.StateTag <span class="keyword">then</span></span><br><span class="line">          <span class="keyword">let</span> error <span class="operator">=</span> reply.<span class="literal">Error</span></span><br><span class="line">          reply <span class="operator">&lt;-</span> p2 stream</span><br><span class="line">          <span class="keyword">if</span> stateTag <span class="operator">=</span> stream.StateTag <span class="keyword">then</span></span><br><span class="line">              reply.<span class="literal">Error</span> <span class="operator">&lt;-</span> mergeErrors reply.<span class="literal">Error</span> error</span><br><span class="line">      reply</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="f#">let (&lt;|&gt;) (p1: Parser&lt;'a,'u&gt;) (p2: Parser&lt;'a,'u&gt;) : Parser&lt;'a,'u&gt; =
+  fun stream -&gt;
+      let mutable stateTag = stream.StateTag
+      let mutable reply = p1 stream
+      if reply.Status = Error &amp;&amp; stateTag = stream.StateTag then
+          let error = reply.Error
+          reply &lt;- p2 stream
+          if stateTag = stream.StateTag then
+              reply.Error &lt;- mergeErrors reply.Error error
+      reply
+</code></pre>
 <p>我们看到，如果第一个Parser失败，<strong>当且仅当在stateTag没有改变时</strong>，才会进行用第二个Parser进行解析。</p>
 <p>这个stateTag，实际上就是position，也就是是当前解析到的位置。如此设计，保证了这个Parser<strong>仅仅会回退一个字符</strong>，因为如果第一个字符是匹配的，position就发生了变化。如此设计，使得它在某种意义上具有了$$LL(1)$$的特性。</p>
 <p>当然，我们也可以使用attempt强行使它回退。</p>
@@ -271,19 +297,107 @@
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">t</span><span class="mord">∣</span><span class="mopen">(</span><span class="mord mathdefault">A</span><span class="mclose">)</span></span></span></span></span></p>
 <p>这文法定义了一个支持加乘两种运算的式子。</p>
 <p>我们用C#实现一下；</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">RecursiveDesentParser</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Parser</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">string</span> Target &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="built_in">int</span> pointer = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">private</span> Node head = <span class="keyword">new</span> Node(<span class="string">&quot;S&quot;</span>);</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Parser</span>(<span class="params"><span class="built_in">string</span> s</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            Target = s;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">Parse</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> success = (head = ParseA()) != <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">return</span> ParseEpsilon() &amp;&amp; success;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> Node <span class="title">ParseA</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            Node now = ParseM();</span><br><span class="line">            <span class="keyword">if</span> (now != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (ParseChar(<span class="string">&#x27;+&#x27;</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    List&lt;Node&gt; nodes = <span class="keyword">new</span> List&lt;Node&gt;();</span><br><span class="line">                    nodes.Add(now);</span><br><span class="line">                    <span class="keyword">var</span> tail = ParseA();</span><br><span class="line">                    nodes.Add(tail);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Node(<span class="string">&quot;+&quot;</span>, nodes);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123; <span class="keyword">return</span> now; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> Node <span class="title">ParseM</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            Node now = ParseD();</span><br><span class="line">            <span class="keyword">if</span>(now != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (ParseChar(<span class="string">&#x27;*&#x27;</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    List&lt;Node&gt; nodes = <span class="keyword">new</span> List&lt;Node&gt;();</span><br><span class="line">                    nodes.Add(now);</span><br><span class="line">                    <span class="keyword">var</span> tail = ParseM();</span><br><span class="line">                    nodes.Add(tail);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">new</span> Node(<span class="string">&quot;*&quot;</span>, nodes);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123; <span class="keyword">return</span> now; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 以下代码略</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c#">
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">RecursiveDesentParser</span>
+&#123;
+    <span class="hljs-keyword">class</span> <span class="hljs-title">Parser</span>
+    &#123;
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> Target &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> pointer = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">private</span> Node head = <span class="hljs-keyword">new</span> Node(<span class="hljs-string">"S"</span>);
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Parser</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> s</span>)</span>
+        &#123;
+            Target = s;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">Parse</span>(<span class="hljs-params"></span>)</span>
+        &#123;
+            <span class="hljs-keyword">var</span> success = (head = ParseA()) != <span class="hljs-literal">null</span>;
+            <span class="hljs-keyword">return</span> ParseEpsilon() &amp;&amp; success;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">ParseA</span>(<span class="hljs-params"></span>)</span>
+        &#123;
+            Node now = ParseM();
+            <span class="hljs-keyword">if</span> (now != <span class="hljs-literal">null</span>)
+            &#123;
+                <span class="hljs-keyword">if</span> (ParseChar(<span class="hljs-string">'+'</span>))
+                &#123;
+                    List&lt;Node&gt; nodes = <span class="hljs-keyword">new</span> List&lt;Node&gt;();
+                    nodes.Add(now);
+                    <span class="hljs-keyword">var</span> tail = ParseA();
+                    nodes.Add(tail);
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Node(<span class="hljs-string">"+"</span>, nodes);
+                &#125;
+                <span class="hljs-keyword">else</span> &#123; <span class="hljs-keyword">return</span> now; &#125;
+            &#125;
+            <span class="hljs-keyword">else</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; &#125;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">ParseM</span>(<span class="hljs-params"></span>)</span>
+        &#123;
+            Node now = ParseD();
+            <span class="hljs-keyword">if</span>(now != <span class="hljs-literal">null</span>)
+            &#123;
+                <span class="hljs-keyword">if</span> (ParseChar(<span class="hljs-string">'*'</span>))
+                &#123;
+                    List&lt;Node&gt; nodes = <span class="hljs-keyword">new</span> List&lt;Node&gt;();
+                    nodes.Add(now);
+                    <span class="hljs-keyword">var</span> tail = ParseM();
+                    nodes.Add(tail);
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Node(<span class="hljs-string">"*"</span>, nodes);
+                &#125;
+                <span class="hljs-keyword">else</span> &#123; <span class="hljs-keyword">return</span> now; &#125;
+            &#125;
+            <span class="hljs-keyword">else</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; &#125;
+        &#125;
+        <span class="hljs-comment">// 以下代码略</span>
+    &#125;
+&#125;
+</code></pre>
 <p>现在来解析这样的式子:</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>∗</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">1 + 2 * 3 
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span></span></span></span></span></p>
 <p>为了更好地展示解析的过程，我们需要把整个解析的所有调用都画出来：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ParseA</span><br><span class="line">  ParseM</span><br><span class="line">    ParseD : 1</span><br><span class="line">  ParseChar : +</span><br><span class="line">  ParseA</span><br><span class="line">    ParseM</span><br><span class="line">      ParseD : 2</span><br><span class="line">      ParseChar : *</span><br><span class="line">      ParseM</span><br><span class="line">        ParseD : 3</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="shell">ParseA
+  ParseM
+    ParseD : 1
+  ParseChar : +
+  ParseA
+    ParseM
+      ParseD : 2
+      ParseChar : *
+      ParseM
+        ParseD : 3
+</code></pre>
 <p>我们发现：<strong>调用函数的过程，自然地形成了一颗解析树！</strong>，这也正是递归向下解析器的一大特性。</p>
 <p>调用函数的过程本身就是解析树，将解析树映射为语法树的做法就呼之欲出了：将返回值作为语法树的节点，在每个函数内部实现解析树到语法树的节点的映射：</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">ParseA</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    Node now = ParseM();</span><br><span class="line">    <span class="keyword">if</span> (now != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (ParseChar(<span class="string">&#x27;+&#x27;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;Node&gt; nodes = <span class="keyword">new</span> List&lt;Node&gt;();</span><br><span class="line">            nodes.Add(now);</span><br><span class="line">            <span class="keyword">var</span> tail = ParseA();</span><br><span class="line">            nodes.Add(tail);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Node(<span class="string">&quot;+&quot;</span>, nodes);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="keyword">return</span> now; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">null</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c#"><span class="hljs-function"><span class="hljs-keyword">private</span> Node <span class="hljs-title">ParseA</span>(<span class="hljs-params"></span>)</span>
+&#123;
+    Node now = ParseM();
+    <span class="hljs-keyword">if</span> (now != <span class="hljs-literal">null</span>)
+    &#123;
+        <span class="hljs-keyword">if</span> (ParseChar(<span class="hljs-string">'+'</span>))
+        &#123;
+            List&lt;Node&gt; nodes = <span class="hljs-keyword">new</span> List&lt;Node&gt;();
+            nodes.Add(now);
+            <span class="hljs-keyword">var</span> tail = ParseA();
+            nodes.Add(tail);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Node(<span class="hljs-string">"+"</span>, nodes);
+        &#125;
+        <span class="hljs-keyword">else</span> &#123; <span class="hljs-keyword">return</span> now; &#125;
+    &#125;
+    <span class="hljs-keyword">else</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; &#125;
+&#125;
+</code></pre>
 <p>在这个函数里，我们把自然形成的这个解析树：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A</span><br><span class="line">  M</span><br><span class="line">  +</span><br><span class="line">  A</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="shell">A
+  M
+  +
+  A
+</code></pre>
 <p>映射成了这样的语法树：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+</span><br><span class="line">  M</span><br><span class="line">  A</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="shell">+
+  M
+  A
+</code></pre>
 <h3 id="yacc的情况"><a class="markdownIt-Anchor" href="#yacc的情况"></a> Yacc的情况</h3>
 <p>yacc是一个LALR(1)文法的Parser Generator. 它产生的分析器是一个自底向上的确定型分析器。</p>
 <p>自底向上的意思是，它对应一个这样的自动机：</p>
@@ -336,90 +450,73 @@
 <li>符号栈：我们刚才说得用来分析的栈。</li>
 </ul>
 <p>这两个栈到底是怎么一回事呢？我们来看一个例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">%&#123;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> typedef struct node</span><br><span class="line"> &#123;</span><br><span class="line"> struct node *left;</span><br><span class="line"> struct node *right;</span><br><span class="line"> char *token;</span><br><span class="line"> &#125; node;</span><br><span class="line"> node *mknode(node *left, node *right, char *token);</span><br><span class="line"> void printtree(node *tree);</span><br><span class="line">#define YYSTYPE struct node *</span><br><span class="line">%&#125; </span><br><span class="line"></span><br><span class="line">exp : term &#123;$$ = $1;&#125;</span><br><span class="line"> | exp PLUS term &#123;$$ = mknode($1, $3, &quot;+&quot;);&#125;</span><br><span class="line"> | exp MINUS term &#123;$$ = mknode($1, $3, &quot;-&quot;);&#125; </span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="yacc">
+%&#123;
+#include &lt;stdio.h&gt;
+ typedef struct node
+ &#123;
+ struct node *left;
+ struct node *right;
+ char *token;
+ &#125; node;
+ node *mknode(node *left, node *right, char *token);
+ void printtree(node *tree);
+#define YYSTYPE struct node *
+%&#125; 
+
+exp : term &#123;$$ = $1;&#125;
+ | exp PLUS term &#123;$$ = mknode($1, $3, &quot;+&quot;);&#125;
+ | exp MINUS term &#123;$$ = mknode($1, $3, &quot;-&quot;);&#125; 
+</code></pre>
 <p>不难看出，node是语法树的节点类型，而那句</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> YYSTYPE struct node *</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> YYSTYPE struct node *</span>
+
+</code></pre>
 <p>就是将内容栈的元素类型定义为node*指针类型。</p>
 <p>下面的那句</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">exp : term &#123;$$ = $1;&#125;</span><br><span class="line"> | exp PLUS term &#123;$$ = mknode($1, $3, &quot;+&quot;);&#125;</span><br><span class="line"> | exp MINUS term &#123;$$ = mknode($1, $3, &quot;-&quot;);&#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="yacc">
+exp : term &#123;$$ = $1;&#125;
+ | exp PLUS term &#123;$$ = mknode($1, $3, &quot;+&quot;);&#125;
+ | exp MINUS term &#123;$$ = mknode($1, $3, &quot;-&quot;);&#125; 
+
+</code></pre>
 <p>如果除去大括号，就是生成文法；而大括号里面的内容，则是对每条文法在<strong>内容栈</strong>上的操作，这个写法表示，在运用这条文法进行规约时，将内容栈上的对应元素拿出，并压入新构造的node*指针。</p>
 <p>这样一来，我们又实现了从解析树映射到语法树的操作。</p>
 <h2 id="需要注意的几个问题"><a class="markdownIt-Anchor" href="#需要注意的几个问题"></a> 需要注意的几个问题</h2>
 <h3 id="不要给parser增加太多负担"><a class="markdownIt-Anchor" href="#不要给parser增加太多负担"></a> 不要给Parser增加太多负担</h3>
 <p>有些人想要在解析阶段就识别出来这种语法错误：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> a = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">a</span>();</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">char</span> a = <span class="hljs-number">0</span>;
+a();
+</code></pre>
 <p>如果真的想做，这需要CSG解析。而CSG解析并没有一个很好的算法，所以，应该放弃这种不切实际的想法，在后面的阶段再检查这种错误。</p>
 <h3 id="最好不要实现parser"><a class="markdownIt-Anchor" href="#最好不要实现parser"></a> 最好不要实现Parser</h3>
 <p>通过上面的描述，可以看到Parser是一个苦大仇深的行业。如果你实现一个复杂的语法，它的Parser会非常复杂，这会耗尽你对程序语言的热情。所以，让我们一起来实现Lisp吧！</p>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%AD%A6%E6%9C%AF/">学术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/PL/" rel="tag">PL</a>, <a class="article-tag-none-link" href="/tags/Parser/" rel="tag">Parser</a>, <a class="article-tag-none-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0/" rel="tag">编程语言实现</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/04/27/2020-04-27-%E7%AB%B9%E7%AC%8B/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          如何正确地烹制春笋
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/04/21/2020-04-21-CLanguage/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          谈谈C语言的两个问题
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

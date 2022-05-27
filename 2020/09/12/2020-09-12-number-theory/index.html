@@ -1,93 +1,59 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>数论中的几个问题 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="辗转相除法的正确性 凡是学过编程的人，几乎没有不知道【辗转相除法】，或者【欧几里得算法】的。用scheme写出来，就是这样： 1234(define (gcd a b)  (if (&#x3D; b 0)      a      (gcd b (modulo a b)))) 大部分人还知道，GCD的理论基础是： (a mod b&#x3D;c)→GCD(a,b)&#x3D;GCD(b,c)(a\ mod\ b &#x3D; c) \r">
-<meta property="og:type" content="article">
-<meta property="og:title" content="数论中的几个问题">
-<meta property="og:url" content="https://ayanamists.xyz/2020/09/12/2020-09-12-number-theory/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="辗转相除法的正确性 凡是学过编程的人，几乎没有不知道【辗转相除法】，或者【欧几里得算法】的。用scheme写出来，就是这样： 1234(define (gcd a b)  (if (&#x3D; b 0)      a      (gcd b (modulo a b)))) 大部分人还知道，GCD的理论基础是： (a mod b&#x3D;c)→GCD(a,b)&#x3D;GCD(b,c)(a\ mod\ b &#x3D; c) \r">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-09-12T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="数论">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2020-09-12-number-theory" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      数论中的几个问题
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-09-12T00:00:00.000Z" itemprop="datePublished">2020-09-12</time>
-
-          
-            × <span class="article-word-count">1.8k words</span>
-            
-            × <span class="article-time-to-read">8 minutes</span>
-            
-          
+        <div class="post-main-title">
+            数论中的几个问题
         </div>
-      </header>
+        <div class="post-meta">
+            2020-09-12
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="辗转相除法的正确性"><a class="markdownIt-Anchor" href="#辗转相除法的正确性"></a> 辗转相除法的正确性</h2>
 <p>凡是学过编程的人，几乎没有不知道【辗转相除法】，或者【欧几里得算法】的。用scheme写出来，就是这样：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name"><span class="built_in">gcd</span></span> a b)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> b <span class="number">0</span>)</span><br><span class="line">      a</span><br><span class="line">      (<span class="name"><span class="built_in">gcd</span></span> b (<span class="name"><span class="built_in">modulo</span></span> a b))))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">gcd</span></span> a b)
+  (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> b <span class="hljs-number">0</span>)
+      a
+      (<span class="hljs-name"><span class="hljs-builtin-name">gcd</span></span> b (<span class="hljs-name"><span class="hljs-builtin-name">modulo</span></span> a b))))
+</code></pre>
 <p>大部分人还知道，GCD的理论基础是：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mtext> </mtext><mi>m</mi><mi>o</mi><mi>d</mi><mtext> </mtext><mi>b</mi><mo>=</mo><mi>c</mi><mo stretchy="false">)</mo><mo>→</mo><mi>G</mi><mi>C</mi><mi>D</mi><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mi>G</mi><mi>C</mi><mi>D</mi><mo stretchy="false">(</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a\ mod\ b = c) \rightarrow
 GCD(a,b) = GCD(b,c)
@@ -191,76 +157,97 @@ LCM(a,b)=[\max(a_0,b_0),\max(a_1,b_1),...]
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span></span></span></span></span></p>
 <h2 id="关于二次剩余的求解"><a class="markdownIt-Anchor" href="#关于二次剩余的求解"></a> 关于二次剩余的求解</h2>
 <p>互联网上的二次剩余求解大都是基于【扩域】的算法，但在《信息安全数学基础》这们课里，老师教给我们的算法却不是这样的。这里给出Racket代码，请自行研究其内涵吧：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">#lang racket</span><br><span class="line"></span><br><span class="line">(#%require (<span class="name">only</span> racket/base random))</span><br><span class="line">(#%require math/number-theory)</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">modulo-muti</span> a b p)</span><br><span class="line">  (<span class="name"><span class="built_in">modulo</span></span> (<span class="name"><span class="built_in">*</span></span> a b) p))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> fast-pow</span><br><span class="line">  (<span class="name"><span class="built_in">lambda</span></span> (a b p)</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> b <span class="number">0</span>)</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">        (<span class="name"><span class="built_in">let</span></span> ((<span class="name">ret</span> (<span class="name">fast-pow</span> a (<span class="name"><span class="built_in">floor</span></span> (<span class="name"><span class="built_in">/</span></span> b <span class="number">2</span>)) p)))</span><br><span class="line">          (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> (<span class="name"><span class="built_in">modulo</span></span> b <span class="number">2</span>) <span class="number">1</span>)</span><br><span class="line">              (<span class="name">modulo-muti</span> (<span class="name">modulo-muti</span> ret ret p) a p)</span><br><span class="line">              (<span class="name">modulo-muti</span> ret ret p))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> Euler-pre</span><br><span class="line">  (<span class="name"><span class="built_in">lambda</span></span> (a p)</span><br><span class="line">    (<span class="name"><span class="built_in">=</span></span> <span class="number">1</span> (<span class="name">fast-pow</span> a (<span class="name"><span class="built_in">/</span></span> (<span class="name"><span class="built_in">-</span></span> p <span class="number">1</span>) <span class="number">2</span>) p))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">rand-choose</span> p)</span><br><span class="line">  (<span class="name"><span class="built_in">let</span></span> ((<span class="name">this-time</span> (<span class="name">random</span> p)))</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">or</span></span></span><br><span class="line">         (<span class="name"><span class="built_in">=</span></span> (<span class="name"><span class="built_in">modulo</span></span> this-time p) <span class="number">0</span>)</span><br><span class="line">         (<span class="name">Euler-pre</span> this-time p))</span><br><span class="line">        (<span class="name">rand-choose</span> p)</span><br><span class="line">        this-time)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">get-2^n</span> p)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> (<span class="name"><span class="built_in">modulo</span></span> p <span class="number">2</span>) <span class="number">0</span>)</span><br><span class="line">      (<span class="name"><span class="built_in">let</span></span> ((<span class="name">res</span> (<span class="name">get-2^n</span> (<span class="name"><span class="built_in">/</span></span> p <span class="number">2</span>))))</span><br><span class="line">        (<span class="name"><span class="built_in">cons</span></span> (<span class="name"><span class="built_in">+</span></span> (<span class="name"><span class="built_in">car</span></span> res) <span class="number">1</span>)</span><br><span class="line">              (<span class="name"><span class="built_in">cdr</span></span> res)))</span><br><span class="line">      (<span class="name"><span class="built_in">cons</span></span> <span class="number">0</span> p)))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">pow</span> a b)</span><br><span class="line">  (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> b <span class="number">0</span>)</span><br><span class="line">      <span class="number">1</span></span><br><span class="line">      (<span class="name"><span class="built_in">*</span></span> a (<span class="name">pow</span> a (<span class="name"><span class="built_in">-</span></span> b <span class="number">1</span>)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">solve-quad-res</span> a p)</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> a-1 (<span class="name">modular-inverse</span> a p))</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> t (<span class="name"><span class="built_in">car</span></span> (<span class="name">get-2^n</span> (<span class="name"><span class="built_in">-</span></span> p <span class="number">1</span>))))</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> s (<span class="name"><span class="built_in">cdr</span></span> (<span class="name">get-2^n</span> (<span class="name"><span class="built_in">-</span></span> p <span class="number">1</span>))))</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> b (<span class="name">pow</span> (<span class="name">rand-choose</span> p) s))</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> (<span class="name">solve</span> x_t t-k)</span><br><span class="line">    <span class="comment">;(printf &quot;~a ~a ~n&quot; x_t t-k)</span></span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> t-k <span class="number">0</span>)</span><br><span class="line">        x_t</span><br><span class="line">        (<span class="name"><span class="built_in">let*</span></span> ((<span class="name">a-1x^2</span> (<span class="name">modulo-muti</span> a-1 (<span class="name">modulo-muti</span> x_t x_t p) p))</span><br><span class="line">              (<span class="name">y^t-k-1</span> (<span class="name">fast-pow</span> a-1x^2 (<span class="name">pow</span> <span class="number">2</span> (<span class="name"><span class="built_in">-</span></span> t-k <span class="number">1</span>)) p)))</span><br><span class="line">          (<span class="name">solve</span></span><br><span class="line">           (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> y^t-k-1 <span class="number">1</span>)</span><br><span class="line">               x_t</span><br><span class="line">               (<span class="name">modulo-muti</span> x_t (<span class="name">fast-pow</span> b (<span class="name">pow</span> <span class="number">2</span> (<span class="name"><span class="built_in">-</span></span> (<span class="name"><span class="built_in">-</span></span> t <span class="number">1</span>) t-k)) p) p))</span><br><span class="line">           (<span class="name"><span class="built_in">-</span></span> t-k <span class="number">1</span>)))))</span><br><span class="line">  (<span class="name">solve</span> (<span class="name">fast-pow</span> a (<span class="name"><span class="built_in">/</span></span> (<span class="name"><span class="built_in">+</span></span> s <span class="number">1</span>) <span class="number">2</span>) p) (<span class="name"><span class="built_in">-</span></span> t <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">solve-quad-res</span> <span class="number">186</span> <span class="number">401</span>)</span><br><span class="line">(<span class="name">solve-quad-res</span> <span class="number">2</span> <span class="number">401</span>)</span><br><span class="line">(<span class="name">solve-quad-res</span> <span class="number">3</span> <span class="number">401</span>)</span><br><span class="line">(<span class="name">solve-quad-res</span> <span class="number">5</span> <span class="number">401</span>)</span><br><span class="line">(<span class="name">solve-quad-res</span> <span class="number">7</span> <span class="number">401</span>)</span><br><span class="line">(<span class="name">solve-quad-res</span> <span class="number">11</span> <span class="number">401</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">#lang racket
 
-      
+(#%require (<span class="hljs-name">only</span> racket/base random))
+(#%require math/number-theory)
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">modulo-muti</span> a b p)
+  (<span class="hljs-name"><span class="hljs-builtin-name">modulo</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> a b) p))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> fast-pow
+  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (a b p)
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> b <span class="hljs-number">0</span>)
+        <span class="hljs-number">1</span>
+        (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ((<span class="hljs-name">ret</span> (<span class="hljs-name">fast-pow</span> a (<span class="hljs-name"><span class="hljs-builtin-name">floor</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">/</span></span> b <span class="hljs-number">2</span>)) p)))
+          (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">modulo</span></span> b <span class="hljs-number">2</span>) <span class="hljs-number">1</span>)
+              (<span class="hljs-name">modulo-muti</span> (<span class="hljs-name">modulo-muti</span> ret ret p) a p)
+              (<span class="hljs-name">modulo-muti</span> ret ret p))))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> Euler-pre
+  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (a p)
+    (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> <span class="hljs-number">1</span> (<span class="hljs-name">fast-pow</span> a (<span class="hljs-name"><span class="hljs-builtin-name">/</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> p <span class="hljs-number">1</span>) <span class="hljs-number">2</span>) p))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">rand-choose</span> p)
+  (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ((<span class="hljs-name">this-time</span> (<span class="hljs-name">random</span> p)))
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">or</span></span>
+         (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">modulo</span></span> this-time p) <span class="hljs-number">0</span>)
+         (<span class="hljs-name">Euler-pre</span> this-time p))
+        (<span class="hljs-name">rand-choose</span> p)
+        this-time)))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">get-2^n</span> p)
+  (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">modulo</span></span> p <span class="hljs-number">2</span>) <span class="hljs-number">0</span>)
+      (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ((<span class="hljs-name">res</span> (<span class="hljs-name">get-2^n</span> (<span class="hljs-name"><span class="hljs-builtin-name">/</span></span> p <span class="hljs-number">2</span>))))
+        (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> res) <span class="hljs-number">1</span>)
+              (<span class="hljs-name"><span class="hljs-builtin-name">cdr</span></span> res)))
+      (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> <span class="hljs-number">0</span> p)))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">pow</span> a b)
+  (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> b <span class="hljs-number">0</span>)
+      <span class="hljs-number">1</span>
+      (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> a (<span class="hljs-name">pow</span> a (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> b <span class="hljs-number">1</span>)))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">solve-quad-res</span> a p)
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a-1 (<span class="hljs-name">modular-inverse</span> a p))
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> t (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> (<span class="hljs-name">get-2^n</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> p <span class="hljs-number">1</span>))))
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> s (<span class="hljs-name"><span class="hljs-builtin-name">cdr</span></span> (<span class="hljs-name">get-2^n</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> p <span class="hljs-number">1</span>))))
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> b (<span class="hljs-name">pow</span> (<span class="hljs-name">rand-choose</span> p) s))
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">solve</span> x_t t-k)
+    <span class="hljs-comment">;(printf "~a ~a ~n" x_t t-k)</span>
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> t-k <span class="hljs-number">0</span>)
+        x_t
+        (<span class="hljs-name"><span class="hljs-builtin-name">let*</span></span> ((<span class="hljs-name">a-1x^2</span> (<span class="hljs-name">modulo-muti</span> a-1 (<span class="hljs-name">modulo-muti</span> x_t x_t p) p))
+              (<span class="hljs-name">y^t-k-1</span> (<span class="hljs-name">fast-pow</span> a-1x^2 (<span class="hljs-name">pow</span> <span class="hljs-number">2</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> t-k <span class="hljs-number">1</span>)) p)))
+          (<span class="hljs-name">solve</span>
+           (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> y^t-k-1 <span class="hljs-number">1</span>)
+               x_t
+               (<span class="hljs-name">modulo-muti</span> x_t (<span class="hljs-name">fast-pow</span> b (<span class="hljs-name">pow</span> <span class="hljs-number">2</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> t <span class="hljs-number">1</span>) t-k)) p) p))
+           (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> t-k <span class="hljs-number">1</span>)))))
+  (<span class="hljs-name">solve</span> (<span class="hljs-name">fast-pow</span> a (<span class="hljs-name"><span class="hljs-builtin-name">/</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> s <span class="hljs-number">1</span>) <span class="hljs-number">2</span>) p) (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> t <span class="hljs-number">1</span>)))
+
+(<span class="hljs-name">solve-quad-res</span> <span class="hljs-number">186</span> <span class="hljs-number">401</span>)
+(<span class="hljs-name">solve-quad-res</span> <span class="hljs-number">2</span> <span class="hljs-number">401</span>)
+(<span class="hljs-name">solve-quad-res</span> <span class="hljs-number">3</span> <span class="hljs-number">401</span>)
+(<span class="hljs-name">solve-quad-res</span> <span class="hljs-number">5</span> <span class="hljs-number">401</span>)
+(<span class="hljs-name">solve-quad-res</span> <span class="hljs-number">7</span> <span class="hljs-number">401</span>)
+(<span class="hljs-name">solve-quad-res</span> <span class="hljs-number">11</span> <span class="hljs-number">401</span>)
+</code></pre>
+
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%AD%A6%E6%9C%AF/">学术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E6%95%B0%E8%AE%BA/" rel="tag">数论</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/09/15/2020-09-25-fuck-the-signal/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          f(x)记法的滥用与匿名函数
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/08/30/2020-08-30-pl5/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          让我们实现编程语言吧(五) 解释器模型
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

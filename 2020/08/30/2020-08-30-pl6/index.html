@@ -1,93 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>让我们实现编程语言吧(六) 递归函数的养成方法 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="lambda表达式的递归 我们知道，一般的lambda表达式会将let实现为： (let x &#x3D; expr1 in expr2)≡(λx.expr2)expr1(let\ x\ &#x3D;\ expr1 \ in\ expr2) \equiv (\lambda x.expr2)expr1 (let x &#x3D; expr1 in expr2)≡(λx.expr2)expr1 这样一来，在expr1中，x的绑定">
-<meta property="og:type" content="article">
-<meta property="og:title" content="让我们实现编程语言吧(六) 递归函数的养成方法">
-<meta property="og:url" content="https://ayanamists.xyz/2020/08/30/2020-08-30-pl6/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="lambda表达式的递归 我们知道，一般的lambda表达式会将let实现为： (let x &#x3D; expr1 in expr2)≡(λx.expr2)expr1(let\ x\ &#x3D;\ expr1 \ in\ expr2) \equiv (\lambda x.expr2)expr1 (let x &#x3D; expr1 in expr2)≡(λx.expr2)expr1 这样一来，在expr1中，x的绑定">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic.downk.cc/item/5f4b5350160a154a67667115.jpg">
-<meta property="article:published_time" content="2020-08-30T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="函数式编程">
-<meta property="article:tag" content="编程语言实现">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.downk.cc/item/5f4b5350160a154a67667115.jpg">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2020-08-30-pl6" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      让我们实现编程语言吧(六) 递归函数的养成方法
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-08-30T00:00:00.000Z" itemprop="datePublished">2020-08-30</time>
-
-          
-            × <span class="article-word-count">2.3k words</span>
-            
-            × <span class="article-time-to-read">10 minutes</span>
-            
-          
+        <div class="post-main-title">
+            让我们实现编程语言吧(六) 递归函数的养成方法
         </div>
-      </header>
+        <div class="post-meta">
+            2020-08-30
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="lambda表达式的递归"><a class="markdownIt-Anchor" href="#lambda表达式的递归"></a> lambda表达式的递归</h2>
 <p>我们知道，一般的lambda表达式会将let实现为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">(</mo><mi>l</mi><mi>e</mi><mi>t</mi><mtext> </mtext><mi>x</mi><mtext> </mtext><mo>=</mo><mtext> </mtext><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mn>1</mn><mtext> </mtext><mi>i</mi><mi>n</mi><mtext> </mtext><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mn>2</mn><mo stretchy="false">)</mo><mo>≡</mo><mo stretchy="false">(</mo><mi>λ</mi><mi>x</mi><mi mathvariant="normal">.</mi><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mn>2</mn><mo stretchy="false">)</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">(let\ x\ =\ expr1 \ in\ expr2) \equiv (\lambda x.expr2)expr1
@@ -165,12 +124,28 @@ f \equiv (expr1\ f) \\
 <li><code>(late)</code>可以进行求值</li>
 </ol>
 <p>根据这个套路，我们写出：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">y-combinator1</span> f)</span><br><span class="line">  (<span class="name">λ</span> ()</span><br><span class="line">    ((<span class="name">λ</span> (<span class="name">x</span>) (<span class="name">f</span> (<span class="name">λ</span> () (<span class="name">x</span> x))))</span><br><span class="line">     (<span class="name">λ</span> (<span class="name">x</span>) (<span class="name">f</span> (<span class="name">λ</span> () (<span class="name">x</span> x)))))))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">y-combinator1</span> f)
+  (<span class="hljs-name">λ</span> ()
+    ((<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>) (<span class="hljs-name">f</span> (<span class="hljs-name">λ</span> () (<span class="hljs-name">x</span> x))))
+     (<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>) (<span class="hljs-name">f</span> (<span class="hljs-name">λ</span> () (<span class="hljs-name">x</span> x)))))))
+</code></pre>
 <p>不过这样一来，参数位置上的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span></span></span></span>就会被变成<code>(λ () ... )</code>，我们需要显式地对它求值：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factor-f</span> f)</span><br><span class="line">  (<span class="name">λ</span> (<span class="name">x</span>)</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">        (<span class="name"><span class="built_in">*</span></span> x ((<span class="name">f</span>) (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> factor</span><br><span class="line">  (<span class="name">y-combinator1</span> factor-f))</span><br><span class="line"></span><br><span class="line">((<span class="name">factor</span>) <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">factor-f</span> f)
+  (<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>)
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> x <span class="hljs-number">0</span>)
+        <span class="hljs-number">1</span>
+        (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> x ((<span class="hljs-name">f</span>) (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> x <span class="hljs-number">1</span>))))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> factor
+  (<span class="hljs-name">y-combinator1</span> factor-f))
+
+((<span class="hljs-name">factor</span>) <span class="hljs-number">10</span>)
+</code></pre>
 <p>有没有能【无损】地进行【惰性求值】的方法呢？</p>
 <p>我在初学<code>scheme</code>时，曾经有过这样的疑问：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cos <span class="comment">;形式1</span></span><br><span class="line">(<span class="name"><span class="built_in">lambda</span></span> (x) (<span class="name"><span class="built_in">cos</span></span> x)) <span class="comment">;形式2</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">cos <span class="hljs-comment">;形式1</span>
+(<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x) (<span class="hljs-name"><span class="hljs-builtin-name">cos</span></span> x)) <span class="hljs-comment">;形式2</span>
+</code></pre>
 <p>这两个形式究竟有什么区别呢？</p>
 <p>在真正地思考过后，我们会发现，形式1是在【得到函数对象的值】，而形式2只有当【函数对象的参数给出后】才会【得到函数对象的值】.</p>
 <p>简单地说，在形式2中，<code>cos</code>这个函数被【惰性化】了！</p>
@@ -185,14 +160,51 @@ f \equiv (expr1\ f) \\
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>λ</mi><mi>a</mi><mi mathvariant="normal">.</mi><mi>f</mi><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>λ</mi><mi>x</mi><mi mathvariant="normal">.</mi><mi>λ</mi><mi>a</mi><mi mathvariant="normal">.</mi><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mi>x</mi><mo stretchy="false">)</mo><mi>a</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>λ</mi><mi>x</mi><mi mathvariant="normal">.</mi><mi>λ</mi><mi>a</mi><mi mathvariant="normal">.</mi><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mi>x</mi><mo stretchy="false">)</mo><mi>a</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">\lambda a.f((\lambda x.\lambda a.f(xx)a)(\lambda x.\lambda a.f(xx)a))a
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">λ</span><span class="mord mathdefault">a</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mopen">(</span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord">.</span><span class="mord mathdefault">λ</span><span class="mord mathdefault">a</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mord mathdefault">a</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathdefault">λ</span><span class="mord mathdefault">x</span><span class="mord">.</span><span class="mord mathdefault">λ</span><span class="mord mathdefault">a</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mord mathdefault">a</span><span class="mclose">)</span><span class="mclose">)</span><span class="mord mathdefault">a</span></span></span></span></span></p>
 <p>而这，就是所谓的Z-combinator. 利用它，我们可以实现我们的真正目标：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">y-combinator2</span> f)</span><br><span class="line">  ((<span class="name">λ</span> (<span class="name">x</span>) (<span class="name">λ</span> (<span class="name">a</span>) ((<span class="name">f</span> (<span class="name">x</span> x)) a)))</span><br><span class="line">   (<span class="name">λ</span> (<span class="name">x</span>) (<span class="name">λ</span> (<span class="name">a</span>) ((<span class="name">f</span> (<span class="name">x</span> x)) a)))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">y-combinator2-let</span> f)</span><br><span class="line">  (<span class="name"><span class="built_in">let</span></span> ([<span class="name">d</span> (<span class="name">λ</span> (<span class="name">x</span>)</span><br><span class="line">             (<span class="name">λ</span> (<span class="name">a</span>)</span><br><span class="line">               ((<span class="name">f</span> (<span class="name">x</span> x)) a)))])</span><br><span class="line">    (<span class="name">d</span> d))) </span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factor-f2</span> f)</span><br><span class="line">  (<span class="name">λ</span> (<span class="name">x</span>)</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">        (<span class="name"><span class="built_in">*</span></span> x (<span class="name">f</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> factor2</span><br><span class="line">  (<span class="name">y-combinator2-let</span> factor-f2))</span><br><span class="line"></span><br><span class="line">(<span class="name">factor2</span> <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">y-combinator2</span> f)
+  ((<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>) (<span class="hljs-name">λ</span> (<span class="hljs-name">a</span>) ((<span class="hljs-name">f</span> (<span class="hljs-name">x</span> x)) a)))
+   (<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>) (<span class="hljs-name">λ</span> (<span class="hljs-name">a</span>) ((<span class="hljs-name">f</span> (<span class="hljs-name">x</span> x)) a)))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">y-combinator2-let</span> f)
+  (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ([<span class="hljs-name">d</span> (<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>)
+             (<span class="hljs-name">λ</span> (<span class="hljs-name">a</span>)
+               ((<span class="hljs-name">f</span> (<span class="hljs-name">x</span> x)) a)))])
+    (<span class="hljs-name">d</span> d))) 
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">factor-f2</span> f)
+  (<span class="hljs-name">λ</span> (<span class="hljs-name">x</span>)
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> x <span class="hljs-number">0</span>)
+        <span class="hljs-number">1</span>
+        (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> x (<span class="hljs-name">f</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> x <span class="hljs-number">1</span>))))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> factor2
+  (<span class="hljs-name">y-combinator2-let</span> factor-f2))
+
+(<span class="hljs-name">factor2</span> <span class="hljs-number">10</span>)
+</code></pre>
 <p>在<em>Essentials of Programming Languages</em>中，还有一种办法可以得到递归函数，而且更好理解一些：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">factor-f</span> f)</span><br><span class="line">  (<span class="name"><span class="built_in">lambda</span></span> (x)</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">        (<span class="name"><span class="built_in">*</span></span> x ((<span class="name">f</span> f) (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>))))))</span><br><span class="line"></span><br><span class="line">(<span class="name"><span class="built_in">define</span></span> factor</span><br><span class="line">  (<span class="name">factor-f</span> factor-f))</span><br><span class="line"></span><br><span class="line">(<span class="name">factor</span> <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">factor-f</span> f)
+  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x)
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> x <span class="hljs-number">0</span>)
+        <span class="hljs-number">1</span>
+        (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> x ((<span class="hljs-name">f</span> f) (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> x <span class="hljs-number">1</span>))))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> factor
+  (<span class="hljs-name">factor-f</span> factor-f))
+
+(<span class="hljs-name">factor</span> <span class="hljs-number">10</span>)
+</code></pre>
 <h2 id="在解释器中实现递归"><a class="markdownIt-Anchor" href="#在解释器中实现递归"></a> 在解释器中实现递归</h2>
 <p>虽说可以用y-combinator或者z-combinator构造递归，但是这样的东西在性能能不是最优解。最优解当然是在语言内支持递归。</p>
 <p>其实，无论是scheme还是ML、Haskell，都是在语言层面上实现了递归的。 例如说</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">letrec</span></span> ((<span class="name">factor</span></span><br><span class="line">          (<span class="name"><span class="built_in">lambda</span></span> (x) </span><br><span class="line">            (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">                <span class="number">1</span></span><br><span class="line">                (<span class="name"><span class="built_in">*</span></span> x (<span class="name">factor</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>))))))</span><br><span class="line">  (<span class="name">factor</span> <span class="number">10</span>))</span><br></pre></td></tr></table></figure>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">rec</span> factor x = <span class="keyword">if</span> x = <span class="number">0</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> x * (factor x - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">letrec</span></span> ((<span class="hljs-name">factor</span>
+          (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x) 
+            (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> x <span class="hljs-number">0</span>)
+                <span class="hljs-number">1</span>
+                (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> x (<span class="hljs-name">factor</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> x <span class="hljs-number">1</span>))))))
+  (<span class="hljs-name">factor</span> <span class="hljs-number">10</span>))
+</code></pre>
+<pre class="highlight"><code class="ocaml"><span class="hljs-keyword">let</span> <span class="hljs-keyword">rec</span> factor x = <span class="hljs-keyword">if</span> x = <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> x * (factor x - <span class="hljs-number">1</span>)
+</code></pre>
 <p>那么，我们应该也可以在语言中实现递归。<em>Essentials of Programming Languages</em>里定义了<code>letrec</code>关键字：</p>
 <p><img src="https://pic.downk.cc/item/5f4b5350160a154a67667115.jpg" alt="1" /></p>
 <p>我们如何对<code>letrec-exp</code>进行求值呢？方法当然是无限多的，这里给出两种方式。</p>
@@ -200,98 +212,103 @@ f \equiv (expr1\ f) \\
 <p>如果你也试着去实现了对此表达式的求值，那么你会发现，最麻烦的问题是，我们需要使得<code>env</code>中存在对这个函数的绑定，但是要构造这个函数的值却需要已经构造好的<code>env</code>，这成了一个【先有鸡还是先有蛋】的无限递归问题。</p>
 <p>为了解决这个问题，我们考虑这样的一个事实：</p>
 <p>假设</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">letrec f(x) = <span class="keyword">if</span> zero?(x) <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> x * f(x - <span class="number">1</span>) <span class="keyword">in</span> f(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ocaml">letrec f(x) = <span class="hljs-keyword">if</span> zero?(x) <span class="hljs-keyword">then</span> <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> x * f(x - <span class="hljs-number">1</span>) <span class="hljs-keyword">in</span> f(<span class="hljs-number">10</span>)
+</code></pre>
 <p>这里的<code>f</code>的<code>env</code>已经被构造好了，那么，我们一定有：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">apply-environment</span> env f) = </span><br><span class="line">	(<span class="name">procedure</span> var exp env)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name">apply-environment</span> env f) = 
+	(<span class="hljs-name">procedure</span> var exp env)
+</code></pre>
 <p>根据这个分析，如果我们的函数</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">extend-environment-rec</span> env-old var body proc-name)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name">extend-environment-rec</span> env-old var body proc-name)
+</code></pre>
 <p>会得到<code>env</code>的话，那么<code>f</code>一定可以被表示为：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">procedure</span> exp (<span class="name">extend-environment-rec</span> env-old var body proc-name) var)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name">procedure</span> exp (<span class="hljs-name">extend-environment-rec</span> env-old var body proc-name) var)
+</code></pre>
 <p>根据这个想法，我们直接可以写出<code>extend-environment-rec</code>的实现：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> extend-environment-rec</span><br><span class="line">  (<span class="name">λ</span> (<span class="name">env</span> var body proc-name)</span><br><span class="line">    (<span class="name">λ</span>(<span class="name">what</span>)</span><br><span class="line">      (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">equal?</span></span> what proc-name)</span><br><span class="line">          (<span class="name">proc-val</span> (<span class="name">procedure</span> var body</span><br><span class="line">                               (<span class="name">extend-environment-rec</span> env var body proc-name)))</span><br><span class="line">          (<span class="name">apply-environment</span> env what)))))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> extend-environment-rec
+  (<span class="hljs-name">λ</span> (<span class="hljs-name">env</span> var body proc-name)
+    (<span class="hljs-name">λ</span>(<span class="hljs-name">what</span>)
+      (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span> what proc-name)
+          (<span class="hljs-name">proc-val</span> (<span class="hljs-name">procedure</span> var body
+                               (<span class="hljs-name">extend-environment-rec</span> env var body proc-name)))
+          (<span class="hljs-name">apply-environment</span> env what)))))
+
+</code></pre>
 <p>这样一来，我们就直接实现了递归函数。</p>
 <h3 id="改变procedure的定义"><a class="markdownIt-Anchor" href="#改变procedure的定义"></a> 改变procedure的定义</h3>
 <p>我们原来是这样定义<code>procedure</code>的：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> procedure</span><br><span class="line">  (<span class="name">λ</span>(<span class="name">var</span> body env)</span><br><span class="line">    (<span class="name">λ</span>(<span class="name">val</span>)</span><br><span class="line">      (<span class="name">value-of</span> body</span><br><span class="line">                (<span class="name">extend-environment</span> env var val)))))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> procedure
+  (<span class="hljs-name">λ</span>(<span class="hljs-name">var</span> body env)
+    (<span class="hljs-name">λ</span>(<span class="hljs-name">val</span>)
+      (<span class="hljs-name">value-of</span> body
+                (<span class="hljs-name">extend-environment</span> env var val)))))
+</code></pre>
 <p>这里，我们把它的函数名也加进去：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> procedure</span><br><span class="line">  (<span class="name">λ</span>(<span class="name">var</span> body env proc-name)</span><br><span class="line">    (<span class="name">λ</span>(<span class="name">val</span>)</span><br><span class="line">      (<span class="name"><span class="built_in">let</span></span> ([<span class="name">env1</span></span><br><span class="line">             (<span class="name">extend-environment</span> env</span><br><span class="line">                                 proc-name</span><br><span class="line">                                 (<span class="name">proc-val</span> (<span class="name">procedure</span> var body env proc-name)))])</span><br><span class="line">      (<span class="name">value-of</span> body</span><br><span class="line">                (<span class="name">extend-environment</span> env1 var val))))))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> procedure
+  (<span class="hljs-name">λ</span>(<span class="hljs-name">var</span> body env proc-name)
+    (<span class="hljs-name">λ</span>(<span class="hljs-name">val</span>)
+      (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ([<span class="hljs-name">env1</span>
+             (<span class="hljs-name">extend-environment</span> env
+                                 proc-name
+                                 (<span class="hljs-name">proc-val</span> (<span class="hljs-name">procedure</span> var body env proc-name)))])
+      (<span class="hljs-name">value-of</span> body
+                (<span class="hljs-name">extend-environment</span> env1 var val))))))
+</code></pre>
 <p>每当要求值的时候，我们临时构造一个相同的函数即可。</p>
 <h2 id="支持引用的语言"><a class="markdownIt-Anchor" href="#支持引用的语言"></a> 支持引用的语言</h2>
 <p>对于支持引用的语言来说，递归函数的实现就不这么麻烦了。例如说C语言：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">factor</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (x == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> x * factor(x - <span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">factor</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span></span>&#123;
+	<span class="hljs-keyword">if</span> (x == <span class="hljs-number">0</span>)&#123;
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	&#125;
+	<span class="hljs-keyword">else</span>&#123;
+		<span class="hljs-keyword">return</span> x * factor(x - <span class="hljs-number">1</span>);
+	&#125;
+&#125;
+</code></pre>
 <p>这里的factor会被解释成一个函数指针，实际上是一个地址，编译出来会是这样：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">factor:</span><br><span class="line">	...</span><br><span class="line">	call factor(0x...)</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="asm">factor:
+	...
+	call factor(0x...)
+	...
+</code></pre>
 <p>通过引用，我们也可以在scheme中以另一种方式实现递归：</p>
-<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name"><span class="built_in">define</span></span> (<span class="name">solve3</span> n)</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> temp <span class="number">10</span>)</span><br><span class="line">  (<span class="name"><span class="built_in">define</span></span> (<span class="name">inner</span> x)</span><br><span class="line">    (<span class="name"><span class="built_in">if</span></span> (<span class="name"><span class="built_in">=</span></span> x <span class="number">0</span>)</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">        (<span class="name"><span class="built_in">*</span></span> x (<span class="name">temp</span> (<span class="name"><span class="built_in">-</span></span> x <span class="number">1</span>)))))</span><br><span class="line">  (<span class="name"><span class="built_in">set!</span></span> temp inner)</span><br><span class="line">  (<span class="name">inner</span> n))</span><br><span class="line"></span><br><span class="line">(<span class="name">solve3</span> <span class="number">10</span>) <span class="comment">;3628800</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">solve3</span> n)
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> temp <span class="hljs-number">10</span>)
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">inner</span> x)
+    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> x <span class="hljs-number">0</span>)
+        <span class="hljs-number">1</span>
+        (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> x (<span class="hljs-name">temp</span> (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> x <span class="hljs-number">1</span>)))))
+  (<span class="hljs-name"><span class="hljs-builtin-name">set!</span></span> temp inner)
+  (<span class="hljs-name">inner</span> n))
 
-      
-    </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%AD%A6%E6%9C%AF/">学术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" rel="tag">函数式编程</a>, <a class="article-tag-none-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0/" rel="tag">编程语言实现</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
-
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/08/30/2020-08-30-pl5/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          让我们实现编程语言吧(五) 解释器模型
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/08/20/2020-8-20-writting/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          谈谈写作软件
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
+(<span class="hljs-name">solve3</span> <span class="hljs-number">10</span>) <span class="hljs-comment">;3628800</span>
+</code></pre>
 
     </div>
-  </div>
-  
 
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

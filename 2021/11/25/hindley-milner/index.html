@@ -1,101 +1,65 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>十分钟搞懂 Hindley-Milner 类型系统 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="类型推理  什么是类型推理 程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型： 12let t &#x3D; 1 + 1let f x &#x3D; x + 1 这里的t、f、x三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。 还有一些时候，给出类型并不是很容易的事情，例如：">
-<meta property="og:type" content="article">
-<meta property="og:title" content="十分钟搞懂 Hindley-Milner 类型系统">
-<meta property="og:url" content="https://ayanamists.xyz/2021/11/25/hindley-milner/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="类型推理  什么是类型推理 程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型： 12let t &#x3D; 1 + 1let f x &#x3D; x + 1 这里的t、f、x三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。 还有一些时候，给出类型并不是很容易的事情，例如：">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic.imgdb.cn/item/619f4b162ab3f51d911a8f2f.jpg">
-<meta property="og:image" content="https://pic.imgdb.cn/item/619f4b552ab3f51d911ab740.jpg">
-<meta property="article:published_time" content="2021-11-25T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="类型推理">
-<meta property="article:tag" content="编程语言">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic.imgdb.cn/item/619f4b162ab3f51d911a8f2f.jpg">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-hindley-milner" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      十分钟搞懂 Hindley-Milner 类型系统
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-11-25T00:00:00.000Z" itemprop="datePublished">2021-11-25</time>
-
-          
-            × <span class="article-word-count">2.9k words</span>
-            
-            × <span class="article-time-to-read">11 minutes</span>
-            
-          
+        <div class="post-main-title">
+            十分钟搞懂 Hindley-Milner 类型系统
         </div>
-      </header>
+        <div class="post-meta">
+            2021-11-25
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="类型推理"><a class="markdownIt-Anchor" href="#类型推理"></a> 类型推理</h2>
 <h3 id="什么是类型推理"><a class="markdownIt-Anchor" href="#什么是类型推理"></a> 什么是类型推理</h3>
 <p>程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> t <span class="operator">=</span> <span class="number">1</span> <span class="operator">+</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> f x <span class="operator">=</span> x <span class="operator">+</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> t = <span class="hljs-number">1</span> + <span class="hljs-number">1</span>
+<span class="hljs-keyword">let</span> f x = x + <span class="hljs-number">1</span>
+</code></pre>
 <p>这里的<code>t</code>、<code>f</code>、<code>x</code>三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。</p>
 <p>还有一些时候，给出类型并不是很容易的事情，例如：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s f g x <span class="operator">=</span> f x (g x)</span><br><span class="line"><span class="keyword">let</span> k x y <span class="operator">=</span> x</span><br><span class="line"><span class="keyword">let</span> i <span class="operator">=</span> s k k</span><br><span class="line"><span class="keyword">let</span> ϕ <span class="operator">=</span> s (k (s i)) k</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> s f g x = f x (g x)
+<span class="hljs-keyword">let</span> k x y = x
+<span class="hljs-keyword">let</span> i = s k k
+<span class="hljs-keyword">let</span> ϕ = s (k (s i)) k
+</code></pre>
 <p>请问，ϕ的类型是什么？</p>
 <p>ϕ的类型是可以计算出来的，但是非常麻烦。自然的想法是找到一个算法，让计算机代替人脑计算。</p>
 <p>事实上，把这段代码送到haskell或者f#的repl里，他们会告诉你ϕ的类型是<code>p -&gt; (p -&gt; q) -&gt; q</code>. 而他们所采用的算法，就是Hindley-Milner类型推理算法。</p>
@@ -108,7 +72,8 @@
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>f</mi><mo>:</mo><mi>a</mi><mo>→</mo><mi>b</mi><mo separator="true">,</mo><mi>x</mi><mo>:</mo><mi>t</mi><mi mathvariant="normal">₁</mi><mo separator="true">,</mo><mo stretchy="false">(</mo><mi>f</mi><mi>x</mi><mo stretchy="false">)</mo><mo>:</mo><mi>t</mi><mi mathvariant="normal">₂</mi></mrow><mrow><mi>t</mi><mi mathvariant="normal">₁</mi><mo>→</mo><mi>t</mi><mi mathvariant="normal">₂</mi><mo>=</mo><mi>a</mi><mo>→</mo><mi>b</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{f:a → b, x:t₁, (f x):t₂}{t₁ → t₂ = a → b}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">t</span><span class="mord">₁</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">t</span><span class="mord">₂</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">b</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">t</span><span class="mord">₁</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault">t</span><span class="mord">₂</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
 <p>例如，这样的函数：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f a b <span class="operator">=</span> a <span class="operator">+</span> b</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> f a b = a + b
+</code></pre>
 <p>就可以建立这样的方程：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>a</mi><mo>:</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mi>t</mi><mi mathvariant="normal">₁</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>b</mi><mo>:</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mi>t</mi><mi mathvariant="normal">₂</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>f</mi><mo>:</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mi>t</mi><mi mathvariant="normal">₃</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>:</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mi>t</mi><mi mathvariant="normal">₄</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mo stretchy="false">(</mo><mo>+</mo><mo stretchy="false">)</mo><mo>:</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow><mo>→</mo><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow><mo>→</mo><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>t</mi><mi mathvariant="normal">₁</mi><mo>→</mo><mi>t</mi><mi mathvariant="normal">₂</mi><mo>→</mo><mi>t</mi><mi mathvariant="normal">₄</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow><mo>→</mo><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow><mo>→</mo><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>t</mi><mi mathvariant="normal">₃</mi></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mi>t</mi><mi mathvariant="normal">₁</mi><mo>→</mo><mi>t</mi><mi mathvariant="normal">₂</mi><mo>→</mo><mi>t</mi><mi mathvariant="normal">₄</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
 a:&amp;t₁ \\
@@ -153,7 +118,8 @@ t₃ &amp;= t₁ → t₂ → t₄
 </ul>
 <h2 id="let多态"><a class="markdownIt-Anchor" href="#let多态"></a> Let多态</h2>
 <p>现在我们已经有了一个类型推理算法。不过，我们并没有推出“多态类型”的能力。这似乎并不正确，因为考虑这样的函数：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x <span class="operator">=</span> x</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> f x = x
+</code></pre>
 <p>上面的推理算法会推出<code>f:x₀ → x₀</code>，这是多态类型吗？不是。因为我们并没有定义什么是“多态类型”。不妨采用System F的类型记法，对这样的函数进行“泛化”：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>f</mi><mo>:</mo><mi>ψ</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">₀</mi><mo stretchy="false">)</mo></mrow><mrow><mi>f</mi><mo>:</mo><mi mathvariant="normal">∀</mi><mi>x</mi><mi mathvariant="normal">₀</mi><mi mathvariant="normal">.</mi><mi>ψ</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">₀</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{f:ψ(x₀)}{f:∀x₀.ψ(x₀)}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">∀</span><span class="mord mathdefault">x</span><span class="mord">₀</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.03588em;">ψ</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mord">₀</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ψ</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mord">₀</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
@@ -169,10 +135,13 @@ t₃ &amp;= t₁ → t₂ → t₄
 <li><code>(e e)</code>的函数调用</li>
 </ol>
 <p>这样带来的问题是，即使λ表达式可以是“多态类型”的，λ表达式的参数仍然没法是多态类型的：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(λf.(λ t. f <span class="literal">true</span>)(f <span class="number">0</span>))(λx.x)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp">(λf.(λ t. f <span class="hljs-keyword">true</span>)(f <span class="hljs-number">0</span>))(λx.x)
+</code></pre>
 <p>以上面的表达式为例，即使<code>λx.x</code>是多态类型，<code>f</code>也不能被推理为多态类型。实际上，<code>f</code>在<code>f 0</code>被推理为<code>int → x₀</code>，在<code>f true</code>被推理为<code>bool → x₀</code>. 这样会产生类型错误。</p>
 <p>回忆一下，在F#或者ocaml中，<code>f</code>真正被赋予泛型的方法是：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x <span class="operator">=</span> x <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> t <span class="operator">=</span> f <span class="number">0</span> <span class="keyword">in</span> f <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> f x = x <span class="hljs-keyword">in</span>
+    <span class="hljs-keyword">let</span> t = f <span class="hljs-number">0</span> <span class="hljs-keyword">in</span> f <span class="hljs-keyword">true</span>
+</code></pre>
 <p>在无类型或简单类型λ表达式中，上面的两段代码完全等价，<code>let</code>只是语法糖。但是在ML系语言中，<code>let</code>却不是语法糖。事实上，ML系语言中，进行“泛化”的时机恰恰是在<code>let</code>绑定这里！</p>
 <p>也就是说：</p>
 <ol>
@@ -188,20 +157,36 @@ t₃ &amp;= t₁ → t₂ → t₄
 <p>而这就是Hindley-Milner算法的基本思想。至于具体实现则有algorithm J和algorithm W，请参考维基百科或者Milner的<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/0022000078900144?via%3Dihub">原始论文</a>。<a target="_blank" rel="noopener" href="https://github.com/ayanamists/TypeInf">我的实现</a>采用了alogrithm J.</p>
 <h2 id="值限制"><a class="markdownIt-Anchor" href="#值限制"></a> 值限制</h2>
 <p>如果你真的试了之前的代码：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s f g x <span class="operator">=</span> f x (g x)</span><br><span class="line"><span class="keyword">let</span> k x y <span class="operator">=</span> x</span><br><span class="line"><span class="keyword">let</span> i <span class="operator">=</span> s k k</span><br><span class="line"><span class="keyword">let</span> ϕ <span class="operator">=</span> s (k (s i)) k</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> s f g x = f x (g x)
+<span class="hljs-keyword">let</span> k x y = x
+<span class="hljs-keyword">let</span> i = s k k
+<span class="hljs-keyword">let</span> ϕ = s (k (s i)) k
+</code></pre>
 <p>你会发现，在Haskell中，这是没问题的：</p>
 <p><img src="https://pic.imgdb.cn/item/619f4b162ab3f51d911a8f2f.jpg" alt="1" /></p>
 <p>但是在F#中，这会报错：</p>
 <p><img src="https://pic.imgdb.cn/item/619f4b552ab3f51d911ab740.jpg" alt="2" /></p>
 <p>为什么要报错呢？这就要从一个更加tricky的程序说起。F#中有可变类型：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mutable</span> x <span class="operator">=</span> <span class="number">10</span></span><br><span class="line">x <span class="operator">&lt;-</span> <span class="number">20</span></span><br><span class="line"><span class="built_in">printfn</span> <span class="string">&quot;%A&quot;</span> x</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> <span class="hljs-keyword">mutable</span> x = <span class="hljs-number">10</span>
+x &lt;- <span class="hljs-number">20</span>
+printfn <span class="hljs-string">"%A"</span> x
+</code></pre>
 <p>如果给出这样的程序：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mutable</span> x <span class="operator">=</span> []</span><br><span class="line">x <span class="operator">&lt;-</span> [<span class="number">3</span>]</span><br><span class="line">List.map (<span class="keyword">fun</span> x <span class="operator">-&gt;</span> x <span class="operator">=</span> <span class="literal">true</span>) x</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> <span class="hljs-keyword">mutable</span> x = []
+x &lt;- [<span class="hljs-number">3</span>]
+List.map (<span class="hljs-keyword">fun</span> x -&gt; x = <span class="hljs-keyword">true</span>) x
+</code></pre>
 <p>那么第一行会报错。但是，假设第一行不报错，第二行会不会报错呢？我们要仔细研究一下。</p>
 <p>首先，<code>&lt;-</code>的类型虽然F#被隐去了，但是F#有一套<a target="_blank" rel="noopener" href="https://aka.ms/fsharp-refcell-ops">已经弃用</a>的操作符<code>!</code>、<code>:=</code>和<code>ref</code>，它们的类型是：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ref</span>  <span class="operator">:</span> <span class="symbol">&#x27;a</span> <span class="operator">-&gt;</span> <span class="symbol">&#x27;a</span> <span class="built_in">ref</span></span><br><span class="line">(<span class="operator">!</span>)  <span class="operator">:</span> <span class="symbol">&#x27;a</span> <span class="built_in">ref</span> <span class="operator">-&gt;</span> <span class="symbol">&#x27;a</span></span><br><span class="line">(<span class="operator">:=</span>) <span class="operator">:</span> <span class="symbol">&#x27;a</span> <span class="built_in">ref</span> <span class="operator">-&gt;</span> <span class="symbol">&#x27;a</span> <span class="operator">-&gt;</span> <span class="type">unit</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp">ref  : <span class="hljs-symbol">'a</span> -&gt; <span class="hljs-symbol">'a</span> ref
+(!)  : <span class="hljs-symbol">'a</span> ref -&gt; <span class="hljs-symbol">'a</span>
+(:=) : <span class="hljs-symbol">'a</span> ref -&gt; <span class="hljs-symbol">'a</span> -&gt; unit
+</code></pre>
 <p>上面的程序写作：</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x <span class="operator">=</span> <span class="built_in">ref</span> []</span><br><span class="line">x <span class="operator">:=</span> [<span class="number">3</span>]</span><br><span class="line">List.map (<span class="keyword">fun</span> x <span class="operator">-&gt;</span> x <span class="operator">=</span> <span class="literal">true</span>) x</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="fsharp"><span class="hljs-keyword">let</span> x = ref []
+x := [<span class="hljs-number">3</span>]
+List.map (<span class="hljs-keyword">fun</span> x -&gt; x = <span class="hljs-keyword">true</span>) x
+</code></pre>
 <p>在第二行被引用的时候，<code>x</code>的类型是<code>'t list ref</code>，也就是<code>∀t.ref[list[t]]</code>，它应该被例化为<code>ref[list[b]]</code>，这样一来得到两个等式：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">e</mi><mi mathvariant="sans-serif">f</mi></mrow><mo stretchy="false">[</mo><mrow><mi mathvariant="sans-serif">l</mi><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">s</mi><mi mathvariant="sans-serif">t</mi></mrow><mo stretchy="false">[</mo><mi>b</mi><mo stretchy="false">]</mo><mo stretchy="false">]</mo><mo>=</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mrow><mi mathvariant="sans-serif">r</mi><mi mathvariant="sans-serif">e</mi><mi mathvariant="sans-serif">f</mi></mrow><mo stretchy="false">[</mo><mi>a</mi><mo stretchy="false">]</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>a</mi><mo>=</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mrow><mi mathvariant="sans-serif">l</mi><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">s</mi><mi mathvariant="sans-serif">t</mi></mrow><mo stretchy="false">[</mo><mrow><mi mathvariant="sans-serif">i</mi><mi mathvariant="sans-serif">n</mi><mi mathvariant="sans-serif">t</mi></mrow><mo stretchy="false">]</mo></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
 \mathsf{ref}[\mathsf{list}[b]] =&amp; \mathsf{ref}[a] \\
@@ -243,74 +228,30 @@ a =&amp; \mathsf{list}[\mathsf{int}]
 </ol>
 </section>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E5%AD%A6%E6%9C%AF/">学术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E7%B1%BB%E5%9E%8B%E6%8E%A8%E7%90%86/" rel="tag">类型推理</a>, <a class="article-tag-none-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2022/05/21/edsac/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          在1951年如何编程--以EDSAC为例
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/09/20/uni-intro-elim/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          高中数学题与全称量词的引入/消除规则
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

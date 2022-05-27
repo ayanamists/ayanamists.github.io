@@ -1,765 +1,348 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="aya ⊢ blog">
-<meta property="og:url" content="https://ayanamists.xyz/page/4/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="ayanamists">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
-    
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-  
-    <article id="post-2020-3-27-grammar" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <ul class="nav">
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/03/27/2020-3-27-grammar/">让我们实现编程语言吧（二）生成文法</a>
-      
+        <li><a href="/">首页</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-03-27T00:00:00.000Z" itemprop="datePublished">2020-03-27</time>
-
-          
-            × <span class="article-word-count">3k words</span>
-            
-            × <span class="article-time-to-read">11 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e4%bb%80%e4%b9%88%e6%98%af%e7%94%9f%e6%88%90%e6%96%87%e6%b3%95">什么是生成文法</a></li>
-<li><a href="#%e7%94%9f%e6%88%90%e6%96%87%e6%b3%95%e7%9a%84%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9">生成文法的注意事项</a>
-<ul>
-<li><a href="#%e7%94%9f%e6%88%90%e6%96%87%e6%b3%95%e7%a9%b6%e7%ab%9f%e4%bb%a3%e8%a1%a8%e4%bb%80%e4%b9%88">生成文法究竟代表什么</a></li>
-<li><a href="#%e7%94%9f%e6%88%90%e5%9b%be">生成图</a></li>
-<li><a href="#parse%e7%9a%84%e7%9c%9f%e6%ad%a3%e6%84%8f%e4%b9%89">Parse的真正意义</a></li>
-</ul>
-</li>
-<li><a href="#%e5%9b%9b%e7%a7%8d%e7%94%9f%e6%88%90%e6%96%87%e6%b3%95">四种生成文法</a>
-<ul>
-<li><a href="#type-0">Type 0</a></li>
-<li><a href="#type-1-context-sensitive-grammar">Type 1 Context-Sensitive Grammar</a></li>
-<li><a href="#type-2-context-free-grammar">Type 2 Context Free Grammar</a>
-<ul>
-<li><a href="#uvwxy%e5%ae%9a%e7%90%86">uvwxy定理</a>
-<ul>
-<li><a href="#uvwxy%e5%ae%9a%e7%90%86%e7%9a%84%e8%af%81%e6%98%8e%e5%92%8c%e6%84%8f%e4%b9%89">uvwxy定理的证明和意义</a></li>
-<li><a href="#%e8%af%81%e6%98%8eanbncn%e4%b8%8d%e8%83%bd%e8%a2%abcfg%e7%94%9f%e6%88%90">证明$$a<sup>{n}b</sup>{n}c^{n}$$不能被CFG生成</a></li>
-<li><a href="#python%e4%b8%8d%e6%98%afcfg">Python不是CFG</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#type-3-regular-grammar">Type 3 Regular Grammar</a></li>
-<li><a href="#type-4">Type 4</a></li>
-</ul>
-</li>
-<li><a href="#%e6%80%bb%e7%bb%93">总结</a></li>
-</ul>
-<h2 id="什么是生成文法"><a class="markdownIt-Anchor" href="#什么是生成文法"></a> 什么是生成文法</h2>
-<p>在谈生成文法之前，我们首先要解释一下什么叫做“文法”(grammar)。</p>
-<blockquote>
-<p>语法（英语：Grammar），也称文法，在语言学中指任意自然语言中句子、短语以及词等语法单位的语法结构与语法意义的规律</p>
-</blockquote>
-<p>可见，文法这东西本身的意义是很宽泛的，我们这里研究的是“生成语法”，也就是说，用来产生语言的文法。</p>
-<p>这里的“语言”，指的是由所有合法的句子组成的集合。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/03/27/2020-3-27-grammar/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-3-27-reg" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+        <li><a href="/archives">归档</a></li>
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/03/27/2020-3-27-reg/">让我们实现编程语言吧（三）正则文法与实现正则表达式解析引擎</a>
-      
+        <li><a href="/about">关于</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-03-27T00:00:00.000Z" itemprop="datePublished">2020-03-27</time>
-
-          
-            × <span class="article-word-count">2.1k words</span>
-            
-            × <span class="article-time-to-read">7 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="什么是正则文法"><a class="markdownIt-Anchor" href="#什么是正则文法"></a> 什么是正则文法</h2>
-<p>正则文法是比较靠谱的文法。它在CFG的基础上继续进行限制：</p>
-<p>每一个正则文法的规则只能是以下两个规则之一：</p>
-<ul>
-<li>形如$$A \rightarrow a$$的规则。</li>
-<li>形如$$A \rightarrow aB$$的规则。</li>
-</ul>
-<p>可以看到这文法是很简单的，过于简单会引起不好用，所以我们也有“增强版”的正则文法，它多了一条规则：</p>
-<ul>
-<li>如果$$A, B, C…$$是正则文法左端的符号，那么$$X = ABC…$$也是正则文法。</li>
-</ul>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/03/27/2020-3-27-reg/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-3-27-what-to-watch-1" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/03/27/2020-3-27-what-to-watch-1/">看点什么（一）</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-03-27T00:00:00.000Z" itemprop="datePublished">2020-03-27</time>
-
-          
-            × <span class="article-word-count">2.1k words</span>
-            
-            × <span class="article-time-to-read">6 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="看点什么是什么"><a class="markdownIt-Anchor" href="#看点什么是什么"></a> 看点什么是什么</h2>
-<p>这个博客的专业气息太浓厚了，看到这个博客的人，可能以为我生活中全都是计算机，实际上的图景和此大相径庭。王垠的博客有他喷《星际穿越》的一篇博文和不少人 生 感 悟（到 处 乱 喷），我的博客里也应该有一些富有生活情趣的东西。这栏目就用来安利（和批评）各种文艺作品吧。</p>
-<h2 id="看点什么呢"><a class="markdownIt-Anchor" href="#看点什么呢"></a> 看点什么呢？</h2>
-<p>有个成语叫“虎头蛇尾”。这当然不是什么褒义词，但是，如果头都不是“虎”的话，那么尾恐怕也只能是“蛇”了。在第一期里，我当然要把我最喜欢的作品拿出来展示。这一期，应该叫“看点我最喜欢看的”</p>
-<h3 id="小说篇"><a class="markdownIt-Anchor" href="#小说篇"></a> 小说篇</h3>
-<p>熟悉我的人，可能在看到标题之后就知道要我在这个版块说什么（可惜这两年这种人已经几近绝迹）。没错，就是那本书，那本我很喜欢的书，那本在我瞟了一眼第二章的第一句话以后就一下子击穿了我的书–《玩笑》。但这本书不宜多说，多说几句话就是严重的恶劣的剧透行为。个人认为这是米兰昆德拉最好的作品。之后的作品也不能说不好，但个人色彩特别浓厚。有些人喜欢他的那种风格，有些人不喜欢，我可能是后者吧。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/03/27/2020-3-27-what-to-watch-1/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-3-12-parser" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/03/14/2020-3-12-parser/">让我们实现编程语言吧（一）序</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-03-14T00:00:00.000Z" itemprop="datePublished">2020-03-14</time>
-
-          
-            × <span class="article-word-count">431 words</span>
-            
-            × <span class="article-time-to-read">1 minute</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="为什么要实现编程语言"><a class="markdownIt-Anchor" href="#为什么要实现编程语言"></a> 为什么要实现编程语言</h2>
-<ul>
-<li>好玩</li>
-<li>深入理解程序的执行过程</li>
-<li>为以后的逆向工程研究打下一些基础</li>
-</ul>
-<h2 id="实现什么编程语言"><a class="markdownIt-Anchor" href="#实现什么编程语言"></a> 实现什么编程语言</h2>
-<p>这里我们实现了类似于ruby的编程语言。它具有以下特性：</p>
-<ul>
-<li>纯面向对象，即所有的字面量与值都是对象</li>
-<li>值驱动，任何表达式都具有值，且其值是一个对象</li>
-<li>支持块</li>
-<li>大部分操作都可以归结为调用某个类的成员方法/类方法</li>
-</ul>
-<p>相比于ruby，我们做出的主要调整有：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/03/14/2020-3-12-parser/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-02-16-white_album-1" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/02/16/2020-02-16-white_album-1/">WA2的逆向与外挂（一） 序</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-02-16T00:00:00.000Z" itemprop="datePublished">2020-02-16</time>
-
-          
-            × <span class="article-word-count">333 words</span>
-            
-            × <span class="article-time-to-read">1 minute</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="wa2简介"><a class="markdownIt-Anchor" href="#wa2简介"></a> WA2简介</h2>
-<p>WA2，也就是White Album2，是日本leaf公司推出的美少女文字冒险游戏。其感情真实细腻，剧情丝丝入扣，是GALGAME业界天花板级别的作品。</p>
-<p>我们这里分析的WA2是国内汉化组汉化过的版本，其所有PE文件罗列如下：</p>
-<ul>
-<li>可执行文件
-<ul>
-<li>WA2.exe，似乎是原本的可执行文件
-<ul>
-<li>大小：1,220,608 字节</li>
-<li>SHA1：DBF3BF1688159CC287ACA81BEE10C41DB0CAE74D</li>
-</ul>
-</li>
-<li>WA2_chs.exe，似乎是汉化版的运行文件
-<ul>
-<li>大小：1,220,096 字节</li>
-<li>SHA1：58FEDD7A10BF4EDB41E44FF1FCC365087AA6E880</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>动态链接库
-<ul>
-<li>未发现</li>
-</ul>
-</li>
-</ul>
-<h2 id="为什么要研究wa2"><a class="markdownIt-Anchor" href="#为什么要研究wa2"></a> 为什么要研究WA2</h2>
-<p>动机最初来源于网上的<a target="_blank" rel="noopener" href="https://blog.csdn.net/applebananac123/article/details/59253642">一篇文章</a>：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/02/16/2020-02-16-white_album-1/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-02-16-white_album-2" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/02/16/2020-02-16-white_album-2/">WA2的逆向与外挂（二） 实现鼠标自动化操作</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-02-16T00:00:00.000Z" itemprop="datePublished">2020-02-16</time>
-
-          
-            × <span class="article-word-count">1.6k words</span>
-            
-            × <span class="article-time-to-read">6 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="实现自动操作的几个想法"><a class="markdownIt-Anchor" href="#实现自动操作的几个想法"></a> 实现自动操作的几个想法</h2>
-<p>实现自动操作，大概有几个方法：</p>
-<ul>
-<li>直接调用某些WA2的函数，强行推进</li>
-<li>使用鼠标自动化方法，模拟人的行为</li>
-</ul>
-<p>这里，我们选择了第二个方案。因为在一番逆向过后，我并没有完全理解WA2剧情推进的机制，只能等日后逆向能力更强后再实践。</p>
-<h2 id="windows平台下鼠标自动化的方法"><a class="markdownIt-Anchor" href="#windows平台下鼠标自动化的方法"></a> Windows平台下鼠标自动化的方法</h2>
-<p>据我所知，要实现UI的自动化，大概有几个方法：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/02/16/2020-02-16-white_album-2/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-02-15-speed-1" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/02/15/2020-02-15-speed-1/">谈谈网速（一）序</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-02-15T00:00:00.000Z" itemprop="datePublished">2020-02-15</time>
-
-          
-            × <span class="article-word-count">623 words</span>
-            
-            × <span class="article-time-to-read">2 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="为什么要研究网速"><a class="markdownIt-Anchor" href="#为什么要研究网速"></a> 为什么要研究网速</h2>
-<p>在日常生活中，你有没有遇到过以下情况呢？</p>
-<ul>
-<li>想看盗版漫画，辛辛苦苦不辞辛劳地找到资源，却发现加载速度奇慢无比，阅读体验极差</li>
-<li>想在github上clone一个几MB的项目，输入一行<strong>git clone xxx.git</strong>，喝杯咖啡回来后，git居然仍在以挤牙膏般的速度传输</li>
-<li>想用ssh连接到境外远程主机，兴高采烈地在键盘上按下键，却迟迟不出现输出</li>
-<li>…</li>
-</ul>
-<p>以上情况都是我的亲身体验。我这个人有一点不好，那就是遇到不懂的事情，就一定要搞明白其中的道理。这些问题背后的道理是什么？恐怕和“网速”有着千丝万缕的联系。</p>
-<h2 id="什么是网速"><a class="markdownIt-Anchor" href="#什么是网速"></a> 什么是“网速”</h2>
-<p>“网速”这个词，似乎应该是 Network Speed 或者说 Network Rate. 但是，和这些术语不同，这里说的“网速”，其实是一个比较复杂和综合的概念，它描述的我们使用网络服务时的综合速度体验，包含这两个内容：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/02/15/2020-02-15-speed-1/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-02-15-speed-2" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/02/15/2020-02-15-speed-2/">谈谈网速（二）不得不首先研究清楚的问题</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-02-15T00:00:00.000Z" itemprop="datePublished">2020-02-15</time>
-
-          
-            × <span class="article-word-count">1.2k words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <h2 id="信号传播的物理学理论"><a class="markdownIt-Anchor" href="#信号传播的物理学理论"></a> 信号传播的物理学理论</h2>
-<p>就我个人来说，我的物理学得很不好，我也懒得处理很多物理上的内容，但是，要理解网速相关的众多内容，对物理中的波至少要有一点感性认识。</p>
-<p>我们就说以太网好了。以太网不涉及什么调制的内容，在以太网上传播的就是数字信号，只不过经过了曼彻斯特编码（就是将源信号和时钟异或一下）</p>
-<p><img src="https://pic.downk.cc/item/5e48162d48b86553ee92ff32.png" alt="1"></p>
-<p>那么，这个信号的传播，究竟是一个什么过程呢？</p>
-<p>电信号就是高低变化的电压，以太网的介质(media)就是导线（准确地说，同轴电缆、双绞线等）。那么这样看起来，这个信号的传播似乎是不需要时间的。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/02/15/2020-02-15-speed-2/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-02-14-eap" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/02/14/2020-02-14-eap/">802.11i 无线网络安全（二）-- 802.1x eap认证</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-02-14T00:00:00.000Z" itemprop="datePublished">2020-02-14</time>
-
-          
-            × <span class="article-word-count">4k words</span>
-            
-            × <span class="article-time-to-read">15 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81eap%e8%ae%a4%e8%af%81">为什么需要EAP认证</a></li>
-<li><a href="#%e6%9c%ac%e6%96%87%e8%a6%81%e6%90%9e%e6%b8%85%e6%a5%9a%e7%9a%84%e4%b8%bb%e8%a6%81%e9%97%ae%e9%a2%98">本文要搞清楚的主要问题</a></li>
-<li><a href="#%e5%af%b9%e6%95%b4%e4%b8%aa8021x-eap%e8%ae%a4%e8%af%81%e6%9e%b6%e6%9e%84%e7%9a%84%e7%ae%80%e5%8d%95%e4%bb%8b%e7%bb%8d">对整个802.1x EAP认证架构的简单介绍</a></li>
-<li><a href="#%e6%90%ad%e5%bb%ba%e4%bd%bf%e7%94%a8eap%e7%9a%8480211%e6%97%a0%e7%ba%bf%e7%bd%91%e7%bb%9c">搭建使用EAP的802.11无线网络</a>
-<ul>
-<li><a href="#%e6%90%ad%e5%bb%basupplicant">搭建supplicant</a></li>
-<li><a href="#%e6%90%ad%e5%bb%baradius-server">搭建Radius Server</a></li>
-<li><a href="#%e6%90%ad%e5%bb%baap">搭建AP</a></li>
-<li><a href="#%e8%af%b4%e6%98%8e">说明</a></li>
-</ul>
-</li>
-<li><a href="#%e8%bf%9e%e6%8e%a5%e5%88%b0%e8%bf%99%e4%b8%aa%e6%97%a0%e7%ba%bf%e7%bd%91%e8%b7%af">连接到这个无线网路</a>
-<ul>
-<li><a href="#%e4%bd%bf%e7%94%a8peap%e6%96%b9%e6%b3%95">使用PEAP方法</a></li>
-<li><a href="#%e4%bd%bf%e7%94%a8eap%ef%bc%8dtls%e6%96%b9%e6%b3%95">使用EAP－TLS方法</a></li>
-</ul>
-</li>
-<li><a href="#%e5%88%86%e6%9e%90eap%ef%bc%8dtls%e6%96%b9%e6%b3%95%e7%9a%84%e5%85%a8%e8%bf%87%e7%a8%8b">分析EAP－TLS方法的全过程</a>
-<ul>
-<li><a href="#clinet-certificate%e4%b8%8etls12%e4%b8%ad%e7%9a%84client-certificatecertificate-verify%e5%b8%a7">Clinet Certificate与tls1.2中的Client Certificate、Certificate Verify帧</a></li>
-<li><a href="#eap-tls%e6%96%b9%e6%b3%95%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e5%8f%8c%e5%90%91%e8%ae%a4%e8%af%81">EAP-TLS方法如何进行双向认证</a></li>
-<li><a href="#eap-tls%e6%96%b9%e6%b3%95%e7%9a%84%e5%8d%8f%e8%ae%ae%e6%a0%88">EAP-TLS方法的协议栈</a></li>
-<li><a href="#%e7%ac%ac%e4%b8%80%e9%98%b6%e6%ae%b5-%e5%8f%91%e9%80%81%e8%ba%ab%e4%bb%bd%e4%bf%a1%e6%81%af">第一阶段 ：发送身份信息</a></li>
-<li><a href="#%e7%ac%ac%e4%ba%8c%e9%98%b6%e6%ae%b5-%e5%8d%8f%e5%95%86eap%e6%96%b9%e6%b3%95">第二阶段 ：协商EAP方法</a></li>
-<li><a href="#%e7%ac%ac%e4%b8%89%e9%98%b6%e6%ae%b5-eap-tls%e8%bf%87%e7%a8%8b">第三阶段 ：EAP-TLS过程</a></li>
-<li><a href="#%e7%ac%ac%e5%9b%9b%e9%98%b6%e6%ae%b5-eap%e6%88%90%e5%8a%9f%ef%bc%8f%e5%a4%b1%e8%b4%a5">第四阶段 ：EAP成功／失败</a></li>
-</ul>
-</li>
-<li><a href="#eap-tls%e5%a6%82%e4%bd%95%e4%b8%ba80211i%e7%9a%84key-hierarchy%e8%bf%87%e7%a8%8b%e6%8f%90%e4%be%9bpmk">EAP-TLS如何为802.11i的Key Hierarchy过程提供PMK</a></li>
-<li><a href="#%e6%80%bb%e7%bb%93">总结</a></li>
-</ul>
-<h2 id="为什么需要eap认证"><a class="markdownIt-Anchor" href="#为什么需要eap认证"></a> 为什么需要EAP认证</h2>
-<p>我们在<a href="!--swig%EF%BF%BC7--">无线网络安全（1）</a>中说过，所谓的“认证”，在802.11i的RSN（或者说，WPA）中有两种方式，一种是<strong>802.1x EAP</strong>认证，一种是<strong>pre-shared-key</strong>认证，而<strong>pre-shared-key</strong>认证直接跳过认证过程，通过“四次握手”(密钥生成与分发)过程，验证<strong>AP</strong>和<strong>STA</strong>对于<strong>PSK</strong>的所有权，是一种相互认证。</p>
-<p>但<strong>pre-shared-key</strong>认证有一些缺陷。以我们的无线校园网<strong>SYSU_SECURE</strong>为例，如果采取<strong>pre-shared-key</strong>认证，那么就会遇到很多问题：</p>
-<ul>
-<li>向一个人分发一份<strong>pre-shared-key</strong>，本意是让一个人使用。但由于密钥生成与分发过程只验证AP和STA对<strong>PSK</strong>的所有权，如果这个人（A）将<strong>PSK</strong>送给了另一个人(B)，那么B也可以用这个<strong>PSK</strong>连接校园网。</li>
-<li>更新<strong>PSK</strong>时如何安全地通知全校同学？</li>
-</ul>
-<p>实际上，如果范围很大的话，我们很难控制<strong>PSK</strong>的传播。在802.11i中引入EAP，就是为了解决大规模无线网络的认证问题。</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/02/14/2020-02-14-eap/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2020-1-2-sort" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/2020/01/02/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-01-02T00:00:00.000Z" itemprop="datePublished">2020-01-02</time>
-
-          
-            × <span class="article-word-count">4.7k words</span>
-            
-            × <span class="article-time-to-read">19 minutes</span>
-            
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <ul>
-<li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
-<li><a href="#%e5%85%b3%e4%ba%8e%e6%8e%92%e5%ba%8f%e7%9a%84%e5%9f%ba%e6%9c%ac%e9%97%ae%e9%a2%98">关于排序的基本问题</a></li>
-<li><a href="#%e6%8f%92%e5%85%a5%e6%8e%92%e5%ba%8f">插入排序</a>
-<ul>
-<li><a href="#%e5%85%b3%e4%ba%8e%e7%9b%91%e8%a7%86%e5%93%a8">关于“监视哨”</a></li>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e5%b8%8c%e5%b0%94%e6%8e%92%e5%ba%8f">希尔排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-1">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e5%86%92%e6%b3%a1%e6%8e%92%e5%ba%8f">冒泡排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-2">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f">快速排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-3">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e9%80%89%e6%8b%a9%e6%8e%92%e5%ba%8f">选择排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-4">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e5%a0%86%e6%8e%92%e5%ba%8f">堆排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-5">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e5%bd%92%e5%b9%b6%e6%8e%92%e5%ba%8f">归并排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-6">算法分析</a></li>
-</ul>
-</li>
-<li><a href="#%e5%9f%ba%e6%95%b0%e6%8e%92%e5%ba%8f">基数排序</a>
-<ul>
-<li><a href="#%e7%ae%97%e6%b3%95%e5%88%86%e6%9e%90-7">算法分析</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
-<p>这一章我们学习了排序这一基本算法。本笔记主要做了以下工作：</p>
-<ul>
-<li>总结了排序的各种问题</li>
-<li>总结并实现了8种排序算法：
-<ul>
-<li>插入排序</li>
-<li>希尔排序</li>
-<li>冒泡排序</li>
-<li>快速排序</li>
-<li>选择排序</li>
-<li>堆排序</li>
-<li>归并排序</li>
-<li>基数排序</li>
-</ul>
-</li>
-<li>这一章的笔记不同于前面两章。前面两章的笔记所含数据结构和算法的实现代码如无特殊标注，均是我自己实现并测试的。而本章的很多代码都是我从资料中引用的。这是因为某些算法实现起来很简单，或实现价值不大。当然，引用者我们也会标出。</li>
-</ul>
-<h2 id="关于排序的基本问题"><a class="markdownIt-Anchor" href="#关于排序的基本问题"></a> 关于排序的基本问题</h2>
-<blockquote>
-<p>在计算机科学与数学中，一个排序算法（英语：Sorting algorithm）是一种能将一串数据依照特定排序方式进行排列的一种算法。最常用到的排序方式是数值顺序以及字典顺序。</p>
-</blockquote>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/2020/01/02/2020-1-2-sort/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav" class="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/3/">« Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next »</a>
-  </nav>
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
+    </ul>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                
+                <div class="post-list">
+    
+    <div class="post">
+        <a class="post-title" href="/2020/03/27/2020-3-27-grammar/">让我们实现编程语言吧（二）生成文法</a>
+        <div class="post-except">
+            
+什么是生成文法
+生成文法的注意事项
+
+生成文法究竟代表什么
+生成图
+Parse的真正意义
+
+
+四种生成文法
+
+Type 0
+Type 1 Context-Sensitive Grammar
+Type 2 Context Free Grammar
+
+uvwxy定理
+
+uvwxy定理的证明和意义
+证明$$a{n}b{n}c^{n}$$不能被CFG生成
+Python不是CFG
+
+
+
+
+Type 3 Regular Grammar
+Type 4
+
+
+总结
+
+ 什么是生成文法
+在谈生
+            <a class="read-more" href="/2020/03/27/2020-3-27-grammar/"> ... </a>
+        </div>
+        <div class="post-date">2020.03.27</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/03/27/2020-3-27-reg/">让我们实现编程语言吧（三）正则文法与实现正则表达式解析引擎</a>
+        <div class="post-except">
+             什么是正则文法
+正则文法是比较靠谱的文法。它在CFG的基础上继续进行限制：
+每一个正则文法的规则只能是以下两个规则之一：
+
+形如$$A \rightarrow a$$的规则。
+形如$$A \rightarrow aB$$的规则。
+
+可以看到这文法是很简单的，过于简单会引起不好用，所以我们也有“增强版”的正则文法，它多了一条规则：
+
+如果$$A, B, C…$$是正则文法左端的符号，那么$$X = ABC…$$也是正则文法。
+
+这个“增强”实际上是允许正则文法进行连接，我们在
+            <a class="read-more" href="/2020/03/27/2020-3-27-reg/"> ... </a>
+        </div>
+        <div class="post-date">2020.03.27</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/03/27/2020-3-27-what-to-watch-1/">看点什么（一）</a>
+        <div class="post-except">
+             看点什么是什么
+这个博客的专业气息太浓厚了，看到这个博客的人，可能以为我生活中全都是计算机，实际上的图景和此大相径庭。王垠的博客有他喷《星际穿越》的一篇博文和不少人 生 感 悟（到 处 乱 喷），我的博客里也应该有一些富有生活情趣的东西。这栏目就用来安利（和批评）各种文艺作品吧。
+ 看点什么呢？
+有个成语叫“虎头蛇尾”。这当然不是什么褒义词，但是，如果头都不是“虎”的话，那么尾恐怕也只能是“蛇”了。在第一期里，我当然要把我最喜欢的作品拿出来展示。这一期，应该叫“看点我最喜欢
+            <a class="read-more" href="/2020/03/27/2020-3-27-what-to-watch-1/"> ... </a>
+        </div>
+        <div class="post-date">2020.03.27</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/03/14/2020-3-12-parser/">让我们实现编程语言吧（一）序</a>
+        <div class="post-except">
+             为什么要实现编程语言
+
+好玩
+深入理解程序的执行过程
+为以后的逆向工程研究打下一些基础
+
+ 实现什么编程语言
+这里我们实现了类似于ruby的编程语言。它具有以下特性：
+
+纯面向对象，即所有的字面量与值都是对象
+值驱动，任何表达式都具有值，且其值是一个对象
+支持块
+大部分操作都可以归结为调用某个类的成员方法/类方法
+
+相比于ruby，我们做出的主要调整有：
+
+只支持部分ruby语法
+彻底推翻了ruby的单件类设计，个人认为单件类是ruby设计中问题最大的一部分
+继承结构简单，
+            <a class="read-more" href="/2020/03/14/2020-3-12-parser/"> ... </a>
+        </div>
+        <div class="post-date">2020.03.14</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/02/16/2020-02-16-white_album-1/">WA2的逆向与外挂（一） 序</a>
+        <div class="post-except">
+             WA2简介
+WA2，也就是White Album2，是日本leaf公司推出的美少女文字冒险游戏。其感情真实细腻，剧情丝丝入扣，是GALGAME业界天花板级别的作品。
+我们这里分析的WA2是国内汉化组汉化过的版本，其所有PE文件罗列如下：
+
+可执行文件
+
+WA2.exe，似乎是原本的可执行文件
+
+大小：1,220,608 字节
+SHA1：DBF3BF1688159CC287ACA81BEE10C41DB0CAE74D
+
+
+WA2_chs.exe，似乎是汉化版的运行文件
+
+大小
+            <a class="read-more" href="/2020/02/16/2020-02-16-white_album-1/"> ... </a>
+        </div>
+        <div class="post-date">2020.02.16</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/02/16/2020-02-16-white_album-2/">WA2的逆向与外挂（二） 实现鼠标自动化操作</a>
+        <div class="post-except">
+             实现自动操作的几个想法
+实现自动操作，大概有几个方法：
+
+直接调用某些WA2的函数，强行推进
+使用鼠标自动化方法，模拟人的行为
+
+这里，我们选择了第二个方案。因为在一番逆向过后，我并没有完全理解WA2剧情推进的机制，只能等日后逆向能力更强后再实践。
+ Windows平台下鼠标自动化的方法
+据我所知，要实现UI的自动化，大概有几个方法：
+
+使用win32 api，直接根据windows的消息机制进行注入。
+使用vbs脚本
+使用微软官方的UI Automation库
+使用pyt
+            <a class="read-more" href="/2020/02/16/2020-02-16-white_album-2/"> ... </a>
+        </div>
+        <div class="post-date">2020.02.16</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/02/15/2020-02-15-speed-1/">谈谈网速（一）序</a>
+        <div class="post-except">
+             为什么要研究网速
+在日常生活中，你有没有遇到过以下情况呢？
+
+想看盗版漫画，辛辛苦苦不辞辛劳地找到资源，却发现加载速度奇慢无比，阅读体验极差
+想在github上clone一个几MB的项目，输入一行git clone xxx.git，喝杯咖啡回来后，git居然仍在以挤牙膏般的速度传输
+想用ssh连接到境外远程主机，兴高采烈地在键盘上按下键，却迟迟不出现输出
+…
+
+以上情况都是我的亲身体验。我这个人有一点不好，那就是遇到不懂的事情，就一定要搞明白其中的道理。这些问题背后的道理是
+            <a class="read-more" href="/2020/02/15/2020-02-15-speed-1/"> ... </a>
+        </div>
+        <div class="post-date">2020.02.15</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/02/15/2020-02-15-speed-2/">谈谈网速（二）不得不首先研究清楚的问题</a>
+        <div class="post-except">
+             信号传播的物理学理论
+就我个人来说，我的物理学得很不好，我也懒得处理很多物理上的内容，但是，要理解网速相关的众多内容，对物理中的波至少要有一点感性认识。
+我们就说以太网好了。以太网不涉及什么调制的内容，在以太网上传播的就是数字信号，只不过经过了曼彻斯特编码（就是将源信号和时钟异或一下）
+
+那么，这个信号的传播，究竟是一个什么过程呢？
+电信号就是高低变化的电压，以太网的介质(media)就是导线（准确地说，同轴电缆、双绞线等）。那么这样看起来，这个信号的传播似乎是不需要时间的
+            <a class="read-more" href="/2020/02/15/2020-02-15-speed-2/"> ... </a>
+        </div>
+        <div class="post-date">2020.02.15</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/02/14/2020-02-14-eap/">802.11i 无线网络安全（二）-- 802.1x eap认证</a>
+        <div class="post-except">
+            
+为什么需要EAP认证
+本文要搞清楚的主要问题
+对整个802.1x EAP认证架构的简单介绍
+搭建使用EAP的802.11无线网络
+
+搭建supplicant
+搭建Radius Server
+搭建AP
+说明
+
+
+连接到这个无线网路
+
+使用PEAP方法
+使用EAP－TLS方法
+
+
+分析EAP－TLS方法的全过程
+
+Clinet Certificate与tls1.2中的Client Certificate、Certificate Verify帧
+EAP-TLS方法如何进行双向认证
+            <a class="read-more" href="/2020/02/14/2020-02-14-eap/"> ... </a>
+        </div>
+        <div class="post-date">2020.02.14</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/2020/01/02/2020-1-2-sort/">数据结构 -- 排序 -- 笔记</a>
+        <div class="post-except">
+            
+前言
+关于排序的基本问题
+插入排序
+
+关于“监视哨”
+算法分析
+
+
+希尔排序
+
+算法分析
+
+
+冒泡排序
+
+算法分析
+
+
+快速排序
+
+算法分析
+
+
+选择排序
+
+算法分析
+
+
+堆排序
+
+算法分析
+
+
+归并排序
+
+算法分析
+
+
+基数排序
+
+算法分析
+
+
+
+ 前言
+这一章我们学习了排序这一基本算法。本笔记主要做了以下工作：
+
+总结了排序的各种问题
+总结并实现了8种排序算法：
+
+插入排序
+希尔排序
+冒泡排序
+快速排序
+选择排序
+堆排序
+归并排序
+基数排序
+
+
+这一章的笔记不同于前面两
+            <a class="read-more" href="/2020/01/02/2020-1-2-sort/"> ... </a>
+        </div>
+        <div class="post-date">2020.01.02</div>
+    </div>
+    
+</div>
+
+<div class="paginator">
+    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
+</div>
+
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

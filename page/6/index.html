@@ -1,282 +1,115 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="aya ⊢ blog">
-<meta property="og:url" content="https://ayanamists.xyz/page/6/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="ayanamists">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
-    
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-  
-    <article id="post-2019-07-25-ffff" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <ul class="nav">
         
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/07/25/ffff/">编写程序验证《全部成为F》中的巧妙trick</a>
-      
+        <li><a href="/">首页</a></li>
         
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-07-25T03:48:18.000Z" itemprop="datePublished">2019-07-25</time>
-
-          
-            × <span class="article-word-count">599 words</span>
-            
-            × <span class="article-time-to-read">2 minutes</span>
-            
-          
-        </div>
-      </header>
+        <li><a href="/archives">归档</a></li>
+        
+        <li><a href="/about">关于</a></li>
+        
+    </ul>
+</div>
+                
+                <div class="post-list">
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>我们在写程序时，时常要用到文件操作。文件操作是一种I/O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>HANDLE CreateFileA(
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/07/25/ffff/">编写程序验证《全部成为F》中的巧妙trick</a>
+        <div class="post-except">
+            我们在写程序时，时常要用到文件操作。文件操作是一种I/O读写，必定要用到系统调用或API。在WinApi的CreateFile函数中
+HANDLE CreateFileA(
   LPCSTR                lpFileName,
   DWORD                 dwDesiredAccess,
   DWORD                 dwShareMode,
-  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-  DWORD                 dwCreationDisposition,
-  DWORD                 dwFlagsAndAttributes,
-  HANDLE                hTemplateFile
-);
-
-</pre>
-<p>倒数第二个参数设置为 CREATE_ALWAYS时，创建的新文件会覆盖原有的同名文件。《终将成为F》就利用了类似的思想，构造了一个非常巧妙的结构。</p>
-<p>假设一个监控程序P，它在每分钟开始的时刻创建监控文件，这个文件记录该分钟内的事件。考虑以下情况：在程序开始运行时，系统时间比标准时间快1分钟（这里的“快”指数值比标准时间大）。在程序运行的过程中，系统通过校准，将时间调整为了标准时间，会发生什么呢？</p>
-<p>假设调整为标准时间的时刻是a🅱️c（标准时间），那么该系统错误显示的时间就是a:(b+1):c。假设P在a:(b+1):00（系统时间）时刻创建的文件名为a:b+1，那么在系统正确显示后，在新的a:b+1时刻，系统会创建新的a:b+1文件。这样一来，实际上的a:b（标准时间）文件就被覆盖了。《全部成为F》的作者就用这样的构造，做出了一个密室。具体情况可参见小说或动画。</p>
-<p>我在WINDOWS环境下编写了以下程序来验证这个构造的正确性：</p>
-      
-    </div>
-    
-      <div class="article-more-link">
-        <a href="/index.php/2019/07/25/ffff/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-    <article id="post-2019-07-17-maxituan" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/07/17/maxituan/">魔偶马戏团：不幸的动画与伟大的原作</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-07-17T14:23:16.000Z" itemprop="datePublished">2019-07-17</time>
-
-          
-            × <span class="article-word-count">1.2k words</span>
-            
-            × <span class="article-time-to-read">4 minutes</span>
-            
-          
+  LPSECURITY_ATTRIBUTES lpSecurityAttri
+            <a class="read-more" href="/index.php/2019/07/25/ffff/"> ... </a>
         </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>去年的十月新番中，有一部叫 《魔偶马戏团》的漫改动画特别地吸引我的目光。</p><figure class="wp-block-image"><p></p>
-<p><img src="https://image.gcores.com/c57c5b7f-d9e7-434e-88de-a78fa889543f.jpg?x-oss-process=style/original_hsat2x" alt="Related image"> </p></figure><p></p>
-<p>为什么呢？看到那个银发小姐姐了吗？她的声优正是曾经饰演过灰原哀、绫波丽、FAYE的林原惠美。这也是林原女王多年（自《昭和元禄落语君中》）后再次在长篇电视动画中担任主役。</p>
-<div class="wp-block-image">
-  <figure class="aligncenter is-resized"><img src="http://img31.mtime.cn/ph/2016/08/25/114404.68927057_290X440X4.jpg" alt="Image result for æåæ ç¾" width="184" height="279"><figcaption>林原惠美</figcaption></figure>
-</div>
-<p>可惜，它失败的命运似乎从一开始就注定了。《魔偶马戏团》的原作是由著名漫画家藤田和日郎自1997年至2006年连载，用8年时间精心创作的、<strong>总计43卷、91幕</strong>的超长篇漫画，而动画组只做了<strong>36集</strong>。</p>
-      
+        <div class="post-date">2019.07.25</div>
     </div>
     
-      <div class="article-more-link">
-        <a href="/index.php/2019/07/17/maxituan/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/07/17/maxituan/">魔偶马戏团：不幸的动画与伟大的原作</a>
+        <div class="post-except">
+            去年的十月新番中，有一部叫 《魔偶马戏团》的漫改动画特别地吸引我的目光。
+ 
+为什么呢？看到那个银发小姐姐了吗？她的声优正是曾经饰演过灰原哀、绫波丽、FAYE的林原惠美。这也是林原女王多年（自《昭和元禄落语君中》）后再次在长篇电视动画中担任主役。
 
+  林原惠美
 
-
-  
-    <article id="post-2019-07-16-g-bug" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="name">
-      <a href="/index.php/2019/07/16/g-bug/">消失的__free_hook=NULL:一个G++编译优化的BUG</a>
-      
-        
-      
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2019-07-16T12:48:39.000Z" itemprop="datePublished">2019-07-16</time>
-
-          
-            × <span class="article-word-count">1.6k words</span>
-            
-            × <span class="article-time-to-read">7 minutes</span>
-            
-          
+可惜，它失败的命运似乎从一开始就注定了。《魔偶马戏团》的原作是由著名漫画家藤田和日郎自1997年至2006年连载，用8年时间精心创作的、总计43卷、91幕的超长篇漫画，而动画组只做了36集。
+作为对比，《进击的巨人
+            <a class="read-more" href="/index.php/2019/07/17/maxituan/"> ... </a>
         </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      
-        <p>我的C++大作业是实现一个自己的STL deque，由于构造函数过慢（STL20ns，笔者200ns），笔者自己实现了一个针对于0x1010大小的内存分配器。为了不大量修改代码，我使用了__malloc_hook和\__free_hook这两个全局变量。大致的思路是使用一个全局对象，在其构造函数里先用mmap分配一个区域，然后在这个区域里建好一个0x1010大小的chunk链表：</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="cpp" data-enlighter-theme="atomic" data-enlighter-highlight data-enlighter-linenumbers="false" data-enlighter-lineoffset data-enlighter-title data-enlighter-group>chxAlloc::chxAlloc()
-{
-    //std::cout &lt;&lt; "invoke chxAlloc\n";
-    void *begin =
-        mmap(NULL, sizeof(allocChunk) * INIT_NUMBER + 0X10,
-             PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    if ((long long)begin == -1)
-    {
-        std::cout &lt;&lt; "error occur in mmap\n";
-        exit(-1);
-    }
-
-    for (int i = 0; i &lt; INIT_NUMBER; ++i)
-    {
-        allocChunk *temp = (allocChunk *)begin;
-        temp->nextPtr = fast_TARGET;
-        fast_TARGET = temp;
-        temp->sign = -TARGET;
-        begin = ((char *)begin + sizeof(allocChunk));
-    }
-}</pre>
-<p>对GLIBC有了解的读者应该知道，这样其实是手工建立了一个大小为0x1010的fast_chunk链表。由于我不太了解全局对象的构造和其他初始化阶段的顺序，为避免出现问题，我在第一次调用deque的函数时才将malloc和free钩住。</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="atomic" data-enlighter-highlight data-enlighter-linenumbers="false" data-enlighter-lineoffset data-enlighter-title data-enlighter-group>if (__builtin_expect(count == 0, 0))
-    {
-        __malloc_hook = chx.chenxiAlloc;
-        __free_hook = chx.chenxiFree;
-        count++;
-    }</pre>
-<p>在这样钩住之后，调用malloc就会调用到chenxiAlloc，调用free就会调用到chenxiFree. 如果申请或释放的大小不是0x1010（这里我们将自己的chunk_size设为-0x1010，在free的时候就可以检测到），我们就调用GLIBC的malloc和free:</p>
-<pre class="EnlighterJSRAW" data-enlighter-language="generic" data-enlighter-theme="atomic" data-enlighter-highlight data-enlighter-linenumbers data-enlighter-lineoffset data-enlighter-title data-enlighter-group>__malloc_hook = NULL;
-void *ret = malloc(size);
-if (ret == NULL)
-{
-    std::cout &lt;&lt; "error occur in glibc malloc\n";
-    exit(0);
-}
-__malloc_hook = &chenxiAlloc;
-return ret;</pre>
-      
+        <div class="post-date">2019.07.17</div>
     </div>
     
-      <div class="article-more-link">
-        <a href="/index.php/2019/07/16/g-bug/#more">read more</a>
-      </div>
-    
-    
-    
-  </div>
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav" class="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/5/">« Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
-  </nav>
-
-
-
+    <div class="post">
+        <a class="post-title" href="/index.php/2019/07/16/g-bug/">消失的__free_hook=NULL:一个G++编译优化的BUG</a>
+        <div class="post-except">
+            我的C++大作业是实现一个自己的STL deque，由于构造函数过慢（STL20ns，笔者200ns），笔者自己实现了一个针对于0x1010大小的内存分配器。为了不大量修改代码，我使用了__malloc_hook和\__free_hook这两个全局变量。大致的思路是使用一个全局对象，在其构造函数里先用mmap分配一个区域，然后在这个区域里建好一个0x1010大小的chunk链表：
+chxAlloc::chxAlloc()
+{
+    //std::cout &lt;&lt; 
+            <a class="read-more" href="/index.php/2019/07/16/g-bug/"> ... </a>
+        </div>
+        <div class="post-date">2019.07.16</div>
     </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
+    
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+
+<div class="paginator">
+    <a class="extend prev" rel="prev" href="/page/5/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+</div>
+
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

@@ -1,90 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>数据结构 -- 排序 -- 笔记 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="前言 关于排序的基本问题 插入排序  关于“监视哨” 算法分析   希尔排序  算法分析   冒泡排序  算法分析   快速排序  算法分析   选择排序  算法分析   堆排序  算法分析   归并排序  算法分析   基数排序  算法分析     前言 这一章我们学习了排序这一基本算法。本笔记主要做了以下工作：  总结了排序的各种问题 总结并实现了8种排序算法：  插入排序 希尔排序 冒泡排">
-<meta property="og:type" content="article">
-<meta property="og:title" content="数据结构 -- 排序 -- 笔记">
-<meta property="og:url" content="https://ayanamists.xyz/2020/01/02/2020-1-2-sort/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="前言 关于排序的基本问题 插入排序  关于“监视哨” 算法分析   希尔排序  算法分析   冒泡排序  算法分析   快速排序  算法分析   选择排序  算法分析   堆排序  算法分析   归并排序  算法分析   基数排序  算法分析     前言 这一章我们学习了排序这一基本算法。本笔记主要做了以下工作：  总结了排序的各种问题 总结并实现了8种排序算法：  插入排序 希尔排序 冒泡排">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-02T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="算法">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2020-1-2-sort" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      数据结构 -- 排序 -- 笔记
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-01-02T00:00:00.000Z" itemprop="datePublished">2020-01-02</time>
-
-          
-            × <span class="article-word-count">4.7k words</span>
-            
-            × <span class="article-time-to-read">19 minutes</span>
-            
-          
+        <div class="post-main-title">
+            数据结构 -- 排序 -- 笔记
         </div>
-      </header>
+        <div class="post-meta">
+            2020-01-02
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <ul>
 <li><a href="#%e5%89%8d%e8%a8%80">前言</a></li>
 <li><a href="#%e5%85%b3%e4%ba%8e%e6%8e%92%e5%ba%8f%e7%9a%84%e5%9f%ba%e6%9c%ac%e9%97%ae%e9%a2%98">关于排序的基本问题</a></li>
@@ -168,12 +130,25 @@
 </blockquote>
 <p>有了这个思想，我们定义一个基本操作A(n)，就是将一个从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>有序的序列变为一个从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>有序的序列。那么，只要自<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>至<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>使用这个操作，这个序列就被排好序了。</p>
 <p>我们还要搞定最后一个问题，那就是如何将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">m</span></span></span></span>号元素插入到“正确”位置呢？答案也很简单，那就是设置一个条件<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi></mrow><annotation encoding="application/x-tex">P</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span></span></span></span>，如果<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>l</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo separator="true">,</mo><mi>l</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo stretchy="false">[</mo><mi>m</mi><mo stretchy="false">]</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(list[i], list[m])</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mopen">[</span><span class="mord mathdefault">i</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mopen">[</span><span class="mord mathdefault">m</span><span class="mclose">]</span><span class="mclose">)</span></span></span></span>满足条件，那就结束，否则将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>号元素后移，继续和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.74285em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>号元素比较。这样有些抽象，为了真正说明白，还是需要代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 此段代码来自维基百科--插入排序词条 */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insertion_sort</span><span class="params">(<span class="type">int</span> arr[],<span class="type">int</span> len)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;len;i++)&#123;</span><br><span class="line">        <span class="type">int</span> key=arr[i];</span><br><span class="line">        <span class="type">int</span> j=i<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>((j&gt;=<span class="number">0</span>) &amp;&amp; (key&lt;arr[j]))&#123;</span><br><span class="line">          arr[j+<span class="number">1</span>]=arr[j];</span><br><span class="line">          j--;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[j+<span class="number">1</span>]=key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* 此段代码来自维基百科--插入排序词条 */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">insertion_sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arr[],<span class="hljs-keyword">int</span> len)</span></span>&#123;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">1</span>;i&lt;len;i++)&#123;
+        <span class="hljs-keyword">int</span> key=arr[i];
+        <span class="hljs-keyword">int</span> j=i<span class="hljs-number">-1</span>;
+        <span class="hljs-keyword">while</span>((j&gt;=<span class="hljs-number">0</span>) &amp;&amp; (key&lt;arr[j]))&#123;
+          arr[j+<span class="hljs-number">1</span>]=arr[j];
+          j--;
+        &#125;
+        arr[j+<span class="hljs-number">1</span>]=key;
+    &#125;
+&#125;
+</code></pre>
 <p>显然，这段代码是升序排序的代码，它很简单。作为实现来说，不足之处是没有正确利用模板，只能实现对整数序列排序。</p>
 <h3 id="关于监视哨"><a class="markdownIt-Anchor" href="#关于监视哨"></a> 关于“监视哨”</h3>
 <p>一个比较麻烦的问题是所谓的“监视哨”，其实说它“比较麻烦”也是因为有些人讲的实在太混乱。</p>
 <p>我们重点关注以下刚才探讨的代码的这一句话：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>((j&gt;=<span class="number">0</span>) &amp;&amp; (key&lt;arr[j]))&#123;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">while</span>((j&gt;=<span class="hljs-number">0</span>) &amp;&amp; (key&lt;arr[j]))&#123;
+</code></pre>
 <p>什么时候会触发<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>j</mi><mo>&gt;</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">j &gt;= 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span></span><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>这一条件呢？那就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>j</mi><mo>=</mo><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">j == -1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span>的时候，也就是说从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.74285em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>都不满足条件，要把这个元素插在开头。</p>
 <p>这样我们会发现，这做法是为了一次失败准备的，但我们却要在成功的时候（绝大部分）来作这次比较。</p>
 <p>所以自然地，我们会想到要不要优化一下，想办法消除掉这次比较。</p>
@@ -224,7 +199,22 @@
 <p>我们看到，这个排序过程有一个“分成n个列表”的动作，这个<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>的不同取值，叫做步长序列。</p>
 <p>步长序列怎么取呢？这取法是很多的，算法的发明者采用的是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mi>n</mi><mn>2</mn></mfrac><mo separator="true">,</mo><mfrac><mi>n</mi><mn>4</mn></mfrac><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\frac{n}{2}, \frac{n}{4}, ..., 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span></span></span></span>这个序列。</p>
 <p>我们来实现一下这个“分列 -&gt; 排序”的过程：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyShellSort</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; vec)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> step = vec.<span class="built_in">size</span>() / <span class="number">2</span>; step &gt; <span class="number">0</span>; step /= <span class="number">2</span>) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> i = step; i &lt; vec.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">			<span class="type">int</span> j = i - step;</span><br><span class="line">			<span class="type">int</span> temp = vec[i];</span><br><span class="line"></span><br><span class="line">			<span class="keyword">while</span> (j - step &gt;= <span class="number">0</span> &amp;&amp; vec[j] &gt; temp)</span><br><span class="line">			&#123;</span><br><span class="line">				vec[j + step] = vec[j];</span><br><span class="line">				j -= step;</span><br><span class="line">			&#125;</span><br><span class="line">			vec[j + step] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">MyShellSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; vec)</span> </span>&#123;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> <span class="hljs-built_in">step</span> = vec.<span class="hljs-built_in">size</span>() / <span class="hljs-number">2</span>; <span class="hljs-built_in">step</span> &gt; <span class="hljs-number">0</span>; <span class="hljs-built_in">step</span> /= <span class="hljs-number">2</span>) &#123;
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-built_in">step</span>; i &lt; vec.<span class="hljs-built_in">size</span>(); ++i) &#123;
+			<span class="hljs-keyword">int</span> j = i - <span class="hljs-built_in">step</span>;
+			<span class="hljs-keyword">int</span> temp = vec[i];
+
+			<span class="hljs-keyword">while</span> (j - <span class="hljs-built_in">step</span> &gt;= <span class="hljs-number">0</span> &amp;&amp; vec[j] &gt; temp)
+			&#123;
+				vec[j + <span class="hljs-built_in">step</span>] = vec[j];
+				j -= <span class="hljs-built_in">step</span>;
+			&#125;
+			vec[j + <span class="hljs-built_in">step</span>] = temp;
+		&#125;
+	&#125;
+&#125;
+</code></pre>
 <p>如果对比一下这份代码和插入排序的代码，我们会发现插入排序就是希尔排序<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>t</mi><mi>e</mi><mi>p</mi><mo>=</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">step == 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>时的情况。</p>
 <p>然后我们也会看到，如果step比较大，那么待排序元素数量不大，会进入第一个插入排序较快情况；如果step比较小，那么序列基本有序，进入第二个插入排序较快情况。可见希尔排序的速度应该是比较好的。</p>
 <h3 id="算法分析-2"><a class="markdownIt-Anchor" href="#算法分析-2"></a> 算法分析</h3>
@@ -239,9 +229,33 @@
 <h2 id="冒泡排序"><a class="markdownIt-Anchor" href="#冒泡排序"></a> 冒泡排序</h2>
 <p>冒泡排序的基本思想是每一次都把未排序序列中最大/最小的元素交换到未排序序列的头部。</p>
 <p>这个算法我们很熟悉，实现起来很简单：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyBubbleSort</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; vec)</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">auto</span> i = <span class="number">0</span>; i &lt; vec.<span class="built_in">size</span>();++i)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> j = i + <span class="number">1</span>; j &lt; vec.<span class="built_in">size</span>();++j)&#123;</span><br><span class="line">      <span class="keyword">if</span>(vec[i] &lt; vec[j])&#123;</span><br><span class="line">        std::<span class="built_in">swap</span>(vec[i], vec[j]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">MyBubbleSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; vec)</span></span>&#123;
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> i = <span class="hljs-number">0</span>; i &lt; vec.<span class="hljs-built_in">size</span>();++i)&#123;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> j = i + <span class="hljs-number">1</span>; j &lt; vec.<span class="hljs-built_in">size</span>();++j)&#123;
+      <span class="hljs-keyword">if</span>(vec[i] &lt; vec[j])&#123;
+        <span class="hljs-built_in">std</span>::swap(vec[i], vec[j]);
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
 <p>但是这样一来即使序列是有序的，我们仍然会是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>的时间复杂度，所以要优化一下:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyBobbleSort</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt;&amp; vec)</span> </span>&#123;</span><br><span class="line">	<span class="type">bool</span> hit = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0</span>; i &lt; vec.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> j = i + <span class="number">1</span>; j &lt; vec.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">			<span class="keyword">if</span> (vec[i] &gt; vec[j]) &#123;</span><br><span class="line">				std::<span class="built_in">swap</span>(vec[i], vec[j]);</span><br><span class="line">				hit = <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (hit == <span class="literal">false</span>) &#123;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		hit = <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">MyBobbleSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; vec)</span> </span>&#123;
+	<span class="hljs-keyword">bool</span> hit = <span class="hljs-literal">false</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> i = <span class="hljs-number">0</span>; i &lt; vec.<span class="hljs-built_in">size</span>(); ++i) &#123;
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> j = i + <span class="hljs-number">1</span>; j &lt; vec.<span class="hljs-built_in">size</span>(); ++j) &#123;
+			<span class="hljs-keyword">if</span> (vec[i] &gt; vec[j]) &#123;
+				<span class="hljs-built_in">std</span>::swap(vec[i], vec[j]);
+				hit = <span class="hljs-literal">true</span>;
+			&#125;
+		&#125;
+		<span class="hljs-keyword">if</span> (hit == <span class="hljs-literal">false</span>) &#123;
+			<span class="hljs-keyword">break</span>;
+		&#125;
+		hit = <span class="hljs-literal">false</span>;
+	&#125;
+&#125;
+</code></pre>
 <p>这样一来，如果序列有序，就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>复杂度了。</p>
 <h3 id="算法分析-3"><a class="markdownIt-Anchor" href="#算法分析-3"></a> 算法分析</h3>
 <p>冒泡排序的</p>
@@ -265,20 +279,89 @@
 <li>把它们合在一起。</li>
 </ol>
 <p>就按照这个描述，我们用ruby实现一下：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Array</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">qsort</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">if</span> <span class="variable language_">self</span>.length &lt;= <span class="number">1</span> </span><br><span class="line">    <span class="comment"># 默认找到的为置为0</span></span><br><span class="line">    left, right = <span class="variable language_">self</span>[<span class="number">1</span>...-<span class="number">1</span>].partition &#123; |<span class="params">i</span>| i &lt;= <span class="variable language_">self</span>[<span class="number">0</span>] &#125;</span><br><span class="line">    left.qsort</span><br><span class="line">    right.qsort</span><br><span class="line">    <span class="variable language_">self</span> = left + <span class="variable language_">self</span>[<span class="number">0</span>] + right</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Array</span></span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">qsort</span></span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.length &lt;= <span class="hljs-number">1</span> 
+    <span class="hljs-comment"># 默认找到的为置为0</span>
+    left, right = <span class="hljs-keyword">self</span>[<span class="hljs-number">1</span>...-<span class="hljs-number">1</span>].partition &#123; <span class="hljs-params">|i|</span> i &lt;= <span class="hljs-keyword">self</span>[<span class="hljs-number">0</span>] &#125;
+    left.qsort
+    right.qsort
+    <span class="hljs-keyword">self</span> = left + <span class="hljs-keyword">self</span>[<span class="hljs-number">0</span>] + right
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
 <p>为了防止有人不懂ruby，我们再用C++实现一遍：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector <span class="title">qsort</span><span class="params">(std::vector vec)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(vec.<span class="built_in">size</span>() &lt;= <span class="number">1</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> vec</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">auto</span> this_ele = vector[<span class="number">0</span>];</span><br><span class="line">	std::vector left;</span><br><span class="line">	std::vector right;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">auto</span> i = <span class="number">1</span>; i &lt; vec.<span class="built_in">size</span>(); ++i)&#123;</span><br><span class="line">		<span class="keyword">if</span>(vec[i] &lt;= this_ele)&#123;</span><br><span class="line">			left.<span class="built_in">push_back</span>(vec[i]);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>&#123;</span><br><span class="line">			right.<span class="built_in">push_back</span>(vec[i]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	left = <span class="built_in">qsort</span>(left);</span><br><span class="line">	right = <span class="built_in">qsort</span>(right);</span><br><span class="line">	<span class="function">std::vector <span class="title">ret</span><span class="params">(left)</span></span>;</span><br><span class="line">	ret.<span class="built_in">push_back</span>(this_ele);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">auto</span> i in right)&#123;</span><br><span class="line">		ret.<span class="built_in">push_back</span>(i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span> <span class="hljs-title">qsort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span> vec)</span></span>&#123;
+	<span class="hljs-keyword">if</span>(vec.<span class="hljs-built_in">size</span>() &lt;= <span class="hljs-number">1</span>)&#123;
+		<span class="hljs-keyword">return</span> vec
+	&#125;
+	<span class="hljs-keyword">auto</span> this_ele = <span class="hljs-built_in">vector</span>[<span class="hljs-number">0</span>];
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span> left;
+	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span> right;
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> i = <span class="hljs-number">1</span>; i &lt; vec.<span class="hljs-built_in">size</span>(); ++i)&#123;
+		<span class="hljs-keyword">if</span>(vec[i] &lt;= this_ele)&#123;
+			left.push_back(vec[i]);
+		&#125;
+		<span class="hljs-keyword">else</span>&#123;
+			right.push_back(vec[i]);
+		&#125;
+	&#125;
+	left = qsort(left);
+	right = qsort(right);
+	<span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span> <span class="hljs-title">ret</span><span class="hljs-params">(left)</span></span>;
+	ret.push_back(this_ele);
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> i in right)&#123;
+		ret.push_back(i);
+	&#125;
+	<span class="hljs-keyword">return</span> ret;
+&#125;
+</code></pre>
 <p>这个实现就是对算法的直接实现，但是它的效率是很堪忧的，为什么呢？</p>
 <p>我们这样写，实际上每次都要新开辟额外的空间，而且这空间还不小，大概是$$O(n)$$的数量级。</p>
 <p>如果用c/c++去写，本事就是要追求性能的，自然不可以这样。</p>
 <p>所以我们需要一种叫做“原位排序”的技术。而原位排序的关键是原位分割，也即是说在原数组上实现分割。</p>
 <p>为了实现原位分割，人们想了各种奇奇怪怪的方法，这里展示两种</p>
 <p>一种是比较难以理解的：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">TYPE_ITERATION</span>&gt;</span><br><span class="line"><span class="function">TYPE_ITERATION <span class="title">partition</span><span class="params">(TYPE_ITERATION begin, TYPE_ITERATION end)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">auto</span> mid = *(end - <span class="number">1</span>);</span><br><span class="line">	TYPE_ITERATION str = begin;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> i = begin; i &lt; end - <span class="number">1</span>; ++i) &#123;</span><br><span class="line">		<span class="keyword">if</span> (*i &lt; mid) &#123;</span><br><span class="line">			<span class="built_in">iter_swap</span>(i, str++);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">iter_swap</span>(str, end - <span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TYPE_ITERATION</span>&gt;
+<span class="hljs-title">TYPE_ITERATION</span> <span class="hljs-title">partition</span>(<span class="hljs-title">TYPE_ITERATION</span> <span class="hljs-title">begin</span>, <span class="hljs-title">TYPE_ITERATION</span> <span class="hljs-title">end</span>) &#123;</span>
+	<span class="hljs-keyword">auto</span> mid = *(<span class="hljs-built_in">end</span> - <span class="hljs-number">1</span>);
+	TYPE_ITERATION str = <span class="hljs-built_in">begin</span>;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> i = <span class="hljs-built_in">begin</span>; i &lt; <span class="hljs-built_in">end</span> - <span class="hljs-number">1</span>; ++i) &#123;
+		<span class="hljs-keyword">if</span> (*i &lt; mid) &#123;
+			iter_swap(i, str++);
+		&#125;
+	&#125;
+	iter_swap(str, <span class="hljs-built_in">end</span> - <span class="hljs-number">1</span>);
+	<span class="hljs-keyword">return</span> str;
+&#125;
+</code></pre>
 <p>一种是稍微好理解一点的：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">T mid = arr[end];</span><br><span class="line"><span class="type">int</span> left = start, right = end - <span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span> (left &lt; right) &#123; <span class="comment">//在整个范围内搜寻比枢纽小或大的元素，然后将左侧元素与右侧元素交换</span></span><br><span class="line">  <span class="keyword">while</span> (arr[left] &lt; mid &amp;&amp; left &lt; right) <span class="comment">//试图在左侧找到一个比枢纽更大的元素</span></span><br><span class="line">    left++;</span><br><span class="line">  <span class="keyword">while</span> (arr[right] &gt;= mid &amp;&amp; left &lt; right) <span class="comment">//试图在右侧找到一个比枢纽更小的元素</span></span><br><span class="line">    right--;</span><br><span class="line">  std::<span class="built_in">swap</span>(arr[left], arr[right]); <span class="comment">//交换元素</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (arr[left] &gt;= arr[end])</span><br><span class="line">  std::<span class="built_in">swap</span>(arr[left], arr[end]);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  left++; </span><br><span class="line"><span class="comment">//arr[left]就是最后被选出的元素</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++">T mid = arr[<span class="hljs-built_in">end</span>];
+<span class="hljs-keyword">int</span> left = start, right = <span class="hljs-built_in">end</span> - <span class="hljs-number">1</span>;
+<span class="hljs-keyword">while</span> (left &lt; right) &#123; <span class="hljs-comment">//在整个范围内搜寻比枢纽小或大的元素，然后将左侧元素与右侧元素交换</span>
+  <span class="hljs-keyword">while</span> (arr[left] &lt; mid &amp;&amp; left &lt; right) <span class="hljs-comment">//试图在左侧找到一个比枢纽更大的元素</span>
+    left++;
+  <span class="hljs-keyword">while</span> (arr[right] &gt;= mid &amp;&amp; left &lt; right) <span class="hljs-comment">//试图在右侧找到一个比枢纽更小的元素</span>
+    right--;
+  <span class="hljs-built_in">std</span>::swap(arr[left], arr[right]); <span class="hljs-comment">//交换元素</span>
+&#125;
+<span class="hljs-keyword">if</span> (arr[left] &gt;= arr[<span class="hljs-built_in">end</span>])
+  <span class="hljs-built_in">std</span>::swap(arr[left], arr[<span class="hljs-built_in">end</span>]);
+<span class="hljs-keyword">else</span>
+  left++; 
+<span class="hljs-comment">//arr[left]就是最后被选出的元素</span>
+</code></pre>
 <p>不过，有了这个partition函数，下面的操作就很简单了：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">TYPE_ITERATION</span>&gt;</span><br><span class="line"><span class="function">VALUE <span class="title">Mysort</span><span class="params">(TYPE_ITERATION begin, TYPE_ITERATION end)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (begin + <span class="number">1</span> &gt;= end) &#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	TYPE_ITERATION mid = ::<span class="built_in">partition</span>(begin, end);</span><br><span class="line">	::<span class="built_in">Mysort</span>(begin, mid);</span><br><span class="line">	::<span class="built_in">Mysort</span>(mid + <span class="number">1</span>, end);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TYPE_ITERATION</span>&gt;
+<span class="hljs-title">VALUE</span> <span class="hljs-title">Mysort</span>(<span class="hljs-title">TYPE_ITERATION</span> <span class="hljs-title">begin</span>, <span class="hljs-title">TYPE_ITERATION</span> <span class="hljs-title">end</span>) &#123;</span>
+	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">begin</span> + <span class="hljs-number">1</span> &gt;= <span class="hljs-built_in">end</span>) &#123;
+		<span class="hljs-keyword">return</span>;
+	&#125;
+	TYPE_ITERATION mid = ::partition(<span class="hljs-built_in">begin</span>, <span class="hljs-built_in">end</span>);
+	::Mysort(<span class="hljs-built_in">begin</span>, mid);
+	::Mysort(mid + <span class="hljs-number">1</span>, <span class="hljs-built_in">end</span>);
+&#125;
+</code></pre>
 <h3 id="算法分析-4"><a class="markdownIt-Anchor" href="#算法分析-4"></a> 算法分析</h3>
 <p>快速排序的</p>
 <ul>
@@ -301,7 +384,18 @@
 <p>选择排序（Selection sort）是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。</p>
 </blockquote>
 <p>实现如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 来自维基百科 */</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; </span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">selection_sort</span><span class="params">(std::vector&lt;T&gt;&amp; arr)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; arr.<span class="built_in">size</span>() - <span class="number">1</span>; i++) &#123;</span><br><span class="line">		<span class="type">int</span> min = i;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; arr.<span class="built_in">size</span>(); j++)</span><br><span class="line">			<span class="keyword">if</span> (arr[j] &lt; arr[min])</span><br><span class="line">				min = j;</span><br><span class="line">		std::<span class="built_in">swap</span>(arr[i], arr[min]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* 来自维基百科 */</span>
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt; 
+<span class="hljs-keyword">void</span> <span class="hljs-title">selection_sort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;T&gt;&amp; arr)</span> </span>&#123;
+	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; arr.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>; i++) &#123;
+		<span class="hljs-keyword">int</span> <span class="hljs-built_in">min</span> = i;
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt; arr.<span class="hljs-built_in">size</span>(); j++)
+			<span class="hljs-keyword">if</span> (arr[j] &lt; arr[<span class="hljs-built_in">min</span>])
+				<span class="hljs-built_in">min</span> = j;
+		<span class="hljs-built_in">std</span>::swap(arr[i], arr[<span class="hljs-built_in">min</span>]);
+	&#125;
+&#125;
+</code></pre>
 <h3 id="算法分析-5"><a class="markdownIt-Anchor" href="#算法分析-5"></a> 算法分析</h3>
 <p>选择排序的</p>
 <ul>
@@ -316,7 +410,17 @@
 <p>那么，如果我们从一个堆中取出<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>次，岂不就得到了一个排好序的序列？</p>
 <p>这时的时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(log(n))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>，然后还需要把一开始的无序序列变为堆，也需要<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(log(n))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>，总体来看，堆排序可以稳定地达到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(log(n))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span>的复杂度。</p>
 <p>由于上次已经用ruby实现过堆了，我们这次直接实现一个堆排序就极为简单：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> BinaryHeapable</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">heap_sort</span></span><br><span class="line">    <span class="variable language_">self</span>.convert_to_heap</span><br><span class="line">    arr = []</span><br><span class="line">    <span class="keyword">while</span> <span class="variable language_">self</span>.length != <span class="number">0</span></span><br><span class="line">      arr &lt;&lt; <span class="variable language_">self</span>.remove_from_heap</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="variable language_">self</span> = arr</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="ruby"><span class="hljs-class"><span class="hljs-keyword">module</span> <span class="hljs-title">BinaryHeapable</span></span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">heap_sort</span></span>
+    <span class="hljs-keyword">self</span>.convert_to_heap
+    arr = []
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">self</span>.length != <span class="hljs-number">0</span>
+      arr &lt;&lt; <span class="hljs-keyword">self</span>.remove_from_heap
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">self</span> = arr
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
 <p>但这样和快速排序一样，会耗费额外的空间。我们也最好要实现原位排序。</p>
 <p>如何实现呢？我们这样去做：<br />
 每次排序时，顺序执行这三个步骤：</p>
@@ -326,7 +430,39 @@
 <li>调整，使得新的堆满足堆序。</li>
 </ol>
 <p>c++实现如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 代码来自维基百科 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">max_heapify</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> start, <span class="type">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 建立父節點指標和子節點指標</span></span><br><span class="line">    <span class="type">int</span> dad = start;</span><br><span class="line">    <span class="type">int</span> son = dad * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (son &lt;= end) &#123; <span class="comment">// 若子節點指標在範圍內才做比較</span></span><br><span class="line">        <span class="keyword">if</span> (son + <span class="number">1</span> &lt;= end &amp;&amp; arr[son] &lt; arr[son + <span class="number">1</span>]) <span class="comment">// 先比較兩個子節點大小，選擇最大的</span></span><br><span class="line">            son++;</span><br><span class="line">        <span class="keyword">if</span> (arr[dad] &gt; arr[son]) <span class="comment">// 如果父節點大於子節點代表調整完畢，直接跳出函數</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="comment">// 否則交換父子內容再繼續子節點和孫節點比較</span></span><br><span class="line">            <span class="built_in">swap</span>(arr[dad], arr[son]);</span><br><span class="line">            dad = son;</span><br><span class="line">            son = dad * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heap_sort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 初始化，i從最後一個父節點開始調整</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = len / <span class="number">2</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">        <span class="built_in">max_heapify</span>(arr, i, len - <span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 先將第一個元素和已经排好的元素前一位做交換，再從新調整(刚调整的元素之前的元素)，直到排序完畢</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = len - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(arr[<span class="number">0</span>], arr[i]);</span><br><span class="line">        <span class="built_in">max_heapify</span>(arr, <span class="number">0</span>, i - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* 代码来自维基百科 */</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">max_heapify</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arr[], <span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> <span class="hljs-built_in">end</span>)</span> </span>&#123;
+    <span class="hljs-comment">// 建立父節點指標和子節點指標</span>
+    <span class="hljs-keyword">int</span> dad = start;
+    <span class="hljs-keyword">int</span> son = dad * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (son &lt;= <span class="hljs-built_in">end</span>) &#123; <span class="hljs-comment">// 若子節點指標在範圍內才做比較</span>
+        <span class="hljs-keyword">if</span> (son + <span class="hljs-number">1</span> &lt;= <span class="hljs-built_in">end</span> &amp;&amp; arr[son] &lt; arr[son + <span class="hljs-number">1</span>]) <span class="hljs-comment">// 先比較兩個子節點大小，選擇最大的</span>
+            son++;
+        <span class="hljs-keyword">if</span> (arr[dad] &gt; arr[son]) <span class="hljs-comment">// 如果父節點大於子節點代表調整完畢，直接跳出函數</span>
+            <span class="hljs-keyword">return</span>;
+        <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">// 否則交換父子內容再繼續子節點和孫節點比較</span>
+            swap(arr[dad], arr[son]);
+            dad = son;
+            son = dad * <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
+        &#125;
+    &#125;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">heap_sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arr[], <span class="hljs-keyword">int</span> len)</span> </span>&#123;
+    <span class="hljs-comment">// 初始化，i從最後一個父節點開始調整</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = len / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--)
+        max_heapify(arr, i, len - <span class="hljs-number">1</span>);
+    <span class="hljs-comment">// 先將第一個元素和已经排好的元素前一位做交換，再從新調整(刚调整的元素之前的元素)，直到排序完畢</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = len - <span class="hljs-number">1</span>; i &gt; <span class="hljs-number">0</span>; i--) &#123;
+        swap(arr[<span class="hljs-number">0</span>], arr[i]);
+        max_heapify(arr, <span class="hljs-number">0</span>, i - <span class="hljs-number">1</span>);
+    &#125;
+&#125;
+</code></pre>
 <h3 id="算法分析-6"><a class="markdownIt-Anchor" href="#算法分析-6"></a> 算法分析</h3>
 <p>堆排序的</p>
 <ul>
@@ -345,7 +481,30 @@
 <li>合，合并这两个子序列，使得它们有序。</li>
 </ol>
 <p>c++实现如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort_recursive</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> reg[], <span class="type">int</span> start, <span class="type">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (start &gt;= end)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> len = end - start, mid = (len &gt;&gt; <span class="number">1</span>) + start;</span><br><span class="line">    <span class="type">int</span> start1 = start, end1 = mid;</span><br><span class="line">    <span class="type">int</span> start2 = mid + <span class="number">1</span>, end2 = end;</span><br><span class="line">    <span class="built_in">merge_sort_recursive</span>(arr, reg, start1, end1);</span><br><span class="line">    <span class="built_in">merge_sort_recursive</span>(arr, reg, start2, end2);</span><br><span class="line">    <span class="type">int</span> k = start;</span><br><span class="line">    <span class="keyword">while</span> (start1 &lt;= end1 &amp;&amp; start2 &lt;= end2)</span><br><span class="line">        reg[k++] = arr[start1] &lt; arr[start2] ? arr[start1++] : arr[start2++];</span><br><span class="line">    <span class="keyword">while</span> (start1 &lt;= end1)</span><br><span class="line">        reg[k++] = arr[start1++];</span><br><span class="line">    <span class="keyword">while</span> (start2 &lt;= end2)</span><br><span class="line">        reg[k++] = arr[start2++];</span><br><span class="line">    <span class="keyword">for</span> (k = start; k &lt;= end; k++)</span><br><span class="line">        arr[k] = reg[k];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">const</span> <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> reg[len];</span><br><span class="line">    <span class="built_in">merge_sort_recursive</span>(arr, reg, <span class="number">0</span>, len - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">merge_sort_recursive</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arr[], <span class="hljs-keyword">int</span> reg[], <span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> <span class="hljs-built_in">end</span>)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (start &gt;= <span class="hljs-built_in">end</span>)
+        <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">int</span> len = <span class="hljs-built_in">end</span> - start, mid = (len &gt;&gt; <span class="hljs-number">1</span>) + start;
+    <span class="hljs-keyword">int</span> start1 = start, end1 = mid;
+    <span class="hljs-keyword">int</span> start2 = mid + <span class="hljs-number">1</span>, end2 = <span class="hljs-built_in">end</span>;
+    merge_sort_recursive(arr, reg, start1, end1);
+    merge_sort_recursive(arr, reg, start2, end2);
+    <span class="hljs-keyword">int</span> k = start;
+    <span class="hljs-keyword">while</span> (start1 &lt;= end1 &amp;&amp; start2 &lt;= end2)
+        reg[k++] = arr[start1] &lt; arr[start2] ? arr[start1++] : arr[start2++];
+    <span class="hljs-keyword">while</span> (start1 &lt;= end1)
+        reg[k++] = arr[start1++];
+    <span class="hljs-keyword">while</span> (start2 &lt;= end2)
+        reg[k++] = arr[start2++];
+    <span class="hljs-keyword">for</span> (k = start; k &lt;= <span class="hljs-built_in">end</span>; k++)
+        arr[k] = reg[k];
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">merge_sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arr[], <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> len)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> reg[len];
+    merge_sort_recursive(arr, reg, <span class="hljs-number">0</span>, len - <span class="hljs-number">1</span>);
+&#125;
+</code></pre>
 <h3 id="算法分析-7"><a class="markdownIt-Anchor" href="#算法分析-7"></a> 算法分析</h3>
 <p>归并排序的</p>
 <ul>
@@ -369,7 +528,39 @@
 </ol>
 <p>这样以后，整个序列就排好序了。可以看到，时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>k</mi><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(kn)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>，其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>是最大位数。还要花费<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>的额外空间。</p>
 <p>实现如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 这段代码来自维基百科 */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">radixsort</span><span class="params">(<span class="type">int</span> data[], <span class="type">int</span> n)</span> <span class="comment">//基数排序</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> d = <span class="built_in">maxbit</span>(data, n);</span><br><span class="line">    <span class="type">int</span> *tmp = <span class="keyword">new</span> <span class="type">int</span>[n];</span><br><span class="line">    <span class="type">int</span> *count = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">10</span>]; <span class="comment">//计数器</span></span><br><span class="line">    <span class="type">int</span> i, j, k;</span><br><span class="line">    <span class="type">int</span> radix = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= d; i++) <span class="comment">//进行d次排序</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++)</span><br><span class="line">            count[j] = <span class="number">0</span>; <span class="comment">//每次分配前清空计数器</span></span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            k = (data[j] / radix) % <span class="number">10</span>; <span class="comment">//统计每个桶中的记录数</span></span><br><span class="line">            count[k]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">1</span>; j &lt; <span class="number">10</span>; j++)</span><br><span class="line">            count[j] = count[j - <span class="number">1</span>] + count[j]; <span class="comment">//将tmp中的位置依次分配给每个桶</span></span><br><span class="line">        <span class="keyword">for</span>(j = n - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) <span class="comment">//将所有桶中记录依次收集到tmp中</span></span><br><span class="line">        &#123;</span><br><span class="line">            k = (data[j] / radix) % <span class="number">10</span>;</span><br><span class="line">            tmp[count[k] - <span class="number">1</span>] = data[j];</span><br><span class="line">            count[k]--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; n; j++) <span class="comment">//将临时数组的内容复制到data中</span></span><br><span class="line">            data[j] = tmp[j];</span><br><span class="line">        radix = radix * <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> []tmp;</span><br><span class="line">    <span class="keyword">delete</span> []count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c++"><span class="hljs-comment">/* 这段代码来自维基百科 */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">radixsort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> data[], <span class="hljs-keyword">int</span> n)</span> <span class="hljs-comment">//基数排序</span>
+</span>&#123;
+    <span class="hljs-keyword">int</span> d = maxbit(data, n);
+    <span class="hljs-keyword">int</span> *tmp = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n];
+    <span class="hljs-keyword">int</span> *count = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[<span class="hljs-number">10</span>]; <span class="hljs-comment">//计数器</span>
+    <span class="hljs-keyword">int</span> i, j, k;
+    <span class="hljs-keyword">int</span> radix = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">1</span>; i &lt;= d; i++) <span class="hljs-comment">//进行d次排序</span>
+    &#123;
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">10</span>; j++)
+            count[j] = <span class="hljs-number">0</span>; <span class="hljs-comment">//每次分配前清空计数器</span>
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; n; j++)
+        &#123;
+            k = (data[j] / radix) % <span class="hljs-number">10</span>; <span class="hljs-comment">//统计每个桶中的记录数</span>
+            count[k]++;
+        &#125;
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">1</span>; j &lt; <span class="hljs-number">10</span>; j++)
+            count[j] = count[j - <span class="hljs-number">1</span>] + count[j]; <span class="hljs-comment">//将tmp中的位置依次分配给每个桶</span>
+        <span class="hljs-keyword">for</span>(j = n - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">0</span>; j--) <span class="hljs-comment">//将所有桶中记录依次收集到tmp中</span>
+        &#123;
+            k = (data[j] / radix) % <span class="hljs-number">10</span>;
+            tmp[count[k] - <span class="hljs-number">1</span>] = data[j];
+            count[k]--;
+        &#125;
+        <span class="hljs-keyword">for</span>(j = <span class="hljs-number">0</span>; j &lt; n; j++) <span class="hljs-comment">//将临时数组的内容复制到data中</span>
+            data[j] = tmp[j];
+        radix = radix * <span class="hljs-number">10</span>;
+    &#125;
+    <span class="hljs-keyword">delete</span> []tmp;
+    <span class="hljs-keyword">delete</span> []count;
+&#125;
+</code></pre>
 <h3 id="算法分析-8"><a class="markdownIt-Anchor" href="#算法分析-8"></a> 算法分析</h3>
 <p>归并排序的</p>
 <ul>
@@ -380,74 +571,30 @@
 <li>辅助空间：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></li>
 </ul>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/02/14/2020-02-14-eap/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          802.11i 无线网络安全（二）-- 802.1x eap认证
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2019/12/22/2019-12-22-Graph/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          数据结构 -- 图 -- 笔记
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

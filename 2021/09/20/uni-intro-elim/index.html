@@ -1,92 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>高中数学题与全称量词的引入/消除规则 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="一道高中数学题 有这样一道高中数学题： 问题1. 考虑一个定义域为实数的函数f(x)f(x)f(x)，如果对于任意的x∈Rx ∈ \mathbb{R}x∈R，有f(x+1)&#x3D;−f(x)f(x + 1)&#x3D;-f(x)f(x+1)&#x3D;−f(x)，f(1)&#x3D;2f(1) &#x3D; 2f(1)&#x3D;2，问：f(2021)f(2021)f(2021)等于多少？ 首先可以看到，这个问题是不宜问“周期是多少”的，因为怎么问都">
-<meta property="og:type" content="article">
-<meta property="og:title" content="高中数学题与全称量词的引入&#x2F;消除规则">
-<meta property="og:url" content="https://ayanamists.xyz/2021/09/20/uni-intro-elim/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="一道高中数学题 有这样一道高中数学题： 问题1. 考虑一个定义域为实数的函数f(x)f(x)f(x)，如果对于任意的x∈Rx ∈ \mathbb{R}x∈R，有f(x+1)&#x3D;−f(x)f(x + 1)&#x3D;-f(x)f(x+1)&#x3D;−f(x)，f(1)&#x3D;2f(1) &#x3D; 2f(1)&#x3D;2，问：f(2021)f(2021)f(2021)等于多少？ 首先可以看到，这个问题是不宜问“周期是多少”的，因为怎么问都">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-20T17:16:28.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.736Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="逻辑学">
-<meta property="article:tag" content="数学">
-<meta property="article:tag" content="数学教育">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-uni-intro-elim" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      高中数学题与全称量词的引入/消除规则
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2021-09-20T17:16:28.000Z" itemprop="datePublished">2021-09-20</time>
-
-          
-            × <span class="article-word-count">1.2k words</span>
-            
-            × <span class="article-time-to-read">5 minutes</span>
-            
-          
+        <div class="post-main-title">
+            高中数学题与全称量词的引入/消除规则
         </div>
-      </header>
+        <div class="post-meta">
+            2021-09-20
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="一道高中数学题"><a class="markdownIt-Anchor" href="#一道高中数学题"></a> 一道高中数学题</h2>
 <p>有这样一道高中数学题：</p>
 <p><strong>问题1.</strong> 考虑一个定义域为实数的函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>，如果对于任意的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>∈</mo><mi mathvariant="double-struck">R</mi></mrow><annotation encoding="application/x-tex">x ∈ \mathbb{R}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68889em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbb">R</span></span></span></span></span>，有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x + 1)=-f(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">f(1) = 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>，问：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mn>2021</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(2021)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord">2</span><span class="mord">0</span><span class="mord">2</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>等于多少？</p>
@@ -150,71 +110,56 @@
 <p>如果能够完全地形式化，那么这个问题并不难讲。但形式化本身是困难的。高中阶段没有讲过形式证明，这个问题出现在“函数”模块，在这之前甚至没有讲过逻辑的部分。所以，这类题目实在不宜当作练习题引入。</p>
 <h2 id="彩蛋coq证明"><a class="markdownIt-Anchor" href="#彩蛋coq证明"></a> 彩蛋：coq证明</h2>
 <p>这个命题在整数上是成立的，我们可以用coq给出一个证明：</p>
-<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Require</span> <span class="keyword">Import</span> Coq.ZArith.BinInt.</span><br><span class="line"></span><br><span class="line"><span class="keyword">Open</span> <span class="keyword">Scope</span> Z_scope.</span><br><span class="line"></span><br><span class="line"><span class="keyword">Theorem</span> double_opp: <span class="keyword">forall</span> x:Z, --x = x.</span><br><span class="line"><span class="keyword">Proof</span>.</span><br><span class="line">  <span class="built_in">intros</span> x.</span><br><span class="line">  <span class="built_in">repeat</span> (<span class="built_in">rewrite</span> Z.opp_eq_mul_m1).</span><br><span class="line">  <span class="built_in">rewrite</span> &lt;- Zmult_assoc. <span class="built_in">simpl</span>.</span><br><span class="line">  <span class="built_in">rewrite</span>  Zmult_1_r. <span class="built_in">reflexivity</span>.</span><br><span class="line"><span class="keyword">Qed</span>.</span><br><span class="line"></span><br><span class="line"><span class="keyword">Theorem</span> t:<span class="keyword">forall</span> f:(Z -&gt; Z), </span><br><span class="line">  (<span class="keyword">forall</span> x, f (x + <span class="number">1</span>) = - f x) -&gt;</span><br><span class="line">  (<span class="keyword">forall</span> x, f (x + <span class="number">2</span>) = f x).</span><br><span class="line"><span class="keyword">Proof</span>.</span><br><span class="line">  <span class="built_in">intros</span> f H1 x.</span><br><span class="line">  <span class="built_in">assert</span> (t1:<span class="keyword">forall</span> x, f(x + <span class="number">2</span>) = - f(x + <span class="number">1</span>)).</span><br><span class="line">  &#123; <span class="built_in">intros</span> x0. </span><br><span class="line">    <span class="built_in">assert</span> (t2: <span class="number">2</span> = <span class="number">1</span> + <span class="number">1</span>). &#123; <span class="built_in">auto</span>. &#125;</span><br><span class="line">    <span class="built_in">rewrite</span> -&gt; t2. <span class="built_in">rewrite</span> Zplus_assoc.</span><br><span class="line">    <span class="built_in">apply</span> H1. &#125;</span><br><span class="line">  <span class="built_in">rewrite</span> t1. <span class="built_in">rewrite</span> H1. <span class="built_in">apply</span> double_opp.</span><br><span class="line"><span class="keyword">Qed</span>.</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="coq"><span class="hljs-keyword">Require</span> <span class="hljs-keyword">Import</span> Coq.ZArith.BinInt.
 
-      
-    </div>
-    
-    
-    <div class="article-category">
-      
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a>, <a class="article-tag-none-link" href="/tags/%E6%95%B0%E5%AD%A6%E6%95%99%E8%82%B2/" rel="tag">数学教育</a>, <a class="article-tag-none-link" href="/tags/%E9%80%BB%E8%BE%91%E5%AD%A6/" rel="tag">逻辑学</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
+<span class="hljs-keyword">Open</span> <span class="hljs-keyword">Scope</span> Z_scope.
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2021/11/25/hindley-milner/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          十分钟搞懂 Hindley-Milner 类型系统
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/09/14/parametric-poly/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          c++模板与参数多态的根本区别
-        
-      </div>
-    </a>
-  
-</nav>
+<span class="hljs-keyword">Theorem</span> double_opp: <span class="hljs-keyword">forall</span> x:Z, --x = x.
+<span class="hljs-keyword">Proof</span>.
+  <span class="hljs-built_in">intros</span> x.
+  <span class="hljs-built_in">repeat</span> (<span class="hljs-built_in">rewrite</span> Z.opp_eq_mul_m1).
+  <span class="hljs-built_in">rewrite</span> &lt;- Zmult_assoc. <span class="hljs-built_in">simpl</span>.
+  <span class="hljs-built_in">rewrite</span>  Zmult_1_r. <span class="hljs-built_in">reflexivity</span>.
+<span class="hljs-keyword">Qed</span>.
 
-
-
-
-
+<span class="hljs-keyword">Theorem</span> t:<span class="hljs-keyword">forall</span> f:(Z -&gt; Z), 
+  (<span class="hljs-keyword">forall</span> x, f (x + <span class="hljs-number">1</span>) = - f x) -&gt;
+  (<span class="hljs-keyword">forall</span> x, f (x + <span class="hljs-number">2</span>) = f x).
+<span class="hljs-keyword">Proof</span>.
+  <span class="hljs-built_in">intros</span> f H1 x.
+  <span class="hljs-built_in">assert</span> (t1:<span class="hljs-keyword">forall</span> x, f(x + <span class="hljs-number">2</span>) = - f(x + <span class="hljs-number">1</span>)).
+  &#123; <span class="hljs-built_in">intros</span> x0. 
+    <span class="hljs-built_in">assert</span> (t2: <span class="hljs-number">2</span> = <span class="hljs-number">1</span> + <span class="hljs-number">1</span>). &#123; <span class="hljs-built_in">auto</span>. &#125;
+    <span class="hljs-built_in">rewrite</span> -&gt; t2. <span class="hljs-built_in">rewrite</span> Zplus_assoc.
+    <span class="hljs-built_in">apply</span> H1. &#125;
+  <span class="hljs-built_in">rewrite</span> t1. <span class="hljs-built_in">rewrite</span> H1. <span class="hljs-built_in">apply</span> double_opp.
+<span class="hljs-keyword">Qed</span>.
+</code></pre>
 
     </div>
-  </div>
-  
 
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>

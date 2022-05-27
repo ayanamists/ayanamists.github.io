@@ -1,106 +1,95 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>谈谈C语言的两个问题 | aya ⊢ blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  
-  
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>aya ⊢ blog | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
 <link rel="stylesheet" href="/css/style.css">
 
-  
     
-<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/markdown.css">
 
-  
-  <meta name="description" content="正确理解函数名 只有正确理解函数名，才能正确使用函数指针。 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的： 123456typedef void(*p)();void func()&amp;#123;&amp;#125;p">
-<meta property="og:type" content="article">
-<meta property="og:title" content="谈谈C语言的两个问题">
-<meta property="og:url" content="https://ayanamists.xyz/2020/04/21/2020-04-21-CLanguage/index.html">
-<meta property="og:site_name" content="aya ⊢ blog">
-<meta property="og:description" content="正确理解函数名 只有正确理解函数名，才能正确使用函数指针。 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的： 123456typedef void(*p)();void func()&amp;#123;&amp;#125;p">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-04-21T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T13:58:10.732Z">
-<meta property="article:author" content="ayanamists">
-<meta property="article:tag" content="C语言">
-<meta property="article:tag" content="函数指针">
-<meta name="twitter:card" content="summary">
-  <link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.typekit.net/ruq6mdv.css">
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
 <!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">aya ⊢ blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
 
-<body>
-  <div id="wrapper">
-    <header id="header">
-  <h1 id="title">
-    <a href="/">aya ⊢ blog</a>
-  </h1>
-  <nav>
     
-    
-      
-      <a class="nav-link" href="/">Home</a>
-    
-      
-        <span class="nav-spacer">×</span>
-      
-      <a class="nav-link" href="/archives">Archives</a>
-    
-    
-  </nav>
-</header>
-
-    <div id="content">
-      
-<article id="post-2020-04-21-CLanguage" class="article article-type-post" itemprop="blogPost" itemscope>
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h2 class="article-title" itemprop="headline name">
-      谈谈C语言的两个问题
-    </h2>
-  
-
-
-        <div class="article-meta">
-          <time class="article-date" datetime="2020-04-21T00:00:00.000Z" itemprop="datePublished">2020-04-21</time>
-
-          
-            × <span class="article-word-count">792 words</span>
-            
-            × <span class="article-time-to-read">2 minutes</span>
-            
-          
+        <div class="post-main-title">
+            谈谈C语言的两个问题
         </div>
-      </header>
+        <div class="post-meta">
+            2020-04-21
+        </div>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-      
+
+    <div class="post-md">
         <h2 id="正确理解函数名"><a class="markdownIt-Anchor" href="#正确理解函数名"></a> 正确理解函数名</h2>
 <p>只有正确理解函数名，才能正确使用函数指针。</p>
 <p>函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。</p>
 <p>我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span><span class="params">(*p)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">p pointer = func; <span class="comment">//写法1</span></span><br><span class="line">p pointer = &amp;func; <span class="comment">//写法2</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span><span class="hljs-params">(*p)</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;&#125;
+
+p pointer = func; <span class="hljs-comment">//写法1</span>
+p pointer = &amp;func; <span class="hljs-comment">//写法2</span>
+</code></pre>
 <p>有些人会这样解释：对一个函数取地址仍然得到函数本身。</p>
 <p>用这个解释，我们可以解决&amp;&amp;func、&amp;&amp;&amp;func的问题，它们仍然会得到func本身。但我们很快就会觉得前一种写法本身与其他指针不太相容，比如说，你永远无法写出这样的代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> p = a;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c"><span class="hljs-keyword">int</span> a = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">int</span> p = a;
+</code></pre>
 <p>这么想来，我们不得不怀疑<em>对一个函数取地址仍然得到函数本身</em>这个说法的合理性。其实，问题的关键在于函数名究竟被处理为了什么。</p>
 <p>答案很简单，<strong>函数名被处理为一个地址字面量值</strong>。</p>
 <p>无论你对此有何评价，Clang、MSVC、GCC都是这样实现的。基于此，我们应该理解</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p pointer = func;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">p pointer = func;
+</code></pre>
 <p>的真正意思是，把func的地址赋给pointer。</p>
 <p>所以，我们不能这样去写程序：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//main.c</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span><span class="params">(*p)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> p func;</span><br><span class="line"></span><br><span class="line">func2(p func)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">  func2(func);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//func.c</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">()</span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><code class="c">
+<span class="hljs-comment">//main.c</span>
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span><span class="hljs-params">(*p)</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-keyword">extern</span> p func;
+
+func2(p func)&#123;
+  ...
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;
+  func2(func);
+&#125;
+
+<span class="hljs-comment">//func.c</span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;
+  ...
+&#125;
+</code></pre>
 <p>如果这么写，你会惊喜地发现func2函数传入的是func函数编译后的二进制代码的前四位。这是因为编译器认为main.c中的func是一个变量，而对其取地址。但实际上func是一个字面量，本身就是要取的地址中的值了。</p>
 <p>你可能会问了，这种不正确的写法为什么还可以正常编译链接呢？</p>
 <p>这就要问问链接器了。</p>
@@ -110,74 +99,30 @@
 <p>也就是说，每当你使用extern关键字声明外部引用时，<strong>你实际上是放弃了对该引用的静态类型检查</strong>。</p>
 <p>而C<ins>则不会有这个问题。你可以将上面的代码改成C</ins>文件名或用C<ins>编译器编译，会发现链接器错误。因为C</ins>有名称修饰，它会将符号做处理，实际上附加了类型信息。但是，<strong>名称修饰不蕴含在C++的标准中，各家编译器厂商有自己的实现</strong>，所谓的<em>C++ ABI不兼容</em>，这个问题也占了一席之地。</p>
 
-      
     </div>
-    
-    
-    <div class="article-category">
-      
-        <b>Categories:</b>
-        <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-      
-      
-        <br/>
-      
-      
-        <b>Tags:</b>
-        <a class="article-tag-none-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a>, <a class="article-tag-none-link" href="/tags/%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88/" rel="tag">函数指针</a>
-      
-    </div>
-    
-    
-  </div>
-</article>
 
-  
-<nav id="article-nav" class="article-nav">
-  
-    <a href="/2020/04/25/2020-4-25-parser2/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          让我们实现编程语言吧（四） 语法、词法分析器与从解析树到语法树
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2020/04/03/2020-04-03-net_class/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">
-        
-          也谈我校在疫情期间不开设网课的诸问题
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-    </div>
-  </div>
-  
-
-
-
-
-<div id="settings-container">
-  <div id="dark-mode">dark</div>
-  <div id="sans-font">sans</div>
 </div>
-<script type="text/javascript">
-let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+                <div class="footer">
+    <span>Copyright © 2022 aya ⊢ blog</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這Li</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
 </script>
 
-
-
-
-</body>
+            </div>
+        </div>
+    </body>
 </html>
