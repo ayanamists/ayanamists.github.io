@@ -171,18 +171,33 @@
     background: #fff;
 }
 
-.post-md code
-{
+.post-md code {
     border-radius: 4px;
-    background: #2b2b2b;
     padding: 2px 4px;
+    background: #2b2b2b;
     color: #f8f8f2;
-    font-size: 1rem;
     font-family:  "mononoki", "Roboto Mono", "Inconsolata", "Consolas", monospace;
 }
 
-.post-md .hljs-ln-numbers
+.post-md figure.highlight
+{
+    border-radius: 4px;
+    background: #2b2b2b;
+    color: #f8f8f2;
+    overflow-x: auto;
+    margin: 16px auto 16px auto;
+}
+
+.post-md pre {
+    margin: 0;
+}
+
+.post-md pre > code {
+    border-radius: 0px 0px;
+}
+
+.post-md span.line
 {
     opacity: .5;
-    padding-right: 12px;
+    padding-left: 8px;
 }

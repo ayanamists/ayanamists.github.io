@@ -59,24 +59,9 @@
 </ul>
 <p>有了这样的抽象以后，我们就无需自己【决定展示层】，我们只需要【决定逻辑层】即可。而相比于指定具体文本的【格式】来说，指定具体文本的【性质】是简单地多的。</p>
 <p>那么，应该如何指定文本的【性质】呢？答案就是输入【控制字符】。以书写本文所采用的Markdown系统为例，本文开头的的源码是：</p>
-<pre class="highlight"><code class="markdown">---
-author: ayanamists
-date: 2020-08-20
-<span class="hljs-section">title: 谈谈写作软件
----</span>
-
-这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。
-
-<span class="hljs-section">## 排版，一个不应该存在的问题</span>
-</code></pre>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">---<br>author: ayanamists<br>date: 2020-08-20<br><span class="hljs-section">title: 谈谈写作软件</span><br><span class="hljs-section">---</span><br><br>这篇文章主要是为了消除一些误解，顺便宣传一下国内使用者寥寥无几的GNU TEXMACS系统。<br><br><span class="hljs-section">## 排版，一个不应该存在的问题</span><br></code></pre></td></tr></table></figure>
 <p>【排版，一个不应该存在的问题】这个标题的【性质】是如何被指定的呢？答案很简单–使用<code>##</code>符号。这个符号指示后面的文本是一个【二级标题】。既然有【二级标题】，那么自然也就有【一级标题】。实际上，markdown一直可以支持到6级标题：</p>
-<pre class="highlight"><code class="markdown"><span class="hljs-section"># a</span>
-<span class="hljs-section">## aa</span>
-<span class="hljs-section">### aaa</span>
-<span class="hljs-section">#### aaaa</span>
-<span class="hljs-section">##### aaaaa</span>
-<span class="hljs-section">###### aaaaaa</span>
-</code></pre>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown"><span class="hljs-section"># a</span><br><span class="hljs-section">## aa</span><br><span class="hljs-section">### aaa</span><br><span class="hljs-section">#### aaaa</span><br><span class="hljs-section">##### aaaaa</span><br><span class="hljs-section">###### aaaaaa</span><br></code></pre></td></tr></table></figure>
 <p>在本博客的设定中，这些东西会被渲染成以下形式：</p>
 <h1 id="a"><a class="markdownIt-Anchor" href="#a"></a> a</h1>
 <h2 id="aa"><a class="markdownIt-Anchor" href="#aa"></a> aa</h2>
@@ -86,18 +71,14 @@ date: 2020-08-20
 <h6 id="aaaaaa"><a class="markdownIt-Anchor" href="#aaaaaa"></a> aaaaaa</h6>
 <p>这样一来，【展示层】和【逻辑层】的分离就用这种非常自然的手段达到了。从【带有控制字符的文本，即源代码】到【最终展示出来的文件】的过程，被称为【渲染】。</p>
 <p>在markdown中，还有其他的很多控制字符，不过这些东西都很简单，例如说，【无序列表】可以这样写：</p>
-<pre class="highlight"><code class="markdown"><span class="hljs-bullet">+ </span>事物1
-<span class="hljs-bullet">+ </span>事物2
-</code></pre>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">+</span> 事物1<br><span class="hljs-bullet">+</span> 事物2<br></code></pre></td></tr></table></figure>
 <p>它会被渲染为：</p>
 <ul>
 <li>事物1</li>
 <li>事物2</li>
 </ul>
 <p>【有序列表】可以这样写：</p>
-<pre class="highlight"><code class="markdown"><span class="hljs-bullet">1. </span>事物1
-<span class="hljs-bullet">2. </span>事物2
-</code></pre>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 事物1<br><span class="hljs-bullet">2.</span> 事物2<br></code></pre></td></tr></table></figure>
 <p>它会被渲染为:</p>
 <ol>
 <li>事物1</li>
@@ -142,14 +123,12 @@ date: 2020-08-20
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">∀</span></span></span></span></span></p>
 <p>这个【任意】无法通过键盘输入。</p>
 <p>为了解决这个问题，Donald Ervin Knuth发明了TeX系统，它也采用了我们上面所说的【逻辑层和表示层】思想，比如说，在Tex中，</p>
-<pre class="highlight"><code class="tex"><span class="hljs-tag">\<span class="hljs-name">forall</span></span>
-</code></pre>
+<figure class="highlight tex"><table><tr><td class="code"><pre><code class="hljs tex"><span class="hljs-keyword">\forall</span><br></code></pre></td></tr></table></figure>
 <p>表示的就是【任意】，它会被【渲染】为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi></mrow><annotation encoding="application/x-tex">\forall
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">∀</span></span></span></span></span></p>
 <p>写一个逻辑表达式：</p>
-<pre class="highlight"><code class="tex"><span class="hljs-tag">\<span class="hljs-name">forall</span><span class="hljs-string">&#123;x&#125;</span></span>,P(x)
-</code></pre>
+<figure class="highlight tex"><table><tr><td class="code"><pre><code class="hljs tex"><span class="hljs-keyword">\forall</span>&#123;x&#125;,P(x)<br></code></pre></td></tr></table></figure>
 <p>它会被渲染为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∀</mi><mi>x</mi><mo separator="true">,</mo><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\forall{x},P(x)
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∀</span><span class="mord"><span class="mord mathdefault">x</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span></span></p>
@@ -235,18 +214,6 @@ date: 2020-08-20
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

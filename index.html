@@ -63,18 +63,12 @@ EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为
              类型推理
  什么是类型推理
 程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：
-let t = 1 + 1
-let f x = x + 1
-
+let t = 1 + 1let f x = x + 1
 这里的t、f、x三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。
 还有一些时候，给出类型并不是很容易的事情，例如：
-let s f g x = f x (g x)
-let k x y = x
-let i = s k k
-let ϕ = s (k (s i)) k
-
+let s f g x = f x (g x)let k x y = xlet i = s k klet ϕ = s (k (s i)) k
 请问，ϕ的类型是什么？
-ϕ的类型是可
+ϕ的类型是可以计算出来的
             <a class="read-more" href="/2021/11/25/hindley-milner/"> ... </a>
         </div>
         <div class="post-date">2021.11.25</div>
@@ -98,13 +92,9 @@ f(x)=0f(x) =
         <div class="post-except">
              c++模板与参数多态
 模板(template)是一种c++语言特性，类似于：
-template &lt;class T&gt;
-T id(T x) &#123;
-    return x;
-&#125;
-
+template &lt;class T&gt;T id(T x) &#123;    return x;&#125;
 这里的T可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份ppt和这个网页。
-然而这篇博客中，我将会说明，无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本
+然而这篇博客中，我将会说明，无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别
             <a class="read-more" href="/2021/09/14/parametric-poly/"> ... </a>
         </div>
         <div class="post-date">2021.09.14</div>
@@ -131,12 +121,7 @@ Frege/Hilbert系统是一个证明系统，是最古老、最简单的证明系�
              从错误处理说起
 错误处理是编程语言中的古老话题，从CPU的某些信号，到C++、托管平台里的exception，都是某种形态的错误处理。
 在函数式语言中，我们一般采用Result或者说Maybe一类的东西做错误处理，例如说，在Haskell中定义自然数除法，可以这样定义：
-data Nat = Zero | S Nat 
-  deriving Show
-  
-sub n Zero = n
-sub Zero n = Zero
-sub (S n) (S n') = sub n n
+data Nat = Zero | S Nat   deriving Show  sub n Zero = nsub Zero n = Zerosub (S n) (S n&#x27;) = sub n n
             <a class="read-more" href="/2021/02/26/monad/"> ... </a>
         </div>
         <div class="post-date">2021.02.26</div>
@@ -198,9 +183,7 @@ sa+tb=(a,b)
              GNU MP库的C++绑定
 GNU MP库是一个大整数和多精度浮点数的运算库。它本身是用C语言写成的，但也提供了C++绑定。当用C++写程序时，如果你不是自虐狂或者狂热的手动编译器变换爱好者，那么用C++绑定毫无疑问是更好的选择。
 这是因为，C语言版本的绑定把所有操作都封装成了类似于汇编语言中的指令。比如说，如果要算一个大整数版本的1+2，那么应该这么写：
-mpz_t a, b, c;
-mpz_init_set_ui(a, 1);
-mpz_init_set_ui(b, 2)
+mpz_t a, b, c;mpz_init_set_ui(a, 1);mpz_init_set_ui(b, 2);m
             <a class="read-more" href="/2020/12/21/gmp/"> ... </a>
         </div>
         <div class="post-date">2020.12.21</div>
@@ -219,18 +202,6 @@ mpz_init_set_ui(b, 2)
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

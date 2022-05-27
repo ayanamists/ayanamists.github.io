@@ -81,7 +81,7 @@
 <li><a href="#%e6%80%bb%e7%bb%93">总结</a></li>
 </ul>
 <h2 id="为什么需要eap认证"><a class="markdownIt-Anchor" href="#为什么需要eap认证"></a> 为什么需要EAP认证</h2>
-<p>我们在<a href="!--swig%EF%BF%BC0--">无线网络安全（1）</a>中说过，所谓的“认证”，在802.11i的RSN（或者说，WPA）中有两种方式，一种是<strong>802.1x EAP</strong>认证，一种是<strong>pre-shared-key</strong>认证，而<strong>pre-shared-key</strong>认证直接跳过认证过程，通过“四次握手”(密钥生成与分发)过程，验证<strong>AP</strong>和<strong>STA</strong>对于<strong>PSK</strong>的所有权，是一种相互认证。</p>
+<p>我们在<a href="!--swig%EF%BF%BC7--">无线网络安全（1）</a>中说过，所谓的“认证”，在802.11i的RSN（或者说，WPA）中有两种方式，一种是<strong>802.1x EAP</strong>认证，一种是<strong>pre-shared-key</strong>认证，而<strong>pre-shared-key</strong>认证直接跳过认证过程，通过“四次握手”(密钥生成与分发)过程，验证<strong>AP</strong>和<strong>STA</strong>对于<strong>PSK</strong>的所有权，是一种相互认证。</p>
 <p>但<strong>pre-shared-key</strong>认证有一些缺陷。以我们的无线校园网<strong>SYSU_SECURE</strong>为例，如果采取<strong>pre-shared-key</strong>认证，那么就会遇到很多问题：</p>
 <ul>
 <li>向一个人分发一份<strong>pre-shared-key</strong>，本意是让一个人使用。但由于密钥生成与分发过程只验证AP和STA对<strong>PSK</strong>的所有权，如果这个人（A）将<strong>PSK</strong>送给了另一个人(B)，那么B也可以用这个<strong>PSK</strong>连接校园网。</li>
@@ -134,35 +134,23 @@
 <ol>
 <li>
 <p>在终端中输入</p>
-<pre class="highlight"><code class="shell"> sudo apt-get install freeradius
-</code></pre>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">sudo apt-get install freeradius<br></code></pre></td></tr></table></figure>
 </li>
 <li>
 <p>安装完成后，打开服务器，修改/etc/freeradius/users，添加一个用户，并使用radtest进行测试：</p>
-<pre class="highlight"><code class="shell"> echo bob Cleartext-Password := "hello" &gt;&gt; /etc/users
- sudo freeradus -X
- radtest bob hello 127.0.0.1 0 testing123
-</code></pre>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">echo bob Cleartext-Password := &quot;hello&quot; &gt;&gt; /etc/users<br>sudo freeradus -X<br>radtest bob hello 127.0.0.1 0 testing123<br></code></pre></td></tr></table></figure>
 </li>
 <li>
 <p>测试成功后，切换到/etc/freeradius/3.0/certs目录，修改client.cnf，填写自己在users中的用户相关信息（比如CN = bob），并使用make工具产生证书：</p>
-<pre class="highlight"><code class="shell"> vim client.cnf
- make
-</code></pre>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">vim client.cnf<br>make<br></code></pre></td></tr></table></figure>
 </li>
 <li>
 <p>修改/etc/freeradius/3.0/mods-enabled/eap文件，将ca证书改成刚刚修改好的证书：</p>
-<pre class="highlight"><code class="shell"> ca_file = /etc/freeradius/3.0/certs/ca.pem
-</code></pre>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">ca_file = /etc/freeradius/3.0/certs/ca.pem<br></code></pre></td></tr></table></figure>
 </li>
 <li>
 <p>修改/etc/freeradius/3.0/client.conf文件，新建一个clinet，准备与ap连接</p>
-<pre class="highlight"><code class="shell"> client 192.168.1.1 &#123;
-   ipaddr = 192.168.1.1
-   proto = *
-   secret = testing123
- &#125;
-</code></pre>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">client 192.168.1.1 &#123;<br>  ipaddr = 192.168.1.1<br>  proto = *<br>  secret = testing123<br>&#125;<br></code></pre></td></tr></table></figure>
 </li>
 <li>
 <p>将此服务器和AP连接到同一个网络，这里我使用的是虚拟机，所以新建了一块桥接网卡。</p>
@@ -223,13 +211,7 @@
 <p>7.4.2是Server Certificate的定义，所以这里也和Server Certificate一样，是直接<strong>明文</strong>发过去的。</p>
 <p>回忆TLS中对于Server Certificate的验证，我们会发现，如果只发送Client Certificate帧，是不能验证客户端对于这个证书的所有权的，验证所有权的关键，应该是私钥。客户端对证书的所有权，是Certificate Verify帧验证的。</p>
 <p>这一帧的结构如下：</p>
-<pre class="highlight"><code class="c"><span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span>
-    digitally-<span class="hljs-keyword">signed</span> <span class="hljs-class"><span class="hljs-keyword">struct</span>
-    &#123;</span>
-        opaque handshake_messages[handshake_messages_length];
-    &#125;
-&#125; CertificateVerify;
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    digitally-<span class="hljs-type">signed</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">    &#123;</span><br>        opaque handshake_messages[handshake_messages_length];<br>    &#125;<br>&#125; CertificateVerify;<br></code></pre></td></tr></table></figure>
 <p>handshake_messages指的是从握手开始到握手结束的所有消息的连接，而digitally-signed正是指客户端需要用私钥加密这些消息。这样一来，服务端端用证书中的公钥解密，判断一下是否和自己存储/打的哈希一致，就可以验证客户端对证书的所有权了。</p>
 <h3 id="eap-tls方法如何进行双向认证"><a class="markdownIt-Anchor" href="#eap-tls方法如何进行双向认证"></a> EAP-TLS方法如何进行双向认证</h3>
 <ul>
@@ -274,22 +256,7 @@
 <h2 id="eap-tls如何为80211i的key-hierarchy过程提供pmk"><a class="markdownIt-Anchor" href="#eap-tls如何为80211i的key-hierarchy过程提供pmk"></a> EAP-TLS如何为802.11i的Key Hierarchy过程提供PMK</h2>
 <p>我们知道，在802.11i无线网络中，Key Hierachy的起点是<strong>PMK</strong>(Pairwise Master Key)。如果使用<strong>PSK</strong>方法，那么<strong>PMK</strong>就是<strong>PSK</strong>。如果使用EAP方法呢？802.11-2007并没有说得很明白，而是使用了May这样的词，但从“密码”到<strong>PSK</strong>所使用的哈希函数也是may，所以还是很有参考价值的。它指向了一个很奇怪的记号：<strong>MS-MPPE-Recv-Key</strong>。这个<strong>MS</strong>恐怕指的就是<strong>Microsoft</strong>了，而这个符号实际上来源于PEAP，是PEAP第一阶段（也是用TLS，只不过没有用Cilent Certificate校验客户端）通过Key Hierarchy产生的密钥。</p>
 <p>EAP-TLS提供了一种和标准TLS不同的方法，来生成PMK，在rfc-5216的2.3节中被这样定义：</p>
-<pre class="highlight"><code class="c++"> Key_Material = TLS-PRF<span class="hljs-number">-128</span>(master_secret, <span class="hljs-string">"client EAP encryption"</span>, client.<span class="hljs-built_in">random</span> || server.<span class="hljs-built_in">random</span>)
- MSK = Key_Material(<span class="hljs-number">0</span>,<span class="hljs-number">63</span>)
- EMSK = Key_Material(<span class="hljs-number">64</span>,<span class="hljs-number">127</span>)
- IV = TLS-PRF<span class="hljs-number">-64</span>(<span class="hljs-string">""</span>, <span class="hljs-string">"client EAP encryption"</span>, client.<span class="hljs-built_in">random</span> || server.<span class="hljs-built_in">random</span>)
- Enc-RECV-Key = MSK(<span class="hljs-number">0</span>,<span class="hljs-number">31</span>) 
-    <span class="hljs-comment">/*
-    Peer to Authenticator Encryption Key
-    (MS-MPPE-Recv-Key in [RFC2548]). Also known as the
-    PMK in [IEEE-802.11].
-    */</span>
- Enc-SEND-Key = MSK(<span class="hljs-number">32</span>,<span class="hljs-number">63</span>) 
-    <span class="hljs-comment">/*
-    Authenticator to Peer Encryption Key
-    (MS-MPPE-Send-Key in [RFC2548])
-    */</span>
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++">Key_Material = TLS-PRF<span class="hljs-number">-128</span>(master_secret, <span class="hljs-string">&quot;client EAP encryption&quot;</span>, client.random || server.random)<br>MSK = <span class="hljs-built_in">Key_Material</span>(<span class="hljs-number">0</span>,<span class="hljs-number">63</span>)<br>EMSK = <span class="hljs-built_in">Key_Material</span>(<span class="hljs-number">64</span>,<span class="hljs-number">127</span>)<br>IV = TLS-PRF<span class="hljs-number">-64</span>(<span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;client EAP encryption&quot;</span>, client.random || server.random)<br>Enc-RECV-Key = <span class="hljs-built_in">MSK</span>(<span class="hljs-number">0</span>,<span class="hljs-number">31</span>) <br>   <span class="hljs-comment">/*</span><br><span class="hljs-comment">   Peer to Authenticator Encryption Key</span><br><span class="hljs-comment">   (MS-MPPE-Recv-Key in [RFC2548]). Also known as the</span><br><span class="hljs-comment">   PMK in [IEEE-802.11].</span><br><span class="hljs-comment">   */</span><br>Enc-SEND-Key = <span class="hljs-built_in">MSK</span>(<span class="hljs-number">32</span>,<span class="hljs-number">63</span>) <br>   <span class="hljs-comment">/*</span><br><span class="hljs-comment">   Authenticator to Peer Encryption Key</span><br><span class="hljs-comment">   (MS-MPPE-Send-Key in [RFC2548])</span><br><span class="hljs-comment">   */</span><br></code></pre></td></tr></table></figure>
 <p>为什么<strong>MS-MPPE-Recv-Key</strong>成了事实上的<strong>PMK</strong>呢？这似乎有历史原因，我并没有找到一个解释或是说明。但事实就是这样，我们的好奇心也不必过于旺盛。</p>
 <p>这时，所有的问题都解决了吗？确实解决了。但是我们又有了新的问题：tls握手是在Authentication Server和Client之间发生的，AP是如何得到Enc-RECV-Key的呢？下一阶段的Key Hierarchy是AP进行的，它必须得到PMK。</p>
 <p>我们仔细研究一下Radius Server发给AP的最后一帧：</p>
@@ -314,18 +281,6 @@
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

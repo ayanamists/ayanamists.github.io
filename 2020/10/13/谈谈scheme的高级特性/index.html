@@ -68,73 +68,35 @@
 <li>是一个形如<code>(list a b ...)</code>的列表</li>
 </ul>
 <p>换句话说，我们想写得简单一点，让<code>(list 1 2 3)</code>用<code>(1 2 3)</code>就可以表达。但问题是<code>(1 2 3)</code>在自然状态下是一个【求值式】，所以直接这么搞是不行的，而要使用<code>(quote (1 2 3))</code>，而<code>(quote (1 2 3))</code>可以被简写为：</p>
-<pre class="highlight"><code class="scheme">'(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&#x27;(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
 <p>我们再给出几个例子：</p>
-<pre class="highlight"><code class="scheme">&gt; <span class="hljs-symbol">'1</span>
-<span class="hljs-number">1</span>
-&gt; '<span class="hljs-string">"a"</span>
-<span class="hljs-string">"a"</span>
-</code></pre>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> '(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)) <span class="hljs-number">2</span>)
-<span class="hljs-number">3</span>
-</code></pre>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">string?</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> '(<span class="hljs-string">"1"</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)))
-#t
-</code></pre>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">vector-ref</span></span> 
-   (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> '(#(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>) <span class="hljs-number">2</span> <span class="hljs-number">3</span>))
-   <span class="hljs-number">0</span>)
-<span class="hljs-number">1</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; <span class="hljs-symbol">&#x27;1</span><br><span class="hljs-number">1</span><br>&gt; &#x27;<span class="hljs-string">&quot;a&quot;</span><br><span class="hljs-string">&quot;a&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">+</span></span> (<span class="hljs-name"><span class="hljs-built_in">car</span></span> &#x27;(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)) <span class="hljs-number">2</span>)<br><span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">string?</span></span> (<span class="hljs-name"><span class="hljs-built_in">car</span></span> &#x27;(<span class="hljs-string">&quot;1&quot;</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)))<br>#t<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">vector-ref</span></span> <br>   (<span class="hljs-name"><span class="hljs-built_in">car</span></span> &#x27;(#(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>) <span class="hljs-number">2</span> <span class="hljs-number">3</span>))<br>   <span class="hljs-number">0</span>)<br><span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
 <p>可以看到，如果<code>a</code>本身是一个【self-evaluating constants, i.e., numbers, booleans, characters, strings, and bytevectors】，那么<code>(quote a)</code>就是<code>a</code>.</p>
 <p>但是，这里还有一个问题。请思考一下下面的代码会得到什么：</p>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
-&gt; <span class="hljs-symbol">'a</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">define</span></span> a <span class="hljs-number">10</span>)<br>&gt; <span class="hljs-symbol">&#x27;a</span><br></code></pre></td></tr></table></figure>
 <p>是<code>10</code>吗？<strong>请再次回忆我之前说的【不要求值】</strong></p>
 <p>在scheme中，把一个<code>identifier</code>变成其对应的值，显然就是求值。</p>
 <p>所以，这段代码不会<code>a</code>的值，它得到的是<code>a</code>本身：</p>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
-&gt; <span class="hljs-symbol">'a</span>
-a
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">define</span></span> a <span class="hljs-number">10</span>)<br>&gt; <span class="hljs-symbol">&#x27;a</span><br>a<br></code></pre></td></tr></table></figure>
 <p>这里的【<code>a</code>本身】就是所谓的【符号】，如果<code>x</code>是一个【标识符】，那么<code>(quote x)</code>就会得到一个【符号】：</p>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">symbol?</span></span> <span class="hljs-symbol">'x</span>)
-#t
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">symbol?</span></span> <span class="hljs-symbol">&#x27;x</span>)<br>#t<br></code></pre></td></tr></table></figure>
 <p>看到这里，你应该明白了什么叫做【allowing <code>*obj*</code> to be employed as data】了吧？喝一杯茶，我们下面要介绍一点更好玩的东西。</p>
 <h3 id="quasiquote-unquote"><a class="markdownIt-Anchor" href="#quasiquote-unquote"></a> quasiquote &amp; unquote</h3>
 <p><code>quote</code>可以很方便地构造【self-evaluating constants】的列表，但却不能实现下面的要求：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
-'(a a a) <span class="hljs-comment">;我们想要(list 10 10 10)而不是(list 'a 'a 'a)</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define</span></span> a <span class="hljs-number">10</span>)<br>&#x27;(a a a) <span class="hljs-comment">;我们想要(list 10 10 10)而不是(list &#x27;a &#x27;a &#x27;a)</span><br></code></pre></td></tr></table></figure>
 <p>这该如何是好呢？</p>
 <p><code>quote</code>实际上相当于引入了一个【不求值的环境】，那么，只要通过某种手段把这个【不求值的环境】变成【普通环境】，那么问题就迎刃而解了。scheme加入了<code>qusiquote</code>来支持【通过<code>unquote</code>变成普通环境】：</p>
-<pre class="highlight"><code class="scheme">&gt; (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a <span class="hljs-number">10</span>)
-&gt; (<span class="hljs-name"><span class="hljs-builtin-name">quasiquote</span></span> ((<span class="hljs-name">unquote</span> a) (<span class="hljs-name">unquote</span> a) (<span class="hljs-name">unquote</span> a) a))
-(<span class="hljs-name">10</span> <span class="hljs-number">10</span> <span class="hljs-number">10</span> a)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&gt; (<span class="hljs-name"><span class="hljs-built_in">define</span></span> a <span class="hljs-number">10</span>)<br>&gt; (<span class="hljs-name"><span class="hljs-built_in">quasiquote</span></span> ((<span class="hljs-name">unquote</span> a) (<span class="hljs-name">unquote</span> a) (<span class="hljs-name">unquote</span> a) a))<br>(<span class="hljs-name">10</span> <span class="hljs-number">10</span> <span class="hljs-number">10</span> a)<br></code></pre></td></tr></table></figure>
 <p>这样有点麻烦，scheme用`表示<code>quasiquote</code>，用<code>,</code>表示<code>unquote</code>，上面的代码可以写成：</p>
-<pre class="highlight"><code class="scheme">`(,a ,a ,a a)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">`(,a ,a ,a a)<br></code></pre></td></tr></table></figure>
 <p>用这个语法，我们就可以方便地创建列表了。</p>
 <h2 id="scheme宏系统"><a class="markdownIt-Anchor" href="#scheme宏系统"></a> scheme宏系统</h2>
 <p>scheme的宏系统是比较难以掌握的一个部分，因为你不得不认真阅读the scheme programming language关于宏系统的部分。但是scheme的卫生宏系统是还没有被各类不基于s表达式的编程语言抄回来的特性，换句话说，这是它的<em>特色</em>，不得不品尝。</p>
 <p>不过，我也懒得再写下去了，这里给出一个tspl里没有的拼字符串的例子吧：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define-syntax</span></span> 缝合
-  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x)
-    (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">get-feng-syntax</span> x y)
-      (<span class="hljs-name">datum-&gt;syntax</span> x (<span class="hljs-name">symbol-append</span> (<span class="hljs-name">syntax-&gt;datum</span> x)
-                                      (<span class="hljs-name">syntax-&gt;datum</span> y))))
-    (<span class="hljs-name"><span class="hljs-builtin-name">syntax-case</span></span> x ()
-      ((<span class="hljs-name">_</span> a b)
-       #`(define #,(get-feng-syntax #<span class="hljs-symbol">'a</span> #<span class="hljs-symbol">'b</span>) <span class="hljs-number">10</span>)))))
-
-(<span class="hljs-name">缝合</span> 我喜欢 拼字符串)
-
-(<span class="hljs-name">printf</span> <span class="hljs-string">"~a"</span> 我喜欢拼字符串) <span class="hljs-comment">;得到10</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define-syntax</span></span> 缝合<br>  (<span class="hljs-name"><span class="hljs-built_in">lambda</span></span> (x)<br>    (<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">get-feng-syntax</span> x y)<br>      (<span class="hljs-name">datum-&gt;syntax</span> x (<span class="hljs-name">symbol-append</span> (<span class="hljs-name">syntax-&gt;datum</span> x)<br>                                      (<span class="hljs-name">syntax-&gt;datum</span> y))))<br>    (<span class="hljs-name"><span class="hljs-built_in">syntax-case</span></span> x ()<br>      ((<span class="hljs-name">_</span> a b)<br>       #`(define #,(get-feng-syntax #<span class="hljs-symbol">&#x27;a</span> #<span class="hljs-symbol">&#x27;b</span>) <span class="hljs-number">10</span>)))))<br><br>(<span class="hljs-name">缝合</span> 我喜欢 拼字符串)<br><br>(<span class="hljs-name">printf</span> <span class="hljs-string">&quot;~a&quot;</span> 我喜欢拼字符串) <span class="hljs-comment">;得到10</span><br></code></pre></td></tr></table></figure>
 
     </div>
 
@@ -146,18 +108,6 @@ a
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

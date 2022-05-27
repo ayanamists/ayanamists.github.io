@@ -112,18 +112,9 @@
         <div class="post-except">
              过程式语言中的尾调用
 在scheme中，尾调用完全是循环的：
-(define factor
-  (lambda (n result)
-    (if (&lt; n 2)
-      result
-      (factor (- n 1) (* result n)))))
-
+(define factor  (lambda (n result)    (if (&lt; n 2)      result      (factor (- n 1) (* result n)))))
 这段代码和
-int factor(int n)&#123;
-  int result = 1;
-  while(n &gt;= 2) &#123;
-    result = n * result;
- 
+int factor(int n)&#123;  int result = 1;  while(n &gt;= 2) &#123;    result = n * result;    n--;  
             <a class="read-more" href="/2020/06/23/2020-06-23-tramp/"> ... </a>
         </div>
         <div class="post-date">2020.06.23</div>
@@ -234,12 +225,7 @@ Yacc的情况
 只有正确理解函数名，才能正确使用函数指针。
 函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。
 我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的：
-typedef void(*p)();
-
-void func()&#123;&#125;
-
-p pointer = func; //写法1
-p pointer = &amp;fun
+typedef void(*p)();void func()&#123;&#125;p pointer = func; //写法1p pointer = &amp;func; //
             <a class="read-more" href="/2020/04/21/2020-04-21-CLanguage/"> ... </a>
         </div>
         <div class="post-date">2020.04.21</div>
@@ -271,18 +257,6 @@ p pointer = &amp;fun
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

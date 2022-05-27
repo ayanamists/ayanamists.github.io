@@ -59,140 +59,54 @@
 <p>这篇文章通过介绍三个变换，解决了第一个问题，在某种程度上解决了第二个问题。至于第三个问题，这是一个纯粹的工程问题，我们就不在这里研究了。</p>
 <h2 id="第0变换"><a class="markdownIt-Anchor" href="#第0变换"></a> 第0变换</h2>
 <p>所谓的【第0变换】是我在研究lisp表达式的解析的时候总结出来的。我们知道，lisp的语法类似于</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">id</span> id id ...)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">id</span> id id ...)<br></code></pre></td></tr></table></figure>
 <p>但是，它有几种不同的情况：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>) <span class="hljs-comment">;函数调用</span>
-</code></pre>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x) (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> x <span class="hljs-number">1</span>)) <span class="hljs-comment">;lambda定义</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>) <span class="hljs-comment">;函数调用</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">lambda</span></span> (x) (<span class="hljs-name"><span class="hljs-built_in">+</span></span> x <span class="hljs-number">1</span>)) <span class="hljs-comment">;lambda定义</span><br></code></pre></td></tr></table></figure>
 <p>这两种情况应该生成两种不同的语法树：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">apply-node</span> <span class="hljs-symbol">'+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)
-</code></pre>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">lambda-node</span> '<span class="hljs-name">x</span> (apply-node '+ 'x 1))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">apply-node</span> <span class="hljs-symbol">&#x27;+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">lambda-node</span> &#x27;<span class="hljs-name">x</span> (apply-node &#x27;+ &#x27;x 1))<br></code></pre></td></tr></table></figure>
 <p>如何在写解析器的时候能够简单地、正确地处理这两种情况呢？</p>
 <p>这里真正的问题是，这个文法本身就不是LL(1)的。因为这两个非终结符的第一个终结符是相等的，所以当解析器读到一个<code>(</code>的时候，它无法区分下一步是进入<code>apply-node</code>的解析函数还是<code>lambda-node</code>的解析函数。</p>
 <p>那么，我们究竟应该怎么办呢？</p>
 <p>答案是，<strong>在解析时不区分这两种节点，而是解析为一个统一的形式</strong>，之后<strong>遍历这颗语法树，把正确的形式映射出来</strong>。</p>
 <p>比如说，对于这个问题，我们把这两种形式都解析为：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">s-expr</span> <span class="hljs-symbol">'+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)
-</code></pre>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">s-expr</span> <span class="hljs-symbol">'lambda</span> (<span class="hljs-name">s-expr</span> <span class="hljs-symbol">'x</span>) (<span class="hljs-name">s-expr</span> <span class="hljs-symbol">'+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">s-expr</span> <span class="hljs-symbol">&#x27;+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">s-expr</span> <span class="hljs-symbol">&#x27;lambda</span> (<span class="hljs-name">s-expr</span> <span class="hljs-symbol">&#x27;x</span>) (<span class="hljs-name">s-expr</span> <span class="hljs-symbol">&#x27;+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
 <p>然后，我们通过<strong>第0变换</strong>，把它们变成：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">apply-node</span> <span class="hljs-symbol">'+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)
-</code></pre>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">lambda-node</span> '<span class="hljs-name">x</span> (apply-node '+ 'x 1))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">apply-node</span> <span class="hljs-symbol">&#x27;+</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">lambda-node</span> &#x27;<span class="hljs-name">x</span> (apply-node &#x27;+ &#x27;x 1))<br></code></pre></td></tr></table></figure>
 <p>至于第0变换是如何做的，我们写一段scheme代码来示意：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">mapping</span> x)
-  (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> x) <span class="hljs-symbol">'lambda</span>)
-      (<span class="hljs-name">lambda-node</span> (mapping (cadr x))
-      			  (<span class="hljs-name">mapping</span> (<span class="hljs-name">caddr</span> x)))
-      (<span class="hljs-name">apply-node</span> ...))))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">mapping</span> x)<br>  (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name"><span class="hljs-built_in">=</span></span> (<span class="hljs-name"><span class="hljs-built_in">car</span></span> x) <span class="hljs-symbol">&#x27;lambda</span>)<br>      (<span class="hljs-name">lambda-node</span> (mapping (cadr x))<br>      			  (<span class="hljs-name">mapping</span> (<span class="hljs-name">caddr</span> x)))<br>      (<span class="hljs-name">apply-node</span> ...))))<br></code></pre></td></tr></table></figure>
 <p>可以看到，这个变换是对语法树的直接映射，它没有什么复杂的东西。</p>
 <h2 id="第1变换"><a class="markdownIt-Anchor" href="#第1变换"></a> 第1变换</h2>
 <p>第一变换，简单地说就是交换语法树次序，比如说：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>)<br></code></pre></td></tr></table></figure>
 <p>变为</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">2</span>)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
 <p>对于具有可交换性的语法树节点，都可以做这个第一变换。</p>
 <h2 id="第2变换"><a class="markdownIt-Anchor" href="#第2变换"></a> 第2变换</h2>
 <p>第二变换是本文的重头戏。因为<strong>它可以解决最麻烦的问题-左递归问题</strong>。</p>
 <p>我们知道，一个左递归文法可以变成右递归的，这个变换有形式化的算法，这里就不多赘述了。</p>
 <p>那个算法的实质和下面介绍的操作没有区别，也就是说，对于这样的句子：</p>
-<pre class="highlight"><code class="c++"><span class="hljs-number">1</span> - <span class="hljs-number">2</span> - <span class="hljs-number">3</span> - <span class="hljs-number">4</span> - <span class="hljs-number">5</span>
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-number">1</span> - <span class="hljs-number">2</span> - <span class="hljs-number">3</span> - <span class="hljs-number">4</span> - <span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
 <p>如果你基于这样的文法进行解析：</p>
-<pre class="highlight"><code class="">A := A - number
-   | number
-</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs plaintext">A := A - number<br>   | number<br></code></pre></td></tr></table></figure>
 <p>那么，它的语法树就会是：</p>
-<pre class="highlight"><code class="scheme">'(-(- (- (- <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-number">3</span>) <span class="hljs-number">4</span>) <span class="hljs-number">5</span>)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&#x27;(-(- (- (- <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-number">3</span>) <span class="hljs-number">4</span>) <span class="hljs-number">5</span>)<br></code></pre></td></tr></table></figure>
 <p>我们把文法修改一下：</p>
-<pre class="highlight"><code class="scheme">A := number - A
-   | number
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">A := number - A<br>   | number<br></code></pre></td></tr></table></figure>
 <p>那么，它的语法树就是：</p>
-<pre class="highlight"><code class="scheme">'(- <span class="hljs-number">1</span> (- <span class="hljs-number">2</span> (- <span class="hljs-number">3</span> (- <span class="hljs-number">4</span> <span class="hljs-number">5</span>))))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&#x27;(- <span class="hljs-number">1</span> (- <span class="hljs-number">2</span> (- <span class="hljs-number">3</span> (- <span class="hljs-number">4</span> <span class="hljs-number">5</span>))))<br></code></pre></td></tr></table></figure>
 <p>我们可以看到，那个算法并不能得到正确的、左递归的语法树。</p>
 <p>实际上，一切递归向下解析器都无法正确解析左递归文法。但是，如果我们可以把被解析为右递归形式的语法树变成左递归的形式，岂不就解决了这个问题？</p>
 <p>这就是我所谓的<strong>第2变换</strong>，这个变换会将【被解析为右递归形式的语法树】变成正确的左递归形式。</p>
 <p>变换的算法其实也不复杂，这里把我写的一段简单的变换代码写出来：</p>
-<pre class="highlight"><code class="scheme">#lang racket
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">make-node</span> root left right)
-  (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> root (<span class="hljs-name"><span class="hljs-builtin-name">list</span></span> left right)))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">node-root</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> ast))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">node-left</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">cadr</span></span> ast))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">node-right</span> ast)
-  (<span class="hljs-name">caddr</span> ast))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">tree?</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">pair?</span></span> ast))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">trans-root?</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">or</span></span>
-   (<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span> (<span class="hljs-name">node-root</span> ast) <span class="hljs-symbol">'-</span>)
-   (<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span> (<span class="hljs-name">node-root</span> ast) <span class="hljs-symbol">'/</span>)))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">rec-right?</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span>
-   (<span class="hljs-name">node-root</span> ast)
-   (<span class="hljs-name">node-root</span> (<span class="hljs-name">node-right</span> ast))))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">trans?</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">and</span></span> (<span class="hljs-name">trans-root?</span> ast)
-       (<span class="hljs-name">tree?</span> (<span class="hljs-name">node-right</span> ast))
-       (<span class="hljs-name">rec-right?</span> ast)))
-
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">type2-trans</span> ast)
-  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">trans-cons</span> this-root queue-list)
-    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">null?</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">cdr</span></span> queue-list))
-        (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> queue-list)
-        (<span class="hljs-name">make-node</span> this-root
-                   (<span class="hljs-name">trans-cons</span> this-root (<span class="hljs-name"><span class="hljs-builtin-name">cdr</span></span> queue-list))
-                   (<span class="hljs-name"><span class="hljs-builtin-name">car</span></span> queue-list))))
-  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">trans-func</span> ast queue)
-    (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name">tree?</span> ast)
-        (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name">trans?</span> ast)
-            (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-right</span> ast)
-                        (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-left</span> ast) '()) queue))
-            (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ([<span class="hljs-name">left</span> (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-left</span> ast) '())]
-                  [<span class="hljs-name">right</span> (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-right</span> ast) '())])
-              (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">null?</span></span> queue)
-                  (<span class="hljs-name">make-node</span> (<span class="hljs-name">node-root</span> ast) left right)
-                  (<span class="hljs-name">trans-cons</span> (<span class="hljs-name">node-root</span> ast) (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> right (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> left queue))))))
-        ast))
-  (<span class="hljs-name">trans-func</span> ast '())) 
-
-<span class="hljs-comment">;; test</span>
-(<span class="hljs-name">type2-trans</span> '(+ <span class="hljs-number">1</span> (+ <span class="hljs-number">1</span> <span class="hljs-number">2</span>)))
-(<span class="hljs-name">type2-trans</span> '(- <span class="hljs-number">5</span> (- <span class="hljs-number">3</span> (- <span class="hljs-number">2</span> <span class="hljs-number">4</span>))))
-(<span class="hljs-name">type2-trans</span> '(/ <span class="hljs-number">3</span> (/ <span class="hljs-number">4</span> <span class="hljs-number">5</span>)))
-(<span class="hljs-name">type2-trans</span> '(- (/
-                  (* <span class="hljs-number">3</span> <span class="hljs-number">4</span>)
-                  (/ <span class="hljs-number">5</span> <span class="hljs-number">6</span>))
-                 (- <span class="hljs-number">2</span> <span class="hljs-number">3</span>)))
-  
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">#lang racket<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">make-node</span> root left right)<br>  (<span class="hljs-name"><span class="hljs-built_in">cons</span></span> root (<span class="hljs-name"><span class="hljs-built_in">list</span></span> left right)))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">node-root</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">car</span></span> ast))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">node-left</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">cadr</span></span> ast))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">node-right</span> ast)<br>  (<span class="hljs-name">caddr</span> ast))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">tree?</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">pair?</span></span> ast))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">trans-root?</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">or</span></span><br>   (<span class="hljs-name"><span class="hljs-built_in">equal?</span></span> (<span class="hljs-name">node-root</span> ast) <span class="hljs-symbol">&#x27;-</span>)<br>   (<span class="hljs-name"><span class="hljs-built_in">equal?</span></span> (<span class="hljs-name">node-root</span> ast) <span class="hljs-symbol">&#x27;/</span>)))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">rec-right?</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">equal?</span></span><br>   (<span class="hljs-name">node-root</span> ast)<br>   (<span class="hljs-name">node-root</span> (<span class="hljs-name">node-right</span> ast))))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">trans?</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">and</span></span> (<span class="hljs-name">trans-root?</span> ast)<br>       (<span class="hljs-name">tree?</span> (<span class="hljs-name">node-right</span> ast))<br>       (<span class="hljs-name">rec-right?</span> ast)))<br><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">type2-trans</span> ast)<br>  (<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">trans-cons</span> this-root queue-list)<br>    (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name"><span class="hljs-built_in">null?</span></span> (<span class="hljs-name"><span class="hljs-built_in">cdr</span></span> queue-list))<br>        (<span class="hljs-name"><span class="hljs-built_in">car</span></span> queue-list)<br>        (<span class="hljs-name">make-node</span> this-root<br>                   (<span class="hljs-name">trans-cons</span> this-root (<span class="hljs-name"><span class="hljs-built_in">cdr</span></span> queue-list))<br>                   (<span class="hljs-name"><span class="hljs-built_in">car</span></span> queue-list))))<br>  (<span class="hljs-name"><span class="hljs-built_in">define</span></span> (<span class="hljs-name">trans-func</span> ast queue)<br>    (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name">tree?</span> ast)<br>        (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name">trans?</span> ast)<br>            (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-right</span> ast)<br>                        (<span class="hljs-name"><span class="hljs-built_in">cons</span></span> (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-left</span> ast) &#x27;()) queue))<br>            (<span class="hljs-name"><span class="hljs-built_in">let</span></span> ([<span class="hljs-name">left</span> (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-left</span> ast) &#x27;())]<br>                  [<span class="hljs-name">right</span> (<span class="hljs-name">trans-func</span> (<span class="hljs-name">node-right</span> ast) &#x27;())])<br>              (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name"><span class="hljs-built_in">null?</span></span> queue)<br>                  (<span class="hljs-name">make-node</span> (<span class="hljs-name">node-root</span> ast) left right)<br>                  (<span class="hljs-name">trans-cons</span> (<span class="hljs-name">node-root</span> ast) (<span class="hljs-name"><span class="hljs-built_in">cons</span></span> right (<span class="hljs-name"><span class="hljs-built_in">cons</span></span> left queue))))))<br>        ast))<br>  (<span class="hljs-name">trans-func</span> ast &#x27;())) <br><br><span class="hljs-comment">;; test</span><br>(<span class="hljs-name">type2-trans</span> &#x27;(+ <span class="hljs-number">1</span> (+ <span class="hljs-number">1</span> <span class="hljs-number">2</span>)))<br>(<span class="hljs-name">type2-trans</span> &#x27;(- <span class="hljs-number">5</span> (- <span class="hljs-number">3</span> (- <span class="hljs-number">2</span> <span class="hljs-number">4</span>))))<br>(<span class="hljs-name">type2-trans</span> &#x27;(/ <span class="hljs-number">3</span> (/ <span class="hljs-number">4</span> <span class="hljs-number">5</span>)))<br>(<span class="hljs-name">type2-trans</span> &#x27;(- (/<br>                  (* <span class="hljs-number">3</span> <span class="hljs-number">4</span>)<br>                  (/ <span class="hljs-number">5</span> <span class="hljs-number">6</span>))<br>                 (- <span class="hljs-number">2</span> <span class="hljs-number">3</span>)))<br>  <br></code></pre></td></tr></table></figure>
 <p>以其中的一个测试为例，它会将</p>
-<pre class="highlight"><code class="scheme">'(- <span class="hljs-number">5</span> (- <span class="hljs-number">3</span> (- <span class="hljs-number">2</span> <span class="hljs-number">4</span>)))) <span class="hljs-comment">;5 - 3 - 2 - 4的错误形式</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&#x27;(- <span class="hljs-number">5</span> (- <span class="hljs-number">3</span> (- <span class="hljs-number">2</span> <span class="hljs-number">4</span>)))) <span class="hljs-comment">;5 - 3 - 2 - 4的错误形式</span><br></code></pre></td></tr></table></figure>
 <p>变为：</p>
-<pre class="highlight"><code class="scheme">'(- (- (- <span class="hljs-number">5</span> <span class="hljs-number">3</span>) <span class="hljs-number">2</span>) <span class="hljs-number">4</span>) <span class="hljs-comment">;5 - 3 - 2 - 4的正确形式</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&#x27;(- (- (- <span class="hljs-number">5</span> <span class="hljs-number">3</span>) <span class="hljs-number">2</span>) <span class="hljs-number">4</span>) <span class="hljs-comment">;5 - 3 - 2 - 4的正确形式</span><br></code></pre></td></tr></table></figure>
 
     </div>
 
@@ -204,18 +118,6 @@
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

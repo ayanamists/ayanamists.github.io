@@ -51,9 +51,7 @@
         <h2 id="在计算机里寻求符号计算是不是搞错了什么"><a class="markdownIt-Anchor" href="#在计算机里寻求符号计算是不是搞错了什么"></a> 在计算机里寻求符号计算是不是搞错了什么？</h2>
 <p>计算机系的学生，大多都是明白计算机是如何做数值计算的。</p>
 <p>比如说，你让一台<code>x86</code>计算机算<code>0xff+0xff00</code>等于多少，可以写成这样的汇编：</p>
-<pre class="highlight"><code class="assembly">mov eax, 0xff ;把0xff这个数放到eax寄存器里
-add eax, 0xff00 ;把eax寄存器里的数加上 0xff00
-</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs assembly">mov eax, 0xff ;把0xff这个数放到eax寄存器里<br>add eax, 0xff00 ;把eax寄存器里的数加上 0xff00<br></code></pre></td></tr></table></figure>
 <p>至于小数，可以用浮点数去算，这些东西都能在硬件上实现。事实上，我们也写过一个简单的CPU，大概知道这些东西在电路上是什么样的。</p>
 <p>可是，很多计算机系的学生，也不明白计算机是如何进行符号计算的。比如说，我要算以下的微分式：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mi>d</mi><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><msup><mi>x</mi><mn>2</mn></msup><mo>=</mo><mn>2</mn><mi>x</mi></mrow><annotation encoding="application/x-tex">\frac{d}{dx}x^2=2x
@@ -72,34 +70,25 @@ add eax, 0xff00 ;把eax寄存器里的数加上 0xff00
 <h3 id="wolfram-language的语法"><a class="markdownIt-Anchor" href="#wolfram-language的语法"></a> Wolfram Language的语法</h3>
 <p>mathematica是Wolfram Language的前端，在mathematica中写下的代码本质上是Wolfram Language代码。</p>
 <p>在Wolfram Language里，一切操作都可以似乎都通过『函数』来完成。它『调用函数』的语法似乎也很简单：</p>
-<pre class="highlight"><code class="mathematica">Func[arg1, arg2, ..., argn]
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">Func</span><span class="hljs-punctuation">[</span><span class="hljs-variable">arg1</span><span class="hljs-operator">,</span> <span class="hljs-variable">arg2</span><span class="hljs-operator">,</span> <span class="hljs-operator">...,</span> <span class="hljs-variable">argn</span><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
 <p>比如说，加法可以这样去算：</p>
-<pre class="highlight"><code class="mathematica"><span class="hljs-keyword">Plus</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-built_in">Plus</span><span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-operator">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
 <p><img src="https://pic.downk.cc/item/5f789253160a154a671c41b3.jpg" alt="1" /></p>
 <p>乘法可以这样去算：</p>
-<pre class="highlight"><code class="mathematica"><span class="hljs-keyword">Times</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-built_in">Times</span><span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-operator">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
 <p><img src="https://pic.downk.cc/item/5f789285160a154a671c530c.jpg" alt="" /></p>
 <p>读者也许会惊呼，这不就是伟大的<code>scheme\lisp</code>吗？</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-comment">;-&gt; 3</span>
-(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-comment">;-&gt; 2</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">+</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-comment">;-&gt; 3</span><br>(<span class="hljs-name"><span class="hljs-built_in">*</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>) <span class="hljs-comment">;-&gt; 2</span><br></code></pre></td></tr></table></figure>
 <p>可惜，这并不是，或者说不完全是伟大的<code>scheme</code>.</p>
 <p>首先，所有的Wolfram Language代码都会被解析成『M-表达式』，这可以用<code>FullForm</code>得到验证：</p>
 <p><img src="https://pic.downk.cc/item/5fdc788f3ffa7d37b380e9b1.png" alt="3" /></p>
 <p>而这个『M-表达式』正是『S-表达式』的变种，简单来说，</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">a</span> b c d e f ...)
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">a</span> b c d e f ...)<br></code></pre></td></tr></table></figure>
 <p>和</p>
-<pre class="highlight"><code class="mathematica">a[b, c, d, e, f, ...]
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">a</span><span class="hljs-punctuation">[</span><span class="hljs-variable">b</span><span class="hljs-operator">,</span> <span class="hljs-variable">c</span><span class="hljs-operator">,</span> <span class="hljs-variable">d</span><span class="hljs-operator">,</span> <span class="hljs-variable">e</span><span class="hljs-operator">,</span> <span class="hljs-variable">f</span><span class="hljs-operator">,</span> <span class="hljs-operator">...</span><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
 <p>是等价的。</p>
 <p>不过更有趣的是，Wolfram Language中的<code>Apply</code>函数的作用，是：</p>
-<pre class="highlight"><code class="mathematica"><span class="hljs-keyword">Apply</span>[ a[b, c, d ...], a' ]
-= a'[b, c, d ...]
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-built_in">Apply</span><span class="hljs-punctuation">[</span> <span class="hljs-variable">a</span><span class="hljs-punctuation">[</span><span class="hljs-variable">b</span><span class="hljs-operator">,</span> <span class="hljs-variable">c</span><span class="hljs-operator">,</span> <span class="hljs-variable">d</span> <span class="hljs-operator">...</span><span class="hljs-punctuation">]</span><span class="hljs-operator">,</span> <span class="hljs-variable">a</span><span class="hljs-operator">&#x27;</span> <span class="hljs-punctuation">]</span><br><span class="hljs-operator">=</span> <span class="hljs-variable">a</span><span class="hljs-operator">&#x27;</span><span class="hljs-punctuation">[</span><span class="hljs-variable">b</span><span class="hljs-operator">,</span> <span class="hljs-variable">c</span><span class="hljs-operator">,</span> <span class="hljs-variable">d</span> <span class="hljs-operator">...</span><span class="hljs-punctuation">]</span><br></code></pre></td></tr></table></figure>
 <p>比如说：</p>
 <p><img src="https://pic.downk.cc/item/5fdc93043ffa7d37b39d8ecc.png" alt="3" /></p>
 <p>这里的<code>&#123;a, b, c&#125;</code>实际上是<code>List[a, b, c]</code>:</p>
@@ -123,14 +112,11 @@ add eax, 0xff00 ;把eax寄存器里的数加上 0xff00
 <p>不仅一个『自由变量』的值就是其本身，任何『无法被求值的M表达式』，值都是其本身。更本质地说，『不能被求值』才是M表达式的常态，『能被求值』是因为预定义了『规约规则』。</p>
 <p>而如何定义『规约规则』呢？Wolfram Language 中提供了<code>Set</code>。<code>Set</code>可以写作<code>=</code>，它定义了<code>Set[a, b]</code>中<code>a</code>要被规约成<code>b</code>。</p>
 <p>显然我们需要一些表达M表达式的方法来定义<code>Set[a, b]</code>中的<code>a</code>，比如说，我们要吧<code>factor[10]</code>改写成<code>10 * factor[9]</code>，但我们不想定义<code>factor[1.1]</code>如何改写。Wolfram Language 把这些东西叫做Pattern，比如说：</p>
-<pre class="highlight"><code class="mathematica">_
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-type">_</span><br></code></pre></td></tr></table></figure>
 <p>可以匹配一切M表达式，这可以用<code>MatchQ</code>来检查：</p>
 <p><img src="https://pic.downk.cc/item/5fdc9be53ffa7d37b3a80444.png" alt="8" /></p>
 <p>这样一来我们就理解了在wolfram language中，『函数定义』为什么是那个样子：</p>
-<pre class="highlight"><code class="mathematica">factor[x_Integer] := x * factor[x - <span class="hljs-number">1</span>]
-factor[<span class="hljs-number">0</span>] := <span class="hljs-number">1</span>
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">factor</span><span class="hljs-punctuation">[</span><span class="hljs-type">x_Integer</span><span class="hljs-punctuation">]</span> <span class="hljs-operator">:=</span> <span class="hljs-variable">x</span> <span class="hljs-operator">*</span> <span class="hljs-variable">factor</span><span class="hljs-punctuation">[</span><span class="hljs-variable">x</span> <span class="hljs-operator">-</span> <span class="hljs-number">1</span><span class="hljs-punctuation">]</span><br><span class="hljs-variable">factor</span><span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span> <span class="hljs-operator">:=</span> <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
 <p>这里的<code>:=</code>是<code>SetDelayed</code>的意思，它会阻止即时地把『绑定变量』进行求值，如果用<code>Set</code>则会造成一些令人啼笑皆非的问题：</p>
 <p><img src="https://pic.downk.cc/item/5fdc9e653ffa7d37b3aad475.png" alt="9" /></p>
 <h3 id="如何评价wolfram-language的设计"><a class="markdownIt-Anchor" href="#如何评价wolfram-language的设计"></a> 如何评价Wolfram Language的设计</h3>
@@ -165,18 +151,6 @@ factor[<span class="hljs-number">0</span>] := <span class="hljs-number">1</span>
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

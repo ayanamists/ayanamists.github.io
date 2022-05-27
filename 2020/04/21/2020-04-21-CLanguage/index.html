@@ -52,45 +52,17 @@
 <p>只有正确理解函数名，才能正确使用函数指针。</p>
 <p>函数指针是C语言里一个比较重要的特性。它实现了某种意义上的高阶函数，使得我们可以把函数作为参数和返回值。</p>
 <p>我们知道，函数指针也就是一个变量，里面存储着指向的函数的地址。一个比较奇怪的问题是，以下两种写法在绝大多数编译器的眼里都是正确的：</p>
-<pre class="highlight"><code class="c"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span><span class="hljs-params">(*p)</span><span class="hljs-params">()</span></span>;
-
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;&#125;
-
-p pointer = func; <span class="hljs-comment">//写法1</span>
-p pointer = &amp;func; <span class="hljs-comment">//写法2</span>
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-title function_">void</span><span class="hljs-params">(*p)</span><span class="hljs-params">()</span>;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">func</span><span class="hljs-params">()</span>&#123;&#125;<br><br>p pointer = func; <span class="hljs-comment">//写法1</span><br>p pointer = &amp;func; <span class="hljs-comment">//写法2</span><br></code></pre></td></tr></table></figure>
 <p>有些人会这样解释：对一个函数取地址仍然得到函数本身。</p>
 <p>用这个解释，我们可以解决&amp;&amp;func、&amp;&amp;&amp;func的问题，它们仍然会得到func本身。但我们很快就会觉得前一种写法本身与其他指针不太相容，比如说，你永远无法写出这样的代码：</p>
-<pre class="highlight"><code class="c"><span class="hljs-keyword">int</span> a = <span class="hljs-number">1</span>;
-<span class="hljs-keyword">int</span> p = a;
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> a = <span class="hljs-number">1</span>;<br><span class="hljs-type">int</span> p = a;<br></code></pre></td></tr></table></figure>
 <p>这么想来，我们不得不怀疑<em>对一个函数取地址仍然得到函数本身</em>这个说法的合理性。其实，问题的关键在于函数名究竟被处理为了什么。</p>
 <p>答案很简单，<strong>函数名被处理为一个地址字面量值</strong>。</p>
 <p>无论你对此有何评价，Clang、MSVC、GCC都是这样实现的。基于此，我们应该理解</p>
-<pre class="highlight"><code class="c">p pointer = func;
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c">p pointer = func;<br></code></pre></td></tr></table></figure>
 <p>的真正意思是，把func的地址赋给pointer。</p>
 <p>所以，我们不能这样去写程序：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-comment">//main.c</span>
-<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span><span class="hljs-params">(*p)</span><span class="hljs-params">()</span></span>;
-
-<span class="hljs-keyword">extern</span> p func;
-
-func2(p func)&#123;
-  ...
-&#125;
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;
-  func2(func);
-&#125;
-
-<span class="hljs-comment">//func.c</span>
-
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;
-  ...
-&#125;
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-comment">//main.c</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-title function_">void</span><span class="hljs-params">(*p)</span><span class="hljs-params">()</span>;<br><br><span class="hljs-keyword">extern</span> p func;<br><br>func2(p func)&#123;<br>  ...<br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>&#123;<br>  func2(func);<br>&#125;<br><br><span class="hljs-comment">//func.c</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">func</span><span class="hljs-params">()</span>&#123;<br>  ...<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>如果这么写，你会惊喜地发现func2函数传入的是func函数编译后的二进制代码的前四位。这是因为编译器认为main.c中的func是一个变量，而对其取地址。但实际上func是一个字面量，本身就是要取的地址中的值了。</p>
 <p>你可能会问了，这种不正确的写法为什么还可以正常编译链接呢？</p>
 <p>这就要问问链接器了。</p>
@@ -110,18 +82,6 @@ func2(p func)&#123;
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

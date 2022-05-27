@@ -80,63 +80,30 @@
 <li>环境(environment)。环境是所有绑定的形成的复合数据结构。</li>
 </ul>
 <p>简单地说，在scheme里，我们使用</p>
-<pre class="highlight"><code class="scheme">
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> x <span class="hljs-number">1</span>)
-
-(<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> x <span class="hljs-number">1</span>)
-
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme"><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> x <span class="hljs-number">1</span>)<br><br>(<span class="hljs-name"><span class="hljs-built_in">+</span></span> x <span class="hljs-number">1</span>)<br><br></code></pre></td></tr></table></figure>
 <p>就是把1这个值绑定到x这个符号上，下面(+ x 1)中的x就可以被解释为1.</p>
 <p>**然而，事情其实没有这么简单。**下面，我们以C/C++为例，谈谈一个符号绑定上的，究竟是什么东西。</p>
 <h2 id="将符号解释为值"><a class="markdownIt-Anchor" href="#将符号解释为值"></a> 将符号解释为值</h2>
 <p>考虑下面的代码：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d"</span>, a);
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, a);<br><br></code></pre></td></tr></table></figure>
 <p>我们注意到，a这个变量，是可以被替换为0的，上面的代码和下面的代码等价：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d"</span>, <span class="hljs-number">0</span>);
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, <span class="hljs-number">0</span>);<br><br></code></pre></td></tr></table></figure>
 <p>这个特性叫做引用透明性(Referential transparency)。其本质就是，一个符号对应一个<strong>不变的值</strong>，就像上面的代码里，我们有：</p>
-<pre class="highlight"><code class="r">
-a : <span class="hljs-number">0</span>
-
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r"><br>a <span class="hljs-operator">:</span> <span class="hljs-number">0</span><br><br></code></pre></td></tr></table></figure>
 <p>a这个符号，在这个词法作用域里，处处被解释为0，只有声明一个新的a覆盖掉这个符号（C里面不允许这样），a才能不被解释为0.</p>
 <p>这才应该是所谓“a这个符号是值类型”的意义。但在C语言里，或者说在大多数命令式编程语言里，<strong>情况与此有些不同</strong>。</p>
 <h2 id="将符号绑定为ir类型仍然解释为值类型"><a class="markdownIt-Anchor" href="#将符号绑定为ir类型仍然解释为值类型"></a> 将符号绑定为IR类型，仍然解释为值类型</h2>
 <h3 id="绑定上和解释为的区别"><a class="markdownIt-Anchor" href="#绑定上和解释为的区别"></a> “绑定上”和“解释为”的区别</h3>
 <p>简单来说，“绑定为”是实现上的概念，“解释为”是在外部观察到的现象。比如说，如果找一个C语言的REPL（类似于irb\fsi\scheme一样的东西），你输入</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-
-a;
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br><br>a;<br><br></code></pre></td></tr></table></figure>
 <p>它必定告诉你：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span>:<span class="hljs-number">0</span>
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span>:<span class="hljs-number">0</span><br><br></code></pre></td></tr></table></figure>
 <p>但a这个符号到底在解释器里真正对应什么东西，仅凭这个是不能确认的。它在解释器里真正对应的东西，就是“绑定为”的东西。</p>
 <h3 id="ir类型和er类型"><a class="markdownIt-Anchor" href="#ir类型和er类型"></a> IR类型和ER类型</h3>
 <p>在C语言里，一个变量是可以被赋值的：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-a = <span class="hljs-number">2</span>;
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>a = <span class="hljs-number">2</span>;<br><br></code></pre></td></tr></table></figure>
 <p>如果你还是让a绑定上一个值，那么必须要求绑定本身是可变的，而“可变”还不能是这样的可变：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-&#123;
-    <span class="hljs-keyword">int</span> a = <span class="hljs-number">2</span>;
-&#125;
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>&#123;<br>    <span class="hljs-type">int</span> a = <span class="hljs-number">2</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 <p>也就是说，不能是开一个新的作用域来“覆盖”，而必须是精准地改变（在这个例子里的）顶层作用域的a符号。我们先禁止这种操作，因为继续看下去，你会发现<strong>这本质上也是引用</strong>。</p>
 <p>如果a不能被直接绑定上一个值，它应该被绑定上什么东西呢？<strong>我们创造一个新的类型，叫做“IR类型”</strong>，这个符号绑定上“IR类型”.</p>
 <p>IR类型”的构造方式为：</p>
@@ -150,25 +117,13 @@ a = <span class="hljs-number">2</span>;
 </ul>
 <p>如何去实现这个类型呢？实现这个类型的关键在于“记忆最近的b”，而在数字电路中，“记忆”的实现方式是触发器，在现代计算机中就是内存。一个比较自然的想法是，每一个IR类型值都占有一块内存。而这个想法的实现方式，就是在IR类型的实现中，记录这块内存的索引（即地址）。</p>
 <p>我们用这种记法来写这个模型：</p>
-<pre class="highlight"><code class="r">
-a : IR(location, value)
-
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r"><br>a <span class="hljs-operator">:</span> IR<span class="hljs-punctuation">(</span>location<span class="hljs-punctuation">,</span> value<span class="hljs-punctuation">)</span><br><br></code></pre></td></tr></table></figure>
 <p>简写为：</p>
-<pre class="highlight"><code class="r">
-a : location --&gt; value
-
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r"><br>a <span class="hljs-operator">:</span> location <span class="hljs-operator">-</span><span class="hljs-operator">-&gt;</span> value<br><br></code></pre></td></tr></table></figure>
 <p>注意到，在静态语言里，set(a, b)中的B必须是某个类型的值，记此类型为B，我们这样表示这个特定的IR类型：</p>
-<pre class="highlight"><code class="r">
-IR[B]
-
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r"><br>IR<span class="hljs-punctuation">[</span>B<span class="hljs-punctuation">]</span><br><br></code></pre></td></tr></table></figure>
 <p>你可能会说，**这样不是把“变量”和“指针”混为一谈了吗？这和“指针”有什么区别呢？**不要着急，我们来向这个模型中加入“指针”。</p>
-<pre class="highlight"><code class="c">
-&amp;a;
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br>&amp;a;<br><br></code></pre></td></tr></table></figure>
 <p>这定义了一个新的操作和一个新的类型：</p>
 <ul>
 <li>对“IR类型”，可以用 get-ref(a)，得到一个“ER类型”值</li>
@@ -180,82 +135,35 @@ IR[B]
 </li>
 </ul>
 <p>把ER类型简写为：</p>
-<pre class="highlight"><code class="r">
-er : location -&gt; value
-
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r"><br>er <span class="hljs-operator">:</span> location <span class="hljs-operator">-&gt;</span> value<br><br></code></pre></td></tr></table></figure>
 <p>这么说，可能还不是特别清楚，我们来举个例子：</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span> a; <span class="hljs-comment">// 相当于构造了一个IR类型值，并绑定到a这个符号上，可以记作 a : loc_0 --&gt; undefined</span>
-a = <span class="hljs-number">10</span>; <span class="hljs-comment">// 相当于set(a, 10)，a：loc_0 --&gt; 10</span>
-a; <span class="hljs-comment">// 相当于get(a)</span>
-
-<span class="hljs-keyword">int</span> * p = &amp;a;
-<span class="hljs-comment">// 注意，这里是构造了一个IR类型值，并绑定到p这个符号上，该IR的值为一个ER类型值，应该记作：</span>
-<span class="hljs-comment">// p : loc_1 --&gt; loc_0 -&gt; 10</span>
-*p = <span class="hljs-number">1000</span>;
-<span class="hljs-comment">// 相当于 set-ref(p, 1000)， p: loc_1 --&gt; loc_0 -&gt; 1000</span>
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span> a; <span class="hljs-comment">// 相当于构造了一个IR类型值，并绑定到a这个符号上，可以记作 a : loc_0 --&gt; undefined</span><br>a = <span class="hljs-number">10</span>; <span class="hljs-comment">// 相当于set(a, 10)，a：loc_0 --&gt; 10</span><br>a; <span class="hljs-comment">// 相当于get(a)</span><br><br><span class="hljs-type">int</span> * p = &amp;a;<br><span class="hljs-comment">// 注意，这里是构造了一个IR类型值，并绑定到p这个符号上，该IR的值为一个ER类型值，应该记作：</span><br><span class="hljs-comment">// p : loc_1 --&gt; loc_0 -&gt; 10</span><br>*p = <span class="hljs-number">1000</span>;<br><span class="hljs-comment">// 相当于 set-ref(p, 1000)， p: loc_1 --&gt; loc_0 -&gt; 1000</span><br></code></pre></td></tr></table></figure>
 <p>讲到这里，我实际上说明了一个问题：<strong>C语言的变量符号，实际上绑定到IR类型值, C语言的指针值，实际上是ER类型值，C语言的指针变量符号，实际上绑定到IR[ER]类型的值</strong>。</p>
 <h3 id="从绑定值到解释值"><a class="markdownIt-Anchor" href="#从绑定值到解释值"></a> 从绑定值到解释值</h3>
 <p>从上面的例子中，我们看到，</p>
-<pre class="highlight"><code class="c">
-<span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br><br></code></pre></td></tr></table></figure>
 <p>这个符号a，绑定为IR类型的值，在我们引用它时，通过</p>
-<pre class="highlight"><code class="c">
-a;
-&lt;=&gt;
-<span class="hljs-built_in">get</span>(a);
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br>a;<br>&lt;=&gt;<br>get(a);<br><br></code></pre></td></tr></table></figure>
 <p>这个变换，实现了绑定值到解释值的转换。实际上，我们可以给出这时的绑定值和解释值的完整定义：</p>
-<pre class="highlight"><code class="BNF">ExpVal = All C Value
-BindVal = IR(ExpVal)
-</code></pre>
+<figure class="highlight bnf"><table><tr><td class="code"><pre><code class="hljs BNF">ExpVal = All C Value<br>BindVal = IR(ExpVal)<br></code></pre></td></tr></table></figure>
 <h2 id="将符号解释为引用类型"><a class="markdownIt-Anchor" href="#将符号解释为引用类型"></a> 将符号解释为引用类型</h2>
 <p>我们知道C++中，有引用类型。就像下面这样：</p>
-<pre class="highlight"><code class="c++">
-<span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-<span class="hljs-keyword">int</span> &amp;b = a;
-b = <span class="hljs-number">10</span>;
-a;
-
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><br><span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br><span class="hljs-type">int</span> &amp;b = a;<br>b = <span class="hljs-number">10</span>;<br>a;<br><br></code></pre></td></tr></table></figure>
 <p>如果有C++的REPL，将这份代码打进去，它会告诉你：</p>
-<pre class="highlight"><code class="c++">
-<span class="hljs-keyword">int</span>:<span class="hljs-number">10</span>
-
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><br><span class="hljs-type">int</span>:<span class="hljs-number">10</span><br><br></code></pre></td></tr></table></figure>
 <p>这又是怎么一回事呢？实际上，它不过是将我们之前说的IR类型，同时也作为了一种解释值而已。</p>
 <p>换句话说，</p>
-<pre class="highlight"><code class="c++">
-<span class="hljs-keyword">int</span> &amp;b = a;
-<span class="hljs-comment">// a: loc_1 --&gt; value</span>
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><br><span class="hljs-type">int</span> &amp;b = a;<br><span class="hljs-comment">// a: loc_1 --&gt; value</span><br></code></pre></td></tr></table></figure>
 <p>这段代码中的b，接受的是a<strong>这个IR值本身</strong>，而不是它的解释值。b可以被记作：</p>
-<pre class="highlight"><code class="r">
-b: loc_0--&gt;loc_1--&gt;value
-
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r"><br>b<span class="hljs-operator">:</span> loc_0<span class="hljs-operator">-</span><span class="hljs-operator">-&gt;</span>loc_1<span class="hljs-operator">-</span><span class="hljs-operator">-&gt;</span>value<br><br></code></pre></td></tr></table></figure>
 <p>这样一来，b的解释值就是</p>
-<pre class="highlight"><code class="c">
-loc_1--&gt;value
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br>loc_1--&gt;value<br><br></code></pre></td></tr></table></figure>
 <p>不过要注意的是，下面的代码：</p>
-<pre class="highlight"><code class="c++">
-<span class="hljs-keyword">int</span>&amp;&amp; c = b;
-<span class="hljs-comment">// 如果没有右值引用，c应该是loc_2 --&gt; loc_1 --&gt; loc_0 --&gt; value</span>
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><br><span class="hljs-type">int</span>&amp;&amp; c = b;<br><span class="hljs-comment">// 如果没有右值引用，c应该是loc_2 --&gt; loc_1 --&gt; loc_0 --&gt; value</span><br></code></pre></td></tr></table></figure>
 <p>会报错，这是因为c++用&amp;&amp;当作所谓的“右值引用”，导致引用值不能嵌套了。</p>
 <h2 id="传值call-by-value和传引用call-by-reference"><a class="markdownIt-Anchor" href="#传值call-by-value和传引用call-by-reference"></a> 传值（call-by-value）和传引用（call-by-reference）</h2>
 <p>在大多数语言中，函数调用都可以这样建模：</p>
-<pre class="highlight"><code class="BNF">
-FUNCTION = BODY + ARG (+ ENV)?
-
-</code></pre>
+<figure class="highlight bnf"><table><tr><td class="code"><pre><code class="hljs BNF"><br>FUNCTION = BODY + ARG (+ ENV)?<br><br></code></pre></td></tr></table></figure>
 <p>BODY就是函数体，ARG就是形式参数，ENV是这个函数定义时的环境，如果有ENV，它就是一个闭包。C语言中的函数就不是闭包，所以它只有BODY和ARG。</p>
 <p>在调用函数时，我们必须将ARG绑定上实际参数，怎么绑定就成了一个问题。</p>
 <h3 id="传值"><a class="markdownIt-Anchor" href="#传值"></a> 传值</h3>
@@ -277,68 +185,17 @@ FUNCTION = BODY + ARG (+ ENV)?
 <p>这个规则，应该说，叫做&quot;General call by reference&quot;，具体到C++，应该这么说：</p>
 <p><strong>如果符号的解释值是一个值，那么传递这个符号绑定的IR值；如果符号的解释值是一个IR值，那么传递这个解释值。</strong></p>
 <p>我们以一段代码为例，解释上面的话：</p>
-<pre class="highlight"><code class="c++">
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func2</span><span class="hljs-params">(<span class="hljs-keyword">int</span>&amp; a)</span></span>&#123;
-  a = <span class="hljs-number">2</span>;
-  <span class="hljs-comment">// a会绑定到 loc_a --&gt; loc_0 --&gt; 0</span>
-  <span class="hljs-comment">// 所以运行后，a会绑定到 loc_a --&gt; loc_0 --&gt; 2</span>
-&#125;
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;
-  <span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
-  <span class="hljs-comment">// a: loc_0 --&gt; 0</span>
-  func2(a);
-  <span class="hljs-comment">// 传入的是 loc_0 --&gt; 0 这个IR值</span>
-  <span class="hljs-comment">// 汇编形式为</span>
-  <span class="hljs-comment">/*
-   * 00B48E02 8D 45 B8             lea         eax,[a]  
-   * 00B48E05 50                   push        eax  
-   * 00B48E06 E8 AE 87 FF FF       call        func2
-   */</span>
-  <span class="hljs-keyword">int</span> &amp;b = a;
-  <span class="hljs-comment">// b: loc_1 --&gt; loc_0 --&gt; 2</span>
-  func2(b);
-  <span class="hljs-comment">// 传入的是 b 的解释值 loc_0 --&gt; 2</span>
-  <span class="hljs-comment">// 汇编形式为</span>
-  <span class="hljs-comment">/*
-   * 007B8E02 8B 45 AC             mov         eax,dword ptr [b]  
-   * 007B8E05 50                   push        eax
-   * 007B8E06 E8 AE 87 FF FF       call        func2
-   */</span>
-&#125;
-
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">(<span class="hljs-type">int</span>&amp; a)</span></span>&#123;<br>  a = <span class="hljs-number">2</span>;<br>  <span class="hljs-comment">// a会绑定到 loc_a --&gt; loc_0 --&gt; 0</span><br>  <span class="hljs-comment">// 所以运行后，a会绑定到 loc_a --&gt; loc_0 --&gt; 2</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>  <span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>  <span class="hljs-comment">// a: loc_0 --&gt; 0</span><br>  <span class="hljs-built_in">func2</span>(a);<br>  <span class="hljs-comment">// 传入的是 loc_0 --&gt; 0 这个IR值</span><br>  <span class="hljs-comment">// 汇编形式为</span><br>  <span class="hljs-comment">/*</span><br><span class="hljs-comment">   * 00B48E02 8D 45 B8             lea         eax,[a]  </span><br><span class="hljs-comment">   * 00B48E05 50                   push        eax  </span><br><span class="hljs-comment">   * 00B48E06 E8 AE 87 FF FF       call        func2</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-type">int</span> &amp;b = a;<br>  <span class="hljs-comment">// b: loc_1 --&gt; loc_0 --&gt; 2</span><br>  <span class="hljs-built_in">func2</span>(b);<br>  <span class="hljs-comment">// 传入的是 b 的解释值 loc_0 --&gt; 2</span><br>  <span class="hljs-comment">// 汇编形式为</span><br>  <span class="hljs-comment">/*</span><br><span class="hljs-comment">   * 007B8E02 8B 45 AC             mov         eax,dword ptr [b]  </span><br><span class="hljs-comment">   * 007B8E05 50                   push        eax</span><br><span class="hljs-comment">   * 007B8E06 E8 AE 87 FF FF       call        func2</span><br><span class="hljs-comment">   */</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
 <p>为啥C++的传引用和别的语言不太一样呢？这就要从那些带GC的语言说起了。</p>
 <h2 id="某些具有gc的语言将符号绑定到引用类型解释为值或引用类型"><a class="markdownIt-Anchor" href="#某些具有gc的语言将符号绑定到引用类型解释为值或引用类型"></a> 某些具有GC的语言：将符号绑定到引用类型，解释为值或引用类型</h2>
 <h3 id="ier类型"><a class="markdownIt-Anchor" href="#ier类型"></a> IER类型</h3>
 <p>预测一下下面的三个带GC的语言，运行差不多代码的结果：</p>
 <p>C#:</p>
-<pre class="highlight"><code class="c#">
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span>(<span class="hljs-params">List&lt;<span class="hljs-keyword">int</span>&gt; a</span>)</span>&#123;
-    a[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;
-&#125;
-<span class="hljs-keyword">var</span> a = List&lt;<span class="hljs-keyword">int</span>&gt;() &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;;
-func(a);
-
-</code></pre>
+<figure class="highlight c#"><table><tr><td class="code"><pre><code class="hljs c#"><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span>(<span class="hljs-params">List&lt;<span class="hljs-built_in">int</span>&gt; a</span>)</span>&#123;<br>    a[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-keyword">var</span> a = List&lt;<span class="hljs-built_in">int</span>&gt;() &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;;<br>func(a);<br><br></code></pre></td></tr></table></figure>
 <p>ruby:</p>
-<pre class="highlight"><code class="ruby">
-a = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span> <span class="hljs-title">a</span></span>
-  a[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>
-<span class="hljs-keyword">end</span>
-func a
-
-</code></pre>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby"><br>a = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span> a<br>  a[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span><br><span class="hljs-keyword">end</span><br>func a<br><br></code></pre></td></tr></table></figure>
 <p>scheme:</p>
-<pre class="highlight"><code class="scheme">
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> func
-  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x)
-    (<span class="hljs-name"><span class="hljs-builtin-name">vector-set!</span></span> x <span class="hljs-number">0</span> <span class="hljs-number">0</span>)))
-(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a (<span class="hljs-name"><span class="hljs-builtin-name">vector</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>))
-(<span class="hljs-name">func</span> a)
-
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme"><br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> func<br>  (<span class="hljs-name"><span class="hljs-built_in">lambda</span></span> (x)<br>    (<span class="hljs-name"><span class="hljs-built_in">vector-set!</span></span> x <span class="hljs-number">0</span> <span class="hljs-number">0</span>)))<br>(<span class="hljs-name"><span class="hljs-built_in">define</span></span> a (<span class="hljs-name"><span class="hljs-built_in">vector</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>))<br>(<span class="hljs-name">func</span> a)<br><br></code></pre></td></tr></table></figure>
 <p>先要提醒一句，<strong>这三个语言全部是传值的</strong>（C#可以传引用，默认传值）</p>
 <p>这三段差不多的代码都会得到一个结果–a变成了 {0, 2, 3}.</p>
 <p>为什么呢？因为在这三个语言中，数组这个结构，都是一个类似于ER类型、有IR类型的某些特征的值。</p>
@@ -357,40 +214,21 @@ func a
 <li>IER类型指向的值，由垃圾回收器负责回收。</li>
 </ul>
 <p>我们记IRE类型的值为：</p>
-<pre class="highlight"><code class="r">ier : loc ---&gt; value
-</code></pre>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r">ier <span class="hljs-operator">:</span> loc <span class="hljs-operator">-</span><span class="hljs-operator">-</span><span class="hljs-operator">-&gt;</span> value<br></code></pre></td></tr></table></figure>
 <p>你也许会问，IER类型的值是IER类型本身，这个特征说明它更像ER类型。它具有IR类型的哪些特质呢？</p>
 <p>观察这样的C#代码：</p>
-<pre class="highlight"><code class="c#">
-List&lt;<span class="hljs-keyword">int</span>&gt; a = List&lt;<span class="hljs-keyword">int</span>&gt;() &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;;
-
-</code></pre>
+<figure class="highlight c#"><table><tr><td class="code"><pre><code class="hljs c#"><br>List&lt;<span class="hljs-built_in">int</span>&gt; a = List&lt;<span class="hljs-built_in">int</span>&gt;() &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;;<br><br></code></pre></td></tr></table></figure>
 <p>a这个符号的绑定值的类型为：</p>
-<pre class="highlight"><code class="c#">
-IR[List&lt;<span class="hljs-keyword">int</span>&gt;]
-<span class="hljs-comment">// 看起来像 loc_0 --&gt; value</span>
-<span class="hljs-comment">// 实际上是 loc_0 --&gt; loc_1 ---&gt; value</span>
-
-</code></pre>
+<figure class="highlight c#"><table><tr><td class="code"><pre><code class="hljs c#"><br>IR[List&lt;<span class="hljs-built_in">int</span>&gt;]<br><span class="hljs-comment">// 看起来像 loc_0 --&gt; value</span><br><span class="hljs-comment">// 实际上是 loc_0 --&gt; loc_1 ---&gt; value</span><br><br></code></pre></td></tr></table></figure>
 <p>习惯上，这个类型标志的应该是List&lt;int&gt;本身，而不是对List&lt;int&gt;的引用。所以它形式上更像IR一些。</p>
 <p>这样一来，整个类型体系可以被写成：</p>
-<pre class="highlight"><code class="BNF">
-ExpVal = IER + Value
-DenVal = IR[ExpVal]
-IER = Ref(C# Reference Type)
-Value = C# Value Type
-
-</code></pre>
+<figure class="highlight bnf"><table><tr><td class="code"><pre><code class="hljs BNF"><br>ExpVal = IER + Value<br>DenVal = IR[ExpVal]<br>IER = Ref(C# Reference Type)<br>Value = C# Value Type<br><br></code></pre></td></tr></table></figure>
 <p>从这里我们可以看到，此处的“引用类型”和C<ins>中的“引用类型”完全是两个东西。C</ins>中的引用类型，是IR，这里的引用类型，是IER。</p>
 <h3 id="ier类型的好处"><a class="markdownIt-Anchor" href="#ier类型的好处"></a> IER类型的好处</h3>
 <ul>
 <li>
 <p>IER类型使得程序员不需要考虑大规模对象的复制开销，因为IER类型的值是IER类型本身，赋值过程本质上是共享的。</p>
-<pre class="highlight"><code class="c#">  <span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-keyword">int</span>&gt;()&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>&#125;;
-  <span class="hljs-comment">// a: loc_a --&gt; loc_1 ---&gt; list0</span>
-  <span class="hljs-keyword">var</span> b = a;
-  <span class="hljs-comment">// b: loc_b --&gt; loc_1 ---&gt; list0</span>
-</code></pre>
+<figure class="highlight c#"><table><tr><td class="code"><pre><code class="hljs c#"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">int</span>&gt;()&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>&#125;;<br><span class="hljs-comment">// a: loc_a --&gt; loc_1 ---&gt; list0</span><br><span class="hljs-keyword">var</span> b = a;<br><span class="hljs-comment">// b: loc_b --&gt; loc_1 ---&gt; list0</span><br></code></pre></td></tr></table></figure>
 </li>
 <li>
 <p>同时，GC的存在使得有一种可靠的方式释放该共享对象。</p>
@@ -399,25 +237,10 @@ Value = C# Value Type
 <h3 id="c中的传引用"><a class="markdownIt-Anchor" href="#c中的传引用"></a> C#中的传引用</h3>
 <p>C#中的变量，也都是可变的，所以势必要有和IR类似的结构。（实际上就是IR）。它传引用的方式和我们前面说的一样：传引用时，传递一个绑定到IR值的符号的绑定值，而非解释值。</p>
 <p>举个例子：</p>
-<pre class="highlight"><code class="c#">
-<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span>(<span class="hljs-params"><span class="hljs-keyword">ref</span> List&lt;<span class="hljs-keyword">int</span>&gt; x</span>)</span>&#123;
-  <span class="hljs-comment">// x被绑定到 loc_x --&gt; loc_0 --&gt; loc_1 ---&gt; (list0)</span>
-  x = <span class="hljs-literal">null</span>;
-  <span class="hljs-comment">// x变为 loc_x --&gt; loc_0 --&gt; null</span>
-&#125;
-
-a = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-keyword">int</span>&gt;();
-<span class="hljs-comment">// a: loc_0 --&gt; loc_1 ---&gt; (list0)</span>
-func(<span class="hljs-keyword">ref</span> a);
-<span class="hljs-comment">// 传入a的绑定值loc_0 --&gt; loc_1 ---&gt; (list0)</span>
-
-</code></pre>
+<figure class="highlight c#"><table><tr><td class="code"><pre><code class="hljs c#"><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span>(<span class="hljs-params"><span class="hljs-keyword">ref</span> List&lt;<span class="hljs-built_in">int</span>&gt; x</span>)</span>&#123;<br>  <span class="hljs-comment">// x被绑定到 loc_x --&gt; loc_0 --&gt; loc_1 ---&gt; (list0)</span><br>  x = <span class="hljs-literal">null</span>;<br>  <span class="hljs-comment">// x变为 loc_x --&gt; loc_0 --&gt; null</span><br>&#125;<br><br>a = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">int</span>&gt;();<br><span class="hljs-comment">// a: loc_0 --&gt; loc_1 ---&gt; (list0)</span><br>func(<span class="hljs-keyword">ref</span> a);<br><span class="hljs-comment">// 传入a的绑定值loc_0 --&gt; loc_1 ---&gt; (list0)</span><br><br></code></pre></td></tr></table></figure>
 <h2 id="真正的值类型"><a class="markdownIt-Anchor" href="#真正的值类型"></a> 真正的值类型</h2>
 <p>在F#、Haskell等等函数式语言里，有真正的、不可变的“值类型”。</p>
-<pre class="highlight"><code class="f#">
-let a = 1
-
-</code></pre>
+<figure class="highlight f#"><table><tr><td class="code"><pre><code class="hljs f#"><br><span class="hljs-keyword">let</span> a <span class="hljs-operator">=</span> <span class="hljs-number">1</span><br><br></code></pre></td></tr></table></figure>
 <p>上面的a，永远会被解释为1。这才是真正的“值类型”。</p>
 
     </div>
@@ -430,18 +253,6 @@ let a = 1
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

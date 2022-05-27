@@ -51,129 +51,58 @@
         <h2 id="从错误处理说起"><a class="markdownIt-Anchor" href="#从错误处理说起"></a> 从错误处理说起</h2>
 <p>错误处理是编程语言中的古老话题，从CPU的某些信号，到C++、托管平台里的<code>exception</code>，都是某种形态的错误处理。</p>
 <p>在函数式语言中，我们一般采用<code>Result</code>或者说<code>Maybe</code>一类的东西做错误处理，例如说，在Haskell中定义自然数除法，可以这样定义：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">Nat</span> = <span class="hljs-type">Zero</span> | <span class="hljs-type">S</span> <span class="hljs-type">Nat</span> </span>
-  <span class="hljs-keyword">deriving</span> <span class="hljs-type">Show</span>
-  
-<span class="hljs-title">sub</span> n <span class="hljs-type">Zero</span> = n
-<span class="hljs-title">sub</span> <span class="hljs-type">Zero</span> n = <span class="hljs-type">Zero</span>
-<span class="hljs-title">sub</span> (<span class="hljs-type">S</span> n) (<span class="hljs-type">S</span> n') = sub n n'
-
-<span class="hljs-title">eqb</span> <span class="hljs-type">Zero</span> n = <span class="hljs-type">False</span>
-<span class="hljs-title">eqb</span> (<span class="hljs-type">S</span> n) (<span class="hljs-type">Zero</span>) = <span class="hljs-type">True</span>
-<span class="hljs-title">eqb</span> (<span class="hljs-type">S</span> n) (<span class="hljs-type">S</span> n') = eqb n n'
-
-<span class="hljs-comment">--除法定义</span>
-<span class="hljs-title">ndiv</span> <span class="hljs-type">Zero</span> n' = <span class="hljs-type">Zero</span>
-<span class="hljs-title">ndiv</span> n n' =
-  <span class="hljs-keyword">if</span> eqb n n' <span class="hljs-keyword">then</span> ndiv (sub n n') n' <span class="hljs-keyword">else</span> n
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">Nat</span> = <span class="hljs-type">Zero</span> | <span class="hljs-type">S</span> <span class="hljs-type">Nat</span> </span><br>  <span class="hljs-keyword">deriving</span> <span class="hljs-type">Show</span><br>  <br><span class="hljs-title">sub</span> n <span class="hljs-type">Zero</span> = n<br><span class="hljs-title">sub</span> <span class="hljs-type">Zero</span> n = <span class="hljs-type">Zero</span><br><span class="hljs-title">sub</span> (<span class="hljs-type">S</span> n) (<span class="hljs-type">S</span> n&#x27;) = sub n n&#x27;<br><br><span class="hljs-title">eqb</span> <span class="hljs-type">Zero</span> n = <span class="hljs-type">False</span><br><span class="hljs-title">eqb</span> (<span class="hljs-type">S</span> n) (<span class="hljs-type">Zero</span>) = <span class="hljs-type">True</span><br><span class="hljs-title">eqb</span> (<span class="hljs-type">S</span> n) (<span class="hljs-type">S</span> n&#x27;) = eqb n n&#x27;<br><br><span class="hljs-comment">--除法定义</span><br><span class="hljs-title">ndiv</span> <span class="hljs-type">Zero</span> n&#x27; = <span class="hljs-type">Zero</span><br><span class="hljs-title">ndiv</span> n n&#x27; =<br>  <span class="hljs-keyword">if</span> eqb n n&#x27; <span class="hljs-keyword">then</span> ndiv (sub n n&#x27;) n&#x27; <span class="hljs-keyword">else</span> n<br></code></pre></td></tr></table></figure>
 <p>然而，这样定义并不能覆盖一个数学上无意义、计算上不停机的情况：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">ndiv</span> (<span class="hljs-type">S</span> <span class="hljs-type">Zero</span>) <span class="hljs-type">Zero</span>
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">ndiv</span> (<span class="hljs-type">S</span> <span class="hljs-type">Zero</span>) <span class="hljs-type">Zero</span><br></code></pre></td></tr></table></figure>
 <p>所以，我们可以将这种情况定义为所谓的“错误”，把除此之外的情况定义为“正确”：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">ndiv</span> n <span class="hljs-type">Zero</span> = <span class="hljs-type">Nothing</span>
-<span class="hljs-title">ndiv</span> <span class="hljs-type">Zero</span> n' = <span class="hljs-type">Just</span> <span class="hljs-type">Zero</span>
-<span class="hljs-title">ndiv</span> n n' =
-  <span class="hljs-keyword">if</span> eqb n n' <span class="hljs-keyword">then</span> ndiv (sub n n') n' <span class="hljs-keyword">else</span> <span class="hljs-type">Just</span> n
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">ndiv</span> n <span class="hljs-type">Zero</span> = <span class="hljs-type">Nothing</span><br><span class="hljs-title">ndiv</span> <span class="hljs-type">Zero</span> n&#x27; = <span class="hljs-type">Just</span> <span class="hljs-type">Zero</span><br><span class="hljs-title">ndiv</span> n n&#x27; =<br>  <span class="hljs-keyword">if</span> eqb n n&#x27; <span class="hljs-keyword">then</span> ndiv (sub n n&#x27;) n&#x27; <span class="hljs-keyword">else</span> <span class="hljs-type">Just</span> n<br></code></pre></td></tr></table></figure>
 <p>这里的<code>Just</code>和<code>Nothing</code>都是“Constructor”，它们构造的类型是<code>Maybe</code>：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-type">Just</span> :: a -&gt; <span class="hljs-type">Maybe</span> a
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-type">Just</span> :: a -&gt; <span class="hljs-type">Maybe</span> a<br></code></pre></td></tr></table></figure>
 <p>这里的Maybe是一个<code>(* -&gt; *)</code>，是所谓的“高阶类型”，它是类型的函数，即输入一个类型，输出一个类型。</p>
 <p>这样看起来似乎并没有什么问题，然而，当我们要对多个<code>Maybe a</code>进行模式匹配式的处理时，麻烦立刻显现了出来：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">case</span> m1 <span class="hljs-keyword">of</span>
-  <span class="hljs-type">Just</span> t1 -&gt; <span class="hljs-keyword">case</span> m2 <span class="hljs-keyword">of</span>
-			   <span class="hljs-type">Just</span> t2 -&gt; ...
-			   <span class="hljs-type">Nothing</span> -&gt; <span class="hljs-type">Nothing</span>
-  <span class="hljs-type">Nothing</span> -&gt; <span class="hljs-type">Nothing</span>
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">case</span> m1 <span class="hljs-keyword">of</span><br>  <span class="hljs-type">Just</span> t1 -&gt; <span class="hljs-keyword">case</span> m2 <span class="hljs-keyword">of</span><br>			   <span class="hljs-type">Just</span> t2 -&gt; ...<br>			   <span class="hljs-type">Nothing</span> -&gt; <span class="hljs-type">Nothing</span><br>  <span class="hljs-type">Nothing</span> -&gt; <span class="hljs-type">Nothing</span><br></code></pre></td></tr></table></figure>
 <p>明明当<code>t1</code>或者<code>t2</code>是<code>Nothing</code>的时候，计算就可以中止了，为什么在每次模式匹配中都需要对<code>Nothing</code>进行处理？能不能找到一个更好的办法来表达这些逻辑？</p>
 <p>这就是Monad大显身手的时刻。我们先定义一个函数<code>comb</code>，它的类型是：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">comb</span> :: <span class="hljs-type">Maybe</span> a -&gt; (a -&gt; <span class="hljs-type">Maybe</span> b) -&gt; <span class="hljs-type">Maybe</span> b
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">comb</span> :: <span class="hljs-type">Maybe</span> a -&gt; (a -&gt; <span class="hljs-type">Maybe</span> b) -&gt; <span class="hljs-type">Maybe</span> b<br></code></pre></td></tr></table></figure>
 <p>它的定义是：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">comb</span> (<span class="hljs-type">Just</span> a) f = f a
-<span class="hljs-title">comb</span> <span class="hljs-type">Nothing</span> f = <span class="hljs-type">Nothing</span>
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">comb</span> (<span class="hljs-type">Just</span> a) f = f a<br><span class="hljs-title">comb</span> <span class="hljs-type">Nothing</span> f = <span class="hljs-type">Nothing</span><br></code></pre></td></tr></table></figure>
 <p>上面的程序立刻可以被改写为：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">comb</span> m1 (\t1 -&gt; comb m2 (\t2 -&gt; ...))
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">comb</span> m1 (\t1 -&gt; comb m2 (\t2 -&gt; ...))<br></code></pre></td></tr></table></figure>
 <p>这，就是大名鼎鼎的Monad最直接、最简练的描述。在Philip Wadler的论文<em>Monads for functional programming</em>中，第一个例子就是Maybe.</p>
 <p>一个Monad需要具有一个<code>return</code>函数（这里的<code>Just</code>）和一个<code>&gt;&gt;=</code>函数（这里的<code>comb</code>），第一个用来构造，第二个用来组合。它们需要满足一些定律，详见Philip的论文。</p>
 <h2 id="map-fold-monad如何和列表结合"><a class="markdownIt-Anchor" href="#map-fold-monad如何和列表结合"></a> map? fold? Monad如何和列表结合</h2>
 <p>Monad到这里，似乎还是很简单、很直接的东西，但其实不然。一旦把Monad用在解释器中，我们立刻就会遇到需要把Monad和列表结合起来的情况，而这其实并不是非常平凡的。</p>
 <p>考虑一个最简单的语法树：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">L</span> = <span class="hljs-type">Id</span> <span class="hljs-type">Int</span> | <span class="hljs-type">F</span> [<span class="hljs-type">Int</span>]</span>
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">L</span> = <span class="hljs-type">Id</span> <span class="hljs-type">Int</span> | <span class="hljs-type">F</span> [<span class="hljs-type">Int</span>]</span><br></code></pre></td></tr></table></figure>
 <p>我们对其求值：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">eval</span> l = 
-  <span class="hljs-keyword">case</span> l <span class="hljs-keyword">of</span> 
-    <span class="hljs-type">Id</span> i -&gt; i
-    <span class="hljs-type">F</span> il -&gt; foldl (+) <span class="hljs-number">0</span> il
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">eval</span> l = <br>  <span class="hljs-keyword">case</span> l <span class="hljs-keyword">of</span> <br>    <span class="hljs-type">Id</span> i -&gt; i<br>    <span class="hljs-type">F</span> il -&gt; foldl (+) <span class="hljs-number">0</span> il<br></code></pre></td></tr></table></figure>
 <p>如果把<code>Id i</code>的那个分支改成</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-type">Id</span> i -&gt; <span class="hljs-type">Just</span> i
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-type">Id</span> i -&gt; <span class="hljs-type">Just</span> i<br></code></pre></td></tr></table></figure>
 <p>那么下面就不能用<code>foldl</code>进行求值了，原因很简单，<code>foldl</code>不可能在遇到一个<code>Nothing</code>的时候就停下来，它永远会从左至右对每一个元素进行操作，这可以从<code>foldl</code>的定义中找到答案（只考虑对列表的<code>foldl</code>）：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">foldl</span> :: (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b
-<span class="hljs-title">foldl</span> f i [] -&gt; i
-<span class="hljs-title">foldl</span> f i (hd::tl) -&gt; foldl f (f i hd) tl
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">foldl</span> :: (b -&gt; a -&gt; b) -&gt; b -&gt; [a] -&gt; b<br><span class="hljs-title">foldl</span> f i [] -&gt; i<br><span class="hljs-title">foldl</span> f i (hd::tl) -&gt; foldl f (f i hd) tl<br></code></pre></td></tr></table></figure>
 <p>也就是说，<code>f</code>被应用的时候，外边总有一个类似于这样：</p>
-<pre class="highlight"><code class="haskell">\x -&gt; fold f x tl
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell">\x -&gt; fold f x tl<br></code></pre></td></tr></table></figure>
 <p>的continuation，无论在<code>f</code>里怎么写（除非用<code>call/cc</code>）都不可能在碰到一个<code>Nothing</code>的时候就停下来，而显然，在<code>foldl</code>一个Monad列表的过程中，如果碰到了一个<code>Nothing</code>，整个表达式毫无疑问地必须是<code>Nothing</code>。这是<code>foldl</code>所无法实现的。</p>
 <p>所以，我们需要自己实现一个<code>foldM</code>，具体如何实现呢？希望读者自行思考，这里给出我实现的版本：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">foldM</span> :: <span class="hljs-type">Monad</span> m =&gt; (b -&gt; a -&gt; m b) -&gt; b -&gt; [a] -&gt; m b
-<span class="hljs-title">foldM</span> f z [] = return z
-<span class="hljs-title">foldM</span> f z (x:xs) = 
-  f z x &gt;&gt;= \i -&gt; foldM f i xs
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">foldM</span> :: <span class="hljs-type">Monad</span> m =&gt; (b -&gt; a -&gt; m b) -&gt; b -&gt; [a] -&gt; m b<br><span class="hljs-title">foldM</span> f z [] = return z<br><span class="hljs-title">foldM</span> f z (x:xs) = <br>  f z x &gt;&gt;= \i -&gt; foldM f i xs<br></code></pre></td></tr></table></figure>
 <h2 id="列表本身也是monad"><a class="markdownIt-Anchor" href="#列表本身也是monad"></a> 列表本身也是Monad</h2>
 <p>列表，显然也是一个<code>(* -&gt; *)</code>，那么，它如果作为一个Monad，会有什么样的意义呢？<em>Structure and Interpretation of Computer Programs</em>的第4.3节为这样的程序写了一个解释器：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">list</span></span> (<span class="hljs-name">amb</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>) (<span class="hljs-name">amb</span> <span class="hljs-symbol">'a</span> <span class="hljs-symbol">'b</span>))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">list</span></span> (<span class="hljs-name">amb</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>) (<span class="hljs-name">amb</span> <span class="hljs-symbol">&#x27;a</span> <span class="hljs-symbol">&#x27;b</span>))<br></code></pre></td></tr></table></figure>
 <p>这个东西的值是</p>
-<pre class="highlight"><code class="scheme">'((<span class="hljs-number">1</span> a) (<span class="hljs-number">1</span> b) (<span class="hljs-number">2</span> a) (<span class="hljs-number">2</span> b) (<span class="hljs-number">3</span> a) (<span class="hljs-number">3</span> b))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">&#x27;((<span class="hljs-number">1</span> a) (<span class="hljs-number">1</span> b) (<span class="hljs-number">2</span> a) (<span class="hljs-number">2</span> b) (<span class="hljs-number">3</span> a) (<span class="hljs-number">3</span> b))<br></code></pre></td></tr></table></figure>
 <p>把上面的程序修改一下，我们就会发现有趣的事情：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">&gt;&gt;=</span> (<span class="hljs-name">amb</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)
-     (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (x)
-       (<span class="hljs-name">&gt;&gt;=</span> (<span class="hljs-name">amb</span> <span class="hljs-symbol">'a</span> <span class="hljs-symbol">'b</span>)
-            (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (y)
-              (<span class="hljs-name">return</span> `(,x ,y))))))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">&gt;&gt;=</span> (<span class="hljs-name">amb</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>)<br>     (<span class="hljs-name"><span class="hljs-built_in">lambda</span></span> (x)<br>       (<span class="hljs-name">&gt;&gt;=</span> (<span class="hljs-name">amb</span> <span class="hljs-symbol">&#x27;a</span> <span class="hljs-symbol">&#x27;b</span>)<br>            (<span class="hljs-name"><span class="hljs-built_in">lambda</span></span> (y)<br>              (<span class="hljs-name">return</span> `(,x ,y))))))<br></code></pre></td></tr></table></figure>
 <p>这正是Monad化的表示。而在Haskell中，这就是List Monad：</p>
-<pre class="highlight"><code class="haskell">*<span class="hljs-type">Main</span>&gt; <span class="hljs-keyword">do</span> x &lt;- [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]; y &lt;- [<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>]; return (x, y)
-[(<span class="hljs-number">1</span>,<span class="hljs-string">"a"</span>),(<span class="hljs-number">1</span>,<span class="hljs-string">"b"</span>),(<span class="hljs-number">2</span>,<span class="hljs-string">"a"</span>),(<span class="hljs-number">2</span>,<span class="hljs-string">"b"</span>),(<span class="hljs-number">3</span>,<span class="hljs-string">"a"</span>),(<span class="hljs-number">3</span>,<span class="hljs-string">"b"</span>)]
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell">*<span class="hljs-type">Main</span>&gt; <span class="hljs-keyword">do</span> x &lt;- [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]; y &lt;- [<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;b&quot;</span>]; return (x, y)<br>[(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;a&quot;</span>),(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;b&quot;</span>),(<span class="hljs-number">2</span>,<span class="hljs-string">&quot;a&quot;</span>),(<span class="hljs-number">2</span>,<span class="hljs-string">&quot;b&quot;</span>),(<span class="hljs-number">3</span>,<span class="hljs-string">&quot;a&quot;</span>),(<span class="hljs-number">3</span>,<span class="hljs-string">&quot;b&quot;</span>)]<br></code></pre></td></tr></table></figure>
 <p>（Haskell中没有不同类型的列表）</p>
 <h2 id="id-monad是什么"><a class="markdownIt-Anchor" href="#id-monad是什么"></a> &quot;Id Monad&quot;是什么？</h2>
 <p>考虑一个<code>id</code>类型函数，它把所有的输入都映射到输入本身，也就是说：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-title">id</span> <span class="hljs-type">Int</span> = <span class="hljs-type">Int</span>
-<span class="hljs-title">id</span> <span class="hljs-type">Char</span> = <span class="hljs-type">Char</span>
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">id</span> <span class="hljs-type">Int</span> = <span class="hljs-type">Int</span><br><span class="hljs-title">id</span> <span class="hljs-type">Char</span> = <span class="hljs-type">Char</span><br></code></pre></td></tr></table></figure>
 <p>那么，如果这个类型函数作为Monad，<code>&gt;&gt;=</code>和<code>return</code>又该是什么意思呢？</p>
 <p>答案很明显：</p>
-<pre class="highlight"><code class="haskell">&gt;&gt;= :: a -&gt; (a -&gt; b) -&gt; b
-&gt;&gt;= a f = f a
-
-<span class="hljs-title">return</span> :: a -&gt; a
-<span class="hljs-title">return</span> x = x
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell">&gt;&gt;= :: a -&gt; (a -&gt; b) -&gt; b<br>&gt;&gt;= a f = f a<br><br><span class="hljs-title">return</span> :: a -&gt; a<br><span class="hljs-title">return</span> x = x<br></code></pre></td></tr></table></figure>
 <p>随便找一段程序，把它全部用“Id Monad”改写，我们会得到：</p>
-<pre class="highlight"><code class="haskell"><span class="hljs-comment">--改写前</span>
-<span class="hljs-title">factor</span> <span class="hljs-number">0</span> = <span class="hljs-number">1</span>
-<span class="hljs-title">factro</span> n = n * (factor n - <span class="hljs-number">1</span>)
-
-<span class="hljs-comment">--改写后</span>
-<span class="hljs-title">factor</span> <span class="hljs-number">0</span> = <span class="hljs-number">1</span>
-<span class="hljs-title">factor</span> n = n        &gt;&gt;= (\x -&gt; 
-           n - <span class="hljs-number">1</span>    &gt;&gt;= (\y -&gt;
-           factor y &gt;&gt;= (\z -&gt;
-           z * x    &gt;&gt;= (\a
-           return a     ))))
-</code></pre>
+<figure class="highlight haskell"><table><tr><td class="code"><pre><code class="hljs haskell"><span class="hljs-comment">--改写前</span><br><span class="hljs-title">factor</span> <span class="hljs-number">0</span> = <span class="hljs-number">1</span><br><span class="hljs-title">factro</span> n = n * (factor n - <span class="hljs-number">1</span>)<br><br><span class="hljs-comment">--改写后</span><br><span class="hljs-title">factor</span> <span class="hljs-number">0</span> = <span class="hljs-number">1</span><br><span class="hljs-title">factor</span> n = n        &gt;&gt;= (\x -&gt; <br>           n - <span class="hljs-number">1</span>    &gt;&gt;= (\y -&gt;<br>           factor y &gt;&gt;= (\z -&gt;<br>           z * x    &gt;&gt;= (\a<br>           return a     ))))<br></code></pre></td></tr></table></figure>
 <p>这是什么？有人可能会说，这是CPS(<em>continuation passing style</em>). 实际上，这和CPS还有一段距离，更准确的说法是，这是ANF(<em>administrative normal form</em>)的一种同构。</p>
 <h2 id="state-monad"><a class="markdownIt-Anchor" href="#state-monad"></a> State Monad</h2>
 <p>有了上面的知识，我们还不足以完全搞明白State Monad. 因为，我们还缺少一个推广、一个直观想法和两个创造。欲知后事如何，请看下回分解。</p>
@@ -188,18 +117,6 @@
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

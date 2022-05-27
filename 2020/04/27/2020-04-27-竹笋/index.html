@@ -83,18 +83,7 @@
 <p>这次的尝试就相当成功，剩下的一点苦涩味完全可以看作对肉的油腻的调和。</p>
 <h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
 <p>我又用改进后的方法做了三次竹笋，味道是比较稳定的。用代码来描述一下这个核心过程–焯水的话，就是这样：</p>
-<pre class="highlight"><code class="ruby">
-<span class="hljs-class"><span class="hljs-keyword">module</span> 烹饪方式</span>
-
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">self</span>.焯水<span class="hljs-params">(食材，时间，环境)</span></span>
-    ...
-  <span class="hljs-keyword">end</span>
-
-<span class="hljs-keyword">end</span>
-
-烹饪方式<span class="hljs-symbol">:</span><span class="hljs-symbol">:</span>焯水(竹笋丝，<span class="hljs-number">10</span>分钟，盐水)
-
-</code></pre>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby"><br><span class="hljs-keyword">module</span> 烹饪方式<br><br>  <span class="hljs-keyword">def</span> <span class="hljs-title function_">self</span>.焯水(食材，时间，环境)<br>    ...<br>  <span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">end</span><br><br>烹饪方式<span class="hljs-symbol">:</span><span class="hljs-symbol">:</span>焯水(竹笋丝，<span class="hljs-number">10</span>分钟，盐水)<br><br></code></pre></td></tr></table></figure>
 <p>不过，要想完全达到酒店的口感，这样还不行。这似乎是因为酒店用的笋，很可能是类似于笋干的一类东西。总之，用这个方法，在家里也可以吃到还不错的竹笋了。</p>
 
     </div>
@@ -107,18 +96,6 @@
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

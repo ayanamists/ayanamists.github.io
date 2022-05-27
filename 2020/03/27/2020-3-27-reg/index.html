@@ -152,55 +152,7 @@ $$ A = BC </p>
 <li>一个自动机</li>
 </ul>
 <p>我们这样来表示栈里的元素</p>
-<pre class="highlight"><code class="c#">  <span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BeginState</span>
-    &#123;
-        <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> internalState &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BeginState</span>(<span class="hljs-params"></span>)</span> &#123; internalState = <span class="hljs-number">0</span>; &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BeginState</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> state</span>)</span>
-        &#123;
-            internalState = state;
-        &#125;
-    &#125;
-
-  <span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">EndState</span>&#123;...&#125;
-
-  <span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">StateInStack</span>
-    &#123;
-        <span class="hljs-keyword">public</span> BeginState Begin &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;
-        <span class="hljs-keyword">public</span> EndState End &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PointEndTo</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> state, <span class="hljs-keyword">in</span> Nfa&lt;CharWithEmpty&gt; nfa</span>)</span>
-        &#123;
-            PointEndToWithout(state, nfa);
-            End.internalList.Clear();
-        &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PointEndToWithout</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> state, <span class="hljs-keyword">in</span> Nfa&lt;CharWithEmpty&gt; nfa</span>)</span>
-        &#123;
-            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> (estate, how) <span class="hljs-keyword">in</span> End)
-            &#123;
-                nfa.SetStateTransition(estate, state, how);
-            &#125;
-        &#125;
-    &#125;
-  <span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">StackElement</span>
-    &#123;
-        <span class="hljs-keyword">public</span> StateInStack State &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">public</span> CharWithEmpty symbol &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-literal">null</span>;
-
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackElement</span>(<span class="hljs-params"><span class="hljs-keyword">in</span> BeginState begin, <span class="hljs-keyword">in</span> EndState end</span>)</span>
-        &#123;
-            State = <span class="hljs-keyword">new</span> StateInStack();
-            State.Begin = begin;
-            State.End = end;
-        &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackElement</span>(<span class="hljs-params"><span class="hljs-keyword">char</span> sym</span>)</span>
-        &#123;
-            symbol = <span class="hljs-keyword">new</span> CharWithEmpty( sym);
-        &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackElement</span>(<span class="hljs-params"></span>)</span> &#123;
-            State = <span class="hljs-keyword">new</span> StateInStack();
-        &#125;
-    &#125;
-</code></pre>
+<figure class="highlight c#"><table><tr><td class="code"><pre><code class="hljs c#"><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BeginState</span><br>  &#123;<br>      <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> internalState &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;<br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BeginState</span>()</span> &#123; internalState = <span class="hljs-number">0</span>; &#125;<br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BeginState</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> state</span>)</span><br>      &#123;<br>          internalState = state;<br>      &#125;<br>  &#125;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">EndState</span>&#123;...&#125;<br><br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">StateInStack</span><br>  &#123;<br>      <span class="hljs-keyword">public</span> BeginState Begin &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;<br>      <span class="hljs-keyword">public</span> EndState End &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;<br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PointEndTo</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> state, <span class="hljs-keyword">in</span> Nfa&lt;CharWithEmpty&gt; nfa</span>)</span><br>      &#123;<br>          PointEndToWithout(state, nfa);<br>          End.internalList.Clear();<br>      &#125;<br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PointEndToWithout</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> state, <span class="hljs-keyword">in</span> Nfa&lt;CharWithEmpty&gt; nfa</span>)</span><br>      &#123;<br>          <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> (estate, how) <span class="hljs-keyword">in</span> End)<br>          &#123;<br>              nfa.SetStateTransition(estate, state, how);<br>          &#125;<br>      &#125;<br>  &#125;<br><span class="hljs-keyword">internal</span> <span class="hljs-keyword">class</span> <span class="hljs-title">StackElement</span><br>  &#123;<br>      <span class="hljs-keyword">public</span> StateInStack State &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-literal">null</span>;<br>      <span class="hljs-keyword">public</span> CharWithEmpty symbol &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-literal">null</span>;<br><br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackElement</span>(<span class="hljs-params"><span class="hljs-keyword">in</span> BeginState begin, <span class="hljs-keyword">in</span> EndState end</span>)</span><br>      &#123;<br>          State = <span class="hljs-keyword">new</span> StateInStack();<br>          State.Begin = begin;<br>          State.End = end;<br>      &#125;<br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackElement</span>(<span class="hljs-params"><span class="hljs-built_in">char</span> sym</span>)</span><br>      &#123;<br>          symbol = <span class="hljs-keyword">new</span> CharWithEmpty( sym);<br>      &#125;<br>      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">StackElement</span>()</span> &#123;<br>          State = <span class="hljs-keyword">new</span> StateInStack();<br>      &#125;<br>  &#125;<br></code></pre></td></tr></table></figure>
 <p>这样一来就可以优雅地实践刚才所描述的组合算法了。</p>
 <h3 id="第三步-由nfa生成dfa"><a class="markdownIt-Anchor" href="#第三步-由nfa生成dfa"></a> 第三步 由NFA生成DFA</h3>
 <p>这里我们使用广度优先搜索的方法，从BeginState开始，搜索出它的$$\epsilon$$闭包，然后分析可能的状态转移。对每一个可能的状态转移都求其$$\epsilon$$闭包，之后将它压入队列中，直至队列为空。</p>
@@ -215,18 +167,6 @@ $$ A = BC </p>
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

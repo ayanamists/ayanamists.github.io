@@ -100,11 +100,9 @@ The Scheme Programming Language对quote的描述是这样的：
              在计算机里寻求符号计算是不是搞错了什么？
 计算机系的学生，大多都是明白计算机是如何做数值计算的。
 比如说，你让一台x86计算机算0xff+0xff00等于多少，可以写成这样的汇编：
-mov eax, 0xff ;把0xff这个数放到eax寄存器里
-add eax, 0xff00 ;把eax寄存器里的数加上 0xff00
-
+mov eax, 0xff ;把0xff这个数放到eax寄存器里add eax, 0xff00 ;把eax寄存器里的数加上 0xff00
 至于小数，可以用浮点数去算，这些东西都能在硬件上实现。事实上，我们也写过一个简单的CPU，大概知道这些东西在电路上是什么样的。
-可是，很多计算机系的学生，
+可是，很多计算机系的学生，也不
             <a class="read-more" href="/2020/10/03/2020-10-03-mma/"> ... </a>
         </div>
         <div class="post-date">2020.10.03</div>
@@ -131,15 +129,11 @@ f(x)=x2
         <div class="post-except">
              辗转相除法的正确性
 凡是学过编程的人，几乎没有不知道【辗转相除法】，或者【欧几里得算法】的。用scheme写出来，就是这样：
-(define (gcd a b)
-  (if (= b 0)
-      a
-      (gcd b (modulo a b))))
-
+(define (gcd a b)  (if (= b 0)      a      (gcd b (modulo a b))))
 大部分人还知道，GCD的理论基础是：
 (a mod b=c)→GCD(a,b)=GCD(b,c)(a\ mod\ b = c) \rightarrow
 GCD(a,b) = GCD(b,c)
-(a mod b=c
+(a mod b=c)→GC
             <a class="read-more" href="/2020/09/12/2020-09-12-number-theory/"> ... </a>
         </div>
         <div class="post-date">2020.09.12</div>
@@ -197,18 +191,6 @@ GCD(a,b) = GCD(b,c)
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

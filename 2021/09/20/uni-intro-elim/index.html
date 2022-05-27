@@ -111,31 +111,7 @@
 <p>如果能够完全地形式化，那么这个问题并不难讲。但形式化本身是困难的。高中阶段没有讲过形式证明，这个问题出现在“函数”模块，在这之前甚至没有讲过逻辑的部分。所以，这类题目实在不宜当作练习题引入。</p>
 <h2 id="彩蛋coq证明"><a class="markdownIt-Anchor" href="#彩蛋coq证明"></a> 彩蛋：coq证明</h2>
 <p>这个命题在整数上是成立的，我们可以用coq给出一个证明：</p>
-<pre class="highlight"><code class="coq"><span class="hljs-keyword">Require</span> <span class="hljs-keyword">Import</span> Coq.ZArith.BinInt.
-
-<span class="hljs-keyword">Open</span> <span class="hljs-keyword">Scope</span> Z_scope.
-
-<span class="hljs-keyword">Theorem</span> double_opp: <span class="hljs-keyword">forall</span> x:Z, --x = x.
-<span class="hljs-keyword">Proof</span>.
-  <span class="hljs-built_in">intros</span> x.
-  <span class="hljs-built_in">repeat</span> (<span class="hljs-built_in">rewrite</span> Z.opp_eq_mul_m1).
-  <span class="hljs-built_in">rewrite</span> &lt;- Zmult_assoc. <span class="hljs-built_in">simpl</span>.
-  <span class="hljs-built_in">rewrite</span>  Zmult_1_r. <span class="hljs-built_in">reflexivity</span>.
-<span class="hljs-keyword">Qed</span>.
-
-<span class="hljs-keyword">Theorem</span> t:<span class="hljs-keyword">forall</span> f:(Z -&gt; Z), 
-  (<span class="hljs-keyword">forall</span> x, f (x + <span class="hljs-number">1</span>) = - f x) -&gt;
-  (<span class="hljs-keyword">forall</span> x, f (x + <span class="hljs-number">2</span>) = f x).
-<span class="hljs-keyword">Proof</span>.
-  <span class="hljs-built_in">intros</span> f H1 x.
-  <span class="hljs-built_in">assert</span> (t1:<span class="hljs-keyword">forall</span> x, f(x + <span class="hljs-number">2</span>) = - f(x + <span class="hljs-number">1</span>)).
-  &#123; <span class="hljs-built_in">intros</span> x0. 
-    <span class="hljs-built_in">assert</span> (t2: <span class="hljs-number">2</span> = <span class="hljs-number">1</span> + <span class="hljs-number">1</span>). &#123; <span class="hljs-built_in">auto</span>. &#125;
-    <span class="hljs-built_in">rewrite</span> -&gt; t2. <span class="hljs-built_in">rewrite</span> Zplus_assoc.
-    <span class="hljs-built_in">apply</span> H1. &#125;
-  <span class="hljs-built_in">rewrite</span> t1. <span class="hljs-built_in">rewrite</span> H1. <span class="hljs-built_in">apply</span> double_opp.
-<span class="hljs-keyword">Qed</span>.
-</code></pre>
+<figure class="highlight coq"><table><tr><td class="code"><pre><code class="hljs coq"><span class="hljs-keyword">Require</span> <span class="hljs-keyword">Import</span> Coq.ZArith.BinInt.<br><br><span class="hljs-keyword">Open</span> <span class="hljs-keyword">Scope</span> Z_scope.<br><br><span class="hljs-keyword">Theorem</span> double_opp: <span class="hljs-keyword">forall</span> x:Z, --x = x.<br><span class="hljs-keyword">Proof</span>.<br>  <span class="hljs-built_in">intros</span> x.<br>  <span class="hljs-built_in">repeat</span> (<span class="hljs-built_in">rewrite</span> Z.opp_eq_mul_m1).<br>  <span class="hljs-built_in">rewrite</span> &lt;- Zmult_assoc. <span class="hljs-built_in">simpl</span>.<br>  <span class="hljs-built_in">rewrite</span>  Zmult_1_r. <span class="hljs-built_in">reflexivity</span>.<br><span class="hljs-keyword">Qed</span>.<br><br><span class="hljs-keyword">Theorem</span> t:<span class="hljs-keyword">forall</span> f:(Z -&gt; Z), <br>  (<span class="hljs-keyword">forall</span> x, f (x + <span class="hljs-number">1</span>) = - f x) -&gt;<br>  (<span class="hljs-keyword">forall</span> x, f (x + <span class="hljs-number">2</span>) = f x).<br><span class="hljs-keyword">Proof</span>.<br>  <span class="hljs-built_in">intros</span> f H1 x.<br>  <span class="hljs-built_in">assert</span> (t1:<span class="hljs-keyword">forall</span> x, f(x + <span class="hljs-number">2</span>) = - f(x + <span class="hljs-number">1</span>)).<br>  &#123; <span class="hljs-built_in">intros</span> x0. <br>    <span class="hljs-built_in">assert</span> (t2: <span class="hljs-number">2</span> = <span class="hljs-number">1</span> + <span class="hljs-number">1</span>). &#123; <span class="hljs-built_in">auto</span>. &#125;<br>    <span class="hljs-built_in">rewrite</span> -&gt; t2. <span class="hljs-built_in">rewrite</span> Zplus_assoc.<br>    <span class="hljs-built_in">apply</span> H1. &#125;<br>  <span class="hljs-built_in">rewrite</span> t1. <span class="hljs-built_in">rewrite</span> H1. <span class="hljs-built_in">apply</span> double_opp.<br><span class="hljs-keyword">Qed</span>.<br></code></pre></td></tr></table></figure>
 
     </div>
 
@@ -147,18 +123,6 @@
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>

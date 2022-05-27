@@ -55,67 +55,25 @@
 <h2 id="解释器的基本模型"><a class="markdownIt-Anchor" href="#解释器的基本模型"></a> 解释器的基本模型</h2>
 <p>【解释器的模型】这个词的意思是，解释器将会被实现为【什么东西】。最简单的模型是【表达式-环境】模型。这个模型指整个解释器被实现为一个<code>eval</code>函数，这个函数的参数为<code>expression</code>和<code>environment</code>，返回值为一个<code>value</code>.</p>
 <p><code>expression</code>自然不用多说，<code>environment</code>是什么东西呢？几乎所有的编程语言都有“定义变量”的功能。比如在C中，我们可以这样写：</p>
-<pre class="highlight"><code class="c"><span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;
-<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d"</span>, a);
-</code></pre>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d&quot;</span>, a);<br></code></pre></td></tr></table></figure>
 <p>在第二行的<code>printf(&quot;%d&quot;, a);</code>中，<code>a</code>是一个【变量】，应该被解释为<code>10</code>. 但<code>expression</code>中是没有这个信息的，我们需要一个参数来保存<code>a-&gt;10</code>这个信息，这就是<code>environment</code>.</p>
 <p>特别地，我们这里实现的解释器不支持【有副作用的操作】，也就是说，一个【变量】不能被赋值两次。这样一来，所谓的【变量】，就可以看作一个【绑定】，即将一个符号绑定到一个值上。</p>
 <p>我们这里使用了<em>Essentials of Programming Languages</em>里的LET语言作为例子，它支持以下语法：</p>
 <p><img src="https://pic.downk.cc/item/5f4b0217160a154a67505d9d.jpg" alt="1" /></p>
 <p>可以看到，这是一个很简单的语言，一个例子程序如下：</p>
-<pre class="highlight"><code class="ocaml"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span> <span class="hljs-keyword">in</span>
-  <span class="hljs-keyword">if</span> zero?(i) <span class="hljs-keyword">then</span> -(i, <span class="hljs-number">1</span>) <span class="hljs-keyword">else</span> i
-</code></pre>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span> <span class="hljs-keyword">in</span><br>  <span class="hljs-keyword">if</span> zero?(i) <span class="hljs-keyword">then</span> -(i, <span class="hljs-number">1</span>) <span class="hljs-keyword">else</span> i<br></code></pre></td></tr></table></figure>
 <h2 id="解释器的实现"><a class="markdownIt-Anchor" href="#解释器的实现"></a> 解释器的实现</h2>
 <p>Parser部分，我们采用<em>Essentials of Programming Languages</em>送给我们的一套系统，下面不再讨论。</p>
 <p>解释器部分是这样实现的：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> value-of
-  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span>(exp env)
-    (<span class="hljs-name">cases</span> expression exp
-      [<span class="hljs-name">const-exp</span> (<span class="hljs-name">num</span>)
-                 (<span class="hljs-name">num-val</span> num)]
-      [<span class="hljs-name">var-exp</span> (<span class="hljs-name">var</span>)
-               (<span class="hljs-name">apply-environment</span> env var)]
-      [<span class="hljs-name">sub-exp</span> (<span class="hljs-name">exp0</span> exp1)
-               (<span class="hljs-name">num-val</span>
-                (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span>
-                 (<span class="hljs-name">exp-val-&gt;num</span> (<span class="hljs-name">value-of</span> exp0 env))
-                 (<span class="hljs-name">exp-val-&gt;num</span> (<span class="hljs-name">value-of</span> exp1 env))))]
-      [<span class="hljs-name">zero-exp</span> (<span class="hljs-name">exp0</span>)
-                (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> (<span class="hljs-name">exp-val-&gt;num</span> (<span class="hljs-name">value-of</span> exp0 env)) <span class="hljs-number">0</span>)
-                    (<span class="hljs-name">bool-val</span> <span class="hljs-literal">#t</span>)
-                    (<span class="hljs-name">bool-val</span> <span class="hljs-literal">#f</span>))]
-      [<span class="hljs-name">if-exp</span> (<span class="hljs-name">exp0</span> exp1 exp2)
-              (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name">exp-val-&gt;bool</span> (<span class="hljs-name">value-of</span> exp0 env))
-                  (<span class="hljs-name">value-of</span> exp1 env)
-                  (<span class="hljs-name">value-of</span> exp2 env))]
-      [<span class="hljs-name">let-exp</span> (<span class="hljs-name">var</span> val body)
-               (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ([<span class="hljs-name">value</span> (<span class="hljs-name">value-of</span> val env)])
-                 (<span class="hljs-name">value-of</span> body
-                           (<span class="hljs-name">extend-environment</span>
-                            env var value)))]
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define</span></span> value-of<br>  (<span class="hljs-name"><span class="hljs-built_in">lambda</span></span>(exp env)<br>    (<span class="hljs-name">cases</span> expression exp<br>      [<span class="hljs-name">const-exp</span> (<span class="hljs-name">num</span>)<br>                 (<span class="hljs-name">num-val</span> num)]<br>      [<span class="hljs-name">var-exp</span> (<span class="hljs-name">var</span>)<br>               (<span class="hljs-name">apply-environment</span> env var)]<br>      [<span class="hljs-name">sub-exp</span> (<span class="hljs-name">exp0</span> exp1)<br>               (<span class="hljs-name">num-val</span><br>                (<span class="hljs-name"><span class="hljs-built_in">-</span></span><br>                 (<span class="hljs-name">exp-val-&gt;num</span> (<span class="hljs-name">value-of</span> exp0 env))<br>                 (<span class="hljs-name">exp-val-&gt;num</span> (<span class="hljs-name">value-of</span> exp1 env))))]<br>      [<span class="hljs-name">zero-exp</span> (<span class="hljs-name">exp0</span>)<br>                (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name"><span class="hljs-built_in">=</span></span> (<span class="hljs-name">exp-val-&gt;num</span> (<span class="hljs-name">value-of</span> exp0 env)) <span class="hljs-number">0</span>)<br>                    (<span class="hljs-name">bool-val</span> <span class="hljs-literal">#t</span>)<br>                    (<span class="hljs-name">bool-val</span> <span class="hljs-literal">#f</span>))]<br>      [<span class="hljs-name">if-exp</span> (<span class="hljs-name">exp0</span> exp1 exp2)<br>              (<span class="hljs-name"><span class="hljs-built_in">if</span></span> (<span class="hljs-name">exp-val-&gt;bool</span> (<span class="hljs-name">value-of</span> exp0 env))<br>                  (<span class="hljs-name">value-of</span> exp1 env)<br>                  (<span class="hljs-name">value-of</span> exp2 env))]<br>      [<span class="hljs-name">let-exp</span> (<span class="hljs-name">var</span> val body)<br>               (<span class="hljs-name"><span class="hljs-built_in">let</span></span> ([<span class="hljs-name">value</span> (<span class="hljs-name">value-of</span> val env)])<br>                 (<span class="hljs-name">value-of</span> body<br>                           (<span class="hljs-name">extend-environment</span><br>                            env var value)))]<br></code></pre></td></tr></table></figure>
 <p>由于我们这里使用了<em>Essentials of Programming Languages</em>送的一套类型系统<code>define-datatype</code>，所以这里各种类型转换有点麻烦，但是总体如何求值却是很清晰的。比如说上面的的代码</p>
-<pre class="highlight"><code class="ocaml"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span> <span class="hljs-keyword">in</span>
-  <span class="hljs-keyword">if</span> zero?(i) <span class="hljs-keyword">then</span> -(i, <span class="hljs-number">1</span>) <span class="hljs-keyword">else</span> i
-</code></pre>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span> <span class="hljs-keyword">in</span><br>  <span class="hljs-keyword">if</span> zero?(i) <span class="hljs-keyword">then</span> -(i, <span class="hljs-number">1</span>) <span class="hljs-keyword">else</span> i<br></code></pre></td></tr></table></figure>
 <p>会被Parser变成：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">a-program</span>
- (<span class="hljs-name">let-exp</span>
-  <span class="hljs-symbol">'i</span>
-  (<span class="hljs-name">const-exp</span> <span class="hljs-number">0</span>)
-  (<span class="hljs-name">if-exp</span>
-   (<span class="hljs-name">zero-exp</span> (<span class="hljs-name">var-exp</span> <span class="hljs-symbol">'i</span>))
-   (<span class="hljs-name">sub-exp</span> (<span class="hljs-name">var-exp</span> <span class="hljs-symbol">'i</span>) (<span class="hljs-name">const-exp</span> <span class="hljs-number">1</span>))
-   (<span class="hljs-name">var-exp</span> <span class="hljs-symbol">'i</span>))))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">a-program</span><br> (<span class="hljs-name">let-exp</span><br>  <span class="hljs-symbol">&#x27;i</span><br>  (<span class="hljs-name">const-exp</span> <span class="hljs-number">0</span>)<br>  (<span class="hljs-name">if-exp</span><br>   (<span class="hljs-name">zero-exp</span> (<span class="hljs-name">var-exp</span> <span class="hljs-symbol">&#x27;i</span>))<br>   (<span class="hljs-name">sub-exp</span> (<span class="hljs-name">var-exp</span> <span class="hljs-symbol">&#x27;i</span>) (<span class="hljs-name">const-exp</span> <span class="hljs-number">1</span>))<br>   (<span class="hljs-name">var-exp</span> <span class="hljs-symbol">&#x27;i</span>))))<br></code></pre></td></tr></table></figure>
 <p>首先，对<code>let-exp</code>求值，会首先求其第二个元素，也就是这里的<code>(const-exp 0)</code>的值，而它的值为<code>(num-val 0)</code>，之后，我们进行一个尾递归，对第三个元素，也即是这里的<code>(if-exp ...)</code>进行求值，此时的<code>env</code>会是：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name">extend-environment</span> empty-environment <span class="hljs-symbol">'i</span> (<span class="hljs-name">num-val</span> <span class="hljs-number">0</span>))
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name">extend-environment</span> empty-environment <span class="hljs-symbol">&#x27;i</span> (<span class="hljs-name">num-val</span> <span class="hljs-number">0</span>))<br></code></pre></td></tr></table></figure>
 <p>在后面的求值中，<code>i</code>就会被解释为<code>(num-val 0)</code>，这是通过对于<code>val-exp</code>的求值实现的：</p>
-<pre class="highlight"><code class="scheme">[<span class="hljs-name">var-exp</span> (<span class="hljs-name">var</span>)
-               (<span class="hljs-name">apply-environment</span> env var)]
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">[<span class="hljs-name">var-exp</span> (<span class="hljs-name">var</span>)<br>               (<span class="hljs-name">apply-environment</span> env var)]<br></code></pre></td></tr></table></figure>
 <p>这里的<code>(apply-environment env var)</code>就会返回<code>env</code>中<code>var</code>所绑定的值。</p>
 <h2 id="头等函数的实现"><a class="markdownIt-Anchor" href="#头等函数的实现"></a> 头等函数的实现</h2>
 <p>在<code>scheme</code>系语言中，头等函数一直是整个语言的核心，这也是【函数式编程】得名的原因。函数可以被随意的定义、传入、传出，是一个值。它来源于lambda表达式。</p>
@@ -125,12 +83,7 @@
 <p>在这个lambda表达式中，<code>x</code>和<code>y</code>都是【绑定变量】，而<code>z</code>是【自由变量】。具体的形式定义这里就不涉及了。我们要知道的是，在进行【函数调用】也就是所谓的$$\beta -reduction$$时，【绑定变量】最终会被【替换】为一个【实际参数】，而【自由变量】则不会如此。</p>
 <p>这样就出现了一个问题 – 如何【处理】自由变量。</p>
 <p><code>scheme</code>将函数实现为一个【闭包】，也就是说，</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> func
-  (<span class="hljs-name"><span class="hljs-builtin-name">let</span></span> ((<span class="hljs-name">a</span> <span class="hljs-number">10</span>))
-    (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> () a))
-  )
-(<span class="hljs-name">func</span>) <span class="hljs-comment">;永远都是10</span>
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define</span></span> func<br>  (<span class="hljs-name"><span class="hljs-built_in">let</span></span> ((<span class="hljs-name">a</span> <span class="hljs-number">10</span>))<br>    (<span class="hljs-name"><span class="hljs-built_in">lambda</span></span> () a))<br>  )<br>(<span class="hljs-name">func</span>) <span class="hljs-comment">;永远都是10</span><br></code></pre></td></tr></table></figure>
 <p>这里的<code>func</code>实际上是<code>(lambda () a)</code>，而<code>a</code>是一个【自由变量】，<code>scheme</code>的设计是，【自由变量】永远会被解释为lambda表达式创建时的环境中的同名绑定。在这里，<code>(lambda () a)</code>创建时的环境是<code>(a 10)</code>，<code>a</code>被绑定到<code>10</code>，所以无论<code>func</code>何时被调用，<code>a</code>的值永远为<code>10</code>.</p>
 <p>要实现这个模型，我们的【函数对象】必须【保存】了三个内容：</p>
 <ol>
@@ -139,24 +92,10 @@
 <li>被创建时的环境，这个环境中保存了所有的【自由变量】。</li>
 </ol>
 <p>为了实现简单，我们这里直接把【被创建时的环境】整个拿到【函数对象】中：</p>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> procedure
-  (<span class="hljs-name">λ</span>(<span class="hljs-name">var</span> body env)
-    (<span class="hljs-name">λ</span>(<span class="hljs-name">val</span>)
-      (<span class="hljs-name">value-of</span> body
-                (<span class="hljs-name">extend-environment</span> env var val)))))
-</code></pre>
-<pre class="highlight"><code class="scheme">(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> apply-procedure
-  (<span class="hljs-name">λ</span>(<span class="hljs-name">proc</span> val)
-    (<span class="hljs-name">proc</span> val)))
-</code></pre>
-<pre class="highlight"><code class="scheme">[<span class="hljs-name">proc-exp</span> (<span class="hljs-name">var</span> body)
-                (<span class="hljs-name">proc-val</span> (<span class="hljs-name">procedure</span> var body env))]
-</code></pre>
-<pre class="highlight"><code class="scheme">[<span class="hljs-name">apply-exp</span> (<span class="hljs-name">func</span> para)
-                 (<span class="hljs-name">apply-procedure</span> (<span class="hljs-name">exp-val-&gt;proc</span>
-                                   (<span class="hljs-name">value-of</span> func env))
-                                  (<span class="hljs-name">value-of</span> para env))]
-</code></pre>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define</span></span> procedure<br>  (<span class="hljs-name">λ</span>(<span class="hljs-name">var</span> body env)<br>    (<span class="hljs-name">λ</span>(<span class="hljs-name">val</span>)<br>      (<span class="hljs-name">value-of</span> body<br>                (<span class="hljs-name">extend-environment</span> env var val)))))<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">(<span class="hljs-name"><span class="hljs-built_in">define</span></span> apply-procedure<br>  (<span class="hljs-name">λ</span>(<span class="hljs-name">proc</span> val)<br>    (<span class="hljs-name">proc</span> val)))<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">[<span class="hljs-name">proc-exp</span> (<span class="hljs-name">var</span> body)<br>                (<span class="hljs-name">proc-val</span> (<span class="hljs-name">procedure</span> var body env))]<br></code></pre></td></tr></table></figure>
+<figure class="highlight scheme"><table><tr><td class="code"><pre><code class="hljs scheme">[<span class="hljs-name">apply-exp</span> (<span class="hljs-name">func</span> para)<br>                 (<span class="hljs-name">apply-procedure</span> (<span class="hljs-name">exp-val-&gt;proc</span><br>                                   (<span class="hljs-name">value-of</span> func env))<br>                                  (<span class="hljs-name">value-of</span> para env))]<br></code></pre></td></tr></table></figure>
 <p>这样一来，我们就实现了头等函数。现在，这门语言可以说是【图灵完全】的了。</p>
 
     </div>
@@ -169,18 +108,6 @@
 
 
 <link rel="stylesheet" href="/css/a11y-dark.min.css">
-
-
-<script src="/js/highlight.min.js"></script>
-
-
-<script src="/js/highlightjs-line-numbers.js"></script>
-
-
-<script>
-    hljs.highlightAll();
-    hljs.initLineNumbersOnLoad();
-</script>
 
             </div>
         </div>
