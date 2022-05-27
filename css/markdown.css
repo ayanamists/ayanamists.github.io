@@ -1,5 +1,6 @@
 @charset "utf-8";
 
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&display=swap');
 .post-md
 {
     width: 100%;
@@ -93,6 +94,7 @@
 .post-md img
 {
     border-radius: 4px;
+    margin: auto;
 }
 .post-md hr
 {
@@ -108,11 +110,26 @@
     width: 100%;
     margin: 12px 0;
 }
-.post-md blockquote
-{
-    border-left: 2px solid var(--line-2);
-    padding-left: 12px;
-    word-wrap: break-word;
+
+.post-md blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  font-family: "Libre Baskerville", "KaiTi", serif;
+  font-size: 1.1rem;
+}
+.post-md blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+.post-md blockquote p {
+  display: inline;
 }
 
 .post-md .video-container
@@ -161,6 +178,7 @@
     padding: 2px 4px;
     color: #f8f8f2;
     font-size: 1rem;
+    font-family:  "mononoki", "Roboto Mono", "Inconsolata", "Consolas", monospace;
 }
 
 .post-md .hljs-ln-numbers
