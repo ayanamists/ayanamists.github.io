@@ -1,31 +1,50 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>My New Hugo Site</title>
-        <link>http://example.org/</link>
+        <title>Ayanamists&#39;s site</title>
+        <link>https://ayayaya.cc/</link>
         <description>This is my cool site</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>me@ayayaya.cc (ayanamists)</managingEditor>
-            <webMaster>me@ayayaya.cc (ayanamists)</webMaster><lastBuildDate>Tue, 20 Jun 2023 19:32:54 &#43;0800</lastBuildDate>
-            <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+            <webMaster>me@ayayaya.cc (ayanamists)</webMaster><lastBuildDate>Sat, 21 May 2022 00:00:00 &#43;0000</lastBuildDate>
+            <atom:link href="https://ayayaya.cc/index.xml" rel="self" type="application/rss+xml" />
         <item>
-    <title>First_post</title>
-    <link>http://example.org/posts/first_post/</link>
-    <pubDate>Tue, 20 Jun 2023 19:32:54 &#43;0800</pubDate>
+    <title>在1951年如何编程 -- 以 EDSAC 为例</title>
+    <link>https://ayayaya.cc/posts/edsac/</link>
+    <pubDate>Sat, 21 May 2022 00:00:00 &#43;0000</pubDate>
     <author>ayanamists</author>
-    <guid>http://example.org/posts/first_post/</guid>
-    <description><![CDATA[Haha]]></description>
+    <guid>https://ayayaya.cc/posts/edsac/</guid>
+    <description><![CDATA[EDSAC EDSAC 是剑桥大学数学实验室设计并建造的计算机。1949年，项目组成功地用 EDSAC 生成并打印了平方数表1，象征着 EDSAC 正式投入使用。
+EDSAC的基本计算模型与现代计算机已经非常相似，可以概括为：
+具有 32 个箱（Tank），每个箱存储 32 个字（Word），注意这里的字是 18 个比特，而非 x86 平台上的 16 个比特。这 32 个箱类似于现代计算机的内存（下文用“内存”来称呼这32个箱）。 具有 5 个寄存器，其中两个寄存器（指令寄存器、指令地址寄存器）用来控制，三个寄存器用来计算。 计算被表现为顺序地执行指令（Order），每条指令占 1 个字，其中有一位不使用，所以每条指令占 17 个比特。所有的指令与数据都放在之前所说的内存中（事实上，在 EDSAC 的设计中，指令与数据没有区别）。每条指令可能读或写寄存器或内存。 EDSAC 的输入设备是五点式打孔纸带，这种纸带同时也承担了输入程序（具体是什么意思下文会解释）的作用。EDSAC 的输出设备是电传式打印机。它还配备了一个电话，这个电话可以用来进行“人机交互”，在 EDSAC 上实现的世界上的第一个电子游戏&ndash;井字棋（有争议）就是通过电话来进行交互的。 EDSAC的程序 前文已经说过，在 EDSAC 的设计中，“计算”就是“顺序地执行指令”，那么这些指令是存储在哪里的呢？和当今的计算机一样，这些指令是存储在“内存”中的。但，“内存”中的程序又是从何而来的呢？
+答案是，“内存”中的程序是通过纸带读入的。EDSAC 所采用的纸带，是“五点式纸带”，大概长这样：
+纸带的每个单元都有 5 个孔，如果被打孔，代表 1，没被打孔代表 0. 所以，理论上来说，我们可以把纸带看作一个列表，列表的每个元素都是 0-31 的自然数。
+纸带表示的不是机器码（18位的指令），而是“文本程序”的直接编码。在 EDSAC 的年代，程序员首先需要把文本形式的程序写在纸上，再通过 keypunch（打孔机）把文本形式的程序打在纸带上。
+那么，文本形式的程序又是什么样的呢？这种程序类似于今天的汇编语言程序，一个输出“HI”的程序如下：
+1 2 3 4 5 6 7 8 9 10 11 12 T64K GK ZF O5θ O6θ O7θ ZF *F HF IF EZ PF 这都什么乱七八糟的？确实，这种形式的程序仍然十分难以阅读。我们一点一点来看。]]></description>
 </item>
 <item>
     <title>十分钟搞懂 Hindley-Milner 类型系统</title>
-    <link>http://example.org/posts/hindley-milner/</link>
+    <link>https://ayayaya.cc/posts/hindley-milner/</link>
     <pubDate>Thu, 25 Nov 2021 00:00:00 &#43;0000</pubDate>
     <author>ayanamists</author>
-    <guid>http://example.org/posts/hindley-milner/</guid>
+    <guid>https://ayayaya.cc/posts/hindley-milner/</guid>
     <description><![CDATA[类型推理 什么是类型推理 程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：
-let t = 1 + 1 let f x = x + 1 这里的 t、f、x 三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。
+1 2 let t = 1 + 1 let f x = x + 1 这里的 t、f、x 三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。
 还有一些时候，给出类型并不是很容易的事情，例如：
-let s f g x = f x (g x) let k x y = x let i = s k k let ϕ = s (k (s i)) k 请问，ϕ 的类型是什么？
+1 2 3 4 let s f g x = f x (g x) let k x y = x let i = s k k let ϕ = s (k (s i)) k 请问，ϕ 的类型是什么？
 ϕ 的类型是可以计算出来的，但是非常麻烦。自然的想法是找到一个算法，让计算机代替人脑计算。
-事实上，把这段代码送到 haskell 或者 f# 的 repl 里，他们会告诉你ϕ的类型是p -&gt; (p -&gt; q) -&gt; q. 而他们所采用的算法，就是 Hindley-Milner 类型推理算法。]]></description>
+事实上，把这段代码送到 haskell 或者 f# 的 repl 里，他们会告诉你ϕ的类型是p -&gt; (p -&gt; q) -&gt; q.]]></description>
+</item>
+<item>
+    <title>c&#43;&#43; 模板与参数多态的根本区别</title>
+    <link>https://ayayaya.cc/posts/parametric-poly/</link>
+    <pubDate>Tue, 14 Sep 2021 15:53:47 &#43;0000</pubDate>
+    <author>ayanamists</author>
+    <guid>https://ayayaya.cc/posts/parametric-poly/</guid>
+    <description><![CDATA[c++ 模板与参数多态 模板(template)是一种 c++ 语言特性，类似于：
+1 2 3 4 template &lt;class T&gt; T id(T x) { return x; } 这里的 T 可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份ppt和这个网页。
+然而这篇博客中，我将会说明，无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别。
+到底什么是参数多态 参数多态的历史要追溯一份讲义(Fundamental Concepts in Programming Languages)，讲义虽然主要描述的是CPL语言，但是实际上这一段应该描述的是LISP的MAP函数：
+Parametric polymorphism is more regular and may be illustrated by an example. Suppose f is a function whose argument is of type α and whose results is of β (so that the type of f might be written α ⇒ β), and that L is a list whose elements are all of type α (so that the type of L is α list).]]></description>
 </item>
 </channel>
 </rss>
