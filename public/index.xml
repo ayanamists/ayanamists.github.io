@@ -1,0 +1,31 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>My New Hugo Site</title>
+        <link>http://example.org/</link>
+        <description>This is my cool site</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>me@ayayaya.cc (ayanamists)</managingEditor>
+            <webMaster>me@ayayaya.cc (ayanamists)</webMaster><lastBuildDate>Tue, 20 Jun 2023 19:32:54 &#43;0800</lastBuildDate>
+            <atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+        <item>
+    <title>First_post</title>
+    <link>http://example.org/posts/first_post/</link>
+    <pubDate>Tue, 20 Jun 2023 19:32:54 &#43;0800</pubDate>
+    <author>ayanamists</author>
+    <guid>http://example.org/posts/first_post/</guid>
+    <description><![CDATA[Haha]]></description>
+</item>
+<item>
+    <title>十分钟搞懂 Hindley-Milner 类型系统</title>
+    <link>http://example.org/posts/hindley-milner/</link>
+    <pubDate>Thu, 25 Nov 2021 00:00:00 &#43;0000</pubDate>
+    <author>ayanamists</author>
+    <guid>http://example.org/posts/hindley-milner/</guid>
+    <description><![CDATA[类型推理 什么是类型推理 程序员是懒惰的生物。很多时候，我们并不想啰嗦地给出类型：
+let t = 1 + 1 let f x = x + 1 这里的 t、f、x 三个变量，每个的类型都是很明确的。当然，更多的时候，显示地给出类型是更好的。
+还有一些时候，给出类型并不是很容易的事情，例如：
+let s f g x = f x (g x) let k x y = x let i = s k k let ϕ = s (k (s i)) k 请问，ϕ 的类型是什么？
+ϕ 的类型是可以计算出来的，但是非常麻烦。自然的想法是找到一个算法，让计算机代替人脑计算。
+事实上，把这段代码送到 haskell 或者 f# 的 repl 里，他们会告诉你ϕ的类型是p -&gt; (p -&gt; q) -&gt; q. 而他们所采用的算法，就是 Hindley-Milner 类型推理算法。]]></description>
+</item>
+</channel>
+</rss>
