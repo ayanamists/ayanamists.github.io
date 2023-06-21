@@ -2,6 +2,11 @@
 title: "女性主义笑话集（一）女书字体"
 date: 2023-03-17T12:00:57+08:00
 draft: false
+categories:
+  - 女性主义批判
+tags:
+  - 豆瓣
+  - 女性主义
 ---
 
 {{<  admonition "warning" >}}
