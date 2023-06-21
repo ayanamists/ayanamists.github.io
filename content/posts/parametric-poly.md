@@ -2,12 +2,11 @@
 layout: post
 title: c++ 模板与参数多态的根本区别
 date: 2021-09-14 15:53:47
-catagories:
-  - 学术
 tags: 
   - c++
-  - 编程语言基础
-math: true
+  - 编程语言
+categories:
+  - 编程语言
 ---
 
 ## c++ 模板与参数多态
@@ -67,8 +66,8 @@ $$
 
 $$
 \begin{aligned}
-((Λ t. λ (x:t). x) \text{Int})1 & ≡ \\
-(λ (x:\text{Int}). x) 1 & ≡ 1
+((Λ t. λ (x:t). x) \text{Int})1 & \Rightarrow \\\\
+(λ (x:\text{Int}). x) 1 & \Rightarrow 1
 \end{aligned}
 $$
 
@@ -78,22 +77,22 @@ System F的类型规则分为四个规则：
 
 1.
     $$
-    {\frac{Γ , (x:t₁) ⊢ y:t₂}{Γ ⊢ (λ(x:t₁).y):t₁ → t₂}}_{}
+    {\frac{Γ , (x:t_1) ⊢ y:t_2}{Γ ⊢ (λ(x:t_1).y):t_1 → t_2}}_{}
     $$
 
 2.
     $$
-    \frac{Γ , A:\bold{type} ⊢ x:t₁ }{ Γ ⊢ (Λ A.x): ∀ A. t₁}
+    \frac{Γ , A:\bold{type} ⊢ x:t_1 }{ Γ ⊢ (Λ A.x): ∀ A. t_1}
     $$
 
 3.
     $$
-    \frac{Γ ⊢ x:(t₁ → t₂), y:t₁}{Γ ⊢ (x\ y): t₂}
+    \frac{Γ ⊢ x:(t_1 → t_2), y:t_1}{Γ ⊢ (x\ y): t_2}
     $$
 
 4.
     $$
-    \frac{Γ ⊢ x:(∀A.t₁)\  \ \ \ (B:\bold{type})}{ Γ ⊢ (x\ B):[B/A]t₁}
+    \frac{Γ ⊢ x:(∀A.t_1)\  \ \ \ (B:\bold{type})}{ Γ ⊢ (x\ B):[B/A]t_1}
     $$
 
 从规则2.中可以看到，这里的 $A$ 是**任意**的类型，引入这个 $Λ$ 的条件是无论 $A$ 到底是什么类型，它都可以推出 $x$ 是 $t₁$ 类型。这样一来，在规则4.中，$B$ 也是一个**任意**的类型。可以不加证明地得到：
