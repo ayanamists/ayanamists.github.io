@@ -1,4 +1,4 @@
-baseURL = 'https://ayayaya.cc'
+baseURL = 'https://ayayaya.org'
 languageCode = 'zh-CN'
 title = "Ayanamists's site"
 # language name ["English", "简体中文", "Français", "Polski", ...]
@@ -8,7 +8,7 @@ languageName = "简体中文"
 # Author config
 [author]
   name = "ayanamists"
-  email = "me@ayayaya.cc"
+  email = "me@ayayaya.org"
   link = ""
 
 # Menu config
