@@ -362,7 +362,7 @@ Kleene 的定理保证了，$g$ 唯一不停机的方式就是 $\forall z. C(e_1
 Gödel 的原始证明 [1, 13] 相当复杂，大概可以概括为：
 
 1. 证明所有的原始递归函数是可表示的。
-2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，类似于用递归函数写一个我们这里写的 `can_prove_n(ψ, n)` 程序。Gödel 写了 45 个原始递归函数。
+2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，类似于用原始递归函数写一个我们这里写的 `can_prove_n(ψ, n)` 程序。Gödel 写了 45 个原始递归函数。
 3. 由于 `can_prove_n(ψ, n)` 是原始递归函数，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(\\#\psi, n)}$ 表示它。
 4. Gödel 证明了不动点定理：对任意的一元公式 $\psi(x)$，都能找到一个语句 $\sigma$，使得 $T \vdash \sigma \leftrightarrow \psi(\mathsf{\\#\sigma})$.
 5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \exists n. \mathsf{P(\\#\sigma, n)}$，注意，这个句子说的是，$T$ 可以证明 $\sigma$ 和 $T$ 不能证明 $\sigma$ 是等价的，这类似于说谎者悖论。
