@@ -61,7 +61,7 @@ Kurt Gödel 的几个著名定理构成了现代逻辑学的基石。其中，G�
 
 这似乎揭示了一个美好的图景：我们可以把整个数学建立在某种完备的一阶理论上，在这个终极理论中，任何命题要么能证明，要么能证否。这样一来，模糊、混乱的数学语言就完全可以被清晰、整洁的一阶逻辑所替代……
 
-令人失望的是，1931 年，Gödel 在其发表的论文 "Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I" ("On Formally Undecidable Propositions of Principia Mathematica and Related Systems I") 中证明了，只要一个形式系统 $T$ 包含初等算术[^3]，那么在其中就一定有既不能证明，也不能证否的命题。注意，加公理是没有任何用处的，因为加入公理后，不完备性定理的前件仍然满足，仍然可以推导出后件。[^4]
+令人失望的是，1931 年，Gödel 在其发表的论文 "Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I" [13] 中证明了，只要一个形式系统 $T$ 包含初等算术[^3]，那么在其中就一定有既不能证明，也不能证否的命题。注意，加公理是没有任何用处的，因为加入公理后，不完备性定理的前件仍然满足，仍然可以推导出后件。[^4]
 
 这等于是给我们上面想象的美好图景判了死刑。当然，我们是程序员，不是数学家，这和我们有什么关系呢？
 
@@ -359,20 +359,20 @@ Kleene 的定理保证了，$g$ 唯一不停机的方式就是 $\forall z. C(e_1
 
 ## 与 Gödel 原始证明的比较
 
-Gödel 的原始证明相当复杂，大概可以概括为：
+Gödel 的原始证明 [1, 13] 相当复杂，大概可以概括为：
 
 1. 证明所有的原始递归函数是可表示的。
-2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，类似于用递归函数写一个我们这里写的 `can_prove` 程序。
-3. 由于 `can_prove` 是原始递归函数，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(x)}$ 表示它。
+2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，类似于用递归函数写一个我们这里写的 `can_prove_n(ψ, n)` 程序。Gödel 写了 45 个原始递归函数。
+3. 由于 `can_prove_n(ψ, n)` 是原始递归函数，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(\\#\psi, n)}$ 表示它。
 4. Gödel 证明了不动点定理：对任意的一元公式 $\psi(x)$，都能找到一个语句 $\sigma$，使得 $T \vdash \sigma \leftrightarrow \psi(\mathsf{\\#\sigma})$.
-5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \mathsf{P(\\#\sigma)}$，注意，这个句子说的是，$T$ 可以证明 $\sigma$ 和 $T$ 不能证明 $\sigma$ 是等价的，这类似于说谎者悖论。
+5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \exists n. \mathsf{P(\\#\sigma, n)}$，注意，这个句子说的是，$T$ 可以证明 $\sigma$ 和 $T$ 不能证明 $\sigma$ 是等价的，这类似于说谎者悖论。
 6. 利用 ω-完备性，无论假设 $T \vdash \sigma$ 还是 $T \vdash \neg \sigma$，都会得到矛盾。这样一来，$\sigma$ 和 $T$ 就是独立的。
 
 可见，我们的证明没有避免 1. 和 2.，而这是最复杂的步骤。不过，半可判定性直觉理解起来比较简单，如果把它当前提，那么证明会非常简短。1. 和 2. 其实都是为了证明半可判定性引入的。
 
 ## 延伸阅读
 
-- 如果你想学习 Gödel 的原始证明，那么请直接阅读 [1]，杨睿之老师的书写得非常好。
+- 如果你想学习 Gödel 的原始证明，那么请直接阅读 [1] 或 Gödel 的原始论文 [13]. 杨睿之老师的书写得非常好。
 - 这种证明的思路最早似乎来源于 Kleene，可以参考他的著作 [10] 和这份笔记 [9].
 - 这篇文章 [4] 也用这种思路介绍不完备性定理
 - ocau 老师的 Agda 形式化值得参考，不过他讲课的视频没有公开（原因不明）。他的思路可能来源于这份 Coq 形式化的工作 [6]，可以直接阅读这篇论文作为替代。
@@ -394,7 +394,7 @@ Gödel 的原始证明相当复杂，大概可以概括为：
 - [10] [Introduction to Metamathematics](https://archive.org/details/BubliothecaMathematicaStephenColeKleeneIntroductionToMetamathematicsWoltersNoordhoffPublishing1971)
 - [11] [An Unsolvable Problem of Elementary Number Theory](https://www.ics.uci.edu/~lopes/teaching/inf212W12/readings/church.pdf)
 - [12] [A. Church on Computability](https://plato.stanford.edu/entries/church/supplementA.html)
-
+- [13] [On Formally Undecidable Propositions of Principia Mathematica and Related Systems I](https://monoskop.org/images/9/93/Kurt_G%C3%B6del_On_Formally_Undecidable_Propositions_of_Principia_Mathematica_and_Related_Systems_1992.pdf)
 
 [^1]: 这里的命题是“元语言”里的命题，不是我们讨论的语言，也就是“对象语言”，此处为一阶逻辑的命题。不要混淆。
 [^2]: 当然，在 Hilbert System 中，还有“逻辑公理”，也就是任何一阶理论都成立的公理。这些公理同样可以作为推理的起点，推出任何逻辑都成立的“永真式”（tautology）。
