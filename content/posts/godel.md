@@ -1,7 +1,12 @@
 ---
 title: "用多线程证明 Gödel Incompleteness 是否搞错了什么"
 date: 2023-09-01T12:34:12+08:00
-draft: false 
+draft: false
+tags:
+    - 数理逻辑
+    - 可计算性
+categories:
+    - 学术
 ---
 
 {{<  admonition "warning" >}}
@@ -55,12 +60,12 @@ Kurt Gödel 的几个著名定理构成了现代逻辑学的基石。其中，G�
 
 而相应地，直觉不成立的命题可以被证否。
 
-果一阶理论足够简单，不完备性是很容易达成的。例如考虑一个符号表为 $\\{ c, e \\}$，公理为 $\emptyset$ 的一阶理论 $A$，显然有：
+如果一阶理论足够简单，不完备性是很容易达成的。例如考虑一个符号表为 $\\{ c, e \\}$，公理为 $\emptyset$ 的一阶理论 $A$，显然有：
 
 - $A \not\vdash c = e$
 - $A \not\vdash c \neq e$
 
-直观上看，这是因为理论的公理集太少了。在 A 里加入一条公理（这往往被叫做“扩张”，extension）$c = e$，就能让 $A$ 变为一个完备的理论。
+直观上看，这是因为理论的公理集太少了。在 $A$ 里加入一条公理（这往往被叫做“扩张”，extension）$c = e$，就能让 $A$ 变为一个完备的理论。
 
 对于任何理论 $T$，如果 $\psi$ 在这个理论中既不能证明，又不能证否（称之为 $\psi$ 独立于 $T$），那么把 $\psi$ 或 $\neg \psi$ 加入 $T$ 的公理，就可以消除这种不完备性。
 
@@ -83,7 +88,11 @@ Kurt Gödel 的几个著名定理构成了现代逻辑学的基石。其中，G�
 怎么枚举呢？考虑 Peano 算术和 Hilbert 系统。Peano 算术的公理中，归纳公理是无穷多的，但它有固定模式：
 
 $$
-\forall \vec{y_k}. ((\varphi(0, \vec{y_k}) \land (\varphi(x, \vec{y_k}) \rightarrow \varphi(S(x), \vec{y_k}))) \rightarrow \forall x. \varphi(x, \vec{y_k}))
+\begin{aligned}
+\forall \vec{y_k}. (& (\varphi(0, \vec{y_k})\ \land \\\\
+    & (\varphi(x, \vec{y_k}) \rightarrow \varphi(S(x), \vec{y_k}))) \\\\ 
+    & \rightarrow \forall x. \varphi(x, \vec{y_k}))
+\end{aligned}
 $$
 
 这里需要枚举的就是 $k$ 和 $\varphi$. $k$ 自不必说，$\varphi$ 是所有的谓词，它的语法也是确定的，可以用固定的规则产生。不过，直接写一个 `gen` 函数还是相当复杂的。我们这里可以借鉴 Gödel 的做法。
@@ -96,7 +105,9 @@ $$
 把这两个区域的符号按照先后顺序进行编码，可以给出编码和解码函数。编码函数将符号映射为自然数，解码函数把自然数映射为符号。
 
 ```python
-LOGIC_SYM = [ '∀', '0', 'S', '+', '×', '(', ')', '¬', '→', '=' ]
+# put '∀' to 1 , instead of 0
+LOGIC_SYM = [ 'dummy', '∀', '0', 'S', '+', '×', '(', ')', '¬', '→', '=' ]
+
 def decode(n):
     if n <= len(LOGIC_SYM):
         return LOGIC_SYM[n]
@@ -109,7 +120,7 @@ def encode(sym):
         # is variable, start with '$'
         index = sym[3:]
         return int(index) + len(LOGIC_SYM)
-    elif sym in LOGIC_SYM:
+    elif sym in LOGIC_SYM and sym != 'dummy':
         return LOGIN_SYM.index(sym)
     else:
         # error
@@ -119,7 +130,7 @@ def encode(sym):
 类似地，一个命题（也就是字符串，字符的列表）也可以进行编码和解码。Gödel 用的技术是这样的：
 
 $$
-\sharp [ a_1, a_2, a_3, ..., a_n ] = p_1^{\sharp a_1} \times p_2^{\sharp a_2} \times \cdots p_n^{\sharp a_n}
+\sharp [ a_1, a_2, a_3, ..., a_n ] = p_1^{\sharp a_1} \times p_2^{\sharp a_2} \times \cdots \times p_n^{\sharp a_n}
 $$
 
 其中，这里的 $\sharp a_i$ 表示我们刚才定义的 `encode(aᵢ)`. 而 $p_i$ 表示第 $i$ 个质数
@@ -137,7 +148,7 @@ def encode_str(stmt):
 
 def decode_str(n):
     """
-    n must be of form `Π pᵢ^{aᵢ}`, or this function is undefined
+    n must be of form `Πᵢ pᵢ^{aᵢ}, aᵢ ≠ 0`, or this function is undefined
     """
     res = []
     factors = factorint(n)
@@ -167,7 +178,7 @@ def gen_all_stmts():
 
 函数 `is_valid_stmt` 类似于编程语言的 [parser](https://en.wikipedia.org/wiki/Parsing)，虽然写起来比较困难，但肯定是可以写出来的。
 
-类似地，我们可以枚举所有的证明（也就是一个命题列表）：
+类似地，我们可以枚举所有的证明（也就是一个命题列表），进而构造一个函数判断一个命题是否可以被证明：
 
 ```python
 def is_valid_proof(stmt_l):
@@ -191,7 +202,7 @@ def can_prove(ψ):
         n += 1
 ```
 
-对这个程序，可以有以下观察：
+对程序 `can_prove` ，有以下观察：
 
 - 如果列表的最后一个就是要证明的 $\psi$，那么显然，$T \vdash \psi$ 是成立的。
 - 我们的枚举遍历了所有的证明，所以，如果 $T \vdash \psi$ ，也就是存在一个符合要求的证明，那么那个证明一定会被找到。
@@ -218,7 +229,7 @@ def p(prog, x):
 半可判定性有几个等价定义：
 
 1. 递归可枚举（recursively enumerable, r.e.）。一个集合 $S$ 是递归可枚举的，当且仅当 $S = \emptyset$ 或存在一个递归全函数 $f$，使得 $S = \\{ y\ |\ \exists x. f(x) = y \\}$，也就是说，$S$ 是 $f$ 的值域.
-2. $S$ 的部分特征函数是部分递归的.
+2. $S$ 的部分[特征函数](https://zh.wikipedia.org/zh-hans/%E6%8C%87%E7%A4%BA%E5%87%BD%E6%95%B0)是部分递归的.
 3. $S$ 是某个部分递归函数的值域.
 
 什么是“部分函数”（partial function）呢？简单来说，就是在某些输入上没定义的函数。一个在某些输入不停机的程序，其“像”，也就是 $\\{ (x, y)\ |\ x \in A, \texttt{p}(x) = y \\}$ 就是一个部分函数。
@@ -305,7 +316,7 @@ Church 在 1936 年的论文 [11] 里首次证明了存在一个不可判定的�
 
 其中，$\Lambda^{\circ}$ 指的是“封闭的 lambda 项”，$\rightsquigarrow_{\beta}$ 指的是 β-规约（关系）的传递闭包，也就是任意次 β-规约。他的文章进一步指出，任何 ω-一致性的系统都无法构造判定器。[11, 12]
 
-如果要沿用 Church 的证明，那么，我们首先需要把 $\rightsquigarrow_{\beta}$ 算术化。这也就是说，要找到一个整数上的关系 $P$，使得 $P(\sharp M, \sharp N)$ 当且仅当 $M \rightsquigarrow_{\beta} N$，其中 $\\#$ 表示编码。我们显然需要 $P$ 有一些良好的表示，因为我们下面要找到一个 $\mathsf{PA}$ 中的句子 $\mathsf{P(x, y)}$ 使得对任意的 $n_1, n_2$
+如果要沿用 Church 的证明，那么，我们首先需要把 $\rightsquigarrow_{\beta}$ 算术化。这也就是说，要找到一个整数上的关系 $P$，使得 $P(\sharp M, \sharp N)$ 当且仅当 $M \rightsquigarrow_{\beta} N$，其中 $\sharp$ 表示编码。我们显然需要 $P$ 有一些良好的表示，因为我们下面要找到一个 $\mathsf{PA}$ 中的句子 $\mathsf{P(x, y)}$ 使得对任意的 $n_1, n_2$
 
 $$
 \begin{aligned}
