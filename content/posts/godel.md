@@ -1,5 +1,5 @@
 ---
-title: "用多线程证明 Gödel Incompleteness 是不是搞错了什么"
+title: "用多线程证明 Gödel Incompleteness 是否搞错了什么"
 date: 2023-09-01T12:34:12+08:00
 draft: false 
 ---
@@ -48,9 +48,14 @@ Kurt Gödel 的几个著名定理构成了现代逻辑学的基石。其中，G�
 
 注意到这是一个纯语法概念，它似乎需要指定一个特定的证明系统。不过，各种一阶逻辑的证明系统，如果没有特别构造，那么在证明能力上都是等价的。又因为 Gödel 完备性定理的存在，$T \vDash \psi$ 当且仅当 $T \vdash \psi$，所以这实际上也是语义概念。这样一来，我们一般不需要指定一个证明系统。在 Gödel 不完备性定理的形式化 [3] 中，这种指定才有可能是必要的。
 
-对于一个一阶理论，我们当然期望它是完备的。例如在 Peano 算术中，$\forall n. n \le S(n) $, $\forall n_1, n_2 . n_1 + n_2 = n_2 + n_1$，这些我们直觉成立的命题都可以被证明，而相应地，我们直觉不成立的命题可以被证否。
+对于一个一阶理论，我们当然期望它是完备的。例如在 Peano 算术中，以下符合直觉的命题可以被证明：
 
-然而，如果一阶理论足够简单，不完备性是很容易达成的。例如考虑一个符号表为 $\\{ c, e \\}$，公理为 $\emptyset$ 的一阶理论 $A$，显然有：
+- $\forall n. n \le S(n) $
+- $\forall n_1, n_2 . n_1 + n_2 = n_2 + n_1$
+
+而相应地，直觉不成立的命题可以被证否。
+
+果一阶理论足够简单，不完备性是很容易达成的。例如考虑一个符号表为 $\\{ c, e \\}$，公理为 $\emptyset$ 的一阶理论 $A$，显然有：
 
 - $A \not\vdash c = e$
 - $A \not\vdash c \neq e$
@@ -73,7 +78,7 @@ Kurt Gödel 的几个著名定理构成了现代逻辑学的基石。其中，G�
 
 显然我们会问：有没有一个程序 $\texttt{p}$，判断一个命题 $\psi$ 是否可以在 $T$ 内被证明？
 
-这个问题的回答是否定的：**没有这样的程序**。证明的方法我们留到下文再谈。这个事实是稍有些反直觉的，因为一个公理系统中的证明，理论上来讲，是可以枚举的。
+这个问题的回答是否定的：**没有这样的程序**。证明的方法我们留到下文再谈。这个事实是稍有些反直觉的，因为一个公理系统中的证明，理论上来讲，是可以**枚举**的。
 
 怎么枚举呢？考虑 Peano 算术和 Hilbert 系统。Peano 算术的公理中，归纳公理是无穷多的，但它有固定模式：
 
@@ -88,7 +93,7 @@ $$
 - 十个逻辑符号（经过简化后）
 - 无限个变量符号（记作 $v_0$, $v_1$, $v_2$, ...）
 
-把这两个区域的符号按照先后顺序进行编码，可以给出编码和解码函数：
+把这两个区域的符号按照先后顺序进行编码，可以给出编码和解码函数。编码函数将符号映射为自然数，解码函数把自然数映射为符号。
 
 ```python
 LOGIC_SYM = [ '∀', '0', 'S', '+', '×', '(', ')', '¬', '→', '=' ]
@@ -96,33 +101,59 @@ def decode(n):
     if n <= len(LOGIC_SYM):
         return LOGIC_SYM[n]
     else:
+        # append '$' to variable head
         return f"$v_{n - len(LOGIC_SYM)}"
 
 def encode(sym):
     if sym[0] == '$':
+        # is variable, start with '$'
         index = sym[3:]
         return int(index) + len(LOGIC_SYM)
     elif sym in LOGIC_SYM:
-        return LOGIN_SYM.index_of(sym)
+        return LOGIN_SYM.index(sym)
     else:
         # error
         return -1
 ```
 
-类似地，一个命题（也就是字符串）也可以进行编码和解码：
+类似地，一个命题（也就是字符串，字符的列表）也可以进行编码和解码。Gödel 用的技术是这样的：
+
+$$
+\sharp [ a_1, a_2, a_3, ..., a_n ] = p_1^{\sharp a_1} \times p_2^{\sharp a_2} \times \cdots p_n^{\sharp a_n}
+$$
+
+其中，这里的 $\sharp a_i$ 表示我们刚才定义的 `encode(aᵢ)`. 而 $p_i$ 表示第 $i$ 个质数
 
 ```python
+from sympy import nextprime, Pow, factorint
+
 def encode_str(stmt):
-    pass
+    pᵢ = 2
+    res = 1
+    for aᵢ in stmt:
+        res *= Pow(pᵢ, encode(aᵢ))
+        pᵢ = nextprime(pᵢ)
+    return res
 
 def decode_str(n):
-    pass
+    """
+    n must be of form `Π pᵢ^{aᵢ}`, or this function is undefined
+    """
+    res = []
+    factors = factorint(n)
+    # factors is like { pᵢ : aᵢ }
+    for pᵢ, aᵢ in sorted(factors.items()):
+        res.append(decode(aᵢ))
+    return res
 ```
 
-那么这样一来，只要我们能判断一个字符串是否是合法的命题，就可以枚举所有的命题了：
+`decode_str` 的值域包括了所有的字符串。这样一来，对字符串的遍历就可以用对自然数的遍历实现。
+
+一个字符串可能不是一个合法的命题。所以，还需要一个判断字符串是否是合法命题的函数。只要有了这个函数，就可以枚举所有的命题：
 
 ```python
 def is_valid_stmt(stmt):
+    # this function is hard to write
     pass
 
 def gen_all_stmts():
@@ -134,6 +165,8 @@ def gen_all_stmts():
         n += 1
 ```
 
+函数 `is_valid_stmt` 类似于编程语言的 [parser](https://en.wikipedia.org/wiki/Parsing)，虽然写起来比较困难，但肯定是可以写出来的。
+
 类似地，我们可以枚举所有的证明（也就是一个命题列表）：
 
 ```python
@@ -141,6 +174,7 @@ def is_valid_proof(stmt_l):
     pass
 
 def encode_proof(proof):
+    # like encode_str()
     pass
 
 def decode_proof(n):
@@ -267,11 +301,11 @@ def p_total(ψ):
 
 Church 在 1936 年的论文 [11] 里首次证明了存在一个不可判定的问题（虽然有些学者不太满意他的证明），这个问题是：
 
-> 给定 $a, b \in \Lambda^{\circ}$，$a \Rightarrow_{\beta} b$ 是否成立？
+> 给定 $a, b \in \Lambda^{\circ}$，$a \rightsquigarrow_{\beta} b$ 是否成立？
 
-其中，$\Lambda^{\circ}$ 指的是“封闭的 lambda 项”，$\Rightarrow_{\beta}$ 指的是 β-规约（关系）的传递闭包，也就是任意次 β-规约。他的文章进一步指出，任何 ω-一致性的系统都无法构造判定器。[11, 12]
+其中，$\Lambda^{\circ}$ 指的是“封闭的 lambda 项”，$\rightsquigarrow_{\beta}$ 指的是 β-规约（关系）的传递闭包，也就是任意次 β-规约。他的文章进一步指出，任何 ω-一致性的系统都无法构造判定器。[11, 12]
 
-如果要沿用 Church 的证明，那么，我们首先需要把 $\Rightarrow_{\beta}$ 算术化。这也就是说，要找到一个整数上的关系 $P$，使得 $P(\\#M, \\#N)$ 当且仅当 $M \Rightarrow_{\beta} N$，其中 $\\#$ 表示编码。我们显然需要 $P$ 有一些良好的表示，因为我们下面要找到一个 $\mathsf{PA}$ 中的句子 $\mathsf{P(x, y)}$ 使得
+如果要沿用 Church 的证明，那么，我们首先需要把 $\rightsquigarrow_{\beta}$ 算术化。这也就是说，要找到一个整数上的关系 $P$，使得 $P(\sharp M, \sharp N)$ 当且仅当 $M \rightsquigarrow_{\beta} N$，其中 $\\#$ 表示编码。我们显然需要 $P$ 有一些良好的表示，因为我们下面要找到一个 $\mathsf{PA}$ 中的句子 $\mathsf{P(x, y)}$ 使得对任意的 $n_1, n_2$
 
 $$
 \begin{aligned}
@@ -280,10 +314,16 @@ P(n_1, n_2) &\rightarrow \mathsf{PA \vdash P(n_1, n_2)} \\\\
 \end{aligned}
 $$
 
-注意，这里的 $\mathsf{P(x, y)}$ 是一个**确定的**、含有两个自由变量的 $\mathsf{PA}$ 句子。这样一来：
+$\mathsf{P(n_1, n_2)}$ 里的 $\mathsf{n_1}$，指的是元语言里的自然数 $n_1$ 在 $\mathsf{PA}$ 里对应的符号串，也就是
+
+$$
+\underbrace{S S S \cdots S}_{n_1 个}\ 0
+$$
+
+$\mathsf{P(x, y)}$ 是一个**确定的**、含有两个自由变量的 $\mathsf{PA}$ 句子。这样一来：
 
 - 假设 $\mathsf{PA}$ 是可判定的，对于任何的 $a, b \in \Lambda^{\circ}$，
-- 在判定器 $\texttt{p}$ 中输入 $\varphi = \mathsf{P(\\#a, \\#b)}$，$\psi = \mathsf{\neg P(\\#a, \\#b)} $
+- 在判定器 $\texttt{p}$ 中输入 $\varphi = \mathsf{P(\sharp a, \sharp b)}$，$\psi = \mathsf{\neg P(\sharp a, \sharp b)} $
 - 返回 $\texttt{p}(\varphi)$
 
 显然，这个程序判定了 Church 证明为不可判定的问题。实际上，如果 $P$ 在 $T$ 中可表示，那么 $P$ 的判定问题就可以规约到 $T$ 的可判定性。
@@ -301,11 +341,10 @@ $$
 
 Kleene 证明了范式定理：
 
-存在一个三元原始递归函数 $C(x, y, z)$ 和一个一元原始递归函数 $U(x)$，使得任意的部分递归函数 $f$ 在 $e$ 值给定时可以表示为：
-
-$$
-f(n) = U(\mu z[C(e, n, z)])
-$$
+> 存在一个三元原始递归函数 $C(x, y, z)$ 和一个一元原始递归函数 $U(x)$，使得任意的部分递归函数 $f$ 在 $e$ 值给定时可以表示为：
+> $$
+> f(n) = U(\mu z[C(e, n, z)])
+> $$
 
 这个定理看起来挺费解的，其实，它描述的是一个类似于解释器的系统：
 
@@ -334,13 +373,12 @@ def f_another(n):
 # ∀ n, f(n) == f_anthor(n)
 ```
 
-这里的 $e$ 大概就是程序（递归函数）被编码之后的结果，通过这个定理，Kleene 证明了一个结果：
+这里的 $e$ 大概可以理解为程序（递归函数）被编码之后的结果，通过这个定理，Kleene 用对角线方法证明了下面的定理：
 
 > 不是每个部分递归函数都是潜在递归（potentially recursive）的
 
-所谓的“潜在递归”，就是说，对于部分递归函数 $g$，存在一个全函数 $f$，使得在 $g$ 有定义的地方， $f(n) = g(n)$.
+所谓的“潜在递归”，就是说，对于部分递归函数 $g$，存在一个全函数 $f$，使得在 $g$ 有定义的地方， $f(n) = g(n)$. 直觉上来看，这个定理类似于“不是所有的半可判定集都是可判定的”。
 
-这个命题类似于“不是所有的半可判定集都是可判定的”
 现在我们假设存在一个 $T$ 的判定器 $\texttt{p\\_t}$，根据 Gödel 的证明，存在一个公式 $\mathsf{C(e, n, z, t)}$ 表示了 $C(e, n, z)$. 那么，可以构造一个新的超级解释器，它能给所有的部分递归函数 $g$ 都找到对应的全函数 $f$. 考虑任意的 $g$，其 $e$ 值为 $e_1$，构造 $f$ 如下：
 
 ```python
@@ -355,7 +393,7 @@ def f(n):
         return U(μ(lambda z: C(e₁, n, z)))
 ```
 
-Kleene 的定理保证了，$g$ 唯一不停机的方式就是 $\forall z. C(e_1, n, z) \neq 0$. 所以，因为 $C$ 本身是可以在 $T$ 里表示的原始递归函数，一旦 $T$ 可判定，对于任意 $n$，$f(n)$ 是否停机就是可判定的。
+Kleene 的定理保证了，$g$ 唯一不停机的方式就是 $\forall z. C(e_1, n, z) \neq 0$. 所以，因为 $C$ 本身是可以在 $T$ 里表示的原始递归函数，一旦 $T$ 可判定，对于任意 $n$，$g(n)$ 是否停机就是可判定的。
 
 ## 与 Gödel 原始证明的比较
 
@@ -363,9 +401,9 @@ Gödel 的原始证明 [1, 13] 相当复杂，大概可以概括为：
 
 1. 证明所有的原始递归函数是可表示的。
 2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，类似于用原始递归函数写一个我们这里写的 `can_prove_n(ψ, n)` 程序。Gödel 写了 45 个原始递归函数。
-3. 由于 `can_prove_n(ψ, n)` 是原始递归函数，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(\\#\psi, n)}$ 表示它。
-4. Gödel 证明了不动点定理：对任意的一元公式 $\psi(x)$，都能找到一个语句 $\sigma$，使得 $T \vdash \sigma \leftrightarrow \psi(\mathsf{\\#\sigma})$.
-5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \exists n. \mathsf{P(\\#\sigma, n)}$，注意，这个句子说的是，$T$ 可以证明 $\sigma$ 和 $T$ 不能证明 $\sigma$ 是等价的，这类似于说谎者悖论。
+3. 由于 `can_prove_n(ψ, n)` 是原始递归函数，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(\sharp\psi, n)}$ 表示它。
+4. Gödel 证明了不动点定理：对任意的一元公式 $\psi(x)$，都能找到一个语句 $\sigma$，使得 $T \vdash \sigma \leftrightarrow \psi(\mathsf{\sharp\sigma})$.
+5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \exists n. \mathsf{P}(\sharp\sigma, n)$，注意，这个句子构造了类似于说谎者悖论的命题。
 6. 利用 ω-完备性，无论假设 $T \vdash \sigma$ 还是 $T \vdash \neg \sigma$，都会得到矛盾。这样一来，$\sigma$ 和 $T$ 就是独立的。
 
 可见，我们的证明没有避免 1. 和 2.，而这是最复杂的步骤。不过，半可判定性直觉理解起来比较简单，如果把它当前提，那么证明会非常简短。1. 和 2. 其实都是为了证明半可判定性引入的。
