@@ -1,17 +1,17 @@
 ---
 layout: post
-title: c++ 模板与参数多态的根本区别
+title: C++ 模板与参数多态的根本区别
 date: 2021-09-14 15:53:47
 tags: 
-  - c++
+  - C++
   - 编程语言
 categories:
   - 编程语言
 ---
 
-## c++ 模板与参数多态
+## C++ 模板与参数多态
 
-模板(template)是一种 c++ 语言特性，类似于：
+模板(template)是一种 C++ 语言特性，类似于：
 
 ```cpp
 template <class T>
@@ -22,11 +22,11 @@ T id(T x) {
 
 这里的 `T` 可以是任意类型。很多人都注意到了这与参数多态(parametric polymorphism)的相似性，更有甚者直接把模板机制看作是一种参数多态。比如这份[ppt](https://www.cs.bham.ac.uk/~hxt/2015/c-plus-plus/templates-slides.pdf)和这个[网页](https://catonmat.net/cpp-polymorphism)。
 
-然而这篇博客中，我将会说明，**无论c++模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别**。
+然而这篇博客中，我将会说明，**无论 C++ 模板到底是不是一个好的语言特性，它都和参数多态有根本性的区别**。
 
 ## 到底什么是参数多态
 
-参数多态的历史要追溯一份讲义([Fundamental Concepts in Programming Languages](https://link.springer.com/article/10.1023%2FA%3A1010000313106))，讲义虽然主要描述的是CPL语言，但是实际上这一段应该描述的是LISP的MAP函数：
+参数多态的历史要追溯一份讲义([Fundamental Concepts in Programming Languages](https://link.springer.com/article/10.1023%2FA%3A1010000313106))，讲义虽然主要描述的是 CPL 语言，但是实际上这一段应该描述的是 LISP 的 MAP 函数：
 
 > Parametric polymorphism is more regular and may be illustrated by an example. Suppose f is a function whose argument is of type α and whose results is of β (so that the type of f might be written α ⇒ β), and that L is a list whose elements are all of type α (so that the type of L is α list). We can imagine a function, say Map, which applies f in turn to each member of L and makes a list of the results. Thus Map[f,L] will produce a β list. We would like Map to work on all types of list provided f was a suitable function, so that Map would have to be polymorphic. However its polymorphism is of a particularly simple parametric type which could be written
 
@@ -48,7 +48,7 @@ id "ssdfs"
 id 1.23
 ```
 
-都是合法的表达式。ML 类语言的类型系统可以看作是对 System F 进行限制和扩展后的系统。System F 可以看作对 λ 表达式的扩展，在 System F 中，λ 表达式的每个绑定变量都必须给定一个类型，而这个类型则是通过$Λ$（大写的λ）引入的。
+都是合法的表达式。ML 类语言的类型系统可以看作是对 System F 进行限制和扩展后的系统。System F 可以看作对 λ 表达式的扩展，在 System F 中，λ 表达式的每个绑定变量都必须给定一个类型，而这个类型则是通过 $Λ$（大写的λ）引入的。
 
 具体来说，最基本的λ表达式 $λx.x$ 在 System F 中应该写作：
 
@@ -62,7 +62,7 @@ $$
 ∀t.t → t
 $$
 
-这个大 $Λ$ 引入的类型变量在使用时需要得到显式 apply（就像对小$λ$的apply一样）。在 System F 中，类似于 λ 表达式，没有除了 $λ$、$Λ$ 和 $∀$以 外的东西，如果给它暂时加入整数类型（例如$1: \text{Int}$），那么就可以给出这样的求值实例:
+这个大 $Λ$ 引入的类型变量在使用时需要得到显式 apply（就像对小 $λ$ 的 apply 一样）。在 System F 中，类似于 λ 表达式，没有除了 $λ$、$Λ$ 和 $∀$ 以外的东西，如果给它暂时加入整数类型（例如$1: \text{Int}$），那么就可以给出这样的求值实例:
 
 $$
 \begin{aligned}
@@ -71,7 +71,7 @@ $$
 \end{aligned}
 $$
 
-由于Hindey-Milner类型推理算法的存在，ML类语言中无须手动给出这样的 $\text{Int}$，函数的类型也会自动推导为带有全称量词的形式。虽然为了进行推理，某些在 System F 中合法的式子不能在ML中被构造，但搞清楚System F的类型规则对接下来的讨论是大有裨益的。
+由于Hindey-Milner类型推理算法的存在，ML类语言中无须手动给出这样的 $\text{Int}$，函数的类型也会自动推导为带有全称量词的形式。虽然为了进行推理，某些在 System F 中合法的式子不能在 ML 中被构造，但搞清楚 System F 的类型规则对接下来的讨论是大有裨益的。
 
 System F的类型规则分为四个规则：
 
@@ -97,7 +97,7 @@ System F的类型规则分为四个规则：
 
 从规则2.中可以看到，这里的 $A$ 是**任意**的类型，引入这个 $Λ$ 的条件是无论 $A$ 到底是什么类型，它都可以推出 $x$ 是 $t₁$ 类型。这样一来，在规则4.中，$B$ 也是一个**任意**的类型。可以不加证明地得到：
 
-> **命题1.** 如果 $(ΛA.x)$ 是一个系统F中的封闭项，那么对于任意的类型$t$，$((ΛA.x)\ t)$是一个系统F中的封闭项。
+> **命题1.** 如果 $(ΛA.x)$ 是一个系统F中的封闭项，那么对于任意的类型 $t$，$((ΛA.x)\ t)$ 是一个系统F中的封闭项。
 
 命题1.是任何声称自己实现了参数多态的系统所必须满足的命题。在ML类语言中，它表现为，一个类型为`'a -> b`（这里的`b`没有加引号，表示任何可能的类型，比如`'a`，这样一来就是`'a -> 'a`）的函数`f`，对于任何类型为`t`的合法ML表达式`x`，`f x`的类型都是`[t/'a]b`.
 
@@ -195,7 +195,7 @@ Prelude| :}
         id :: a -> Int (bound at <interactive>:12:1)
 ```
 
-可见，c++ 并不是参数多态，它的模板系统和ML类语言中的泛型系统完全不在一个层次上。
+可见，C++ 并不是参数多态，它的模板系统和 ML 类语言中的泛型系统完全不在一个层次上。
 
 ## 类型类影响问题吗？
 
@@ -214,11 +214,11 @@ max I J -- 这里报错
 --      In an equation for ‘it’: it = max I J
 ```
 
-这个错误简单来说，就是自定义类型`X`没有实现`Ord`类型类，而`max`的**类型签名**中需要类型类`Ord`，所以报错。这和 c++ 模板仍然很不一样。根本性的区别是，在对`max I J`进行类型检查的时候，只需要`max :: Ord p => p -> p -> p`这一个信息就够了，不需要知道`max`的函数体是什么，更不需要“特化”这个函数，这仍是在类型系统中的推导。
+这个错误简单来说，就是自定义类型`X`没有实现`Ord`类型类，而`max`的**类型签名**中需要类型类`Ord`，所以报错。这和 C++ 模板仍然很不一样。根本性的区别是，在对`max I J`进行类型检查的时候，只需要`max :: Ord p => p -> p -> p`这一个信息就够了，不需要知道`max`的函数体是什么，更不需要“特化”这个函数，这仍是在类型系统中的推导。
 
 ## 真假泛型？性能更好？
 
-虽然我很不喜欢 java 语言，但是 java 语言的泛型系统（在一般情况下）满足命题1.，它是真正的参数多态。这是因为java泛型的前身--Generic Java（GJ）是由 Philip Wadler 等真正的编程语言专家设计的。
+虽然我并不是很喜欢 Java 语言，但是 Java 语言的泛型系统（在一般情况下）满足命题1.，它是真正的参数多态。这是因为 Java 泛型的前身--Generic Java（GJ）是由 Philip Wadler 等真正的编程语言专家设计的。
 
 ![GJ作者的合照](https://homepages.inf.ed.ac.uk/wadler/gj/gj-front-full.jpg)
 
@@ -276,7 +276,7 @@ namespace <StartupCode$_>
 }
 ```
 
-`select2`难道不是对`select`的“特化”吗？由此看来，c++ 模板的“性能更好”也是很难说清楚的问题。
+`select2`难道不是对`select`的“特化”吗？由此看来，C++ 模板的“性能更好”也是很难说清楚的问题。
 
 ## concept: 能解决问题吗？
 
@@ -284,7 +284,7 @@ namespace <StartupCode$_>
 
 之前已经提到了，Haskell 也有会出错的问题。其他 ML 家族的语言，如果不算上类似 F# 的 object 系统的扩展，则基本没有出错的问题，但是需要传递更多参数。比如`List.sortWith`的类型就是`(('a -> 'a -> int) -> 'a list -> 'a list)`，对于任何`'a`都不会出错，但是需要显式地传递一个 comparer. 所以不是参数多态，可能也不是特别大的问题。
 
-但说到 c++，不是参数多态确实带来了一个相当严重的问题，那就是模板系统给出的报错信息常常令人无从下手。
+但说到 C++，不是参数多态确实带来了一个相当严重的问题，那就是模板系统给出的报错信息常常令人无从下手。
 
 例如这样的程序：
 
@@ -310,7 +310,7 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.2
 ...
 ```
 
-为了解决这个问题，c++20 引入了 concept，concept 借鉴了类型类和 java 泛型的设计，可以使得我们能写出类似于之前 Haskell 的`max`那样的程序：
+为了解决这个问题，C++20 引入了 concept，concept 借鉴了类型类和 Java 泛型的设计，可以使得我们能写出类似于之前 Haskell 的`max`那样的程序：
 
 ```cpp
 #include <iostream>
@@ -349,29 +349,29 @@ source>: In function 'int main()':
       |      ^~~
 <source>:6:6: note:   template argument deduction/substitution failed:
 <source>:6:6: note: constraints not satisfied
-In file included from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/compare:39,
-                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_pair.h:65,
-                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/stl_algobase.h:64,
-                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/char_traits.h:39,
-                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ios:40,
-                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/ostream:38,
-                 from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/iostream:39,
+In file included from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/compare:39,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/bits/stl_pair.h:65,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/bits/stl_algobase.h:64,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/bits/char_traits.h:39,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/ios:40,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/ostream:38,
+                 from /opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/iostream:39,
                  from <source>:1:
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts: In substitution of 'template<class T>  requires  equality_comparable<T> bool max(T, T) [with T = A]':
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts: In substitution of 'template<class T>  requires  equality_comparable<T> bool max(T, T) [with T = A]':
 <source>:17:8:   required from here
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:280:15:   required for the satisfaction of '__weakly_eq_cmp_with<_Tp, _Tp>' [with _Tp = A]
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:290:13:   required for the satisfaction of 'equality_comparable<T>' [with T = A]
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:281:4:   in requirements with 'std::remove_reference_t<_Tp>& __t', 'std::remove_reference_t<_Up>& __u' [with _Up = A; _Tp = A]
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:282:17: note: the required expression '(__t == __u)' is invalid
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:280:15:   required for the satisfaction of '__weakly_eq_cmp_with<_Tp, _Tp>' [with _Tp = A]
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:290:13:   required for the satisfaction of 'equality_comparable<T>' [with T = A]
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:281:4:   in requirements with 'std::remove_reference_t<_Tp>& __t', 'std::remove_reference_t<_Up>& __u' [with _Up = A; _Tp = A]
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:282:17: note: the required expression '(__t == __u)' is invalid
   282 |           { __t == __u } -> __boolean_testable;
       |             ~~~~^~~~~~
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:283:17: note: the required expression '(__t != __u)' is invalid
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:283:17: note: the required expression '(__t != __u)' is invalid
   283 |           { __t != __u } -> __boolean_testable;
       |             ~~~~^~~~~~
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:284:17: note: the required expression '(__u == __t)' is invalid
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:284:17: note: the required expression '(__u == __t)' is invalid
   284 |           { __u == __t } -> __boolean_testable;
       |             ~~~~^~~~~~
-/opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/concepts:285:17: note: the required expression '(__u != __t)' is invalid
+/opt/compiler-explorer/gcc-11.2.0/include/C++/11.2.0/concepts:285:17: note: the required expression '(__u != __t)' is invalid
   285 |           { __u != __t } -> __boolean_testable;
       |             ~~~~^~~~~~
 cc1plus: note: set '-fconcepts-diagnostics-depth=' to at least 2 for more detail
@@ -400,4 +400,6 @@ n file included from /opt/compiler-explorer/gcc-11.2.0/include/c++/11.2.0/bits/s
 剩下还有80多行
 ```
 
-事实上，当 c\++ 引入模板机制而不进行类型检查的那一刻，这种修修补补也很难解决问题的情形已经被决定了。希望 c\++ 模板的引起的种种问题，能够给后世的语言设计者以警醒和教训。
+公允地说，C++ 的模板设计也带来了一些好处。虽然从理论上来说，编译器有一些通用的方法能够得到“特化”所带来的性能提升，但实践上的各种困难使得 C++ 模板在性能上确实有一些优势（这里指的是运行时性能，在编译性能上，C++ 模板是极其糟糕的）。
+
+相比语言设计本身，我更不喜欢的是某些 C++ 程序员的无知，以及这种无知带来的傲慢态度。某些人动辄把 Java 的泛型叫做“假泛型”，认为只有像 C++ 模板一样的泛型实现才是“真泛型”。我真诚地建议，这些人应该认真阅读一下本文。
