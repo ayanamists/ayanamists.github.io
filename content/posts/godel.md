@@ -312,11 +312,11 @@ def p_total(ψ):
 
 Church 在 1936 年的论文 [11] 里首次证明了存在一个不可判定的问题（虽然有些学者不太满意他的证明），这个问题是：
 
-> 给定 $a, b \in \Lambda^{\circ}$，$a \rightsquigarrow_{\beta} b$ 是否成立？
+> 给定 $a, b \in \Lambda^{\circ}$，$a \approx_{\beta} b$ 是否成立？
 
-其中，$\Lambda^{\circ}$ 指的是“封闭的 lambda 项”，$\rightsquigarrow_{\beta}$ 指的是 β-规约（关系）的传递闭包，也就是任意次 β-规约。他的文章进一步指出，任何 ω-一致性的系统都无法构造判定器。[11, 12]
+其中，$\Lambda^{\circ}$ 指的是“封闭的 lambda 项”，$\approx_{\beta}$ 指的是 β-等价关系，大概就是说，$a$ 和 $b$ 之间有一条 $\beta$ 规约和 $\beta$ 抽象构成的路径。他的文章进一步指出，任何 ω-一致性的系统都无法构造判定器。[11, 12]
 
-如果要沿用 Church 的证明，那么，我们首先需要把 $\rightsquigarrow_{\beta}$ 算术化。这也就是说，要找到一个整数上的关系 $P$，使得 $P(\sharp M, \sharp N)$ 当且仅当 $M \rightsquigarrow_{\beta} N$，其中 $\sharp$ 表示编码。我们显然需要 $P$ 有一些良好的表示，因为我们下面要找到一个 $\mathsf{PA}$ 中的句子 $\mathsf{P(x, y)}$ 使得对任意的 $n_1, n_2$
+如果要沿用 Church 的证明，那么，我们首先需要把 $\approx_{\beta}$ 算术化。这也就是说，要找到一个整数上的关系 $P$，使得 $P(\sharp M, \sharp N)$ 当且仅当 $M \approx_{\beta} N$，其中 $\sharp$ 表示编码。我们显然需要 $P$ 有一些良好的表示，因为我们下面要找到一个 $\mathsf{PA}$ 中的句子 $\mathsf{P(x, y)}$ 使得对任意的 $n_1, n_2$
 
 $$
 \begin{aligned}
@@ -411,10 +411,10 @@ Kleene 的定理保证了，$g$ 唯一不停机的方式就是 $\forall z. C(e_1
 Gödel 的原始证明 [1, 13] 相当复杂，大概可以概括为：
 
 1. 证明所有的原始递归函数是可表示的。
-2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，类似于用原始递归函数写一个我们这里写的 `can_prove_n(ψ, n)` 程序。Gödel 写了 45 个原始递归函数。
-3. 由于 `can_prove_n(ψ, n)` 是原始递归函数，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(\sharp\psi, n)}$ 表示它。
+2. 将一阶逻辑和初等算术的语法用原始递归函数算术化，我们这里通过写 `can_prove_n(ψ, n)` 解决；Gödel 则是定义了初等递归函数，并且定义了对应的初等递归关系。他写了 45 个递归关系，最终定义了可证明性（著名的 Bew）。
+3. 由于 Bew 是原始递归关系，所以是可表示的。这样一来，能找到一个公式 $\mathsf{P(\sharp\psi)}$ 表示它。
 4. Gödel 证明了不动点定理：对任意的一元公式 $\psi(x)$，都能找到一个语句 $\sigma$，使得 $T \vdash \sigma \leftrightarrow \psi(\mathsf{\sharp\sigma})$.
-5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \exists n. \mathsf{P}(\sharp\sigma, n)$，注意，这个句子构造了类似于说谎者悖论的命题。
+5. 所以，存在 $\sigma$ 使得 $T \vdash \sigma \leftrightarrow \neg \mathsf{P(\sharp \sigma)}$，注意，这个句子构造了类似于说谎者悖论的命题。
 6. 利用 ω-完备性，无论假设 $T \vdash \sigma$ 还是 $T \vdash \neg \sigma$，都会得到矛盾。这样一来，$\sigma$ 和 $T$ 就是独立的。
 
 可见，我们的证明没有避免 1. 和 2.，而这是最复杂的步骤。不过，半可判定性直觉理解起来比较简单，如果把它当前提，那么证明会非常简短。1. 和 2. 其实都是为了证明半可判定性引入的。
