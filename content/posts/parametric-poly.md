@@ -31,7 +31,7 @@ T id(T x) {
 > Parametric polymorphism is more regular and may be illustrated by an example. Suppose f is a function whose argument is of type α and whose results is of β (so that the type of f might be written α ⇒ β), and that L is a list whose elements are all of type α (so that the type of L is α list). We can imagine a function, say Map, which applies f in turn to each member of L and makes a list of the results. Thus Map[f,L] will produce a β list. We would like Map to work on all types of list provided f was a suitable function, so that Map would have to be polymorphic. However its polymorphism is of a particularly simple parametric type which could be written
 
 $$
-(α → β , α\ list) → β \ list
+(α → β , α\ \text{list}) → β \ \text{list}
 $$
 
 1975 年的 ML 语言在类型系统的层面上实现了这种多态。在 ML 类语言中，一个函数的类型中可以含有类型变量，例如如下的`id`函数：
