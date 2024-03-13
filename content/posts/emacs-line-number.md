@@ -221,6 +221,6 @@ Emacs Lisp 的全局变量和全局函数是不同的，这和 Scheme 很不一�
   (if coq-use-pg 'proof-mode 'prog-mode))
 ```
 
-上面的修改就足以使得 Spacemacs 可以自动侦测到 `coq-mode` 派生自 `prog-mode`，从而开启行号显示。过几天我可能会提个 PR，把这个修改合并到 `coq-mode` 的主仓库里。
+上面的修改就足以使得 Spacemacs 可以自动侦测到 `coq-mode` 派生自 `prog-mode`，从而开启行号显示。我已经提交了一个 [PR](https://github.com/ProofGeneral/PG/pull/717)，并合入了主分支。
 
 [^1]: 如果你不熟悉这种快捷键记法，可以参考[文档](https://kb.iu.edu/d/aghb)

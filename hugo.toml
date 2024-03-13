@@ -1,61 +1,160 @@
 baseURL = 'https://ayayaya.org'
-languageCode = 'zh-CN'
-title = "Ayanamists's site"
+title = "Aya's Blog"
 # language name ["English", "简体中文", "Français", "Polski", ...]
 theme = "LoveIt"
-languageName = "简体中文"
+defaultContentLanguageInSubdir = true
+defaultContentLanguage = "zh-CN"
+
+[languages]
+  [languages.zh-cn]
+    weight = 1
+    title = "Aya's Blog"
+    languageCode = "zh-CN"
+    languageName = "简体中文"
+    hasCJKLanguage = true
+    [[languages.zh-cn.menu.main]]
+      weight = 1
+      identifier = "posts"
+      pre = ""
+      post = ""
+      name = "文章"
+      url = "/posts/"
+      title = ""
+    [[languages.zh-cn.menu.main]]
+      weight = 2
+      identifier = "tags"
+      pre = ""
+      post = ""
+      name = "标签"
+      url = "/tags/"
+      title = ""
+    [[languages.zh-cn.menu.main]]
+      weight = 3
+      identifier = "categories"
+      pre = ""
+      post = ""
+      name = "分类"
+      url = "/categories/"
+      title = ""
+    [[languages.zh-cn.menu.main]]
+      weight = 4
+      identifier = "about"
+      pre = ""
+      post = ""
+      name = "关于"
+      url = "/about/"
+      title = ""
+    [[languages.zh-cn.menu.main]]
+      weight = 5
+      identifier = "slides"
+      pre = ""
+      post = ""
+      name = "幻灯片"
+      url = "/slides/"
+      title = ""
+
+  [languages.en]
+    weight = 2
+    title = "Aya's Blog"
+    languageCode = "en"
+    languageName = "English"
+    hasCJKLanguage = false
+    [[languages.en.menu.main]]
+      weight = 1
+      identifier = "posts"
+      pre = ""
+      post = ""
+      name = "Posts"
+      url = "/posts/"
+      title = ""
+    [[languages.en.menu.main]]
+      weight = 2
+      identifier = "tags"
+      pre = ""
+      post = ""
+      name = "Tags"
+      url = "/tags/"
+      title = ""
+    [[languages.en.menu.main]]
+      weight = 3
+      identifier = "categories"
+      pre = ""
+      post = ""
+      name = "Categories"
+      url = "/categories/"
+      title = ""
+    [[languages.en.menu.main]]
+      weight = 4
+      identifier = "about"
+      pre = ""
+      post = ""
+      name = "About"
+      url = "/about/"
+      title = ""
+    [[languages.en.menu.main]]
+      weight = 5
+      identifier = "slides"
+      pre = ""
+      post = ""
+      name = "Slides"
+      url = "/slides/"
+      title = ""
+
+
+
+  [languages.ja]
+    weight = 3
+    title = ""
+    languageCode = "ja"
+    languageName = "日本語"
+    hasCJKLanguage = true
+    [[languages.ja.menu.main]]
+      weight = 1
+      identifier = "posts"
+      pre = ""
+      post = ""
+      name = "Posts"
+      url = "/posts/"
+      title = ""
+    [[languages.ja.menu.main]]
+      weight = 2
+      identifier = "tags"
+      pre = ""
+      post = ""
+      name = "Tags"
+      url = "/tags/"
+      title = ""
+    [[languages.ja.menu.main]]
+      weight = 3
+      identifier = "categories"
+      pre = ""
+      post = ""
+      name = "Categories"
+      url = "/categories/"
+      title = ""
+    [[languages.ja.menu.main]]
+      weight = 4
+      identifier = "about"
+      pre = ""
+      post = ""
+      name = "About"
+      url = "/about/"
+      title = ""
+    [[languages.ja.menu.main]]
+      weight = 5
+      identifier = "slides"
+      pre = ""
+      post = ""
+      name = "Slides"
+      url = "/slides/"
+      title = ""
+
 
 # Author config
 [author]
   name = "ayanamists"
   email = "me@ayayaya.org"
   link = ""
-
-# Menu config
-[menu]
-  [[menu.main]]
-    weight = 1
-    identifier = "posts"
-    # you can add extra information before the name (HTML format is supported), such as icons
-    pre = ""
-    # you can add extra information after the name (HTML format is supported), such as icons
-    post = ""
-    name = "Posts"
-    url = "/posts/"
-    # title will be shown when you hover on this menu link
-    title = ""
-  [[menu.main]]
-    weight = 2
-    identifier = "tags"
-    pre = ""
-    post = ""
-    name = "Tags"
-    url = "/tags/"
-    title = ""
-  [[menu.main]]
-    weight = 3
-    identifier = "categories"
-    pre = ""
-    post = ""
-    name = "Categories"
-    url = "/categories/"
-    title = ""
-  [[menu.main]]
-    weight = 4
-    identifier = "about"
-    pre = ""
-    post = ""
-    name = "About"
-    url = "/about/"
-    title = ""
-  [[menu.main]]
-    weight = 5
-    identifier = "slides"
-    pre = ""
-    post = ""
-    name = "Slides"
-    url = "/slides/"
-    title = ""
 
 # Markup related configuration in Hugo
 [markup]
