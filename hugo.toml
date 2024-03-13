@@ -3,13 +3,13 @@ title = "Aya's Blog"
 # language name ["English", "简体中文", "Français", "Polski", ...]
 theme = "LoveIt"
 defaultContentLanguageInSubdir = true
-defaultContentLanguage = "zh-CN"
+defaultContentLanguage = "zh-cn"
 
 [languages]
   [languages.zh-cn]
     weight = 1
     title = "Aya's Blog"
-    languageCode = "zh-CN"
+    languageCode = "zh-cn"
     languageName = "简体中文"
     hasCJKLanguage = true
     [[languages.zh-cn.menu.main]]
