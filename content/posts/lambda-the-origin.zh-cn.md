@@ -186,7 +186,7 @@ $$
 Church 发现，不仅是后继函数，加法函数 $f(x, y) = x + y$ 也是 $\lambda$ 可定义的。但是，Church 不知道 “前驱” 函数（$P(n) = n - 1$）是不是 $\lambda$ 可定义的。当然，他的系统允许他 “作弊”，不用 $\lambda$ 定义性，也能得到前驱函数。他的定义是这样的：
 
 $$
-\lambda r. \lambda s. \iota x. (\mathsf{S}\ x = r)
+\lambda r. \iota x. (\mathsf{S}\ x = r)
 $$
 
 这个 $\iota$ 的定义见上一节，简单来说就是，Church 通过 “满足 $\mathsf{S}\ x = r$ 的 $x$” 来定义 $r$ 的前驱。
