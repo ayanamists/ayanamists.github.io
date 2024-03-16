@@ -2,6 +2,8 @@
 title: "不为人知的故事--Church 和他的系统"
 date: 2024-03-15T22:29:00+08:00
 draft: false
+categories:
+    - 计算机历史
 ---
 
 作为函数式编程爱好者，你一定知道 Church 和他的 $\lambda$ 演算。如果你学过递归论，也许还会知道 $\lambda$ 可定义性、$\lambda$ 演算的各种性质（Church-Rosser 定理、不动点定理……），以及他们结合起来是如何给出 $\beta$ 等价的不可判定证明的。
@@ -71,10 +73,10 @@ Church 的系统，语法中确实没有集合或者类，由这些符号构成�
 
 > 5. Undefined terms. We are now ready to set down a list of the undefined terms of our formal logic. They are as follows:
 $$
-\{\}(),\\ \lambda\[\],\\ \Pi,\ \Sigma,\ \\&, \\ \sim, \\ \iota, \\ A
+\\{\\}(),\\ \lambda\[\],\\ \Pi,\ \Sigma,\ \\&, \\ \sim, \\ \iota, \\ A
 $$
 
-其中，$\{\}()$ 代表的是现代 $\lambda$ 演算中的 “作用”（apply, 俗称函数调用），$\lambda [\ ]$ 自然是 $\lambda$ 抽象，$\Pi$ 是一个比较复杂的语法，$\Pi(P, Q)$ 大概是 $\forall x. (P(x) \to Q(x))$[^5]，$\Sigma$ 是存在，$\\&$ 是逻辑与，$\sim$ 是逻辑非，$\iota$ 类似于递归函数里的 $\mu$ 算子，$\iota(F)$ 指的是 “让 $\{F\}(x)$” 成立的 $x$”. 至于 $A$，这个符号特别抽象，这里不讨论了。
+其中，$\\{\\}()$ 代表的是现代 $\lambda$ 演算中的 “作用”（apply, 俗称函数调用），$\lambda [\ ]$ 自然是 $\lambda$ 抽象，$\Pi$ 是一个比较复杂的语法，$\Pi(P, Q)$ 大概是 $\forall x. (P(x) \to Q(x))$[^5]，$\Sigma$ 是存在，$\\&$ 是逻辑与，$\sim$ 是逻辑非，$\iota$ 类似于递归函数里的 $\mu$ 算子，$\iota(F)$ 指的是 “让 $\\{F\\}(x)$” 成立的 $x$”. 至于 $A$，这个符号特别抽象，这里不讨论了。
 
 之后，Church 定义了一些语法糖，或者说，“宏” (macro)。比如，他定义了 $V$，也就是现代逻辑学里的 $\lor$，定义是这样的：
 
@@ -184,10 +186,10 @@ $$
 Church 发现，不仅是后继函数，加法函数 $f(x, y) = x + y$ 也是 $\lambda$ 可定义的。但是，Church 不知道 “前驱” 函数（$P(n) = n - 1$）是不是 $\lambda$ 可定义的。当然，他的系统允许他 “作弊”，不用 $\lambda$ 定义性，也能得到前驱函数。他的定义是这样的：
 
 $$
-\lambda r. \lambda s. \iota x. (\mathsf{S}\ r = x)
+\lambda r. \lambda s. \iota x. (\mathsf{S}\ x = r)
 $$
 
-这个 $\iota$ 的定义见上一节，简单来说就是，Church 通过 “满足 $\mathsf{S}\ r = x$ 的 $x$” 来定义 $r$ 的前驱。
+这个 $\iota$ 的定义见上一节，简单来说就是，Church 通过 “满足 $\mathsf{S}\ x = r$ 的 $x$” 来定义 $r$ 的前驱。
 
 1932 年初，Church 让 Kleene 想办法把自然数的公理（Peano Axioms）在他的系统里证明出来。Kleene 发现这里必须得有一个前驱函数，他对 Church 的 “作弊” 不是特别满意，于是他开始研究前驱函数是不是 $\lambda$ 可定义的。
 
