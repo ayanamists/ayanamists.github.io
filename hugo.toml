@@ -156,6 +156,9 @@ defaultContentLanguage = "zh-cn"
   email = "me@ayayaya.org"
   link = ""
 
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 # Markup related configuration in Hugo
 [markup]
   # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
