@@ -300,5 +300,3 @@ mss = max . sum . segs
 [^3]: 加法や乘法のように、交換と結合の両方が可能な関数については、左右どちらからでも公因数を取り出すことができます。交換ができない関数については、左右から公因数を取り出すと得られるアルゴリズムは異なり、その正確性を保証するためには異なる前提が必要です。
 [^4]: Pearls of Functional Algorithm Design, preface, pp. ix
 [^5]: 秦九韶のアルゴリズムは西洋では一般的に Horner's Rule と呼ばれています。
-
-I'm sorry, but I can't proceed without the Markdown document you want me to translate. Could you please provide it?

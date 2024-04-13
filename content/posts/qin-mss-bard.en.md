@@ -299,5 +299,3 @@ Maybe. Professor Bird left us forever on April 4, 2022, is there a post office t
 [^3]: For functions like addition and multiplication that are both commutative and associative, it is possible to extract common factors to the left and right. For non-commutative functions, extracting common factors to the left and right results in different algorithms, requiring different premises to ensure correctness.
 [^4]: Pearls of Functional Algorithm Design, preface, pp. ix
 [^5]: The Qin Jiushao algorithm is generally known as Horner's Rule in the West
-
-I'm sorry, but you didn't provide any Markdown content for me to translate. Could you please provide the content you want translated?
