@@ -28,7 +28,7 @@ categories:
 
 ```bash
 ❯ docker container ls | rg ipsec
-b13ca7eb8233   hwdsl2/ipsec-vpn-server                          "/opt/src/run.sh"        2 months ago   Up 6 days   0.0.0.0:500->500/udp, :::500->500/udp, 0.0.0.0:4500->4500/udp, :::4500->4500/udp   
+b13ca7eb8233   hwdsl2/ipsec-vpn-server   "/opt/src/run.sh"   2 months ago   Up 6 days   0.0.0.0:500->500/udp, :::500->500/udp, 0.0.0.0:4500->4500/udp, :::4500->4500/udp   
 ```
 
 可以看到，它只占用了 500 和 4500 两个端口。这样一来，你只需要在 iptables 开放这两个端口即可，其他的都可以关闭。事实上，我没有直接把这台服务器连接到校园网，而是通过一个路由器连接到校园网，服务器连接在路由器创建的内网里。我只需要在路由器的端口转发里面把这两个端口转发到服务器上，就可以在校园网里访问 VPN 了。
@@ -52,7 +52,6 @@ b13ca7eb8233   hwdsl2/ipsec-vpn-server                          "/opt/src/run.sh
 Warp 作为一个 VPN，首先会创建一个虚拟网卡。然后，所有的流量都会被发送到这个虚拟网卡上。观察到它是很简单的：
 
 ```bash
-❯ ifconfig | rg Cloudflare -A 9
 ❯ ifconfig | rg Cloudflare -A 10
 CloudflareWARP: flags=4305<UP,POINTOPOINT,RUNNING,NOARP,MULTICAST>  mtu 1280
         inet 172.16.0.2  netmask 255.255.255.255  destination 172.16.0.2
@@ -129,7 +128,9 @@ default via 192.168.1.1 dev enp34s0 proto dhcp metric 20100
 
 为什么会这么多规则呢？
 
-这就要说到 Split Tunnel 了。Warp 就是通过这些规则实现 Split Tunnel 的。具体来说，如果默认的只有这一条（所有的流量都发送到 Warp 的虚拟网卡）的话：
+这就要说到 Split Tunnel 了。Split Tunnel 的功能是通过这些路由规则实现的。
+
+具体来说，如果默认的只有这一条（所有的流量都发送到 Warp 的虚拟网卡）的话：
 
 ```bash
 0.0.0.0/0 dev CloudflareWARP proto static scope link
@@ -175,7 +176,7 @@ default via 192.168.1.1 dev enp34s0 proto dhcp metric 20100
 32767:  from all lookup default
 ```
 
-第二个原因是，在不知不觉之间，本机防火墙的 OUTPUT 链已经被 Warp 设下了非常强的规则。这个错误困扰了我很久，因为 Warp 根本就没有用 iptables，它直接调用的 nftables，在 iptables 里根本看不到它：
+第二个原因是，在不知不觉之间，本机防火墙的 OUTPUT 链已经被 Warp 设下了非常强的规则。
 
 ```bash
 ❯ sudo nft list table inet cloudflare-warp
@@ -215,7 +216,7 @@ table inet cloudflare-warp {
 - 目标接口是 CloudflareWARP 接口
 - 其他特殊情况，比如本机的流量、dhcp 等等
 
-结果是，我们这样 “绕过” 的流量自然会被 reject 掉。我觉得最好还是不要和 Warp 对着干，所以也不倾向于修改这些规则。
+结果是，我们这样 “绕过” 的流量自然会被 reject 掉。我觉得最好还是不要和 Warp 对着干，所以也不倾向于修改这些规则。值得一提的是，这些规则通过通常的 `iptables` 命令是看不到的（iptables 不支持自定义表，而 nftables 支持），必须通过 `nft` 命令来查看。
 
 ## 最终方案
 
