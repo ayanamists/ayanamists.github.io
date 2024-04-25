@@ -371,7 +371,7 @@ object Solution {
 1. 从右向左遍历，找到最长的下降序列 $a[i \dots (\text{len - 1})]$
 2. 进行计算，
    - 如果 $i = 0$，那么反转数组
-   - 其他情况，找到 $j$，使得
+   - 其他情况，找到 $j \in [i, \text{(len - 1)}]$，使得
 
      - $a[j] > a[i - 1]$
      - $\forall k \ge i, a[k] > a[i - 1] \to a[k] \ge a[j]$
