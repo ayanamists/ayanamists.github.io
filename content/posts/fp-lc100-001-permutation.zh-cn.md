@@ -325,6 +325,7 @@ tick x xs = build l r x
           build [] r x = reverse (x:r)
           build l  r x = last l : reverse (init l ++ [x] ++ r)
 
+dup xs = zip xs (tail xs)
 downs = scanr (\(x, x1) r -> (x >= x1) && r) True . dup
 
 next xs = l ++ tick (head r) (tail r)
