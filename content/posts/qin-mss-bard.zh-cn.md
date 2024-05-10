@@ -36,7 +36,7 @@ def mss(arr):
 ```Haskell
 import Data.List (tails, inits)
 
-mss = max . sum . segs
+mss = maximum . map sum . segs
 segs = concat . map tails . inits
 ```
 
@@ -281,7 +281,7 @@ mssNeg l
 
 ```haskell
 --sum [] = 0
-mss = max . sum . segs
+mss = maximum . map sum . segs
 ```
 
 `segs` 的结果中一定存在空表，而空表在用 `sum` 求值之后，就会得到 0. 所以显然，这个式子就无法处理负数最大和的情况。又考虑到在这里的秦九韶算法中，`0` 是 `+` 的单位元，我认为要修改到能处理负数的算法，需要的可能是完全推倒重来。

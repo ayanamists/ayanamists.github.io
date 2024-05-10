@@ -38,7 +38,7 @@ def mss(arr):
 ```Haskell
 import Data.List (tails, inits)
 
-mss = max . sum . segs
+mss = maximum . map sum . segs
 segs = concat . map tails . inits
 ```
 
@@ -283,7 +283,7 @@ mssNeg l
 
 ```haskell
 --sum [] = 0
-mss = max . sum . segs
+mss = maximum . map sum . segs
 ```
 
 `segs` の結果には必ず空のリストが存在し、その空のリストを `sum` で評価すると、0が得られます。したがって、この式は負の最大和のケースを処理することはできません。また、ここでの秦九韶のアルゴリズムでは、`0` は `+` の単位元であるため、負数を処理できるアルゴリズムに修正するには、完全に一からやり直す必要があるかもしれません。

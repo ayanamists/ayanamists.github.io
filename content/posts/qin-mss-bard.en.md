@@ -38,7 +38,7 @@ This program would be more concise if written in Haskell:
 ```Haskell
 import Data.List (tails, inits)
 
-mss = max . sum . segs
+mss = maximum . map sum . segs
 segs = concat . map tails . inits
 ```
 
@@ -283,7 +283,7 @@ This approach is a bit clumsy. Can we modify Professor Bird's derivation process
 
 ```haskell
 --sum [] = 0
-mss = max . sum . segs
+mss = maximum . map sum . segs
 ```
 
 There must be an empty table in the result of `segs`, and after the empty table is evaluated with `sum`, it will get 0. So obviously, this equation cannot handle the situation of negative maximum sum. Considering that in the Qin Jiushao algorithm here, `0` is the unit element of `+`, I think that to modify it to be able to handle negative numbers, it may need to be completely overhauled.
